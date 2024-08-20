@@ -1,7 +1,6 @@
 export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
-    'header-max-length': [2, 'always', 72],
     'subject-case': [2, 'never', ['pascal-case']],
     'subject-empty': [2, 'never'],
     'subject-full-stop': [2, 'never', '.'],
@@ -25,6 +24,5 @@ export default {
         'ci',
       ],
     ],
-    'scope-enum': [2, 'always', ['auth', 'ui', 'api', 'db', 'config']],
   },
 };
