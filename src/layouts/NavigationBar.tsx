@@ -53,7 +53,7 @@ export default function NavigationBar() {
             <Link
               to={menu.to}
               title={menu.title}
-              className={`flex h-10 w-10 items-center justify-center ${menu.to === pathname ? 'rounded-xl border shadow-md [&>svg]:text-[#2B2B2B]' : ''}`}
+              className={`flex h-10 w-10 items-center justify-center ${menu.to === pathname && 'rounded-xl border shadow-md [&>svg]:text-[#2B2B2B]'}`}
             >
               {menu.icon}
             </Link>
@@ -64,7 +64,7 @@ export default function NavigationBar() {
       <Link
         to="/mypage"
         title="마이페이지 이동"
-        className="ali mt-auto flex h-8 w-8 items-center justify-center"
+        className="mt-auto flex h-8 w-8 items-center justify-center"
       >
         <BsGear className={`${iconStyle} text-[#8C8C8C]`} />
       </Link>

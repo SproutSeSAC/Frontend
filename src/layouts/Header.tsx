@@ -11,13 +11,14 @@ interface Props {
 
 export default function Header({ title, children }: Props) {
   const { pathname } = useLocation();
-  const isHomePath = pathname === '/';
+
+  const homePathname = pathname === '/';
 
   return (
     <header className="mb-6 flex h-[52px] items-center justify-between">
       <section>
         <h1 className="text-2xl font-semibold">{title}</h1>
-        {isHomePath && (
+        {homePathname && (
           <h2 className="font-[roboto] font-bold text-lime-500">
             Seoul Software Academy
           </h2>
