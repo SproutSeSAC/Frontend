@@ -1,7 +1,7 @@
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
-interface HeartButtonProps {
-  size: number | string;
+interface FavoriteButtonProps {
+  size?: number | string;
   isFavorite: boolean;
   onClick: () => void;
 }
@@ -12,10 +12,10 @@ interface HeartButtonProps {
  * @param onClick - 버튼 클릭 시 실행될 콜백 함수
  */
 export default function FavoriteButton({
-  size,
+  size = 26,
   isFavorite,
   onClick,
-}: HeartButtonProps) {
+}: FavoriteButtonProps) {
   return isFavorite ? (
     <BsHeartFill
       size={size}
