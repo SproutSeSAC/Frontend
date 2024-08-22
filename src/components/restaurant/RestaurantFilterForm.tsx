@@ -4,7 +4,7 @@ import Input from '@/components/common/Input';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
 
-export default function RestaurantFilter() {
+export default function RestaurantFilterForm() {
   return (
     <form action="" className="flex w-[200px] flex-col gap-8">
       <div className="flex w-full justify-between">
