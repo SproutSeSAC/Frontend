@@ -19,15 +19,13 @@ export default function FavoriteButton({
   return isFavorite ? (
     <BsHeartFill
       size={size}
-      color="#6FA235"
-      className="cursor-pointer"
+      className="cursor-pointer text-oliveGreen1"
       onClick={onClick}
     />
   ) : (
     <BsHeart
       size={size}
-      color="#6FA235"
-      className="cursor-pointer"
+      className="cursor-pointer text-oliveGreen1"
       onClick={onClick}
     />
   );
