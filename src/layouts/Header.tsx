@@ -11,12 +11,15 @@ interface Props {
 }
 
 const TitleWithHighlight = ({
-  parts,
+  title,
   highlight,
 }: {
-  parts: string[];
+  title: string;
   highlight: string;
 }) => {
+  const regex = new RegExp(`(${highlight})`, 'gi');
+  const parts = title.split(regex);
+
   return parts.map((part: string) =>
     part.toLowerCase() === highlight?.toLowerCase() ? (
       <span key={part} className="text-oliveGreen1">
@@ -33,15 +36,12 @@ export default function Header({ title, highlight, children }: Props) {
 
   const homePathname = pathname === '/';
 
-  const regex = new RegExp(`(${highlight})`, 'gi');
-  const parts = title.split(regex);
-
   return (
     <header className="mb-6 flex h-[52px] items-center justify-between">
       <section>
         <h1 className="text-2xl font-semibold">
           {highlight ? (
-            <TitleWithHighlight parts={parts} highlight={highlight} />
+            <TitleWithHighlight title={title} highlight={highlight} />
           ) : (
             title
           )}
