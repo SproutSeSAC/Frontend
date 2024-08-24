@@ -28,7 +28,13 @@
         "tsx": "never"
       }
     ],
-    "import/order": "off"
+    "import/order": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   },
   "ignorePatterns": [
     "dist",
