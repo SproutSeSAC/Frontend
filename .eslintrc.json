@@ -16,6 +16,7 @@
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
     "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
     "import/extensions": [
       "error",
@@ -26,7 +27,8 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "import/order": "off"
   },
   "ignorePatterns": [
     "dist",

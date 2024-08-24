@@ -1,62 +1,59 @@
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import Dashboard from '@/pages/Dashboard';
+import Layout from '@/layouts/Layout';
+
+import Home from '@/pages/Home';
+import MyPage from '@/pages/MyPage';
+import NotFound from '@/pages/NotFound';
+import Restaurant from '@/pages/Restaurant';
+import Schedule from '@/pages/Schedule';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/dashboard" replace />,
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: '/login',
   },
   {
     path: '/signup',
   },
   {
-    path: '/profile-setup',
-  },
-  {
-    path: '/dashboard',
-    element: <Dashboard />,
-  },
-  {
     path: '/mypage',
+    element: (
+      <Layout>
+        <MyPage />
+      </Layout>
+    ),
   },
   {
     path: '/restaurants',
-    children: [
-      {
-        path: 'map',
-      },
-      {
-        path: ':id',
-      },
-    ],
+    element: (
+      <Layout>
+        <Restaurant />
+      </Layout>
+    ),
   },
   {
     path: '/schedule',
+    element: (
+      <Layout>
+        <Schedule />
+      </Layout>
+    ),
   },
   {
-    path: '/lounge',
-
-    children: [
-      {
-        path: 'editor',
-      },
-    ],
-  },
-  {
-    path: '/networking',
-  },
-  {
-    // not-found 페이지
     path: '*',
+    element: <NotFound />,
   },
 ]);
 
