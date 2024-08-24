@@ -13,7 +13,7 @@ import { PiForkKnifeBold } from 'react-icons/pi';
 export default function NavigationBar() {
   const { pathname } = useLocation();
 
-  const iconStyle = 'w-6 h-6 text-[#bebebe]';
+  const iconStyle = 'w-6 h-6 text-gray3';
 
   const menuList = [
     {
@@ -44,16 +44,16 @@ export default function NavigationBar() {
   ];
 
   return (
-    <nav className="flex w-[100px] flex-col items-center bg-[#F5F5F7] px-5 pb-24 pt-8">
+    <nav className="flex w-[100px] flex-col items-center px-5 pb-24 pt-8">
       <Logo />
 
-      <ul className="mb-[40px] mt-[120%] flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-[#fff] px-4 py-8 shadow-lg">
+      <ul className="mb-[40px] mt-[120%] flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-white px-4 py-8 shadow-lg">
         {menuList.map(menu => (
           <li key={menu.title}>
             <Link
               to={menu.to}
               title={menu.title}
-              className={`flex h-10 w-10 items-center justify-center ${menu.to === pathname && 'rounded-xl border shadow-md [&>svg]:text-[#2B2B2B]'}`}
+              className={`flex h-10 w-10 items-center justify-center ${menu.to === pathname && 'rounded-xl border shadow-md [&>svg]:text-text'}`}
             >
               {menu.icon}
             </Link>
@@ -66,7 +66,7 @@ export default function NavigationBar() {
         title="마이페이지 이동"
         className="mt-auto flex h-8 w-8 items-center justify-center"
       >
-        <BsGear className={`${iconStyle} text-[#8C8C8C]`} />
+        <BsGear className={`${iconStyle} text-[#8c8c8c]`} />
       </Link>
     </nav>
   );

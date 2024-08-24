@@ -8,7 +8,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="flex min-h-[100vh] bg-[#F5F5F7]">
+    <div className="flex min-h-[100vh] bg-bg">
       <NavigationBar />
       {children}
     </div>
