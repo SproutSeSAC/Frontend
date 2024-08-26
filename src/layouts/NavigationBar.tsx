@@ -1,13 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
 import Logo from '@/layouts/Logo';
-import {
-  BsCalendar,
-  BsGear,
-  BsHouse,
-  BsPencilSquare,
-  BsPersonFillAdd,
-} from 'react-icons/bs';
+import { BsCalendar, BsGear, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
 import { PiForkKnifeBold } from 'react-icons/pi';
 
 export default function NavigationBar() {
@@ -32,13 +26,8 @@ export default function NavigationBar() {
       icon: <PiForkKnifeBold className={iconStyle} />,
     },
     {
-      title: '취업게시판 이동',
-      to: '',
-      icon: <BsPencilSquare className={iconStyle} />,
-    },
-    {
       title: '라운지 이동',
-      to: '',
+      to: '/lounge',
       icon: <BsPersonFillAdd className={iconStyle} />,
     },
   ];
@@ -64,7 +53,7 @@ export default function NavigationBar() {
       <Link
         to="/mypage"
         title="마이페이지 이동"
-        className="mt-auto flex h-8 w-8 items-center justify-center"
+        className="mt-auto flex size-8 items-center justify-center"
       >
         <BsGear className={`${iconStyle} text-[#8c8c8c]`} />
       </Link>

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from '@/layouts/Layout';
 
 import Home from '@/pages/Home';
+import Lounge from '@/pages/Lounge';
 import MyPage from '@/pages/MyPage';
 import NotFound from '@/pages/NotFound';
 import Restaurant from '@/pages/Restaurant';
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <Schedule />
+      </Layout>
+    ),
+  },
+  {
+    path: '/lounge',
+    element: (
+      <Layout>
+        <Lounge />
       </Layout>
     ),
   },
