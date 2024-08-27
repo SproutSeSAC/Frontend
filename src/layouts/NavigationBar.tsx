@@ -1,13 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
 import Logo from '@/layouts/Logo';
-import {
-  BsCalendar,
-  BsGear,
-  BsHouse,
-  BsPencilSquare,
-  BsPersonFillAdd,
-} from 'react-icons/bs';
+import { BsCalendar, BsGear, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
 import { PiForkKnifeBold } from 'react-icons/pi';
 
 export default function NavigationBar() {
@@ -32,22 +26,17 @@ export default function NavigationBar() {
       icon: <PiForkKnifeBold className={iconStyle} />,
     },
     {
-      title: '취업게시판 이동',
-      to: '',
-      icon: <BsPencilSquare className={iconStyle} />,
-    },
-    {
       title: '라운지 이동',
-      to: '',
+      to: '/lounge',
       icon: <BsPersonFillAdd className={iconStyle} />,
     },
   ];
 
   return (
-    <nav className="flex w-[100px] flex-col items-center px-5 pb-24 pt-8">
+    <nav className="sticky top-0 flex h-[100vh] w-[100px] flex-col items-center justify-between px-5 pb-[4%] pt-8">
       <Logo />
 
-      <ul className="mb-[40px] mt-[120%] flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-white px-4 py-8 shadow-lg">
+      <ul className="flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-white px-4 py-8 shadow-lg">
         {menuList.map(menu => (
           <li key={menu.title}>
             <Link
@@ -64,9 +53,11 @@ export default function NavigationBar() {
       <Link
         to="/mypage"
         title="마이페이지 이동"
-        className="mt-auto flex h-8 w-8 items-center justify-center"
+        className="flex h-8 w-8 items-center justify-center"
       >
-        <BsGear className={`${iconStyle} text-[#8c8c8c]`} />
+        <BsGear
+          className={`${iconStyle} stroke-1 ${pathname === '/mypage' ? 'text-gray1' : 'text-[#8c8c8c]'}`}
+        />
       </Link>
     </nav>
   );

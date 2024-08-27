@@ -57,9 +57,9 @@ export default function Header({ title, highlight, children }: Props) {
       <section>{children}</section>
 
       <aside className="flex items-center">
-        <BsBell className="mr-6 h-6 w-6 font-bold text-text" />
+        <BsBell className="mr-6 size-6 font-bold text-text" />
         <div className="flex aspect-square w-[50px] items-center justify-center rounded-full border bg-white">
-          <BsPerson className="h-7 w-7 text-gray2" />
+          <BsPerson className="size-7 text-gray2" />
         </div>
       </aside>
     </header>
