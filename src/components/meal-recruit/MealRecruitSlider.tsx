@@ -3,9 +3,13 @@ import { useRef } from 'react';
 import { BsChevronDown } from 'react-icons/bs';
 import Slider from 'react-slick';
 
-import MealRecruitListItem from '@/components/meal-recruit/MealRecruitListItem';
+import MealRecruitCard from '@/components/meal-recruit/MealRecruitCard';
 
-export default function MealRecruitList() {
+export default function MealRecruitSlider({
+  sideViewOpen,
+}: {
+  sideViewOpen: boolean;
+}) {
   const sliderRef = useRef<Slider | null>(null);
   const settings = {
     dots: false,
@@ -24,7 +28,7 @@ export default function MealRecruitList() {
   };
 
   return (
-    <div className="slider-container">
+    <div className={`slider-container ${!sideViewOpen && 'hidden'}`}>
       <Slider
         ref={slider => {
           sliderRef.current = slider;
@@ -33,7 +37,7 @@ export default function MealRecruitList() {
       >
         {Array.from({ length: 10 }, (_, idx) => (
           <div key={idx} className="py-2">
-            <MealRecruitListItem />
+            <MealRecruitCard />
           </div>
         ))}
       </Slider>
