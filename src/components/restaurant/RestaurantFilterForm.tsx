@@ -1,6 +1,5 @@
 import { MdOutlineRefresh } from 'react-icons/md';
 
-import Input from '@/components/common/Input';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
 
@@ -18,14 +17,13 @@ export default function RestaurantFilterForm() {
 
       <div>
         <h3 className="mb-[6px]">나의 위치 찾기</h3>
-        <Input
-          name="address"
-          width="w-full"
-          height="h-7"
-          placeholder="지번, 도로명, 건물명으로 검색"
-          size="small"
-          onChange={() => {}}
-        />
+        {/* TODO: 추후 API 명세에 따라 value값 추가 */}
+        <select name="campus" className="px-3 py-1">
+          <option value="">강북캠퍼스</option>
+          <option value="">도봉캠퍼스</option>
+          <option value="">동대문캠퍼스</option>
+          <option value="">성북캠퍼스</option>
+        </select>
       </div>
 
       {/* TODO: 추후 데이터 받아올 시, 반복문으로 구현 */}
