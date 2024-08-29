@@ -1,17 +1,17 @@
 import Slider from 'react-slick';
 
+import SliderArrow from '@/components/common/SliderArrow';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
-import StoreMenuSliderArrow from '@/components/store/StoreMenuSliderArrow';
 
-export default function StoreMenuSlider() {
+export default function StoreMenuImageSlider() {
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    prevArrow: <StoreMenuSliderArrow direction="left" onClick={() => {}} />,
-    nextArrow: <StoreMenuSliderArrow direction="right" onClick={() => {}} />,
+    prevArrow: <SliderArrow direction="left" onClick={() => {}} />,
+    nextArrow: <SliderArrow direction="right" onClick={() => {}} />,
   };
 
   return (
