@@ -3,9 +3,9 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
 
-export default function RestaurantFilterForm() {
+export default function StoreFilterForm() {
   return (
-    <form action="" className="flex w-[200px] flex-col gap-8">
+    <form action="" className="flex w-[200px] flex-shrink-0 flex-col gap-8">
       <div className="flex w-full justify-between">
         <h3 className="text-[#545B61]">Filter</h3>
         {/* TODO: 데이터 형식 확인한 후, 필터 초기화 기능 추가 */}
