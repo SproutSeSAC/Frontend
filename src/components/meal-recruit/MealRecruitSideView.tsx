@@ -1,4 +1,4 @@
-import MealRecruitList from '@/components/meal-recruit/MealRecruitList';
+import MealRecruitSlider from '@/components/meal-recruit/MealRecruitSlider';
 
 interface MealRecruitSideViewProps {
   sideViewOpen: boolean;
@@ -30,7 +30,7 @@ export default function MealRecruitSideView({
         </header>
       )}
 
-      <MealRecruitList />
+      <MealRecruitSlider sideViewOpen={sideViewOpen} />
     </section>
   );
 }

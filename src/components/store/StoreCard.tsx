@@ -1,13 +1,13 @@
 import { BsFillGeoAltFill, BsFillTelephoneFill } from 'react-icons/bs';
 
 import FavoriteButton from '@/components/common/FavoriteButton';
-import StoreMenuSlider from '@/components/store/StoreMenuSlider';
-import StoreTag from '@/components/store/StoreTag';
+import Tag from '@/components/common/Tag';
+import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
 
 export default function StoreCard() {
   return (
     <article className="w-[300px] gap-[11px]">
-      <StoreMenuSlider />
+      <StoreMenuImageSlider />
 
       <section className="mt-3 flex flex-col gap-6">
         <header className="flex items-center justify-between font-semibold">
@@ -32,8 +32,8 @@ export default function StoreCard() {
         </div>
 
         <footer className="flex gap-2">
-          <StoreTag text="제로페이" />
-          <StoreTag text="만원이하" />
+          <Tag text="제로페이" />
+          <Tag text="만원이하" />
         </footer>
       </section>
     </article>
