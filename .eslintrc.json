@@ -34,7 +34,8 @@
       {
         "endOfLine": "auto"
       }
-    ]
+    ],
+    "no-alert": "off"
   },
   "overrides": [
     {
