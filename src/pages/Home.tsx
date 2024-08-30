@@ -32,7 +32,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="flex items-center gap-4 border md:flex-col md:border-red-500">
+          <div className="flex items-center gap-4 md:flex-col">
             <CourseDDayRadialBarCard data={courseData} />
             <InterestJobDomainSkillCard />
           </div>

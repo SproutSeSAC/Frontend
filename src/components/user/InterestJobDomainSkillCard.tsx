@@ -1,10 +1,10 @@
 export default function InterestJobDomainSkillCard() {
-  const listStyle = 'flex py-4';
+  const listStyle = 'flex items-center py-2.5';
 
-  const itemStyle = 'font-semibold tracking-tight px-2 leading-5';
+  const itemStyle = 'font-semibold tracking-tight px-2 mt-1.5 leading-5';
 
   return (
-    <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl border bg-white px-6 py-2 md:w-full">
+    <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 md:w-full">
       <ul className={`${listStyle} divide-x-2`}>
         {['IT', '건설', '게임'].map(domain => (
           <li key={domain} className={itemStyle}>

@@ -22,7 +22,7 @@ export default function FavoritePostCard() {
       </p>
 
       <div className="mt-8 flex items-center gap-x-3">
-        <div className="flex size-12 items-center justify-center rounded-full border bg-gray4">
+        <div className="flex size-12 items-center justify-center rounded-full bg-gray4">
           <BsPerson />
         </div>
         <div className="flex flex-col">
