@@ -22,7 +22,7 @@ export default function NavigationBar() {
     },
     {
       title: '맛집 이동',
-      to: '/restaurants',
+      to: '/stores',
       icon: <PiForkKnifeBold className={iconStyle} />,
     },
     {

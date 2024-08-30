@@ -32,6 +32,9 @@ export default {
         skyBlue1: '#00b2e3',
         skyBlue2: '#7bd2ec',
       },
+      boxShadow: {
+        card: '2px 4px 12px 0px rgba(0, 0, 0, 0.08)',
+      },
     },
   },
   plugins: [require('tailwind-scrollbar-hide')],
