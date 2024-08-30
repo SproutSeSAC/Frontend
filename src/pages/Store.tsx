@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCollapsibleSideView } from '@/hooks/useCollapsibleSideView';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
@@ -10,7 +10,8 @@ import StoreCard from '@/components/store/StoreCard';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
 
 export default function Store() {
-  const [sideViewOpen, setSideViewOpen] = useState(true);
+  const { sideViewOpen, openSideView, closeSideView } =
+    useCollapsibleSideView();
 
   return (
     <>
@@ -47,7 +48,7 @@ export default function Store() {
 
       <MealRecruitSideView
         sideViewOpen={sideViewOpen}
-        setSideViewOpen={setSideViewOpen}
+        onClose={closeSideView}
       />
 
       {!sideViewOpen && (
@@ -55,7 +56,7 @@ export default function Store() {
           type="button"
           aria-label="사이드뷰 펼치기"
           className="mt-24 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
-          onClick={() => setSideViewOpen(true)}
+          onClick={openSideView}
         >
           <BsChevronLeft />
         </button>
