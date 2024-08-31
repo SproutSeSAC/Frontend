@@ -13,7 +13,7 @@ import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceCha
 export default function Home() {
   const courseData = {
     course: 'UXUI 디자인 과정',
-    campas: '마포캠퍼스',
+    campus: '마포캠퍼스',
     startDate: '2024.08.01',
     endDate: '2024.08.31',
   };
