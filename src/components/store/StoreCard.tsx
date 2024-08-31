@@ -1,7 +1,7 @@
 import { BsFillGeoAltFill, BsFillTelephoneFill } from 'react-icons/bs';
 
-import FavoriteButton from '@/components/common/FavoriteButton';
 import Tag from '@/components/common/Tag';
+import FavoriteButton from '@/components/common/button/FavoriteButton';
 import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
 
 export default function StoreCard() {
