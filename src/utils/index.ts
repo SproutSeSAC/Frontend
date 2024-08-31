@@ -1,1 +1,1 @@
-// 유틸 함수 모음
+export { getDDay } from '@/utils/getDDay';

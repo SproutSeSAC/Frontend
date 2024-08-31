@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       screens: {
-        sm: { max: '768px' },
+        sm: { max: '767px' },
+        md: { max: '1023px' },
       },
       fontFamily: {
         pretendard: ['Pretendard', 'sans-serif'],
@@ -36,5 +37,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
 };
