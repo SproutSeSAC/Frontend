@@ -1,8 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 
+import NavigationStoreIcon from '@/assets/icon/NavigationStoreIcon';
 import Logo from '@/layouts/Logo';
 import { BsCalendar, BsGear, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
-import { PiForkKnifeBold } from 'react-icons/pi';
 
 export default function NavigationBar() {
   const { pathname } = useLocation();
@@ -23,7 +23,7 @@ export default function NavigationBar() {
     {
       title: '맛집 이동',
       to: '/stores',
-      icon: <PiForkKnifeBold className={iconStyle} />,
+      icon: <NavigationStoreIcon className={iconStyle} />,
     },
     {
       title: '라운지 이동',
@@ -33,7 +33,7 @@ export default function NavigationBar() {
   ];
 
   return (
-    <nav className="sticky top-0 flex h-[100vh] w-[100px] flex-col items-center justify-between px-5 pb-[4%] pt-8">
+    <nav className="sticky top-0 flex h-[100vh] w-[100px] flex-col items-center justify-between px-5 pb-[4%] pt-11">
       <Logo />
 
       <ul className="flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-white px-4 py-8 shadow-lg">
@@ -55,9 +55,7 @@ export default function NavigationBar() {
         title="마이페이지 이동"
         className="flex h-8 w-8 items-center justify-center"
       >
-        <BsGear
-          className={`${iconStyle} stroke-1 ${pathname === '/mypage' ? 'text-gray1' : 'text-[#8c8c8c]'}`}
-        />
+        <BsGear className="size-6 text-gray1" />
       </Link>
     </nav>
   );

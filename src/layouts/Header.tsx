@@ -32,7 +32,7 @@ export default function Header({ title, highlight, children }: Props) {
       <section>{children}</section>
 
       <aside className="flex items-center">
-        <BsBell className="mr-6 size-6 stroke-[0.5px] font-bold text-gray1" />
+        <BsBell className="mr-6 size-6 stroke-[0.2] font-bold text-gray1" />
         <div className="flex aspect-square w-[50px] items-center justify-center rounded-full border bg-white">
           <BsPerson className="size-7 text-gray2" />
         </div>

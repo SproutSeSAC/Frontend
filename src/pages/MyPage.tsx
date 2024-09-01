@@ -61,12 +61,12 @@ export default function MyPage() {
       </section>
 
       <section className="mb-16">
-        <Title title="김철수님이 작성한 글 모음" />
+        <Title title="김철수님이 작성한 글 모음" className="mb-[10px]" />
         <PostAndCommentCollection />
       </section>
 
       <section className="mb-16 w-full flex-1">
-        <div className="flex items-center justify-between">
+        <div className="mb-[10px] flex items-center justify-between">
           <Title title="김철수님이 찜한 글 모음" />
           <Link
             to="/lounge"

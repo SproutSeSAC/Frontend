@@ -4,11 +4,13 @@ interface TitleProps {
   as?: ElementType | string;
   title: string;
   highlight?: string;
+  className?: string;
 }
 
 interface HighlightProps {
   text: string;
   highlight: string;
+  className?: string;
 }
 
 type TitleStyleObj = { [key: string]: string };
@@ -32,16 +34,17 @@ export default function Title({
   as: DynamicTitleTag = 'h2',
   title,
   highlight,
+  className,
 }: TitleProps) {
   const titleStyleObj: TitleStyleObj = {
     h1: 'text-2xl font-semibold',
-    h2: 'mb-[10px] pl-2 text-lg font-semibold',
+    h2: 'pl-2 text-lg font-semibold',
   };
 
   const titleStyle = titleStyleObj[`${DynamicTitleTag}`];
 
   return (
-    <DynamicTitleTag className={titleStyle}>
+    <DynamicTitleTag className={`${titleStyle} ${className}`}>
       {highlight ? (
         <TitleWithHighlight highlight={highlight} text={title} />
       ) : (
