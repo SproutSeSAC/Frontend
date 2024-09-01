@@ -5,6 +5,7 @@ import MainView from '@/layouts/MainView';
 import { BsChevronLeft, BsMap } from 'react-icons/bs';
 
 import Input from '@/components/common/Input';
+import Title from '@/components/common/Title';
 import MealRecruitSideView from '@/components/meal-recruit/MealRecruitSideView';
 import StoreCard from '@/components/store/StoreCard';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
@@ -30,8 +31,8 @@ export default function Store() {
           <StoreFilterForm />
 
           <div className="flex-auto">
-            <div className="flex justify-between">
-              <h1 className="mb-6 text-lg font-semibold">맛집 리스트</h1>
+            <div className="mb-6 flex items-center justify-between">
+              <Title title="맛집 리스트" />
               <div className="flex size-[30px] items-center justify-center rounded-full bg-white">
                 <BsMap className="text-gray2" />
               </div>
