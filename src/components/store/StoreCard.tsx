@@ -1,13 +1,30 @@
-import { BsFillGeoAltFill, BsFillTelephoneFill } from 'react-icons/bs';
+import {
+  BsClockFill,
+  BsFillGeoAltFill,
+  BsFillTelephoneFill,
+} from 'react-icons/bs';
 
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
 
-export default function StoreCard() {
+// TODO: phoneNumber 부분은 API Response 구조 보고 빼셔도 됩니다.
+interface StoreCardProps {
+  width: string;
+  height: string;
+  phoneNumber?: string;
+  showFavoriteButton?: boolean;
+}
+
+export default function StoreCard({
+  width,
+  height,
+  phoneNumber,
+  showFavoriteButton = true,
+}: StoreCardProps) {
   return (
-    <article className="w-[300px] gap-[11px]">
-      <StoreMenuImageSlider />
+    <article className={`${width} gap-[11px]`}>
+      <StoreMenuImageSlider width={width} height={height} />
 
       <section className="mt-3 flex flex-col gap-6">
         <header className="flex items-center justify-between font-semibold">
@@ -15,7 +32,9 @@ export default function StoreCard() {
             <h2 className="text-lg">식당 이름</h2>
             <span className="text-gray2">양식</span>
           </div>
-          <FavoriteButton size={18} isFavorite={false} onClick={() => {}} />
+          {showFavoriteButton && (
+            <FavoriteButton size={18} isFavorite={false} onClick={() => {}} />
+          )}
         </header>
 
         <div className="flex flex-col gap-4">
@@ -24,11 +43,17 @@ export default function StoreCard() {
             <span className="text-gray1">서울 용산구 이촌로64길 61</span>
           </p>
           <p className="flex items-center">
-            <BsFillTelephoneFill className="mr-[10px] text-gray2" size={15} />
+            <BsClockFill className="mr-[10px] text-gray2" size={15} />
             <span className="text-gray1">영업 중</span>
             <span className="mx-1 text-gray3">|</span>
             <span className="text-gray1">15:00에 브레이크타임</span>
           </p>
+          {phoneNumber && (
+            <p className="flex items-center">
+              <BsFillTelephoneFill className="mr-[10px] text-gray2" size={15} />
+              <span className="text-gray1">{phoneNumber}</span>
+            </p>
+          )}
         </div>
 
         <footer className="flex gap-2">

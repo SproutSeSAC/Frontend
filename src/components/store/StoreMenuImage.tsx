@@ -1,13 +1,15 @@
 interface FoodImageProps {
+  width: string;
+  height: string;
   src: string;
 }
 
-export default function StoreMenuImage({ src }: FoodImageProps) {
+export default function StoreMenuImage({ width, height, src }: FoodImageProps) {
   return (
     <img
       src={src}
       alt="식당 대표 메뉴 사진"
-      className="size-[300px] rounded object-cover"
+      className={`${width} ${height} rounded object-cover`}
     />
   );
 }
