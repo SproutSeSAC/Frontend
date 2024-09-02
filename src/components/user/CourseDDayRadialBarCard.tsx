@@ -1,4 +1,5 @@
 import { getDDay } from '@/utils';
+import Chart from 'react-apexcharts';
 
 interface Props {
   data: {
@@ -14,12 +15,60 @@ export default function MyCourseDDayRadialBarCard({
 }: Props) {
   const DDay = getDDay(endDate);
 
-  return (
-    <div className="flex h-[190px] items-center gap-4 rounded-3xl bg-oliveGreen1 px-5 py-4 md:w-full lg:max-w-[380px]">
-      {/* 차트로 변경 */}
-      <div className="size-[150px] rounded-full bg-white" />
+  const options = {
+    labels: ['교육과정 진행률'],
+    colors: ['#ffffff'],
+    plotOptions: {
+      radialBar: {
+        startAngle: -40,
+        endAngle: 320,
+        offsetX: 0,
+        offsetY: 3,
+        hollow: {
+          size: '100%',
+        },
+        track: {
+          show: true,
+          background: '#d9d9d9',
+          opacity: 0.4,
+          strokeWidth: '134',
+          margin: -28,
+          dropShadow: {
+            enabled: false,
+          },
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            offsetY: 10,
+            show: true,
+            fontSize: '24px',
+            fontWeight: 600,
+            color: '#ffffff',
+            formatter(val: number) {
+              return `${val}%`;
+            },
+          },
+        },
+      },
+    },
+  };
 
-      <div className="flex flex-col">
+  const series = [45];
+
+  return (
+    <div className="md:border-indigo flex h-[190px] min-w-[330px] items-center gap-4 rounded-3xl bg-oliveGreen1 md:w-full md:border lg:w-[380px] [&>div:first-child]:w-[180px]">
+      <Chart
+        type="radialBar"
+        options={options}
+        series={series}
+        width={200}
+        height={200}
+      />
+
+      <div className="flex flex-col py-4 pr-5">
         <div className="mb-4 self-start rounded-lg bg-white px-4">
           <span className="text-2xl font-bold text-oliveGreen1">D{DDay}</span>
         </div>
