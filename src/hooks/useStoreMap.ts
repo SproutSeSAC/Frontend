@@ -65,7 +65,6 @@ const useStoreMap = (mapOption: UseStoreMapOption) => {
       map: storeMapInstanceRef.current,
     });
 
-    // NOTE - 방법 고려
     naver.maps.Event.addListener(marker, 'click', () => setIsModalOpen(true));
 
     markerListRef.current.push(marker);
