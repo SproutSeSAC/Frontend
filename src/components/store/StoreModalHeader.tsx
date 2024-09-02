@@ -1,6 +1,6 @@
 import { BsChevronLeft } from 'react-icons/bs';
 
-import FavoriteButton from '@/components/common/FavoriteButton';
+import FavoriteButton from '@/components/common/button/FavoriteButton';
 
 interface StoreModalHeaderProps {
   onClose: () => void;

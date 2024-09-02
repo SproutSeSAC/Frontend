@@ -1,4 +1,4 @@
-import FavoriteButton from '@/components/common/FavoriteButton';
+import FavoriteButton from '@/components/common/button/FavoriteButton';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
 
 export default function StoreListSliderCard() {
