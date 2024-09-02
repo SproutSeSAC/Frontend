@@ -34,7 +34,7 @@ export default function Store() {
           <StoreFilterForm />
 
           <div className="flex-auto">
-            <div className="flex justify-between">
+            <div className="mb-6 flex justify-between">
               <Title title="맛집 리스트" />
               <button
                 type="button"
