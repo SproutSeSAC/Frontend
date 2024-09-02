@@ -30,8 +30,7 @@
     "react-router-dom": "^6.26.1",
     "tailwind-scrollbar-hide": "^1.1.7",
     "react-slick": "^0.30.2",
-    "slick-carousel": "^1.8.1",
-    "tailwind-scrollbar-hide": "^1.1.7"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
