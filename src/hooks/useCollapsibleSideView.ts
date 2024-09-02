@@ -7,9 +7,13 @@ export function useCollapsibleSideView() {
   // 이런 경우에 지도는 첫 렌더링때 불러왔던 width값과, center값 등 위치값이 달라지기 때문에,
   // resize 이벤트를 걸어주어 지도 짤림 현상과 center가 맞지 않는 현상을 방지합니다.
   useEffect(() => {
-    setTimeout(() => {
+    const resizeTimeout = setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
     }, 100);
+
+    return () => {
+      clearTimeout(resizeTimeout);
+    };
   }, [sideViewOpen]);
 
   const openSideView = () => setSideViewOpen(true);
