@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { useCollapsibleSideView } from '@/hooks/useCollapsibleSideView';
 
 import Header from '@/layouts/Header';
@@ -13,6 +15,7 @@ import StoreFilterForm from '@/components/store/StoreFilterForm';
 export default function Store() {
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -31,16 +34,22 @@ export default function Store() {
           <StoreFilterForm />
 
           <div className="flex-auto">
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex justify-between">
               <Title title="맛집 리스트" />
-              <div className="flex size-[30px] items-center justify-center rounded-full bg-white">
+              <button
+                type="button"
+                className="flex size-[30px] items-center justify-center rounded-full bg-white"
+                aria-label="식당 상세보기로 이동"
+                // TODO: 후에 라우팅 수정
+                onClick={() => navigate('/stores/1')}
+              >
                 <BsMap className="text-gray2" />
-              </div>
+              </button>
             </div>
 
             <div className="flex flex-wrap justify-around gap-9 text-xs">
               {Array.from({ length: 12 }, (_, idx) => (
-                <StoreCard key={idx} />
+                <StoreCard key={idx} width="w-[300px]" height="h-[300px]" />
               ))}
             </div>
           </div>

@@ -3,7 +3,15 @@ import Slider from 'react-slick';
 import SliderArrow from '@/components/common/SliderArrow';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
 
-export default function StoreMenuImageSlider() {
+interface StoreMenuImageSliderProps {
+  width: string;
+  height: string;
+}
+
+export default function StoreMenuImageSlider({
+  width,
+  height,
+}: StoreMenuImageSliderProps) {
   const settings = {
     dots: false,
     infinite: true,
@@ -17,8 +25,16 @@ export default function StoreMenuImageSlider() {
   return (
     <div className="slider-container">
       <Slider {...settings}>
-        <StoreMenuImage src="src/assets/images/food.jpg" />
-        <StoreMenuImage src="src/assets/images/food2.jpg" />
+        <StoreMenuImage
+          src="/src/assets/images/food.jpg"
+          width={width}
+          height={height}
+        />
+        <StoreMenuImage
+          src="/src/assets/images/food2.jpg"
+          width={width}
+          height={height}
+        />
       </Slider>
     </div>
   );

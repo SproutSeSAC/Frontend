@@ -15,6 +15,7 @@ import NotFound from '@/pages/NotFound';
 import Schedule from '@/pages/Schedule';
 import SignUp from '@/pages/SignUp';
 import Store from '@/pages/Store';
+import StoreDetail from '@/pages/StoreDetail';
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,15 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: '/stores/:storeId',
+    element: (
+      <Layout>
+        <StoreDetail />
+      </Layout>
+    ),
+  },
+
   {
     path: '/schedule',
     element: (

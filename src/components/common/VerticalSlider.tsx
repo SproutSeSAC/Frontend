@@ -5,11 +5,13 @@ import Slider from 'react-slick';
 
 interface VerticalSliderProps {
   sideViewOpen: boolean;
+  slidesToShow: number;
   children: React.ReactNode;
 }
 
 export default function VerticalSlider({
   sideViewOpen,
+  slidesToShow,
   children,
 }: VerticalSliderProps) {
   const sliderRef = useRef<Slider | null>(null);
@@ -18,7 +20,7 @@ export default function VerticalSlider({
     infinite: true,
     vertical: true,
     verticalSwiping: true,
-    slidesToShow: 3,
+    slidesToShow,
     slidesToScroll: 1,
     arrows: false,
   };
