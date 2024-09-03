@@ -22,11 +22,45 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <Layout>
-        <Home />
-      </Layout>
-    ),
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: 'announcement',
+        element: <Announcement />,
+      },
+      {
+        path: 'mypage',
+        element: <MyPage />,
+      },
+      {
+        path: 'stores',
+        element: <Store />,
+      },
+      {
+        path: 'stores/:storeId',
+        element: <StoreDetail />,
+      },
+      {
+        path: 'schedule',
+        element: <Schedule />,
+      },
+      {
+        path: 'lounge',
+        element: <Lounge />,
+        children: [
+          {
+            path: 'post/:postId',
+          },
+          {
+            path: 'post',
+          },
+        ],
+      },
+    ],
   },
   {
     path: '/login',
@@ -35,63 +69,6 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignUp />,
-  },
-  {
-    path: '/announcement',
-    element: (
-      <Layout>
-        <Announcement />
-      </Layout>
-    ),
-  },
-  {
-    path: '/mypage',
-    element: (
-      <Layout>
-        <MyPage />
-      </Layout>
-    ),
-  },
-  {
-    path: '/stores',
-    element: (
-      <Layout>
-        <Store />
-      </Layout>
-    ),
-  },
-  {
-    path: '/stores/:storeId',
-    element: (
-      <Layout>
-        <StoreDetail />
-      </Layout>
-    ),
-  },
-
-  {
-    path: '/schedule',
-    element: (
-      <Layout>
-        <Schedule />
-      </Layout>
-    ),
-  },
-  {
-    path: '/lounge',
-    element: (
-      <Layout>
-        <Lounge />
-      </Layout>
-    ),
-    children: [
-      {
-        path: 'post/:postId',
-      },
-      {
-        path: 'post',
-      },
-    ],
   },
   {
     path: '*',
