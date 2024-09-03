@@ -5,12 +5,10 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 
 import Title from '@/components/common/Title';
-import CameraButton from '@/components/common/button/CameraButton';
-import EditButton from '@/components/common/button/EditButton';
 import Faq from '@/components/faq/Faq';
 import FavoritePostCard from '@/components/user/FavoritePostCard';
 import PostAndCommentCollection from '@/components/user/PostAndCommentCollection';
-import UserImage from '@/components/user/UserImage';
+import UserNameImageCard from '@/components/user/UserNameImageCard';
 
 export default function MyPage() {
   const userInfoList = [
@@ -22,22 +20,9 @@ export default function MyPage() {
   return (
     <MainView>
       <Header title="회원 정보 수정" />
+
       <section className="mb-16 flex gap-4">
-        <div className="relative flex w-[45%] max-w-[305px] items-center gap-8 rounded-xl bg-oliveGreen1 px-6 py-10">
-          <UserImage className="size-[100px] p-5">
-            <CameraButton onClick={() => {}} />
-          </UserImage>
-
-          <div className="flex flex-col gap-2">
-            <span className="text-2xl font-medium text-white">김철수</span>
-            <span className="text-oliveGreen3">@새싹 김철수</span>
-          </div>
-
-          <EditButton
-            label="프로필 수정 버튼"
-            className="absolute right-3 top-3 text-white"
-          />
-        </div>
+        <UserNameImageCard />
 
         <ul className="flex w-[55%] max-w-[405px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
           {userInfoList.map(info => (
