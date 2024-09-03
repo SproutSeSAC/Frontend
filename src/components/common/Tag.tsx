@@ -5,6 +5,7 @@ interface TagProps {
   color?: 'black' | 'green' | 'gray' | 'olivegreen';
   size?: 'small' | 'medium' | 'big';
   onDeleteClick?: () => void;
+  className?: string;
 }
 
 export default function Tag({
@@ -12,6 +13,7 @@ export default function Tag({
   color = 'black',
   size = 'small',
   onDeleteClick,
+  className,
 }: TagProps) {
   const styleBySize = {
     small: 'text-xs px-1.5 rounded',
@@ -31,7 +33,9 @@ export default function Tag({
   const colorStyle = styleByColor[color];
 
   return (
-    <div className={`flex items-center py-0.5 ${tagStyle} ${colorStyle}`}>
+    <div
+      className={`flex min-w-fit items-center py-0.5 ${tagStyle} ${colorStyle} ${className}`}
+    >
       <span>{text}</span>
 
       {onDeleteClick && (
