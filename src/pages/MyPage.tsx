@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { faqList } from '@/dummy/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { BsCameraFill, BsPerson } from 'react-icons/bs';
 
 import Title from '@/components/common/Title';
+import CameraButton from '@/components/common/button/CameraButton';
 import EditButton from '@/components/common/button/EditButton';
 import Faq from '@/components/faq/Faq';
 import FavoritePostCard from '@/components/user/FavoritePostCard';
 import PostAndCommentCollection from '@/components/user/PostAndCommentCollection';
+import UserImage from '@/components/user/UserImage';
 
 export default function MyPage() {
   const userInfoList = [
@@ -17,22 +18,15 @@ export default function MyPage() {
     { label: '캠퍼스', value: '도봉 캠퍼스' },
     { label: '담당 교육과정', value: '데이터 드리븐 기획자 과정' },
   ];
+
   return (
     <MainView>
       <Header title="회원 정보 수정" />
       <section className="mb-16 flex gap-4">
         <div className="relative flex w-[45%] max-w-[305px] items-center gap-8 rounded-xl bg-oliveGreen1 px-6 py-10">
-          <div className="relative flex size-24 items-center justify-center rounded-full bg-white">
-            <BsPerson className="size-10 text-gray1" />
-
-            <button
-              type="button"
-              aria-label="프로필 이미지 수정하기"
-              className="absolute bottom-0 right-0 flex size-7 items-center justify-center rounded-full bg-vividGreen1 p-1"
-            >
-              <BsCameraFill className="size-4 text-white" />
-            </button>
-          </div>
+          <UserImage className="size-[100px] p-5">
+            <CameraButton onClick={() => {}} />
+          </UserImage>
 
           <div className="flex flex-col gap-2">
             <span className="text-2xl font-medium text-white">김철수</span>

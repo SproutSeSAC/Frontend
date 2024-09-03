@@ -1,6 +1,5 @@
-import { BsPerson } from 'react-icons/bs';
-
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import UserImage from '@/components/user/UserImage';
 
 export default function FavoritePostCard() {
   return (
@@ -22,9 +21,7 @@ export default function FavoritePostCard() {
       </p>
 
       <div className="mt-8 flex items-center gap-x-3">
-        <div className="flex size-12 items-center justify-center rounded-full bg-gray4">
-          <BsPerson />
-        </div>
+        <UserImage className="size-12 p-3" />
         <div className="flex flex-col">
           <span className="text-sm">박민수</span>
           <span className="text-xs opacity-60">@minsupark5452</span>
