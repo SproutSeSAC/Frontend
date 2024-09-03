@@ -6,8 +6,8 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { BsChevronLeft, BsMap } from 'react-icons/bs';
 
-import Input from '@/components/common/Input';
 import Title from '@/components/common/Title';
+import SearchInput from '@/components/common/input/SearchInput';
 import MealRecruitSideView from '@/components/meal-recruit/MealRecruitSideView';
 import StoreCard from '@/components/store/StoreCard';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
@@ -21,7 +21,7 @@ export default function Store() {
     <>
       <MainView>
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
-          <Input
+          <SearchInput
             name="search"
             placeholder="검색어를 입력해 주세요"
             width="w-[422px]"
