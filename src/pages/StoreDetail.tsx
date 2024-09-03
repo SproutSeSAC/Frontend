@@ -1,5 +1,4 @@
-import { useCollapsibleSideView } from '@/hooks/useCollapsibleSideView';
-
+import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { BsChevronLeft } from 'react-icons/bs';

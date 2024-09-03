@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useCollapsibleSideView } from '@/hooks/useCollapsibleSideView';
-
+import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { BsChevronLeft, BsMap } from 'react-icons/bs';

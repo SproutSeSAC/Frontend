@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export function useCollapsibleSideView() {
+export const useCollapsibleSideView = () => {
   const [sideViewOpen, setSideViewOpen] = useState(true);
 
   // sideView toggle로 인해서 지도의 부모 컴포넌트의 width가 변하게 됩니다.
@@ -26,4 +26,4 @@ export function useCollapsibleSideView() {
     closeSideView,
     toggleSideView,
   };
-}
+};
