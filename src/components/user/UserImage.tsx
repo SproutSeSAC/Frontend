@@ -13,7 +13,7 @@ export default function UserImage({
 }: UserImageProps) {
   return (
     <div
-      className={`relative flex flex-col items-center justify-center rounded-full border bg-oliveGreen3 ${className}`}
+      className={`group relative flex flex-col items-center justify-center rounded-full border bg-oliveGreen3 ${className}`}
     >
       <BsPerson className="h-full w-full text-oliveGreen1" />
       {children}
