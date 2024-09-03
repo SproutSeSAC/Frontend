@@ -2,8 +2,7 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import useStoreMap from '@/hooks/useStoreMap';
-
+import { useStoreMap } from '@/hooks';
 import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/StoreModal';

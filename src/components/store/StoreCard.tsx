@@ -57,8 +57,8 @@ export default function StoreCard({
         </div>
 
         <footer className="flex gap-2">
-          <Tag text="제로페이" />
-          <Tag text="만원이하" />
+          <Tag text="# 제로페이" />
+          <Tag text="# 만원이하" />
         </footer>
       </section>
     </article>

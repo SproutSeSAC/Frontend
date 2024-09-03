@@ -1,10 +1,9 @@
-import { useCollapsibleSideView } from '@/hooks/useCollapsibleSideView';
-
+import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { BsChevronLeft } from 'react-icons/bs';
 
-import Input from '@/components/common/Input';
+import SearchInput from '@/components/common/input/SearchInput';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
 import StoreListSideView from '@/components/store/StoreListSideView';
 import StoreMap from '@/components/store/StoreMap';
@@ -17,7 +16,7 @@ export default function StoreDetail() {
     <>
       <MainView>
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
-          <Input
+          <SearchInput
             name="search"
             placeholder="검색어를 입력해 주세요"
             width="w-[422px]"

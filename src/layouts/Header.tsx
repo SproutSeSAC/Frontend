@@ -2,9 +2,11 @@ import { ReactNode } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import { BsBell, BsPerson } from 'react-icons/bs';
+import HeaderMenu from '@/layouts/HeaderMenu';
+import { BsBell } from 'react-icons/bs';
 
 import Title from '@/components/common/Title';
+import UserImage from '@/components/user/UserImage';
 
 interface Props {
   title: string;
@@ -32,10 +34,15 @@ export default function Header({ title, highlight, children }: Props) {
       <section>{children}</section>
 
       <aside className="flex items-center">
-        <BsBell className="mr-6 size-6 stroke-[0.2] font-bold text-gray1" />
-        <div className="flex aspect-square w-[50px] items-center justify-center rounded-full border bg-white">
-          <BsPerson className="size-7 text-gray2" />
+        <div className="relative mr-6 p-1">
+          <BsBell className="size-6 stroke-[0.2] font-bold text-gray1" />
+          {/* 새로운 알림 시 표시 */}
+          <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
         </div>
+
+        <UserImage className="size-[50px] p-3">
+          <HeaderMenu />
+        </UserImage>
       </aside>
     </header>
   );

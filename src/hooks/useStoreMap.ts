@@ -6,7 +6,7 @@ interface UseStoreMapOption {
   zoom: number;
 }
 
-const useStoreMap = (mapOption: UseStoreMapOption) => {
+export const useStoreMap = (mapOption: UseStoreMapOption) => {
   /**
    * storeMapRef: 단순 DOM 요소 참조용. Map이 렌더링될 위치만 제어합니다.
    * storeMapInstanceRef: Map에 행해지는 모든 action은 이 instance로만 제어합니다.
@@ -80,5 +80,3 @@ const useStoreMap = (mapOption: UseStoreMapOption) => {
     addMarker,
   };
 };
-
-export default useStoreMap;
