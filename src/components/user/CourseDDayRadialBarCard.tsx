@@ -59,7 +59,7 @@ export default function MyCourseDDayRadialBarCard({
   const series = [45];
 
   return (
-    <div className="md:border-indigo flex h-[190px] min-w-[330px] items-center gap-4 rounded-3xl bg-oliveGreen1 md:w-full md:border lg:w-[380px] [&>div:first-child]:w-[180px]">
+    <div className="flex h-[190px] min-w-[330px] items-center gap-4 rounded-3xl bg-oliveGreen1 shadow-card md:w-full lg:w-[380px] [&>div:first-child]:w-[180px]">
       <Chart
         type="radialBar"
         options={options}

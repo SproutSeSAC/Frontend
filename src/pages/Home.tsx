@@ -4,7 +4,9 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
+import ScrollContainer from '@/components/common/ScrollContainer';
 import Title from '@/components/common/Title';
+import LoungePostCard from '@/components/lounge/LoungePostCard';
 import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
 import InterestJobDomainSkillCard from '@/components/user/InterestJobDomainSkillCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
@@ -43,6 +45,12 @@ export default function Home() {
               라운지 바로가기
             </Link>
           </div>
+
+          <ScrollContainer>
+            {[1, 2, 3, 4].map(card => (
+              <LoungePostCard key={card} />
+            ))}
+          </ScrollContainer>
         </section>
       </MainView>
 

@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       screens: {
-        sm: { max: '767px' },
         md: { max: '1023px' },
+        sm: { max: '767px' },
       },
       fontFamily: {
         pretendard: ['Pretendard', 'sans-serif'],
