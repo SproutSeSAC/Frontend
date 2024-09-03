@@ -5,13 +5,17 @@ export default function InterestJobDomainSkillCard() {
 
   return (
     <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 md:w-full">
-      <ul className={`${listStyle} divide-x-2`}>
+      <ul className={`${listStyle} gap-1.5`}>
         {['IT', '건설', '게임'].map(domain => (
-          <li key={domain} className={itemStyle}>
+          <li
+            key={domain}
+            className={`${itemStyle} rounded-[4px] bg-gray4 px-3.5 py-0.5`}
+          >
             {domain}
           </li>
         ))}
       </ul>
+
       <ul className={listStyle}>
         {['서비스 기획', '데이터 분석'].map(interestJob => (
           <li key={interestJob} className={itemStyle}>
