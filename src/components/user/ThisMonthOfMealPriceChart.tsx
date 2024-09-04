@@ -193,7 +193,7 @@ export default function ThisMonthOfMealPriceChart() {
   ];
 
   return (
-    <div className="my-6 h-[216px] rounded-2xl bg-white px-6 pb-10 pt-5">
+    <div className="my-6 h-[216px] rounded-2xl bg-white px-6 pb-10 pt-5 shadow-card">
       <header className="mb-2 flex justify-between">
         <h2 className="font-semibold">이번달 식대 금액</h2>
         <div className="flex items-center">

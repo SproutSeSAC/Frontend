@@ -2,9 +2,10 @@ import { BsX } from 'react-icons/bs';
 
 interface TagProps {
   text: string;
-  color?: 'black' | 'green' | 'gray';
+  color?: 'black' | 'green' | 'gray' | 'olivegreen';
   size?: 'small' | 'medium' | 'big';
   onDeleteClick?: () => void;
+  className?: string;
 }
 
 export default function Tag({
@@ -12,6 +13,7 @@ export default function Tag({
   color = 'black',
   size = 'small',
   onDeleteClick,
+  className,
 }: TagProps) {
   const styleBySize = {
     small: 'text-xs px-1.5 rounded',
@@ -20,7 +22,8 @@ export default function Tag({
   };
 
   const styleByColor = {
-    green: 'bg-oliveGreen1 text-white',
+    green: 'bg-vividGreen1 text-gray4 ',
+    olivegreen: 'bg-oliveGreen1 text-white',
     black: 'bg-text text-gray3',
     gray: 'bg-gray4 text-text',
   };
@@ -30,7 +33,9 @@ export default function Tag({
   const colorStyle = styleByColor[color];
 
   return (
-    <div className={`flex items-center py-0.5 ${tagStyle} ${colorStyle}`}>
+    <div
+      className={`flex min-w-fit items-center py-0.5 ${tagStyle} ${colorStyle} ${className}`}
+    >
       <span>{text}</span>
 
       {onDeleteClick && (

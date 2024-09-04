@@ -4,6 +4,7 @@ import { faqList } from '@/dummy/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 
+import ScrollContainer from '@/components/common/ScrollContainer';
 import Title from '@/components/common/Title';
 import Faq from '@/components/faq/Faq';
 import FavoritePostCard from '@/components/user/FavoritePostCard';
@@ -54,13 +55,12 @@ export default function MyPage() {
             전체보기
           </Link>
         </div>
-        <div className="overflow-x-scroll scrollbar-hide">
-          <ul className="flex max-w-0 flex-1 gap-6">
-            {[1, 2, 3, 4, 5, 6].map(card => (
-              <FavoritePostCard key={card} />
-            ))}
-          </ul>
-        </div>
+
+        <ScrollContainer>
+          {[1, 2, 3, 4, 5, 6].map(card => (
+            <FavoritePostCard key={card} />
+          ))}
+        </ScrollContainer>
       </section>
 
       <section>
