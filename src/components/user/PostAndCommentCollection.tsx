@@ -34,13 +34,15 @@ export default function PostAndCommentCollection() {
       createdAt: '2024.08.13',
       number: 10,
       type: '한끼팟',
-      title: '을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다!',
+      title:
+        '을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다! 을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다! 을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다!',
     },
     {
       createdAt: '2024.08.13',
       number: 1023,
       type: '스터디 모집',
-      title: '을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다!',
+      title:
+        '을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다! 을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다!',
     },
     {
       createdAt: '2024.08.13',
@@ -123,7 +125,9 @@ export default function PostAndCommentCollection() {
 
               <TableDataCell>{cell.type}</TableDataCell>
 
-              <TableDataCell>{cell.title}</TableDataCell>
+              <TableDataCell className="max-w-[0px] overflow-hidden truncate">
+                {cell.title}
+              </TableDataCell>
 
               <TableDataCell className="text-center">
                 <EyeButton />

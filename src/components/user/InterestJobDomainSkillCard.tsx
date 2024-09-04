@@ -27,7 +27,7 @@ export default function InterestJobDomainSkillCard() {
         className="absolute -top-[38px] right-2 text-gray2"
         onClick={toggleModal}
       />
-      <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 md:w-full">
+      <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 shadow-card md:w-full">
         <ul className={`${listStyle} gap-1.5`}>
           {userInterestList.domainList.map(domain => (
             <li key={domain}>
@@ -86,7 +86,7 @@ export default function InterestJobDomainSkillCard() {
                 <li key={interestJob}>
                   <Tag
                     text={interestJob}
-                    color="green"
+                    color="olivegreen"
                     size="medium"
                     onDeleteClick={() => {}}
                   />
