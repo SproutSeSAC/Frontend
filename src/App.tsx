@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Layout from '@/layouts/Layout';
+import LoungeLayout from '@/layouts/LoungeLayout';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 
@@ -10,6 +11,8 @@ import Announcement from '@/pages/Announcement';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Lounge from '@/pages/Lounge';
+import LoungeDetail from '@/pages/LoungeDetail';
+import LoungeEditor from '@/pages/LoungeEditor';
 import MyPage from '@/pages/MyPage';
 import NotFound from '@/pages/NotFound';
 import Schedule from '@/pages/Schedule';
@@ -50,13 +53,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'lounge',
-        element: <Lounge />,
+        element: <LoungeLayout />,
         children: [
           {
-            path: 'post/:postId',
+            index: true,
+            element: <Lounge />,
           },
           {
-            path: 'post',
+            path: 'post/:postId',
+            element: <LoungeDetail />,
+          },
+          {
+            path: 'editor',
+            element: <LoungeEditor />,
           },
         ],
       },
