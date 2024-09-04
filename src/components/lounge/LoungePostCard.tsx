@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
@@ -10,7 +12,10 @@ export default function LoungePostCard() {
   ];
 
   return (
-    <div className="flex h-[280px] w-[275px] flex-col items-start justify-between rounded-xl bg-white p-4 shadow-card">
+    <Link
+      to="/lounge/post/1" // 변경
+      className="flex h-[280px] w-[275px] flex-col items-start justify-between rounded-xl bg-white p-4 shadow-card"
+    >
       <div className="flex w-full items-center justify-between">
         <Tag color="green" size="medium" text="# 프로젝트" />
         <FavoriteButton isFavorite={false} onClick={() => {}} size={20} />
@@ -43,6 +48,6 @@ export default function LoungePostCard() {
           </li>
         ))}
       </ul>
-    </div>
+    </Link>
   );
 }
