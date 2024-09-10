@@ -1,14 +1,12 @@
+import imgUrl from '@/assets/images/food.jpg';
+
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
 
 export default function StoreListSliderCard() {
   return (
     <article className="flex w-full gap-[11px]">
-      <StoreMenuImage
-        width="w-[147px]"
-        height="h-[147px]"
-        src="/src/assets/images/food.jpg"
-      />
+      <StoreMenuImage width="w-[147px]" height="h-[147px]" src={imgUrl} />
 
       <div className="flex w-full flex-col gap-4">
         <header className="font-semibold">

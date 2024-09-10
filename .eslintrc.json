@@ -26,7 +26,11 @@
         "js": "never",
         "jsx": "never",
         "ts": "never",
-        "tsx": "never"
+        "tsx": "never",
+        "png": "always",
+        "svg": "always",
+        "jpg": "always",
+        "jpeg": "always"
       }
     ],
     "import/order": "off",
