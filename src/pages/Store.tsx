@@ -1,9 +1,13 @@
+import { useRef } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
+// import useObserver from '@/hooks/useObserver';
 import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { BsChevronLeft, BsMap } from 'react-icons/bs';
+import { BsMap } from 'react-icons/bs';
+import { FaChevronLeft } from 'react-icons/fa';
 
 import Title from '@/components/common/Title';
 import SearchInput from '@/components/common/input/SearchInput';
@@ -15,6 +19,23 @@ export default function Store() {
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
   const navigate = useNavigate();
+
+  const observeRef = useRef(null);
+
+  // TODO : 무한스크롤 구현부
+  // const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
+  //   useGetInfiniteStoreCardList({});
+
+  // const onIntersect = useCallback(
+  //   (entry: IntersectionObserverEntry) => {
+  //     if (entry.isIntersecting) {
+  //       if (hasNextPage) fetchNextPage();
+  //     }
+  //   },
+  //   [fetchNextPage, hasNextPage],
+  // );
+
+  // useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
 
   return (
     <>
@@ -46,10 +67,11 @@ export default function Store() {
               </button>
             </div>
 
-            <div className="flex flex-wrap justify-around gap-9 text-xs">
+            <div className="flex flex-wrap justify-around gap-9 text-base">
               {Array.from({ length: 12 }, (_, idx) => (
-                <StoreCard key={idx} width="w-[300px]" height="h-[300px]" />
+                <StoreCard key={idx} width="w-[290px]" height="h-[290px]" />
               ))}
+              <div ref={observeRef} />
             </div>
           </div>
         </section>
@@ -64,10 +86,10 @@ export default function Store() {
         <button
           type="button"
           aria-label="사이드뷰 펼치기"
-          className="mt-24 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
+          className="fixed right-0 mt-24 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
           onClick={openSideView}
         >
-          <BsChevronLeft />
+          <FaChevronLeft />
         </button>
       )}
     </>

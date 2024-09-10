@@ -11,7 +11,7 @@ export default function MealRecruitSlider({
   return (
     <VerticalSlider sideViewOpen={sideViewOpen} slidesToShow={3}>
       {Array.from({ length: 10 }, (_, idx) => (
-        <div key={idx} className="py-2">
+        <div key={idx} className="py-4">
           <MealRecruitCard />
         </div>
       ))}

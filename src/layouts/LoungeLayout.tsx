@@ -1,10 +1,16 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import Header from '@/layouts/Header';
+import Header from './Header';
+
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
+import LoungeSideView from '@/components/lounge/LoungeSideView';
+import LoungeTabNavigation from '@/components/lounge/LoungeTabNavigation';
+
 export default function LoungeLayout() {
+  const location = useLocation();
+
   return (
     <>
       <MainView>
@@ -12,10 +18,12 @@ export default function LoungeLayout() {
           title="나에게 딱 맞는 프로젝트를 만나보세요!"
           highlight="프로젝트"
         />
-
+        {!location.pathname.includes('/lounge/post') && <LoungeTabNavigation />}
         <Outlet />
       </MainView>
-      <SideView>사이드뷰</SideView>
+      <SideView>
+        <LoungeSideView />
+      </SideView>
     </>
   );
 }

@@ -12,7 +12,6 @@ import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Lounge from '@/pages/Lounge';
 import LoungeDetail from '@/pages/LoungeDetail';
-import LoungeEditor from '@/pages/LoungeEditor';
 import MyPage from '@/pages/MyPage';
 import NotFound from '@/pages/NotFound';
 import Schedule from '@/pages/Schedule';
@@ -62,10 +61,6 @@ const router = createBrowserRouter([
           {
             path: 'post/:postId',
             element: <LoungeDetail />,
-          },
-          {
-            path: 'editor',
-            element: <LoungeEditor />,
           },
         ],
       },

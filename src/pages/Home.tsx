@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import { mockData } from './Lounge';
+
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
@@ -48,8 +50,8 @@ export default function Home() {
           </div>
 
           <ScrollContainer>
-            {[1, 2, 3, 4].map(card => (
-              <LoungePostCard key={card} />
+            {mockData.map(card => (
+              <LoungePostCard key={card.id} card={card} />
             ))}
           </ScrollContainer>
         </section>
