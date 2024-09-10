@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import imgUrl from '@/assets/images/faq.png';
 import { faqList } from '@/dummy/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
@@ -76,7 +77,7 @@ export default function MyPage() {
           </ul>
 
           <img
-            src="src/assets/images/faq.png"
+            src={imgUrl}
             className="mb-auto w-2/5 object-contain"
             alt="faq 관련 이미지"
           />

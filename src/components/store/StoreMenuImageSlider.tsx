@@ -1,3 +1,4 @@
+import imgUrl from '@/assets/images/food.jpg';
 import Slider from 'react-slick';
 
 import SliderArrow from '@/components/common/SliderArrow';
@@ -25,16 +26,8 @@ export default function StoreMenuImageSlider({
   return (
     <div className="slider-container">
       <Slider {...settings}>
-        <StoreMenuImage
-          src="/src/assets/images/food.jpg"
-          width={width}
-          height={height}
-        />
-        <StoreMenuImage
-          src="/src/assets/images/food2.jpg"
-          width={width}
-          height={height}
-        />
+        <StoreMenuImage src={imgUrl} width={width} height={height} />
+        <StoreMenuImage src={imgUrl} width={width} height={height} />
       </Slider>
     </div>
   );
