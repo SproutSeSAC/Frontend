@@ -12,31 +12,41 @@ export default {
       },
       colors: {
         bg: '#F5F5F7',
-        text: '#2b2b2b',
+        text: '#2b2b2b', //black 900
 
-        gray1: '#6d6d6d',
-        gray2: '#b5b5b5',
-        gray3: '#dedede',
-        gray4: '#e9e9e9',
+        gray1: '#6d6d6d', //black 700
+        gray2: '#b5b5b5', //black 400
+        gray3: '#dedede', //white 300
+        gray4: '#e9e9e9', //black 100
+        gray5: '#d9d9d9', //black 300
 
-        white: '#fff',
+        white: '#fff', //white 50
 
-        oliveGreen1: '#6fa235',
-        oliveGreen2: '#b4d780',
-        oliveGreen3: '#cae3a5',
+        oliveGreen1: '#6fa235', //primary 700
+        oliveGreen2: '#b4d780', //primary 400
+        oliveGreen3: '#cae3a5', //primary 200
 
-        vividGreen1: '#00ad49',
-        vividGreen2: '#69c57e',
-        vividGreen3: '#c0e5c7',
+        vividGreen1: '#00ac49', //secondary 500
+        vividGreen2: '#69c57e', //secondary 300
+        vividGreen3: '#c0e5c7', //secondary 100
 
-        skyBlue1: '#00b2e3',
-        skyBlue2: '#7bd2ec',
+        skyBlue1: '#00b2e3', //point 400
+        skyBlue2: '#7bd2ec', //point 200
       },
       boxShadow: {
         card: '2px 4px 12px 0px rgba(0, 0, 0, 0.08)',
         modal: '2px 2px 16px 0px rgba(0, 0, 0, 0.25)',
       },
+      gridAutoColumns: {
+        '2fr': 'minmax(0, 2fr)',
+        '3fr': 'minmax(0, 3fr)',
+      },
     },
   },
   plugins: [require('tailwind-scrollbar-hide')],
 };
+
+// regular : 400
+// medium : 500
+// semiBold : 600
+// bold : 700

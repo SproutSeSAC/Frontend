@@ -9,7 +9,7 @@ export default function StoreMenuImage({ width, height, src }: FoodImageProps) {
     <img
       src={src}
       alt="식당 대표 메뉴 사진"
-      className={`${width} ${height} rounded object-cover`}
+      className={`${width} ${height} rounded-lg object-cover`}
     />
   );
 }

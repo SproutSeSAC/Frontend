@@ -1,3 +1,5 @@
+import { FaChevronRight } from 'react-icons/fa';
+
 interface CollapsibleSideViewProps {
   sideViewOpen: boolean;
   onClose: () => void;
@@ -17,8 +19,17 @@ export default function CollapsibleSideView({
     >
       {sideViewOpen && (
         <header className="mb-10 mt-[50px] flex justify-between font-semibold text-gray2">
-          <button type="button" className="mt-auto text-sm" onClick={onClose}>
-            접어두기
+          {/* <button type="button" className="mt-auto text-sm" onClick={onClose}>
+            <FaChevronRight />
+          </button> */}
+
+          <button
+            type="button"
+            aria-label="접어두기"
+            className="mt-auto flex size-10 items-center justify-center rounded-lg bg-white text-sm text-gray2"
+            onClick={onClose}
+          >
+            <FaChevronRight />
           </button>
 
           {headerContent}

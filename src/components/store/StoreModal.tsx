@@ -13,7 +13,7 @@ export default function StoreModal({ onClose }: StoreModalProps) {
   const [tab, setTab] = useState('menu');
 
   return (
-    <div className="absolute top-0 m-[15px] h-[calc(100%-30px)] w-[420px] overflow-y-auto rounded bg-white px-5 pt-[15px] shadow-modal scrollbar-hide">
+    <div className="absolute top-0 z-20 m-[15px] h-[calc(100%-30px)] w-[420px] overflow-y-auto rounded bg-white px-5 pt-[15px] shadow-modal scrollbar-hide">
       <StoreModalHeader onClose={onClose} />
 
       <StoreCard

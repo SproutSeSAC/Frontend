@@ -33,7 +33,24 @@ export default function StoreMap() {
         <BsList size={16} />
       </button>
 
+      {/* {isModalOpen && <StoreModal onClose={() => setIsModalOpen(false)} />} */}
+
       {isModalOpen && <StoreModal onClose={() => setIsModalOpen(false)} />}
+
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-10"
+          onClick={() => setIsModalOpen(false)}
+          onKeyDown={event => {
+            if (event.key === 'Escape') {
+              setIsModalOpen(false);
+            }
+          }}
+          tabIndex={-1}
+          role="button"
+          aria-label="모달 닫기"
+        />
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { BsChevronLeft } from 'react-icons/bs';
+import { FaChevronLeft } from 'react-icons/fa';
 
 import SearchInput from '@/components/common/input/SearchInput';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
@@ -41,7 +41,7 @@ export default function StoreDetail() {
           className="mt-24 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
           onClick={openSideView}
         >
-          <BsChevronLeft />
+          <FaChevronLeft />
         </button>
       )}
     </>

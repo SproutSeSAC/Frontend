@@ -30,20 +30,22 @@ export default function Header({ title, highlight, children }: Props) {
         )}
       </section>
 
-      {/* 인풋 */}
-      <section>{children}</section>
+      <section className="flex items-center gap-7">
+        {/* 인풋 */}
+        <section>{children}</section>
 
-      <aside className="flex items-center">
-        <div className="relative mr-6 p-1">
-          <BsBell className="size-6 stroke-[0.2] font-bold text-gray1" />
-          {/* 새로운 알림 시 표시 */}
-          <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
-        </div>
+        <aside className="flex items-center">
+          <div className="relative mr-6 p-1">
+            <BsBell className="size-6 stroke-[0.2] font-bold text-gray1" />
+            {/* 새로운 알림 시 표시 */}
+            <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
+          </div>
 
-        <UserImage className="size-[50px] p-3">
-          <HeaderMenu />
-        </UserImage>
-      </aside>
+          <UserImage className="size-[50px] p-3">
+            <HeaderMenu />
+          </UserImage>
+        </aside>
+      </section>
     </header>
   );
 }

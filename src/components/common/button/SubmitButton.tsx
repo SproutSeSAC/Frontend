@@ -12,7 +12,7 @@ export default function SubmitButton({
   return (
     <button
       type="button"
-      className={`rounded-xl bg-oliveGreen1 px-4 py-2 tracking-tight text-white ${className}`}
+      className={`rounded-lg bg-oliveGreen1 px-4 py-2 tracking-tight text-white ${className}`}
       onClick={onClick}
     >
       {name}

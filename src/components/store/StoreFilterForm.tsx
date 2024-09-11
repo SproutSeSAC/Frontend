@@ -11,7 +11,7 @@ export default function StoreFilterForm() {
         {/* TODO: 데이터 형식 확인한 후, 필터 초기화 기능 추가 */}
         <div className="flex items-center gap-2">
           <MdOutlineRefresh className="text-gray-400" />
-          <span className="text-gray-600">Clear filters</span>
+          <span className="text-xs text-gray1">Clear filters</span>
         </div>
       </div>
 
