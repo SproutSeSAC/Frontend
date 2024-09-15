@@ -1,0 +1,47 @@
+.policyContainer body {
+  font-family: Calibri;
+  font-size: 11pt;
+}
+.policyContainer p {
+  margin: 0pt 0pt 8pt;
+}
+.policyContainer li,
+.policyContainer table {
+  margin-top: 0pt;
+  margin-bottom: 8pt;
+}
+.policyContainer .policyContainer h1 {
+  margin-top: 12pt;
+  margin-bottom: 3pt;
+  page-break-after: avoid;
+  font-family: Arial;
+  font-size: 16pt;
+  font-weight: bold;
+}
+.policyContainer h2 {
+  margin-top: 6px;
+  font-size: 13pt;
+}
+.policyContainer h3 {
+  margin-top: 12pt;
+  margin-bottom: 8pt;
+  page-break-after: avoid;
+  font-family: Arial;
+  font-size: 13pt;
+  font-weight: medium;
+  display: inline-block;
+  background-color: #000000;
+  color: #fff;
+  padding: 2px 8px;
+}
+.policyContainer .IndentedCode {
+  margin-bottom: 8pt;
+  font-family: Consolas;
+  font-size: 10pt;
+  background-color: #e2e2e2;
+}
+.policyContainer span.Hyperlink {
+  text-decoration: underline;
+  color: #0000ff;
+  -aw-style-name: hyperlink;
+}
