@@ -23,6 +23,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.51.23",
     "apexcharts": "^3.53.0",
+    "axios": "^1.7.7",
     "jotai": "^2.9.3",
     "react": "^18.3.1",
     "react-apexcharts": "^1.4.1",
