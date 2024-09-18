@@ -62,7 +62,7 @@ export default function Home() {
         <div className="mb-10 mt-2 h-60 rounded-xl border bg-white shadow-card" />
 
         <div className="mb-2 flex items-center justify-between">
-          <Title title="공지사항" className="pl-0 text-sm" />
+          <Title title="공지사항" className="!pl-0 text-sm" />
           <Link
             to="/announcement"
             className="p-1 text-xs font-semibold text-gray2"

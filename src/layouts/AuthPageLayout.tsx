@@ -8,14 +8,14 @@ interface Props {
 
 export default function AuthPageLayout({ children }: Props) {
   return (
-    <div className="flex h-[100vh]">
+    <div className="flex h-[100vh] bg-white">
       <img
         src={loginBgUrl}
         alt="로그인 화면 배경 이미지"
         className="w-[70%] flex-1 object-cover"
       />
 
-      <section className="h-full w-[30%] min-w-[300px] overflow-auto border border-black px-[3%] py-[6%]">
+      <section className="flex w-[30%] min-w-[300px] flex-col overflow-auto px-[3.5%] py-[6%] scrollbar-hide">
         <img
           src="/sprout_logo.png"
           alt="sprout 로고"
