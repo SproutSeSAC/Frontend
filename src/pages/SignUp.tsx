@@ -7,6 +7,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import SquareButton from '@/components/common/button/SquareButton';
 import Dropdown from '@/components/common/form/Dropdown';
 import FormStepIndicator from '@/components/common/form/FormStepIndicator';
+import MultiSelectList from '@/components/common/form/MultiSelectList';
 import QuestionItem from '@/components/common/form/QuestionItem';
 import Radio from '@/components/common/input/Radio';
 import UnControlledInput from '@/components/common/input/UnControlledInput';
@@ -18,23 +19,23 @@ type FormInputs = {
   courseId: string[];
   jobList: string[];
   domainList: string[];
-  marketingConsent: boolean;
+  marketingConsent: boolean | string;
   email: string;
   avatarImgUrl: string;
   campus: string[];
 };
 
 const defaultValues: FormInputs = {
-  role: '새싹 교육생',
+  courseId: ['디지털헬스케어 서비스 기획 올라잇'], // number
   name: '',
   nickname: '',
-  courseId: ['디지털헬스케어 서비스 기획 올라잇'],
-  jobList: ['프론트엔드', '안드로이드 개발', '유니티 개발'],
-  domainList: ['모빌리티', '인공지능 AI'],
-  marketingConsent: false,
   email: '',
   avatarImgUrl: '',
-  campus: ['강북 캠퍼스'],
+  role: '새싹 교육생', // "ADMIN" ?
+  domainList: ['모빌리티', '인공지능 AI'], // 원래는 영어
+  jobList: ['프론트엔드', '안드로이드 개발', '유니티 개발'], // 원래는 영어
+  marketingConsent: true,
+  campus: ['강북 캠퍼스'], // 원래 없는 값이네
 };
 
 export default function SignUp() {
@@ -45,7 +46,11 @@ export default function SignUp() {
   const { handleSubmit, watch, trigger } = methods;
 
   const onSubmit: SubmitHandler<FormInputs> = data => {
-    console.log('최종 데이터:', data);
+    const value = {
+      ...data,
+      marketingConsent: data.marketingConsent === '동의',
+    };
+    console.log('최종 데이터:', value);
   };
 
   const questionListByRole = getQuestionListByRole(watch('role'));
@@ -78,7 +83,7 @@ export default function SignUp() {
           className="mt-[15%] flex flex-col"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="h-[500px]">
+          <div className="h-[600px]">
             {questionListByRole.map(
               (questionList, index) =>
                 currentStep === index + 1 &&
@@ -112,6 +117,10 @@ export default function SignUp() {
                           className="h-[50px] w-full pl-4"
                           condition={{
                             required: '성함이 작성되지 않았습니다.',
+                            pattern: {
+                              value: /^[가-힣a-zA-Z]+$/,
+                              message: '국문, 영문만 입력 가능합니다.',
+                            },
                           }}
                         />
                       )}
@@ -140,29 +149,19 @@ export default function SignUp() {
                       )}
 
                       {'jobList' in question && (
-                        <ul className="flex flex-wrap gap-3">
-                          {question.jobList.map(job => (
-                            <li
-                              key={job}
-                              className={`${watch('jobList').includes(job) ? 'bg-vividGreen1 text-white' : 'bg-white text-text'} cursor-pointer rounded border px-2 py-0.5 font-medium`}
-                            >
-                              {job}
-                            </li>
-                          ))}
-                        </ul>
+                        <MultiSelectList
+                          list={question.jobList}
+                          selectLimit={5}
+                          name="jobList"
+                        />
                       )}
 
                       {'domainList' in question && (
-                        <ul className="flex flex-wrap gap-3">
-                          {question.domainList.map(domain => (
-                            <li
-                              key={domain}
-                              className={`${watch('domainList').includes(domain) ? 'bg-vividGreen1 text-white' : 'bg-white text-text'} cursor-pointer rounded border px-2 py-0.5 font-medium`}
-                            >
-                              {domain}
-                            </li>
-                          ))}
-                        </ul>
+                        <MultiSelectList
+                          list={question.domainList}
+                          selectLimit={3}
+                          name="domainList"
+                        />
                       )}
 
                       {'keyword' in question && (
@@ -186,13 +185,7 @@ export default function SignUp() {
                           </p>
 
                           <fieldset className="flex flex-wrap gap-x-8 gap-y-3">
-                            <Radio
-                              label="동의"
-                              name="marketingConsent"
-                              options={{
-                                setValueAs: value => value === '동의',
-                              }}
-                            />
+                            <Radio label="동의" name="marketingConsent" />
                             <Radio
                               label="동의하지 않음"
                               name="marketingConsent"
