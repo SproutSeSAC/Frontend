@@ -1,56 +1,17 @@
-import { useState } from 'react';
-
-import { useQuery } from '@tanstack/react-query';
-
+import styles from '@/assets/terms-and-policy/policy.module.css';
+import { useTermsAndPolicy } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
-import styles from '@/policies/policy.module.css';
 import { FcGoogle } from 'react-icons/fc';
 
 import Modal from '@/components/common/modal/Modal';
 
-type PolicyAndTermsType = '개인정보 처리방침' | '서비스 이용약관';
-
-type ModalState = {
-  type: PolicyAndTermsType;
-  isOpen: boolean;
-};
-
-const initialModalState: ModalState = {
-  type: '서비스 이용약관',
-  isOpen: false,
-};
-
-async function fetchPolicyContent(type: PolicyAndTermsType) {
-  const filename =
-    type === '서비스 이용약관'
-      ? 'termsAndConditionsOfService'
-      : 'policyOfHandlingPersonalInformation';
-
-  const response = await fetch(`/src/policies/${filename}.html`);
-
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.text();
-}
-
 export default function Login() {
-  const [modalState, setModalState] = useState<ModalState>(initialModalState);
-
-  const { data: htmlContent, isLoading } = useQuery({
-    queryKey: ['policyContent'],
-    queryFn: () => fetchPolicyContent(modalState.type),
-    enabled: modalState.isOpen,
-  });
-
-  const toggleModal = (type?: PolicyAndTermsType) => {
-    setModalState(({ isOpen, type: prevType }) => {
-      return {
-        isOpen: !isOpen,
-        type: type || prevType,
-      };
-    });
-  };
+  const {
+    modalState,
+    toggleModal,
+    isLoading,
+    htmlContent, //
+  } = useTermsAndPolicy();
 
   return (
     <AuthPageLayout>

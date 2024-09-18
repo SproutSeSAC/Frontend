@@ -40,8 +40,7 @@
   font-size: 10pt;
   background-color: #e2e2e2;
 }
-.policyContainer span.Hyperlink {
+.policyContainer a {
   text-decoration: underline;
   color: #0000ff;
-  -aw-style-name: hyperlink;
 }
