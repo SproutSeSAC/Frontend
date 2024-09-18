@@ -6,6 +6,10 @@ import { FcGoogle } from 'react-icons/fc';
 import Modal from '@/components/common/modal/Modal';
 
 export default function Login() {
+  const handleGoogle = async () => {
+    window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
+  };
+
   const {
     modalState,
     toggleModal,
@@ -27,6 +31,7 @@ export default function Login() {
 
       <button
         type="button"
+        onClick={handleGoogle}
         className="my-[25%] flex w-full items-center justify-center gap-2 rounded-lg bg-black py-3 text-sm font-medium tracking-tight text-white"
       >
         <FcGoogle className="text-lg" />
