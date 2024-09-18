@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import SubmitButton from '@/components/common/button/SubmitButton';
+import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungeEditor from '@/components/lounge/LoungeEditor';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
@@ -162,7 +162,7 @@ export default function Lounge() {
           height="h-12"
           onChange={() => {}}
         />
-        <SubmitButton
+        <SquareButton
           name="검색하기"
           onClick={() => {}}
           className="w-20 whitespace-nowrap px-3.5 py-3 text-white"

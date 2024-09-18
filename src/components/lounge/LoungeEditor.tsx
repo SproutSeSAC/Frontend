@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 import Title from '../common/Title';
-import SubmitButton from '../common/button/SubmitButton';
+import SquareButton from '../common/button/SquareButton';
 
 import GuideNumberIcon from '@/assets/icon/GuideNumberIcon';
 
@@ -109,7 +109,7 @@ export default function LoungeEditor() {
         >
           취소
         </button>
-        <SubmitButton name="등록하기" onClick={() => {}} />
+        <SquareButton name="등록하기" onClick={() => {}} />
       </div>
     </div>
   );

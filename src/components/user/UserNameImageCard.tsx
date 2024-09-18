@@ -2,8 +2,8 @@ import { useToggleModal } from '@/hooks';
 
 import CameraButton from '@/components/common/button/CameraButton';
 import EditButton from '@/components/common/button/EditButton';
-import SubmitButton from '@/components/common/button/SubmitButton';
-import Input from '@/components/common/input/Input';
+import SquareButton from '@/components/common/button/SquareButton';
+import ControlledInput from '@/components/common/input/ControlledInput';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import UserImage from '@/components/user/UserImage';
@@ -42,7 +42,7 @@ export default function UserNameImageCard() {
             </UserImage>
 
             <Label htmlFor="이름" />
-            <Input
+            <ControlledInput
               name="이름"
               placeholder="김철수"
               width="w-full"
@@ -52,7 +52,7 @@ export default function UserNameImageCard() {
             />
 
             <Label htmlFor="별명" />
-            <Input
+            <ControlledInput
               name="별명"
               placeholder="새싹 김철수"
               width="w-full"
@@ -60,7 +60,7 @@ export default function UserNameImageCard() {
               onChange={() => {}}
             />
 
-            <SubmitButton
+            <SquareButton
               name="저장하기"
               onClick={() => {}}
               className="mt-6 self-end font-semibold text-white"
