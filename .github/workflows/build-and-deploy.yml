@@ -15,6 +15,14 @@ jobs:
       - name: ✅ 코드 체크아웃
         uses: actions/checkout@v3
 
+      - name: ✅ 환경변수 등록
+        run: |
+          echo "VITE_NAVER_API_CLIENT_ID=$VITE_NAVER_API_CLIENT_ID" >> .env
+          echo "VITE_NAVER_API_CLIENT_SECRET_ID=$VITE_NAVER_API_CLIENT_SECRET_ID" >> .env
+        env:
+          VITE_NAVER_API_CLIENT_ID: ${{ secrets.VITE_NAVER_API_CLIENT_ID }}
+          VITE_NAVER_API_CLIENT_SECRET_ID: ${{ secrets.VITE_NAVER_API_CLIENT_SECRET_ID }}
+
       - name: ✅ AWS 자격 증명 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:
