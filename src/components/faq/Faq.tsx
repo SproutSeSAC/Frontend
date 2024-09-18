@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { FAQ } from '@/dummy/faq';
+import { FAQ } from '@/constants/faq';
 import { BsChevronDown } from 'react-icons/bs';
 
 interface Props {
