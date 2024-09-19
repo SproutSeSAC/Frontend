@@ -96,7 +96,7 @@ export default function PostAndCommentCollection() {
         <thead>
           <tr className="text-left">
             <TableHeaderCell className={commonCheckboxStyle}>
-              <Checkbox name="체크박스" />
+              <Checkbox id="체크박스" checked={false} onChange={() => {}} />
             </TableHeaderCell>
 
             {headerCellList.map(cell => (
@@ -114,7 +114,7 @@ export default function PostAndCommentCollection() {
           {bodyCellList.map(cell => (
             <tr key={cell.number} className="group hover:bg-gray4">
               <TableDataCell className={commonCheckboxStyle}>
-                <Checkbox name="체크박스" />
+                <Checkbox id="체크박스" checked={false} onChange={() => {}} />
               </TableDataCell>
 
               <TableDataCell>{cell.createdAt}</TableDataCell>

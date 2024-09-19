@@ -19,7 +19,7 @@ export default function LoungeTabNavigation() {
         {TAB_LIST.map(({ text, type }) => (
           <li
             key={type}
-            className={`box-border flex flex-1 cursor-pointer justify-center whitespace-nowrap ${tab === type && 'border-b-2 border-text'}`}
+            className={`box-border flex flex-1 cursor-pointer justify-center whitespace-nowrap ${tab === type ? 'border-b-2 border-text' : 'text-gray2'}`}
           >
             <button
               type="button"
