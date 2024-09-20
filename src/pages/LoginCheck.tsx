@@ -28,7 +28,6 @@ export default function LoginCheck() {
         });
 
         // if (response.status === 200) {
-        navigate('/');
         // } else if (response.status === 304) {
         //   navigate('/signup');
         // }
@@ -41,6 +40,7 @@ export default function LoginCheck() {
 
     if (accessToken) {
       handleLoginPost();
+      navigate('/'); // 나중에 수정
     } else {
       alert('로그인에 실패했습니다.');
     }
