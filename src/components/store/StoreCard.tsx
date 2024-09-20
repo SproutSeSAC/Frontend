@@ -1,8 +1,11 @@
+import { useState } from 'react';
+
 import {
   BsClockFill,
   BsFillGeoAltFill,
   BsFillTelephoneFill,
 } from 'react-icons/bs';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -22,6 +25,8 @@ export default function StoreCard({
   phoneNumber,
   showFavoriteButton = true,
 }: StoreCardProps) {
+  const [openHoursModal, setOpenHoursModal] = useState(false);
+
   return (
     <article className={`${width} gap-[11px]`}>
       <StoreMenuImageSlider width={width} height={height} />
@@ -46,7 +51,47 @@ export default function StoreCard({
             <BsClockFill className="mr-[10px] text-gray2" size={15} />
             <span className="text-gray1">영업 중</span>
             <span className="mx-1 text-gray3">|</span>
-            <span className="text-gray1">15:00에 브레이크타임</span>
+            <p className="relative flex items-center gap-1.5 text-gray1">
+              <span>15:00에 브레이크타임</span>
+              <button
+                type="button"
+                onClick={() => setOpenHoursModal(prev => !prev)}
+              >
+                {openHoursModal ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              </button>
+              {openHoursModal && (
+                <div className="absolute right-0 top-6 z-10 flex w-[175px] flex-col justify-center gap-2 rounded-lg bg-white px-2.5 py-3 text-sm shadow-card">
+                  <p className="flex gap-4 pl-2">
+                    <span>월요일</span>
+                    <span>11:30 ~ 21:00</span>
+                  </p>
+                  <p className="flex gap-4 pl-2">
+                    <span>화요일</span>
+                    <span>11:30 ~ 21:00</span>
+                  </p>
+                  <p className="flex gap-4 pl-2">
+                    <span>수요일</span>
+                    <span>11:30 ~ 21:00</span>
+                  </p>
+                  <p className="flex gap-4 pl-2">
+                    <span>목요일</span>
+                    <span>11:30 ~ 21:00</span>
+                  </p>
+                  <p className="flex gap-4 pl-2">
+                    <span>금요일</span>
+                    <span>11:30 ~ 21:00</span>
+                  </p>
+                  <p className="flex gap-4 pl-2">
+                    <span>토요일</span>
+                    <span>11:30 ~ 21:00</span>
+                  </p>
+                  <p className="flex gap-4 pl-2">
+                    <span>일요일</span>
+                    <span>정기휴무</span>
+                  </p>
+                </div>
+              )}
+            </p>
           </p>
           {phoneNumber && (
             <p className="flex items-center">

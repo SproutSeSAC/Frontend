@@ -42,6 +42,28 @@ export default {
         '3fr': 'minmax(0, 3fr)',
       },
     },
+    animation: {
+      'slide-fade-in-dropdown': 'slide-fade-in-dropdown-animation 0.4s ease',
+      'slide-fade-out-dropdown': 'slide-fade-out-dropdown-animation 0.4s ease',
+    },
+    keyframes: {
+      'slide-fade-in-dropdown-animation': {
+        '0%': {
+          transform: 'translateY(-10%)',
+        },
+        '100%': {
+          transform: 'translateY(0)',
+        },
+      },
+      'slide-fade-out-dropdown-animation': {
+        '0%': {
+          transform: 'translateY(0)',
+        },
+        '100%': {
+          transform: 'translateY(-10%)',
+        },
+      },
+    },
   },
   plugins: [require('tailwind-scrollbar-hide')],
 };

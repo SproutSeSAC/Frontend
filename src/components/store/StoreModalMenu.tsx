@@ -7,7 +7,7 @@ export default function StoreModalMenu() {
     <div className="flex flex-col">
       <StoreMenuImage width="w-[100px]" height="h-[100px]" src={imgUrl} />
 
-      <h3>메뉴 이름</h3>
+      <h3 className="mt-2">메뉴 이름</h3>
       <span className="font-semibold">23,000원</span>
     </div>
   );

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Tag from '../common/Tag';
 import Title from '../common/Title';
 import UserImage from '../user/UserImage';
@@ -38,7 +40,10 @@ export default function LoungeSideView() {
 
         <div className="flex flex-col gap-6">
           {[1, 2, 3, 4, 5].map(card => (
-            <div key={card}>
+            <Link
+              key={card}
+              to="/lounge/post/1" // 변경
+            >
               <div className="text-gray1">
                 함께 수상하실 안드로이드 앱 프론트엔드 개발자 구합니다!
               </div>
@@ -46,7 +51,7 @@ export default function LoungeSideView() {
                 <UserImage className="size-[22px] p-0.5" />
                 <div>@h-g0-getter</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
