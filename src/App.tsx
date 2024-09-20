@@ -10,6 +10,7 @@ import 'slick-carousel/slick/slick.css';
 import Announcement from '@/pages/Announcement';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
+import LoginCheck from '@/pages/LoginCheck';
 import Lounge from '@/pages/Lounge';
 import LoungeDetail from '@/pages/LoungeDetail';
 import MyPage from '@/pages/MyPage';
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/login-check',
+    element: <LoginCheck />,
   },
   {
     path: '/signup',
