@@ -27,6 +27,15 @@ export default function Schedule() {
           }}
         />
       </div>
+
+      <button
+        type="button"
+        className="fixed bottom-5 right-5 z-10 rounded-md border bg-vividGreen1 px-4 py-2 text-white"
+      >
+        <span className="text-xs">교육 일정 캘린더</span>
+        <br />
+        <span className="text-lg font-semibold">+구독하기</span>
+      </button>
     </MainView>
   );
 }

@@ -38,12 +38,3 @@
 
 @tailwind components;
 @tailwind utilities;
-
-.fc-dayGridMonth-view {
-  background-color: #fff;
-}
-
-.fc-toolbar-title {
-  font-weight: 500;
-  color: #575757;
-}
