@@ -1,9 +1,13 @@
+import LoungeModal from '../LoungeModal';
+
+import { useToggleModal } from '@/hooks';
 import { BsEye } from 'react-icons/bs';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import UserImage from '@/components/user/UserImage';
 
 export default function LoungePostDetails() {
+  const { toggleModal, modalOpen } = useToggleModal();
   return (
     <>
       <div className="border-b-solid mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
@@ -73,6 +77,7 @@ export default function LoungePostDetails() {
         간단한 자기소개와 함께 연락주시면 감사하겠습니다. (사용할 언어 등.)
         <br />
       </div>
+      {modalOpen && <LoungeModal toggleModal={toggleModal} />}
     </>
   );
 }
