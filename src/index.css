@@ -33,6 +33,18 @@
     font-family: 'Pretendard', sans-serif;
     background-color: #f5f5f7;
     color: #2b2b2b;
+
+    #toolBar {
+      @apply rounded-t-lg border border-b-0 border-solid border-gray4 bg-white py-[15px];
+    }
+
+    .ql-container.ql-snow {
+      @apply rounded-b-lg border border-solid border-gray4 bg-white;
+    }
+
+    .ql-editor.ql-blank::before {
+      @apply text-base not-italic text-gray2;
+    }
   }
 }
 

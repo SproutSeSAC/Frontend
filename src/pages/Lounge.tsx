@@ -2,10 +2,18 @@ import { useMemo } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
+import {
+  positionList,
+  progressList,
+  stackList,
+} from '@/constant/\bfilterConstant';
+
+import MultiSelectDropdown from '@/components/common/MultiSelectDropdown';
+import SelectableDropdown from '@/components/common/SelectableDropdown';
 import SubmitButton from '@/components/common/button/SubmitButton';
 import SearchInput from '@/components/common/input/SearchInput';
-import LoungeEditor from '@/components/lounge/LoungeEditor';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
+import LoungeEditor from '@/components/lounge/editor/LoungeEditor';
 
 export interface Card {
   id: number;
@@ -119,6 +127,16 @@ export const mockData: Card[] = [
   },
 ];
 
+const TAB_LIST = [
+  { text: '프론트엔드', type: 'frontend' },
+  { text: '백엔드', type: 'backend' },
+  { text: '모바일', type: 'mobile' },
+  { text: '컴퓨터', type: 'computer' },
+  { text: 'pm/ui/ux', type: 'pm' },
+  { text: '데이터', type: 'data' },
+  { text: '모두보기', type: 'all' },
+];
+
 export default function Lounge() {
   const location = useLocation();
 
@@ -151,7 +169,7 @@ export default function Lounge() {
   if (location.state === 'edit') {
     return <LoungeEditor />;
   }
-
+  // console.log(stackList);
   return (
     <>
       <div className="flex items-center gap-10">
@@ -169,7 +187,46 @@ export default function Lounge() {
         />
       </div>
 
-      <div className="mb-9 mt-6">필터영역</div>
+      <div className="relative mb-9 mt-6 flex justify-between">
+        <div className="flex gap-4">
+          <MultiSelectDropdown
+            label="기술스택"
+            tabList={TAB_LIST}
+            defaultValue="frontend"
+            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
+            options={stackList}
+            onChangeValue={value => console.log('value>>', value)}
+          />
+          <SelectableDropdown
+            label="기술스택"
+            options={stackList}
+            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
+            onChangeValue={value => console.log('value>>', value)}
+          />
+
+          <SelectableDropdown
+            label="포지션"
+            options={positionList}
+            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
+            onChangeValue={value => console.log('value11>>', value)}
+          />
+          <SelectableDropdown
+            label="진행방식"
+            options={progressList}
+            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
+            onChangeValue={value => console.log('value22>>', value)}
+          />
+        </div>
+        <SelectableDropdown
+          label="정렬"
+          options={[
+            { key: '최신순', value: '최신순' },
+            { key: '인기순', value: '인기순' },
+          ]}
+          className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
+          onChangeValue={value => console.log('value22>>', value)}
+        />
+      </div>
 
       <ul className="flex flex-wrap gap-6">
         {filteredData.map(card => (
