@@ -1,33 +1,14 @@
-type FormInputs = {
-  step: number;
-  roles: string[];
-  name: string;
-  nickname: string;
-  courseId: string[];
-  jobList: string[];
-  domainList: string[];
-  email: string;
-  avatarImgUrl: string;
-  campus: string[];
-  keyword: string;
-  marketingConsent: string[];
-};
+import { QuestionsByStep, Role } from '@/types';
 
-type Step = {
-  [K in keyof FormInputs]: {
-    title: { text: string; condition?: string };
-  } & Pick<FormInputs, K>;
-}[keyof FormInputs];
-
-const commonFirstStep: Step[] = [
+const commonFirstStep: QuestionsByStep[] = [
   {
     title: { text: '회원 유형을 선택해주세요.' },
     roles: [
-      '새싹 교육생',
-      '교육 매니저',
-      '캠퍼스 매니저',
-      '잡코디',
-      '예비 수강생',
+      'TRAINEE',
+      'EDU_MANAGER',
+      'CAMPUS_MANAGER',
+      'JOB_COORDINATOR',
+      'PRE_TRAINEE',
     ],
   },
   {
@@ -40,86 +21,67 @@ const commonFirstStep: Step[] = [
   },
 ];
 
-const commonStudentStep: Step[] = [
+const commonStudentStep: QuestionsByStep[] = [
   {
     title: { text: '관심있는 직군을 선택해주세요.', condition: '*최대 5가지' },
-    jobList: [
-      '프론트엔드',
-      '백엔드',
-      '데이터 분석가',
-      'AI 엔지니어',
-      '안드로이드 개발',
-      'iOS 개발',
-      'PM/PO',
-      '게임기획',
-      '유니티 개발',
-      '서비스 기획자',
-      '콘텐츠 마케터',
-      'UI/UX 디자이너',
-      '브랜드 디자이너',
-    ],
+    jobIdList: [],
   },
   {
     title: {
       text: '관심있는 도메인을 선택해주세요.',
       condition: '*최대 3가지',
     },
-    domainList: [
-      '소셜/컨텐츠',
-      '모빌리티',
-      '패션',
-      '여행',
-      '푸드테크',
-      '이커머스',
-      '헬스케어',
-      '금융/보험',
-      '직장',
-      '프롭테크',
-      '인공지능 AI',
-      '교육',
-      '블록체인',
-    ],
+    domainIdList: [],
+  },
+  {
+    title: {
+      text: '나의 스킬을 선택해주세요.',
+      condition: '*최대 3가지',
+    },
+    techStackIdList: [],
   },
 ];
 
-const sesacStudentStep: Step[] = [
+const sesacStudentStep: QuestionsByStep[] = [
   {
     title: { text: '소속 캠퍼스를 선택해주세요.', condition: '' },
-    campus: ['강북 캠퍼스', '도봉 캠퍼스', '성북 캠퍼스'],
+    campusId: [],
   },
   {
     title: { text: '소속 교육과정을 선택해주세요.', condition: '*선택' },
-    courseId: ['디지털헬스케어 서비스 기획 올라잇'],
+    courseId: [],
   },
 ];
 
-const indentification: Step[] = [
-  {
-    title: { text: '정보 확인을 위하여 키워드를 작성해주세요.' },
-    keyword: '',
-  },
-];
-
-const adminStep: Step[] = [
+const adminStep: QuestionsByStep[] = [
   {
     title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복 가능' },
-    campus: ['강북 캠퍼스', '도봉 캠퍼스', '성북 캠퍼스'],
+    campusId: [],
   },
   {
     title: { text: '담당 교육 과정은 무엇인가요?', condition: '*선택' },
-    courseId: ['디지털헬스케어 서비스 기획 올라잇'],
+    courseId: [],
   },
 ];
 
-const marketingConsent: Step[] = [
+const indentification: QuestionsByStep[] = [
+  {
+    title: { text: '정보 확인을 위하여 확인 코드를 작성해주세요.' },
+    verifyCode: '',
+  },
+];
+
+const marketingConsent: QuestionsByStep[] = [
   {
     title: { text: '마케팅 활용 및 정보 수신에 동의하시나요?' },
-    marketingConsent: ['동의', '동의하지 않음'],
+    marketingConsent: [true, false],
+    additionalInfo:
+      '스프라우트가 제공하는 이벤트, 혜택, 다양한 정보(뉴스레터, 취업, 교육 등) 안내 목적으로 이메일을 통한 정보수신을 위해 이용하고자 합니다. 마케팅 및 정보 수신을원하지 않는 경우, 동의하지 않아도 됩니다.',
   },
 ];
 
-export const getQuestionListByRole = (role: string): Step[][] => {
-  if (role === '새싹 교육생') {
+export const getQuestionListByRole = (role: Role): QuestionsByStep[][] => {
+  if (role === 'TRAINEE') {
     return [
       commonFirstStep,
       sesacStudentStep,
@@ -127,7 +89,7 @@ export const getQuestionListByRole = (role: string): Step[][] => {
       [...indentification, ...marketingConsent],
     ];
   }
-  if (role === '예비 수강생') {
+  if (role === 'PRE_TRAINEE') {
     return [commonFirstStep, commonStudentStep, marketingConsent];
   }
   return [
@@ -135,4 +97,13 @@ export const getQuestionListByRole = (role: string): Step[][] => {
     adminStep,
     [...indentification, ...marketingConsent],
   ];
+};
+
+export const matchedRoleName = {
+  ADMIN: '매니저',
+  TRAINEE: '새싹 교육생',
+  EDU_MANAGER: '교육 매니저',
+  CAMPUS_MANAGER: '캠퍼스 매니저',
+  JOB_COORDINATOR: '잡코디',
+  PRE_TRAINEE: '예비 수강생',
 };

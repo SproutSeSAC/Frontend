@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   TermsAndPolicyType,
   getPolicyContent,
-} from '@/services/api/auth/terms-and-policy';
+} from '@/services/auth/termsAndPolicy';
 
 type ModalState = {
   type: TermsAndPolicyType;

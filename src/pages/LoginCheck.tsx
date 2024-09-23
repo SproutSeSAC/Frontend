@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { loginCheck } from '@/services/api/auth/auth';
+import { useLoginCheck } from '@/services/auth/authQueries';
 
 export default function LoginCheck() {
   const navigate = useNavigate();
+  const { data } = useLoginCheck();
 
   const params = new URLSearchParams(window.location.search);
   const accessToken = params.get('access_token');
@@ -20,17 +21,15 @@ export default function LoginCheck() {
         );
 
         if (accessToken && refreshToken) {
-          const response = await loginCheck();
+          console.log(data?.status);
 
-          switch (response.status) {
+          switch (data?.status) {
             case 200:
               navigate('/');
               break;
-
             case 304:
               navigate('/signup');
               break;
-
             default:
               break;
           }
@@ -45,7 +44,7 @@ export default function LoginCheck() {
     } else {
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
     }
-  }, [accessToken, refreshToken, navigate]);
+  }, [accessToken, refreshToken, data?.status, navigate]);
 
   return (
     <div className="flex h-[100vh] flex-col items-center justify-center gap-4">
