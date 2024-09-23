@@ -2,37 +2,39 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
+import { loginCheck } from '@/services/api/auth/auth';
 
 export default function LoginCheck() {
   const navigate = useNavigate();
 
   const params = new URLSearchParams(window.location.search);
-
   const accessToken = params.get('access_token');
   const refreshToken = params.get('refresh_token');
 
   useEffect(() => {
     const handleLoginPost = async () => {
-      localStorage.setItem(
-        'sproutToken',
-        JSON.stringify({ accessToken, refreshToken }),
-      );
-
       try {
-        await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/login/check`, {
-          headers: {
-            'Access-Token': accessToken,
-            'Refresh-Token': refreshToken,
-          },
-        });
+        localStorage.setItem(
+          'sproutToken',
+          JSON.stringify({ accessToken, refreshToken }),
+        );
 
-        // if (response.status === 200) {
-        // } else if (response.status === 304) {
-        //   navigate('/signup');
-        // }
+        if (accessToken && refreshToken) {
+          const response = await loginCheck();
 
-        window.location.reload();
+          switch (response.status) {
+            case 200:
+              navigate('/');
+              break;
+
+            case 304:
+              navigate('/signup');
+              break;
+
+            default:
+              break;
+          }
+        }
       } catch (error) {
         console.log(error);
       }
@@ -40,11 +42,15 @@ export default function LoginCheck() {
 
     if (accessToken) {
       handleLoginPost();
-      navigate('/'); // 나중에 수정
     } else {
-      alert('로그인에 실패했습니다.');
+      alert('로그인에 실패했습니다. 다시 시도해주세요.');
     }
   }, [accessToken, refreshToken, navigate]);
 
-  return <div>로그인 체크 중...</div>;
+  return (
+    <div className="flex h-[100vh] flex-col items-center justify-center gap-4">
+      <div className="h-20 w-20 animate-spin rounded-full border-[7px] border-gray3 border-b-gray1" />
+      <span className="text-sm text-gray1">로그인 검증중...</span>
+    </div>
+  );
 }

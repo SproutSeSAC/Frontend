@@ -45,6 +45,7 @@ export default {
     animation: {
       'slide-fade-in-dropdown': 'slide-fade-in-dropdown-animation 0.4s ease',
       'slide-fade-out-dropdown': 'slide-fade-out-dropdown-animation 0.4s ease',
+      spin: 'spin 1s linear infinite',
     },
     keyframes: {
       'slide-fade-in-dropdown-animation': {
@@ -62,6 +63,10 @@ export default {
         '100%': {
           transform: 'translateY(-10%)',
         },
+      },
+      spin: {
+        '0%': { transform: 'rotate(0deg)' },
+        '100%': { transform: 'rotate(360deg)' },
       },
     },
   },

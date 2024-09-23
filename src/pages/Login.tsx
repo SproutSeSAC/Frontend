@@ -7,7 +7,7 @@ import Modal from '@/components/common/modal/Modal';
 
 export default function Login() {
   const handleGoogle = async () => {
-    window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/oauth2/authorization/google`;
+    window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
   };
 
   const {

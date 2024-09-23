@@ -19,11 +19,11 @@ jobs:
         run: |
           echo "VITE_NAVER_API_CLIENT_ID=$VITE_NAVER_API_CLIENT_ID" >> .env
           echo "VITE_NAVER_API_CLIENT_SECRET_ID=$VITE_NAVER_API_CLIENT_SECRET_ID" >> .env
-          echo "VITE_SERVER_URL=$VITE_SERVER_URL" >> .env
+          echo "VITE_SERVER_API_URL=$VITE_SERVER_API_URL" >> .env
         env:
           VITE_NAVER_API_CLIENT_ID: ${{ secrets.VITE_NAVER_API_CLIENT_ID }}
           VITE_NAVER_API_CLIENT_SECRET_ID: ${{ secrets.VITE_NAVER_API_CLIENT_SECRET_ID }}
-          VITE_SERVER_URL: ${{ secrets.VITE_SERVER_URL }}
+          VITE_SERVER_API_URL: ${{ secrets.VITE_SERVER_API_URL }}
 
       - name: ✅ AWS 자격 증명 설정
         uses: aws-actions/configure-aws-credentials@v1
