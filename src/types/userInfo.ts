@@ -18,12 +18,16 @@ export type UserInfo = {
   campusId?: number;
 };
 
+export type VerifyCode = {
+  verifyCode: string;
+};
+
 export type FormTitle = {
   title: { text: string; condition?: string };
   additionalInfo?: string;
 };
 
-type FormData = {
+export type FormData = {
   step: number;
   roles: Role[];
   name: string;

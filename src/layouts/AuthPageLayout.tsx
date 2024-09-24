@@ -16,12 +16,6 @@ export default function AuthPageLayout({ children }: Props) {
       />
 
       <section className="flex w-[30%] min-w-[300px] flex-col overflow-auto px-[3.5%] py-[6%] scrollbar-hide">
-        <img
-          src="/sprout_logo.png"
-          alt="sprout 로고"
-          className="mb-[15%] h-10 w-10"
-        />
-
         {children}
       </section>
     </div>
