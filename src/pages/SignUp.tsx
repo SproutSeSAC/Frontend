@@ -28,6 +28,7 @@ const defaultValues: UserInfo & VerifyCode = {
   name: '',
   nickname: '',
   role: 'TRAINEE',
+  campusId: 1,
   courseId: 1,
   domainIdList: [],
   jobIdList: [],
@@ -37,13 +38,15 @@ const defaultValues: UserInfo & VerifyCode = {
 };
 
 export default function SignUp() {
+  const [currentStep] = useAtom(currentStepAtom);
+
   const methods = useForm<UserInfo & VerifyCode>({
     mode: 'onSubmit',
     defaultValues,
   });
-  const [currentStep] = useAtom(currentStepAtom);
-
   const { handleSubmit, watch } = methods;
+
+  const campusIdValue = watch('campusId');
 
   const { data: jobList, isLoading: isJobListLoading } = useGetJobList();
 
@@ -55,8 +58,6 @@ export default function SignUp() {
 
   const { data: campusList, isLoading: isCampusListLoading } =
     useGetCampusList();
-
-  const campusIdValue = watch('campusId');
 
   const { data: courseList } = useGetCourseList(campusIdValue);
 
