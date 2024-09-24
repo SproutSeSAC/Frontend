@@ -7,7 +7,7 @@ import SquareButton from '../../common/button/SquareButton';
 import LoungeTextEditor from './LoungeTextEditor';
 import { loungeEditorSchema } from './loungeEditorSchema';
 
-import GuideNumberIcon from '@/assets/icon/GuideNumberIcon';
+import GuideNumberIcon from '@/assets/icons/GuideNumberIcon';
 import { stackList } from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

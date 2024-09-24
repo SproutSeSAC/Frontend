@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import Title from '../common/Title';
 import SquareButton from '../common/button/SquareButton';
 
-import GuideNumberIcon from '@/assets/icon/GuideNumberIcon';
+import GuideNumberIcon from '@/assets/icons/GuideNumberIcon';
 
 const defaultInputStyle =
   'rounded-2xl border border-solid border-gray4 px-[15px] py-4';
