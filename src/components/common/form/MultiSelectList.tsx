@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useFormContext } from 'react-hook-form';
 
 interface MultiSelectListProps {
@@ -13,19 +15,22 @@ export default function MultiSelectList({
 }: MultiSelectListProps) {
   const { setValue, watch, getValues } = useFormContext();
 
-  const handleClick = (id: number) => {
-    const currentIds: number[] = getValues(name) || [];
+  const handleClick = useCallback(
+    (id: number) => {
+      const currentIds: number[] = getValues(name) || [];
 
-    const removeId = currentIds.filter(currentId => currentId !== id);
+      const removeId = currentIds.filter(currentId => currentId !== id);
 
-    const addId = [...currentIds, id];
-    const limitNum = currentIds.length >= selectLimit;
-    const addIdUntilLimit = limitNum ? currentIds : addId;
+      const addId = [...currentIds, id];
+      const limitNum = currentIds.length >= selectLimit;
+      const addIdUntilLimit = limitNum ? currentIds : addId;
 
-    const listValue = currentIds.includes(id) ? removeId : addIdUntilLimit;
+      const listValue = currentIds.includes(id) ? removeId : addIdUntilLimit;
 
-    setValue(name, listValue, { shouldValidate: true, shouldDirty: true });
-  };
+      setValue(name, listValue, { shouldValidate: true, shouldDirty: true });
+    },
+    [getValues, name, selectLimit, setValue],
+  );
 
   return (
     <ul className="flex flex-wrap gap-3">
