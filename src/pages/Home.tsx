@@ -28,8 +28,8 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const accessToken = getCookie('Access-Token');
-    const refreshToken = getCookie('Refresh-Token');
+    const accessToken = getCookie('access_token');
+    const refreshToken = getCookie('refresh_token');
 
     if (!accessToken || !refreshToken) {
       navigate('/login');

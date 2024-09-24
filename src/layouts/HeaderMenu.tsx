@@ -13,8 +13,8 @@ export default function HeaderMenu() {
   const onLogOutClick = () => {
     const confirm = window.confirm('정말로 로그아웃하시겠습니까?');
     if (confirm) {
-      deleteCookie('Access-Token');
-      deleteCookie('Refresh-Token');
+      deleteCookie('access_token');
+      deleteCookie('refresh_token');
       navigate('/login');
     }
   };

@@ -16,8 +16,8 @@ export default function LoginCheck() {
   useEffect(() => {
     const handleLoginPost = async () => {
       if (accessToken && refreshToken) {
-        setCookie('Access-Token', accessToken, 1);
-        setCookie('Refresh-Token', refreshToken, 1);
+        setCookie('access_token', accessToken, 1);
+        setCookie('refresh_token', refreshToken, 1);
       }
 
       try {
@@ -36,7 +36,7 @@ export default function LoginCheck() {
 
         window.location.reload();
       } catch (error) {
-        console.error(error);
+        alert('문제가 발생했습니다!');
       }
     };
 
