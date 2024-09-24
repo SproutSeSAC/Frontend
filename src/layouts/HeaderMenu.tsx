@@ -1,10 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { deleteCookie } from '@/utils';
 
 export default function HeaderMenu() {
   const menuList = [
     { title: '마이페이지', to: '/mypage' },
     { title: '공지사항', to: '/announcement' },
   ];
+
+  const navigate = useNavigate();
+
+  const onLogOutClick = () => {
+    const confirm = window.confirm('정말로 로그아웃하시겠습니까?');
+    if (confirm) {
+      deleteCookie('access_token');
+      deleteCookie('refresh_token');
+      navigate('/login');
+    }
+  };
 
   return (
     <nav className="absolute right-0 top-[40px] z-10 hidden py-4 hover:block group-hover:block">
@@ -24,7 +37,7 @@ export default function HeaderMenu() {
           <button
             type="button"
             className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-gray3"
-            onClick={() => {}}
+            onClick={onLogOutClick}
           >
             로그아웃
           </button>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import imgUrl from '@/assets/images/faq.png';
-import { faqList } from '@/dummy/faq';
+import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 

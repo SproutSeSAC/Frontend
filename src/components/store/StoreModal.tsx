@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import SubmitButton from '../common/button/SubmitButton';
+import SquareButton from '../common/button/SquareButton';
 import UserImage from '../user/UserImage';
 import StoreStarRating from './StoreStarRating';
 
@@ -67,7 +67,7 @@ export default function StoreModal({ onClose }: StoreModalProps) {
             rows={5}
           />
           <div className="flex justify-end gap-2">
-            <SubmitButton onClick={() => {}} name="등록하기" />
+            <SquareButton onClick={() => {}} name="등록하기" />
             <button
               onClick={() => {}}
               type="button"

@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import NavigationStoreIcon from '@/assets/icon/NavigationStoreIcon';
+import StoreIcon from '@/assets/icons/store.svg?react';
 import Logo from '@/layouts/Logo';
 import { BsCalendar, BsGear, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
 
 export default function NavigationBar() {
   const { pathname } = useLocation();
 
-  const iconStyle = 'w-6 h-6 text-gray3';
+  const iconStyle = 'size-6 text-gray3';
 
   const menuList = [
     {
@@ -23,7 +23,7 @@ export default function NavigationBar() {
     {
       title: '맛집 이동',
       to: '/stores',
-      icon: <NavigationStoreIcon className={iconStyle} />,
+      icon: <StoreIcon className={`${iconStyle} size-9`} />,
     },
     {
       title: '라운지 이동',

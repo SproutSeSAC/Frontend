@@ -1,10 +1,10 @@
 import MultiInput from '../common/MultiInput';
 import MultiSelectDropdown from '../common/MultiSelectDropdown';
-import SubmitButton from '../common/button/SubmitButton';
+import SquareButton from '../common/button/SquareButton';
 import Label from '../common/input/Label';
 import Modal from '../common/modal/Modal';
 
-import { stackList } from '@/constant/\bfilterConstant';
+import { stackList } from '@/constants';
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },
@@ -47,7 +47,7 @@ export default function LoungeModal({ toggleModal }: LoungeModalProps) {
           placeholder="참여직무를 선택해주세요."
         />
 
-        <SubmitButton name="저장하기" onClick={() => {}} className="self-end" />
+        <SquareButton name="저장하기" onClick={() => {}} className="self-end" />
       </form>
     </Modal>
   );

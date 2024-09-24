@@ -1,16 +1,16 @@
-interface SubmitButtonProps {
+interface SquareButtonProps {
   name: string;
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit';
 }
 
-export default function SubmitButton({
+export default function SquareButton({
   name,
   onClick,
   className = '',
   type = 'button',
-}: SubmitButtonProps) {
+}: SquareButtonProps) {
   return (
     <button
       type={type === 'submit' ? 'submit' : 'button'}

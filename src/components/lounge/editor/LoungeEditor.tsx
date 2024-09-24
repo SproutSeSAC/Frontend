@@ -3,12 +3,12 @@ import { ReactNode, useCallback } from 'react';
 import MultiSelectDropdown from '../../common/MultiSelectDropdown';
 import SelectableDropdown from '../../common/SelectableDropdown';
 import Title from '../../common/Title';
-import SubmitButton from '../../common/button/SubmitButton';
+import SquareButton from '../../common/button/SquareButton';
 import LoungeTextEditor from './LoungeTextEditor';
 import { loungeEditorSchema } from './loungeEditorSchema';
 
-import GuideNumberIcon from '@/assets/icon/GuideNumberIcon';
-import { stackList } from '@/constant/\bfilterConstant';
+import GuideNumberIcon from '@/assets/icons/GuideNumberIcon';
+import { stackList } from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -309,7 +309,7 @@ export default function LoungeEditor() {
           >
             취소
           </button>
-          <SubmitButton name="등록하기" type="submit" />
+          <SquareButton name="등록하기" type="submit" />
         </div>
       </form>
     </FormProvider>

@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+
+import { Link, useNavigate } from 'react-router-dom';
 
 import { mockData } from './Lounge';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
+import { getCookie } from '@/utils';
 
 import ScrollContainer from '@/components/common/ScrollContainer';
 import Tag from '@/components/common/Tag';
@@ -21,6 +24,17 @@ export default function Home() {
     startDate: '2024.08.01',
     endDate: '2024.08.31',
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = getCookie('access_token');
+    const refreshToken = getCookie('refresh_token');
+
+    if (!accessToken || !refreshToken) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -62,7 +76,7 @@ export default function Home() {
         <div className="mb-10 mt-2 h-60 rounded-xl border bg-white shadow-card" />
 
         <div className="mb-2 flex items-center justify-between">
-          <Title title="공지사항" className="pl-0 text-sm" />
+          <Title title="공지사항" className="!pl-0 text-sm" />
           <Link
             to="/announcement"
             className="p-1 text-xs font-semibold text-gray2"

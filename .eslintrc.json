@@ -30,7 +30,8 @@
         "png": "always",
         "svg": "always",
         "jpg": "always",
-        "jpeg": "always"
+        "jpeg": "always",
+        "css": "always"
       }
     ],
     "import/order": "off",
@@ -49,7 +50,9 @@
         "controlComponents": ["CustomInput"],
         "depth": 3
       }
-    ]
+    ],
+    "react/button-has-type": "off",
+    "react/no-danger": "off"
   },
   "overrides": [
     {

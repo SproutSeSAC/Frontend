@@ -3,7 +3,7 @@ import LoungeModal from '../LoungeModal';
 import { useToggleModal } from '@/hooks';
 import { BsEye } from 'react-icons/bs';
 
-import SubmitButton from '@/components/common/button/SubmitButton';
+import SquareButton from '@/components/common/button/SquareButton';
 import UserImage from '@/components/user/UserImage';
 
 export default function LoungePostDetails() {
@@ -29,7 +29,7 @@ export default function LoungePostDetails() {
             </div>
           </div>
         </div>
-        <SubmitButton name="참여하기" onClick={toggleModal} />
+        <SquareButton name="참여하기" onClick={() => {}} />
       </div>
 
       <div className="mt-6 text-lg">

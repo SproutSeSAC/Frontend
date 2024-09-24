@@ -2,7 +2,7 @@ import { useToggleModal } from '@/hooks';
 
 import Tag from '@/components/common/Tag';
 import EditButton from '@/components/common/button/EditButton';
-import SubmitButton from '@/components/common/button/SubmitButton';
+import SquareButton from '@/components/common/button/SquareButton';
 import Input from '@/components/common/input/Input';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
@@ -109,7 +109,7 @@ export default function InterestJobDomainSkillCard() {
               className="mb-6"
             />
 
-            <SubmitButton
+            <SquareButton
               name="저장하기"
               onClick={() => {}}
               className="self-end"

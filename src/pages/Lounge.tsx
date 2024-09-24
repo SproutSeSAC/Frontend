@@ -2,15 +2,11 @@ import { useMemo } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import {
-  positionList,
-  progressList,
-  stackList,
-} from '@/constant/\bfilterConstant';
+import { positionList, progressList, stackList } from '@/constants';
 
 import MultiSelectDropdown from '@/components/common/MultiSelectDropdown';
 import SelectableDropdown from '@/components/common/SelectableDropdown';
-import SubmitButton from '@/components/common/button/SubmitButton';
+import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import LoungeEditor from '@/components/lounge/editor/LoungeEditor';
@@ -180,7 +176,7 @@ export default function Lounge() {
           height="h-12"
           onChange={() => {}}
         />
-        <SubmitButton
+        <SquareButton
           name="검색하기"
           onClick={() => {}}
           className="w-20 whitespace-nowrap px-3.5 py-3 text-white"
