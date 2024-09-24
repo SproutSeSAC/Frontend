@@ -1,4 +1,9 @@
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
@@ -15,7 +20,7 @@ export const leaveMemberShip = (userId: number) => {
   return axiosInstance.put('/login/leave', { userId });
 };
 
-// 나의 회원 정보
+// 나의 회원 정보 얻기
 export const useGetUserInfo = (options?: UseQueryOptions) => {
   const getUserInfo = () => axiosInstance.get('/user');
 
@@ -26,13 +31,25 @@ export const useGetUserInfo = (options?: UseQueryOptions) => {
   });
 };
 
-// 나의 회원 정보
-export const usePostUserInfo = (data: UserInfo, options?: UseQueryOptions) => {
-  const postUserInfo = () => axiosInstance.post('/user', data);
+// 나의 회원 정보 입력
+export const usePostUserInfo = (
+  options?: UseMutationOptions<unknown, Error, UserInfo, unknown>,
+) => {
+  const postUserInfo = async (formData: UserInfo) => {
+    await axiosInstance.post('/user', formData);
+  };
 
-  return useQuery({
-    queryKey: ['userInfo', data],
-    queryFn: postUserInfo,
+  return useMutation<unknown, Error, UserInfo, unknown>({
+    mutationFn: postUserInfo,
+    mutationKey: ['posts'],
+    onSuccess: (data, variables, context) => {
+      console.log('onSuccess', data, variables, context);
+    },
+    onSettled: (data, error, variables, context) => {
+      console.log('onSettled', data, error, variables, context);
+    },
+    retry: 3,
+    retryDelay: 500,
     ...options,
   });
 };

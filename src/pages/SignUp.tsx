@@ -1,3 +1,4 @@
+import { usePostUserInfo } from '@/services/auth/authQueries';
 import {
   useGetCampusList,
   useGetCourseList,
@@ -61,6 +62,8 @@ export default function SignUp() {
 
   const { data: courseList } = useGetCourseList(campusIdValue);
 
+  const { mutate } = usePostUserInfo();
+
   const onSubmit: SubmitHandler<UserInfo> = formData => {
     const data = {
       ...formData,
@@ -71,7 +74,7 @@ export default function SignUp() {
 
     const { verifyCode, campusId, ...rest } = data as UserInfo & VerifyCode;
 
-    console.log('최종 데이터:', rest);
+    mutate(rest);
   };
 
   const questionListByRole = getQuestionListByRole(watch('role'));

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginCheck } from '@/services/auth/authQueries';
 
 import { setCookie } from '@/utils';
+import axios from 'axios';
 
 export default function LoginCheck() {
   const navigate = useNavigate();
@@ -22,21 +23,14 @@ export default function LoginCheck() {
 
       try {
         const response = await loginCheck();
-
-        switch (response?.status) {
-          case 200:
-            navigate('/');
-            break;
-          case 304:
-            navigate('/signup');
-            break;
-          default:
-            break;
+        if (response.status === 200) {
+          navigate('/');
+          window.location.reload();
         }
-
-        window.location.reload();
       } catch (error) {
-        alert('문제가 발생했습니다!');
+        if (axios.isAxiosError(error) && error.status === 304) {
+          navigate('/signup');
+        }
       }
     };
 
