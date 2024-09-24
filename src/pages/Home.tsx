@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+
+import { Link, useNavigate } from 'react-router-dom';
 
 import { mockData } from './Lounge';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
+import { getCookie } from '@/utils';
 
 import ScrollContainer from '@/components/common/ScrollContainer';
 import Tag from '@/components/common/Tag';
@@ -21,6 +24,17 @@ export default function Home() {
     startDate: '2024.08.01',
     endDate: '2024.08.31',
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = getCookie('Access-Token');
+    const refreshToken = getCookie('Refresh-Token');
+
+    if (!accessToken || !refreshToken) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   return (
     <>

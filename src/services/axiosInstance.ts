@@ -1,3 +1,4 @@
+import { getCookie } from '@/utils';
 import axios, { InternalAxiosRequestConfig } from 'axios';
 
 export const axiosInstance = axios.create({
@@ -6,9 +7,8 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const tokens = JSON.parse(localStorage.getItem('sproutToken') as string);
-
-    const { accessToken, refreshToken } = tokens;
+    const accessToken = getCookie('Access-Token');
+    const refreshToken = getCookie('Refresh-Token');
 
     if (accessToken && refreshToken) {
       config.headers.set('Access-Token', accessToken);
