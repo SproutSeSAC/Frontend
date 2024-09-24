@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export type TermsAndPolicyType = '개인정보 처리방침' | '서비스 이용약관';
 
 export const getPolicyContent = async (type: TermsAndPolicyType) => {
@@ -6,10 +8,9 @@ export const getPolicyContent = async (type: TermsAndPolicyType) => {
       ? 'termsAndConditionsOfService'
       : 'policyOfHandlingPersonalInformation';
 
-  const response = await fetch(`/src/assets/terms-and-policy/${filename}.html`);
+  const response = await axios.get(
+    `/src/assets/terms-and-policy/${filename}.html`,
+  );
 
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.text();
+  return response.data;
 };
