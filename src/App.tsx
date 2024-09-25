@@ -65,6 +65,10 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
   },
   {
@@ -78,10 +82,6 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignUp />,
-  },
-  {
-    path: '*',
-    element: <NotFound />,
   },
 ]);
 
