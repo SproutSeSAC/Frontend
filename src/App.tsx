@@ -2,12 +2,15 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import AnnouncementLayout from './layouts/AnnouncementLayout';
+import Announcement from './pages/Announcement';
+import AnnouncementDetail from './pages/AnnouncementDetail';
+
 import Layout from '@/layouts/Layout';
 import LoungeLayout from '@/layouts/LoungeLayout';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 
-import Announcement from '@/pages/Announcement';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import LoginCheck from '@/pages/LoginCheck';
@@ -33,7 +36,17 @@ const router = createBrowserRouter([
       },
       {
         path: 'announcement',
-        element: <Announcement />,
+        element: <AnnouncementLayout />,
+        children: [
+          {
+            index: true,
+            element: <Announcement />,
+          },
+          {
+            path: 'post/:postId',
+            element: <AnnouncementDetail />,
+          },
+        ],
       },
       {
         path: 'mypage',
