@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -14,11 +14,13 @@ import SearchInput from '@/components/common/input/SearchInput';
 import MealRecruitSideView from '@/components/meal-recruit/MealRecruitSideView';
 import StoreCard from '@/components/store/StoreCard';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
+import StoreModal from '@/components/store/StoreModal';
 
 export default function Store() {
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const observeRef = useRef(null);
 
@@ -36,6 +38,10 @@ export default function Store() {
   // );
 
   // useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
+
+  const onOpenModal = () => {
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -69,13 +75,21 @@ export default function Store() {
 
             <div className="flex flex-wrap justify-around gap-9 text-base">
               {Array.from({ length: 12 }, (_, idx) => (
-                <StoreCard key={idx} width="w-[290px]" height="h-[290px]" />
+                <button onClick={onOpenModal} key={idx} type="button">
+                  <StoreCard width="w-[290px]" height="h-[290px]" />
+                </button>
               ))}
               <div ref={observeRef} />
             </div>
           </div>
         </section>
       </MainView>
+
+      {isModalOpen && (
+        <div className="bg-red absolute left-[65%] top-1/2 z-20 h-full w-full -translate-x-[45%] -translate-y-1/2 transform">
+          <StoreModal onClose={() => setIsModalOpen(false)} />
+        </div>
+      )}
 
       <MealRecruitSideView
         sideViewOpen={sideViewOpen}

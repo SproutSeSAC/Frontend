@@ -1,4 +1,11 @@
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import { useQueryClient } from '@tanstack/react-query';
+
+import { usePostLoungeProject } from '@/services/lounge/loungeMutations';
+import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
 
 import MultiSelectDropdown from '../../common/MultiSelectDropdown';
 import SelectableDropdown from '../../common/SelectableDropdown';
@@ -7,15 +14,24 @@ import SquareButton from '../../common/button/SquareButton';
 import LoungeTextEditor from './LoungeTextEditor';
 import { loungeEditorSchema } from './loungeEditorSchema';
 
-import GuideNumberIcon from '@/assets/icons/GuideNumberIcon';
-import { stackList } from '@/constants';
+import {
+  Progress,
+  PtypeList,
+  contactMethodList,
+  progressList,
+  stackList,
+} from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Control,
   Controller,
   FormProvider,
   SubmitErrorHandler,
+  SubmitHandler,
   useForm,
+  useWatch,
 } from 'react-hook-form';
+import { BsLink45Deg } from 'react-icons/bs';
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },
@@ -29,22 +45,25 @@ const TAB_LIST = [
 const defaultInputStyle =
   'rounded-2xl border border-solid border-gray4 px-[15px] py-4 bg-white';
 
+const commonOptionBoxClass = 'px-4 py-[15px]';
+const commonOptionClass = 'px-4 py-1 hover:rounded-lg hover:bg-gray4';
+
 // TODO: api type 수정 필요
-interface FormValues {
-  모집구분: string;
-  모집기간1: string;
-  모집기간2: string;
-  모집인원: string;
-  모집직무: string[];
-  모집유형: string;
-  필요스택: string[];
-  연락방법: string;
-  제목: string;
-  모집기간: string;
+export interface FormValues {
+  recruitmentCount: number;
+  meetingType: Progress;
+  contactMethod: string;
+  recruitmentType: string;
+  startDate: string;
+  endDate: string;
+  positions: number[];
+  requiredStacks: number[];
+  projectTitle: string;
+  projectDescription: string;
 }
 
 interface LabeledSectionProps {
-  label: string;
+  label: string | ReactNode;
   children: ReactNode;
   className?: string;
 }
@@ -58,24 +77,81 @@ function LabeledSection({ label, children, className }: LabeledSectionProps) {
   );
 }
 
+function ContactMethodContainer({ control }: { control: Control<FormValues> }) {
+  const contactMethod = useWatch({ control, name: 'contactMethod' });
+
+  return (
+    <div className={`${contactMethod && 'flex gap-2'}`}>
+      <Controller
+        control={control}
+        name="contactMethod"
+        render={({ field: { onChange } }) => {
+          return (
+            <SelectableDropdown
+              label="연락 방법"
+              width="100%"
+              options={contactMethodList}
+              selectBoxClassName={`${defaultInputStyle}`}
+              selectOptionBoxClassName={commonOptionBoxClass}
+              selectOptionClassName={commonOptionClass}
+              onChangeValue={data => onChange(data[0].key)}
+            />
+          );
+        }}
+      />
+      {contactMethod && (
+        <input
+          type="text"
+          className={`${defaultInputStyle} w-full ${contactMethod && 'flex-1'}`}
+          onChange={() => {}}
+          // value={value}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function LoungeEditor() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const methods = useForm<FormValues>({
     defaultValues: {
-      모집구분: '',
-      모집기간1: '',
-      모집기간2: '',
-      모집인원: '',
-      모집직무: [],
-      모집유형: '',
-      필요스택: [],
-      연락방법: '',
-      제목: '',
-      모집기간: '',
+      recruitmentCount: 0,
+      meetingType: 'ONLINE',
+      contactMethod: '',
+      recruitmentType: '',
+      startDate: '',
+      endDate: '',
+      positions: [],
+      requiredStacks: [],
+      projectTitle: '',
+      projectDescription: '',
     },
     resolver: zodResolver(loungeEditorSchema),
   });
+  const { data: positionsList } = useGetLoungePositionsFilterList();
+  const { mutateAsync } = usePostLoungeProject();
 
   const { handleSubmit, control } = methods;
+
+  const onSubmit: SubmitHandler<FormValues> = async data => {
+    const params = {
+      ...data,
+      recruitmentCount: Number(data.recruitmentCount),
+    };
+
+    try {
+      await mutateAsync(params);
+      console.log('성공');
+      queryClient.invalidateQueries({
+        queryKey: ['useGetLoungeProjects', {}],
+      });
+      navigate('/lounge');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
     err => {
@@ -91,36 +167,45 @@ export default function LoungeEditor() {
     [methods],
   );
 
+  const recruitmentCountList = useMemo(() => {
+    return Array.from({ length: 10 }, (_, index) => {
+      if (index === 9) {
+        return {
+          id: index + 1,
+          name: `${index + 1}명 이상`,
+        };
+      }
+      return {
+        id: index + 1,
+        name: `${index + 1}명`,
+      };
+    });
+  }, []);
+
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={handleSubmit(
-          submitData => console.log('submitData', submitData),
-          onError,
-        )}
-        className="mt-[26px]"
-      >
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-[26px]">
         <div className="flex items-center gap-1.5">
-          <GuideNumberIcon version="v1" />
+          <div className="font-600 flex h-6 w-6 items-center justify-center rounded-full bg-skyBlue1 text-[18px] text-white">
+            1
+          </div>
           <Title as="h1" title="프로젝트 필수 정보" />
         </div>
         <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
           <LabeledSection label="모집 구분" className="col-span-2">
             <Controller
               control={control}
-              name="모집구분"
+              name="recruitmentType"
               render={({ field: { onChange } }) => {
                 return (
                   <SelectableDropdown
                     label="모집 구분"
                     width="50%"
-                    options={[
-                      { key: '프로젝트, 스터디', value: '프로젝트, 스터디' },
-                      { key: '프로젝트, 스터디2', value: '프로젝트, 스터디2' },
-                      { key: '프로젝트, 스터디3', value: '프로젝트, 스터디3' },
-                    ]}
-                    className={`${defaultInputStyle}`}
-                    onChangeValue={data => onChange(data[0].value)}
+                    options={PtypeList}
+                    selectBoxClassName={`${defaultInputStyle}`}
+                    selectOptionBoxClassName={commonOptionBoxClass}
+                    selectOptionClassName={commonOptionClass}
+                    onChangeValue={data => onChange(data[0].key)}
                   />
                 );
               }}
@@ -131,7 +216,7 @@ export default function LoungeEditor() {
             <div className="flex w-full items-center gap-2">
               <Controller
                 control={control}
-                name="모집기간1"
+                name="startDate"
                 render={({ field: { onChange, value } }) => {
                   return (
                     <input
@@ -147,7 +232,7 @@ export default function LoungeEditor() {
               <span>~</span>
               <Controller
                 control={control}
-                name="모집기간2"
+                name="endDate"
                 render={({ field: { onChange, value } }) => {
                   return (
                     <input
@@ -165,28 +250,17 @@ export default function LoungeEditor() {
           <LabeledSection label="모집 인원">
             <Controller
               control={control}
-              name="모집인원"
+              name="recruitmentCount"
               render={({ field: { onChange } }) => {
                 return (
                   <SelectableDropdown
                     label="모집 인원"
                     width="100%"
-                    options={[
-                      {
-                        key: '인원 미정 ~ 10명 이상',
-                        value: '인원 미정 ~ 10명 이상',
-                      },
-                      {
-                        key: '인원 미정 ~ 20명 이상',
-                        value: '인원 미정 ~ 20명 이상',
-                      },
-                      {
-                        key: '인원 미정 ~ 30명 이상',
-                        value: '인원 미정 ~ 30명 이상',
-                      },
-                    ]}
-                    className={`${defaultInputStyle}`}
-                    onChangeValue={data => onChange(data[0].value)}
+                    options={recruitmentCountList}
+                    selectOptionBoxClassName={commonOptionBoxClass}
+                    selectOptionClassName={commonOptionClass}
+                    selectBoxClassName={`${defaultInputStyle}`}
+                    onChangeValue={data => onChange(data[0].name)}
                   />
                 );
               }}
@@ -195,19 +269,20 @@ export default function LoungeEditor() {
           <LabeledSection label="모집 직무">
             <Controller
               control={control}
-              name="모집직무"
+              name="positions"
               render={({ field: { onChange } }) => {
                 return (
-                  <MultiSelectDropdown
-                    label="모집직무"
+                  <SelectableDropdown
+                    label="모집 직무"
                     width="100%"
-                    tabList={TAB_LIST}
-                    defaultValue="frontend"
-                    className={`${defaultInputStyle} `}
-                    options={stackList}
+                    isCheckBox
+                    options={positionsList || []}
+                    selectBoxClassName={`${defaultInputStyle}`}
+                    selectOptionBoxClassName={commonOptionBoxClass}
+                    selectOptionClassName={commonOptionClass}
                     onChangeValue={data => {
-                      const newData = data.map(item => item.value);
-                      onChange(newData);
+                      const ids = data.map(item => item.id);
+                      onChange(ids);
                     }}
                   />
                 );
@@ -217,19 +292,17 @@ export default function LoungeEditor() {
           <LabeledSection label="모집 유형">
             <Controller
               control={control}
-              name="모집유형"
+              name="meetingType"
               render={({ field: { onChange } }) => {
                 return (
                   <SelectableDropdown
                     label="모집 유형"
                     width="100%"
-                    options={[
-                      { key: '온라인', value: '온라인' },
-                      { key: '오프라인', value: '오프라인' },
-                      { key: '혼합', value: '혼합' },
-                    ]}
-                    className={`${defaultInputStyle}`}
-                    onChangeValue={data => onChange(data[0].value)}
+                    options={progressList}
+                    selectBoxClassName={`${defaultInputStyle}`}
+                    selectOptionBoxClassName={commonOptionBoxClass}
+                    selectOptionClassName={commonOptionClass}
+                    onChangeValue={data => onChange(data[0].key)}
                   />
                 );
               }}
@@ -238,7 +311,7 @@ export default function LoungeEditor() {
           <LabeledSection label="필요 스택">
             <Controller
               control={control}
-              name="필요스택"
+              name="requiredStacks"
               render={({ field: { onChange } }) => {
                 return (
                   <MultiSelectDropdown
@@ -249,41 +322,37 @@ export default function LoungeEditor() {
                     className={`${defaultInputStyle} `}
                     options={stackList}
                     onChangeValue={data => {
-                      const newData = data.map(item => item.value);
-                      onChange(newData);
+                      const ids = data.map(item => item.id);
+                      onChange(ids);
                     }}
                   />
                 );
               }}
             />
           </LabeledSection>
-          <LabeledSection label="연락 방법">
-            <Controller
-              control={control}
-              name="연락방법"
-              render={({ field: { onChange, value } }) => {
-                return (
-                  <input
-                    type="text"
-                    className={`${defaultInputStyle} w-full`}
-                    onChange={onChange}
-                    value={value}
-                  />
-                );
-              }}
-            />
+          <LabeledSection
+            label={
+              <div className="flex items-center gap-1.5">
+                <div>연락 방법</div>
+                <BsLink45Deg size={22} />
+              </div>
+            }
+          >
+            <ContactMethodContainer control={control} />
           </LabeledSection>
         </div>
 
         <div className="mt-16 flex items-center gap-1.5">
-          <GuideNumberIcon version="v2" />
+          <div className="font-600 flex h-6 w-6 items-center justify-center rounded-full bg-skyBlue1 text-[18px] text-white">
+            2
+          </div>
           <Title as="h1" title="프로젝트 상세 정보" />
         </div>
         <div className="w-full">
           <LabeledSection label="제목" className="mt-8">
             <Controller
               control={control}
-              name="제목"
+              name="projectTitle"
               render={({ field: { onChange, value } }) => {
                 return (
                   <input
@@ -301,11 +370,11 @@ export default function LoungeEditor() {
             <LoungeTextEditor />
           </LabeledSection>
         </div>
-        <div className="flax mt-8 w-full items-center justify-end gap-4">
+        <div className="flax mt-8 w-full items-center justify-end gap-4 text-end">
           <button
             type="button"
             className="mr-2 rounded-lg bg-gray2 px-4 py-2 tracking-tight text-white"
-            onClick={() => {}}
+            onClick={() => navigate(-1)}
           >
             취소
           </button>

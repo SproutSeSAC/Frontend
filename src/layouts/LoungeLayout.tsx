@@ -5,8 +5,8 @@ import Header from './Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
-import LoungeSideView from '@/components/lounge/LoungeSideView';
-import LoungeTabNavigation from '@/components/lounge/LoungeTabNavigation';
+import LoungeSideView from '@/components/lounge/layout/LoungeSideView';
+import LoungeTabNavigation from '@/components/lounge/layout/LoungeTabNavigation';
 
 export default function LoungeLayout() {
   const location = useLocation();

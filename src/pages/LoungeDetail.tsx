@@ -2,10 +2,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { FaChevronLeft } from 'react-icons/fa';
 
+import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
-import LoungeApplicationInfo from '@/components/lounge/detail/LoungeApplicationInfo';
-import LoungeComment from '@/components/lounge/detail/LoungeComment';
-import LoungePostDetails from '@/components/lounge/detail/LoungePostDetails';
+import ApplicationInfoTemplate from '@/components/common/postTemplate/ApplicationInfoTemplate';
+import CommentTemplate from '@/components/common/postTemplate/CommentTemplate';
+import PostDetailsTemplate from '@/components/common/postTemplate/PostDetailsTemplate';
 
 export default function LoungeDetail() {
   const navigate = useNavigate();
@@ -28,12 +29,20 @@ export default function LoungeDetail() {
               </h1>
               <FavoriteButton isFavorite={false} onClick={() => {}} size={24} />
             </div>
-            <LoungeApplicationInfo />
-            <LoungePostDetails />
+            <Tag
+              color="green"
+              size="medium"
+              text="프로젝트"
+              className="mt-12 w-fit"
+            />
+            <ApplicationInfoTemplate />
+            <PostDetailsTemplate
+              actions={[{ label: '참여하기', onClick: () => {} }]}
+            />
           </div>
         </div>
       </div>
-      <LoungeComment />
+      <CommentTemplate />
     </div>
   );
 }

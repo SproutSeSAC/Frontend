@@ -35,7 +35,7 @@ export default function LoungeModal({ toggleModal }: LoungeModalProps) {
           className={`${defaultInputStyle} mb-6`}
           options={stackList}
           onChangeValue={data => {
-            const newData = data.map(item => item.value);
+            const newData = data.map(item => item.name);
             console.log(newData);
           }}
         />
