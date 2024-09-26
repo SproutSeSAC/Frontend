@@ -1,21 +1,11 @@
-import { usePostUserInfo } from '@/services/auth/authQueries';
-import {
-  useGetCampusList,
-  useGetCourseList,
-} from '@/services/course/courseQueries';
-import {
-  useGetDomainList,
-  useGetJobList,
-  useGetTechStackList,
-} from '@/services/specifications/specificationsQueries';
-
 import { currentStepAtom } from '@/atoms/formStepAtom';
 
 import { getQuestionListByRole, matchedRoleName } from '@/constants';
+import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { UserInfo, VerifyCode } from '@/types';
 import { useAtom } from 'jotai';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import Dropdown from '@/components/common/form/Dropdown';
@@ -45,48 +35,25 @@ export default function SignUp() {
     mode: 'onSubmit',
     defaultValues,
   });
+
   const { handleSubmit, watch } = methods;
 
-  const campusIdValue = watch('campusId');
+  const watchedRole = watch('role');
+  const watchedCampusId = watch('campusId');
 
-  const { data: jobList, isLoading: isJobListLoading } = useGetJobList();
+  const {
+    jobList,
+    domainList,
+    campusList,
+    courseList,
+    techStackList,
+    onSubmit,
+    isLoading,
+  } = useHandleSignUp(watchedCampusId);
 
-  const { data: domainList, isLoading: isDomainListLoading } =
-    useGetDomainList();
+  const questionListByRole = getQuestionListByRole(watchedRole);
 
-  const { data: techStackList, isLoading: isTechStackListLoading } =
-    useGetTechStackList();
-
-  const { data: campusList, isLoading: isCampusListLoading } =
-    useGetCampusList();
-
-  const { data: courseList } = useGetCourseList(campusIdValue);
-
-  const { mutate } = usePostUserInfo();
-
-  const onSubmit: SubmitHandler<UserInfo> = formData => {
-    const data = {
-      ...formData,
-      courseId: +formData.courseId,
-      marketingConsent:
-        (formData.marketingConsent as unknown as string) === 'true',
-    };
-
-    const { verifyCode, campusId, ...rest } = data as UserInfo & VerifyCode;
-
-    mutate(rest);
-  };
-
-  const questionListByRole = getQuestionListByRole(watch('role'));
-
-  if (
-    isCampusListLoading ||
-    isDomainListLoading ||
-    isJobListLoading ||
-    isTechStackListLoading
-  ) {
-    return null;
-  }
+  if (isLoading) return null;
 
   return (
     <AuthPageLayout>
@@ -243,7 +210,7 @@ export default function SignUp() {
                   }),
               )}
 
-              {watch('role') === 'PRE_TRAINEE' && (
+              {watchedRole === 'PRE_TRAINEE' && (
                 <span className="mt-10 inline-block text-center text-gray2">
                   예비 수강생은 제한된 서비스만 이용 가능합니다.
                 </span>
