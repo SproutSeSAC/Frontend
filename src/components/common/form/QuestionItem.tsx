@@ -10,11 +10,11 @@ export default function QuestionItem({
   children: ReactNode;
 }) {
   return (
-    <div className="relative mb-10">
+    <div className="relative pb-14">
       <h4 className="mb-4 block text-lg font-semibold">
         {title}
 
-        <span className="ml-2 text-base font-normal text-[#FF3939]">
+        <span className="ml-2 text-base font-normal text-vividGreen2">
           {condition?.includes('최대') ? (
             <>
               <span className="text-gray2">*최대</span>

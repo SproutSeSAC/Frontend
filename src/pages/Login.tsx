@@ -19,9 +19,17 @@ export default function Login() {
 
   return (
     <AuthPageLayout>
-      <h1 className="mb-[10%] text-lg font-medium">
-        <span className="text-3xl font-medium text-oliveGreen1">SPROUT</span>에
-        오신 것을 환영합니다
+      <img
+        src="/sprout_logo.png"
+        alt="sprout 로고"
+        className="mb-[30%] h-10 w-10"
+      />
+
+      <h1 className="mb-[5%] text-lg font-medium">
+        <span className="mr-0.5 text-2xl font-medium text-oliveGreen1">
+          SPROUT
+        </span>
+        에 오신 것을 환영합니다
       </h1>
 
       <p className="tracking-tight text-gray1">
@@ -57,6 +65,10 @@ export default function Login() {
         </button>
         의 내용을 확인한 것으로 간주합니다
       </p>
+
+      <span className="mt-auto self-end text-sm text-gray1">
+        © Team Sprout 2024
+      </span>
 
       {modalState.isOpen && (
         <Modal

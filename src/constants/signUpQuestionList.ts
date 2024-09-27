@@ -1,4 +1,4 @@
-import { QuestionsByStep, Role } from '@/types';
+import { KeyOfRole, QuestionsByStep } from '@/types';
 
 const commonFirstStep: QuestionsByStep[] = [
   {
@@ -23,6 +23,13 @@ const commonFirstStep: QuestionsByStep[] = [
 
 const commonStudentStep: QuestionsByStep[] = [
   {
+    title: {
+      text: '본인의 스택을 선택해주세요.',
+      condition: '',
+    },
+    techStackIdList: [],
+  },
+  {
     title: { text: '관심있는 직군을 선택해주세요.', condition: '*최대 5가지' },
     jobIdList: [],
   },
@@ -33,13 +40,6 @@ const commonStudentStep: QuestionsByStep[] = [
     },
     domainIdList: [],
   },
-  {
-    title: {
-      text: '나의 스킬을 선택해주세요.',
-      condition: '*최대 3가지',
-    },
-    techStackIdList: [],
-  },
 ];
 
 const sesacStudentStep: QuestionsByStep[] = [
@@ -48,7 +48,7 @@ const sesacStudentStep: QuestionsByStep[] = [
     campusId: [],
   },
   {
-    title: { text: '소속 교육과정을 선택해주세요.', condition: '*선택' },
+    title: { text: '소속 교육과정을 선택해주세요.', condition: '' },
     courseId: [],
   },
 ];
@@ -59,14 +59,14 @@ const adminStep: QuestionsByStep[] = [
     campusId: [],
   },
   {
-    title: { text: '담당 교육 과정은 무엇인가요?', condition: '*선택' },
+    title: { text: '담당 교육 과정은 무엇인가요?', condition: '' },
     courseId: [],
   },
 ];
 
 const indentification: QuestionsByStep[] = [
   {
-    title: { text: '정보 확인을 위하여 확인 코드를 작성해주세요.' },
+    title: { text: '정보 확인을 위하여 확인 코드를 입력해주세요.' },
     verifyCode: '',
   },
 ];
@@ -80,7 +80,7 @@ const marketingConsent: QuestionsByStep[] = [
   },
 ];
 
-export const getQuestionListByRole = (role: Role): QuestionsByStep[][] => {
+export const getQuestionListByRole = (role: KeyOfRole): QuestionsByStep[][] => {
   if (role === 'TRAINEE') {
     return [
       commonFirstStep,

@@ -72,7 +72,7 @@ export default function FormStepIndicator({
         <SquareButton
           name="다음"
           onClick={goNextStep}
-          className="mt-14 w-[50%] self-center px-4 py-3 font-medium"
+          className="mt-[20%] w-[50%] self-center px-4 py-3 font-medium"
         />
       )}
     </>
