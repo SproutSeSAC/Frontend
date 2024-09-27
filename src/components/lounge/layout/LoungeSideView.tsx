@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 
-import Tag from '../common/Tag';
-import Title from '../common/Title';
-import UserImage from '../user/UserImage';
+import Tag from '@/components/common/Tag';
+import Title from '@/components/common/Title';
+import UserImage from '@/components/user/UserImage';
 
 const TAG_LIST = [
   '#스터디',

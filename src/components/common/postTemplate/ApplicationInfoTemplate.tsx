@@ -1,9 +1,8 @@
-export default function LoungeApplicationInfo() {
+// interface LoungeApplicationInfoProps {}
+
+export default function ApplicationInfoTemplate() {
   return (
-    <div className="mt-12">
-      <div className="py-3px w-fit rounded-3xl bg-vividGreen1 px-[13px] text-lg text-white">
-        # 프로젝트
-      </div>
+    <div>
       <div className="mt-4 flex w-full gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
         <div className="flex w-full flex-col gap-6">
           <div className="flex items-center gap-3 text-[22px]">

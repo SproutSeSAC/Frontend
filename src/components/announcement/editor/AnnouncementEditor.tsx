@@ -5,31 +5,27 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostLoungeProject } from '@/services/lounge/loungeMutations';
-import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
 
+// import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
 import MultiSelectDropdown from '../../common/MultiSelectDropdown';
 import SelectableDropdown from '../../common/SelectableDropdown';
 import Title from '../../common/Title';
 import SquareButton from '../../common/button/SquareButton';
-import LoungeTextEditor from './LoungeTextEditor';
-import { loungeEditorSchema } from './loungeEditorSchema';
+import AnnouncementTextEditor from './AnnouncementTextEditor';
 
 import {
   Progress,
   PtypeList,
-  contactMethodList,
+  positionList,
   progressList,
   stackList,
 } from '@/constants';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Control,
   Controller,
   FormProvider,
   SubmitErrorHandler,
   SubmitHandler,
   useForm,
-  useWatch,
 } from 'react-hook-form';
 import { BsLink45Deg } from 'react-icons/bs';
 
@@ -77,41 +73,7 @@ function LabeledSection({ label, children, className }: LabeledSectionProps) {
   );
 }
 
-function ContactMethodContainer({ control }: { control: Control<FormValues> }) {
-  const contactMethod = useWatch({ control, name: 'contactMethod' });
-
-  return (
-    <div className={`${contactMethod && 'flex gap-2'}`}>
-      <Controller
-        control={control}
-        name="contactMethod"
-        render={({ field: { onChange } }) => {
-          return (
-            <SelectableDropdown
-              label="연락 방법"
-              width="100%"
-              options={contactMethodList}
-              selectBoxClassName={`${defaultInputStyle}`}
-              selectOptionBoxClassName={commonOptionBoxClass}
-              selectOptionClassName={commonOptionClass}
-              onChangeValue={data => onChange(data[0].key)}
-            />
-          );
-        }}
-      />
-      {contactMethod && (
-        <input
-          type="text"
-          className={`${defaultInputStyle} w-full ${contactMethod && 'flex-1'}`}
-          onChange={() => {}}
-          // value={value}
-        />
-      )}
-    </div>
-  );
-}
-
-export default function LoungeEditor() {
+export default function AnnouncementEditor() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -128,9 +90,8 @@ export default function LoungeEditor() {
       projectTitle: '',
       projectDescription: '',
     },
-    resolver: zodResolver(loungeEditorSchema),
   });
-  const { data: positionsList } = useGetLoungePositionsFilterList();
+  // const { data: positionsList } = useGetLoungePositionsFilterList();
   const { mutateAsync } = usePostLoungeProject();
 
   const { handleSubmit, control } = methods;
@@ -189,7 +150,7 @@ export default function LoungeEditor() {
           <div className="font-600 flex h-6 w-6 items-center justify-center rounded-full bg-skyBlue1 text-[18px] text-white">
             1
           </div>
-          <Title as="h1" title="프로젝트 필수 정보" />
+          <Title as="h1" title="공지사항 필수 정보" />
         </div>
         <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
           <LabeledSection label="모집 구분" className="col-span-2">
@@ -276,7 +237,7 @@ export default function LoungeEditor() {
                     label="모집 직무"
                     width="100%"
                     isCheckBox
-                    options={positionsList || []}
+                    options={positionList || []}
                     selectBoxClassName={`${defaultInputStyle}`}
                     selectOptionBoxClassName={commonOptionBoxClass}
                     selectOptionClassName={commonOptionClass}
@@ -338,7 +299,66 @@ export default function LoungeEditor() {
               </div>
             }
           >
-            <ContactMethodContainer control={control} />
+            <Controller
+              control={control}
+              name="contactMethod"
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <input
+                    type="text"
+                    className={`${defaultInputStyle} w-full`}
+                    onChange={onChange}
+                    value={value}
+                  />
+                );
+              }}
+            />
+          </LabeledSection>
+          <LabeledSection
+            label={
+              <div className="flex items-center gap-1.5">
+                <div>zoom</div>
+                <BsLink45Deg size={22} />
+              </div>
+            }
+          >
+            <Controller
+              control={control}
+              name="contactMethod"
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <input
+                    type="text"
+                    className={`${defaultInputStyle} w-full`}
+                    onChange={onChange}
+                    value={value}
+                  />
+                );
+              }}
+            />
+          </LabeledSection>
+          <LabeledSection
+            label={
+              <div className="flex items-center gap-1.5">
+                <div>만족도 조사</div>
+                <BsLink45Deg size={22} />
+              </div>
+            }
+          >
+            <Controller
+              control={control}
+              name="contactMethod"
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <input
+                    type="text"
+                    className={`${defaultInputStyle} w-full`}
+                    onChange={onChange}
+                    value={value}
+                  />
+                );
+              }}
+            />
           </LabeledSection>
         </div>
 
@@ -346,7 +366,7 @@ export default function LoungeEditor() {
           <div className="font-600 flex h-6 w-6 items-center justify-center rounded-full bg-skyBlue1 text-[18px] text-white">
             2
           </div>
-          <Title as="h1" title="프로젝트 상세 정보" />
+          <Title as="h1" title="공지사항 상세 정보" />
         </div>
         <div className="w-full">
           <LabeledSection label="제목" className="mt-8">
@@ -367,7 +387,7 @@ export default function LoungeEditor() {
             />
           </LabeledSection>
           <LabeledSection label="모집기간" className="mt-6">
-            <LoungeTextEditor />
+            <AnnouncementTextEditor />
           </LabeledSection>
         </div>
         <div className="flax mt-8 w-full items-center justify-end gap-4 text-end">

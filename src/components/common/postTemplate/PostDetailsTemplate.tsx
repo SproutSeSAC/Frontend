@@ -1,12 +1,17 @@
-import LoungeModal from '../LoungeModal';
+import LoungeModal from '../../lounge/LoungeModal';
 
 import { useToggleModal } from '@/hooks';
 import { BsEye } from 'react-icons/bs';
 
-import SquareButton from '@/components/common/button/SquareButton';
 import UserImage from '@/components/user/UserImage';
 
-export default function LoungePostDetails() {
+interface PostDetailsTemplateProps {
+  actions?: Array<{ label: string; onClick: () => void; className?: string }>;
+}
+
+export default function PostDetailsTemplate({
+  actions,
+}: PostDetailsTemplateProps) {
   const { toggleModal, modalOpen } = useToggleModal();
   return (
     <>
@@ -29,7 +34,19 @@ export default function LoungePostDetails() {
             </div>
           </div>
         </div>
-        <SquareButton name="참여하기" onClick={() => {}} />
+
+        <div className="flex gap-4">
+          {actions?.map(item => (
+            <button
+              key={item.label}
+              type="button"
+              className={`rounded-lg px-4 py-2 tracking-tight text-white ${item.className}`}
+              onClick={item.onClick}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mt-6 text-lg">

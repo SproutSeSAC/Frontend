@@ -3,7 +3,7 @@ import { BsHeart, BsHeartFill } from 'react-icons/bs';
 interface FavoriteButtonProps {
   size?: number | string;
   isFavorite: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
@@ -16,17 +16,13 @@ export default function FavoriteButton({
   isFavorite,
   onClick,
 }: FavoriteButtonProps) {
-  return isFavorite ? (
-    <BsHeartFill
-      size={size}
-      className="cursor-pointer text-oliveGreen1"
-      onClick={onClick}
-    />
-  ) : (
-    <BsHeart
-      size={size}
-      className="cursor-pointer text-oliveGreen1"
-      onClick={onClick}
-    />
+  return (
+    <button type="button" onClick={onClick}>
+      {isFavorite ? (
+        <BsHeartFill size={size} className="cursor-pointer text-oliveGreen1" />
+      ) : (
+        <BsHeart size={size} className="cursor-pointer text-oliveGreen1" />
+      )}
+    </button>
   );
 }

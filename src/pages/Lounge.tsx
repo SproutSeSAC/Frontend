@@ -1,127 +1,22 @@
-import { useMemo } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-import { positionList, progressList, stackList } from '@/constants';
+import {
+  useGetLoungePositionsFilterList,
+  useGetLoungeProjects, // useGetLoungeTechStackFilterList,
+} from '@/services/lounge/loungeQueries';
+
+import { progressList, sortList, stackList } from '@/constants';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 
 import MultiSelectDropdown from '@/components/common/MultiSelectDropdown';
+import Pagination from '@/components/common/Pagination';
 import SelectableDropdown from '@/components/common/SelectableDropdown';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import LoungeEditor from '@/components/lounge/editor/LoungeEditor';
-
-export interface Card {
-  id: number;
-  tag: string;
-  type: string;
-  title: string;
-  date: string;
-  maximum: number;
-  current: number;
-  job: string[];
-  category: string;
-  like: boolean;
-}
-
-export const mockData: Card[] = [
-  {
-    id: 1,
-    tag: '# 프로젝트',
-    type: '건설',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱',
-    date: '2024.09.24 ~ 2024.10.11',
-    maximum: 5,
-    current: 3,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인',
-    like: false,
-  },
-  {
-    id: 2,
-    tag: '# 스터디',
-    type: '건설2',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱2',
-    date: '2024.09.24 ~ 2024.10.12',
-    maximum: 5,
-    current: 3,
-    job: ['프론트엔드'],
-    category: '온라인2',
-    like: false,
-  },
-  {
-    id: 3,
-    tag: '# 프로젝트',
-    type: '건설3',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱3',
-    date: '2024.09.24 ~ 2024.10.13',
-    maximum: 5,
-    current: 2,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인3',
-    like: true,
-  },
-  {
-    id: 4,
-    tag: '# 스터디',
-    type: '건설4',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱4',
-    date: '2024.09.24 ~ 2024.10.11',
-    maximum: 5,
-    current: 1,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인4',
-    like: true,
-  },
-  {
-    id: 5,
-    tag: '# 스터디',
-    type: '건설5',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱5',
-    date: '2024.09.24 ~ 2024.10.11',
-    maximum: 5,
-    current: 4,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인5',
-    like: false,
-  },
-  {
-    id: 6,
-    tag: '# 프로젝트',
-    type: '건설6',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱6',
-    date: '2024.09.24 ~ 2024.10.11',
-    maximum: 5,
-    current: 3,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인6',
-    like: true,
-  },
-  {
-    id: 7,
-    tag: '# 프로젝트',
-    type: '건설7',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱7',
-    date: '2024.09.24 ~ 2024.10.11',
-    maximum: 5,
-    current: 3,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인7',
-    like: false,
-  },
-  {
-    id: 8,
-    tag: '# 프로젝트',
-    type: '건설',
-    title: '[서울] 크리스찬들을 위한 챗 GPT 성경앱8',
-    date: '2024.09.24 ~ 2024.10.11',
-    maximum: 5,
-    current: 3,
-    job: ['프론트엔드', '백엔드'],
-    category: '온라인8',
-    like: false,
-  },
-];
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },
@@ -133,52 +28,60 @@ const TAB_LIST = [
   { text: '모두보기', type: 'all' },
 ];
 
+const commonSelectBoxClass =
+  'rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1';
+const commonOptionBoxClass = 'px-1.5 py-2.5';
+const commonOptionClass = 'hover:rounded-sm hover:bg-gray3 pl-1';
+
 export default function Lounge() {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const pType = searchParams.get('pType');
 
-  // 임시구현
-  const filteredData = useMemo(() => {
-    const state = location.state as
-      | 'all'
-      | 'project'
-      | 'study'
-      | 'like'
-      | 'edit'
-      | null;
+  const [filterData, setFilterData] =
+    useState<LoungeDto.Request.GetLoungeProjects>({ page: 1, size: 20 });
 
-    if (state === 'edit') return [];
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  // 로딩 추가
+  const { data } = useGetLoungeProjects(filterData);
+  // const { data: techStackList } = useGetLoungeTechStackFilterList();
+  const { data: positionsList } = useGetLoungePositionsFilterList();
 
-    if (!state || state === 'all') return mockData;
-
-    switch (state) {
-      case 'project':
-        return mockData.filter(item => item.tag === '# 프로젝트');
-      case 'study':
-        return mockData.filter(item => item.tag === '# 스터디');
-      case 'like':
-        return mockData.filter(item => item.like);
-      default:
-        return mockData;
+  const handleChangeFilterValue = useCallback(
+    (value: { id: number; name: string }[], name: string) => {
+      const ids = value.map(item => item.id);
+      setFilterData(prev => ({ ...prev, [name]: ids }));
+    },
+    [],
+  );
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (searchRef.current) {
+      searchRef.current.value = e.target.value;
     }
-  }, [location.state]);
+  }, []);
 
-  if (location.state === 'edit') {
+  const handleSearchSubmit = useCallback(() => {
+    setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
+  }, []);
+
+  if (pType === 'EDIT') {
     return <LoungeEditor />;
   }
-  // console.log(stackList);
+
   return (
     <>
       <div className="flex items-center gap-10">
         <SearchInput
           name="search"
+          ref={searchRef}
           placeholder="검색어를 입력해 주세요"
           width="w-full"
           height="h-12"
-          onChange={() => {}}
+          onEnter={handleSearchSubmit}
+          onChange={handleChange}
         />
         <SquareButton
           name="검색하기"
-          onClick={() => {}}
+          onClick={handleSearchSubmit}
           className="w-20 whitespace-nowrap px-3.5 py-3 text-white"
         />
       </div>
@@ -191,46 +94,57 @@ export default function Lounge() {
             defaultValue="frontend"
             className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
             options={stackList}
-            onChangeValue={value => console.log('value>>', value)}
-          />
-          <SelectableDropdown
-            label="기술스택"
-            options={stackList}
-            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
-            onChangeValue={value => console.log('value>>', value)}
+            onChangeValue={value => handleChangeFilterValue(value, 'techStack')}
           />
 
           <SelectableDropdown
             label="포지션"
-            options={positionList}
-            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
-            onChangeValue={value => console.log('value11>>', value)}
+            selectOptionBoxClassName={commonOptionBoxClass}
+            selectOptionClassName={commonOptionClass}
+            options={positionsList || []}
+            selectBoxClassName={commonSelectBoxClass}
+            onChangeValue={value => handleChangeFilterValue(value, 'position')}
           />
           <SelectableDropdown
             label="진행방식"
             options={progressList}
-            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
-            onChangeValue={value => console.log('value22>>', value)}
+            selectBoxClassName={commonSelectBoxClass}
+            selectOptionBoxClassName={commonOptionBoxClass}
+            selectOptionClassName={commonOptionClass}
+            onChangeValue={value => {
+              const newValue = value.map(item => item.key);
+              setFilterData(prev => ({ ...prev, meetingType: newValue[0] }));
+            }}
           />
         </div>
         <SelectableDropdown
           label="정렬"
-          options={[
-            { key: '최신순', value: '최신순' },
-            { key: '인기순', value: '인기순' },
-          ]}
-          className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
-          onChangeValue={value => console.log('value22>>', value)}
+          options={sortList}
+          selectBoxClassName={commonSelectBoxClass}
+          selectOptionBoxClassName={commonOptionBoxClass}
+          selectOptionClassName={commonOptionClass}
+          onChangeValue={value => {
+            const newValue = value.map(item => item.key);
+            setFilterData(prev => ({ ...prev, sort: newValue[0] }));
+          }}
         />
       </div>
-
-      <ul className="flex flex-wrap gap-6">
-        {filteredData.map(card => (
+      <ul className="mb-[90px] flex flex-wrap gap-6">
+        {(data?.projects || []).map(card => (
           <li key={card.id} className="[&>div]:w-full">
             <LoungePostCard card={card} />
           </li>
         ))}
       </ul>
+      {(data?.projects || []).length > 0 && (
+        <Pagination
+          totalPages={data?.totalPages || 0}
+          currentPage={(data?.currentPage || 0) - 1 || 1}
+          onPageChange={(pageNumber: number) => {
+            setFilterData(prev => ({ ...prev, page: pageNumber }));
+          }}
+        />
+      )}
     </>
   );
 }

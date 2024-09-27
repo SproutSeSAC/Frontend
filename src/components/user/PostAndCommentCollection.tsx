@@ -142,7 +142,11 @@ export default function PostAndCommentCollection() {
       </table>
 
       {/* 페이지네이션 */}
-      <Pagination totalItems={bodyCellList.length} onPageChange={() => {}} />
+      <Pagination
+        totalPages={bodyCellList.length}
+        currentPage={1}
+        onPageChange={() => {}}
+      />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import { mockData } from './Lounge';
+import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
@@ -36,6 +36,8 @@ export default function Home() {
     }
   }, [navigate]);
 
+  const { data: loungeList } = useGetLoungeProjects({ page: 1, size: 10 });
+
   return (
     <>
       <MainView>
@@ -64,9 +66,10 @@ export default function Home() {
           </div>
 
           <ScrollContainer>
-            {mockData.map(card => (
+            {(loungeList?.projects || []).map(card => (
               <LoungePostCard key={card.id} card={card} />
             ))}
+            <div />
           </ScrollContainer>
         </section>
       </MainView>

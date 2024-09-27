@@ -2,21 +2,22 @@ import { useCallback, useState } from 'react';
 
 import OutsideClickContainer from './OutsideClickContainer';
 import TabNavigation from './TabNavigation';
+import Tag from './Tag';
 
-import { BsArrowCounterclockwise, BsX } from 'react-icons/bs';
+import { BsArrowCounterclockwise } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
-interface MultiSelectDropdownProps<T extends string> {
+interface MultiSelectDropdownProps {
   label: string;
-  options: { key: T; value: string; type?: string }[];
-  onChangeValue: (value: { key: T; value: string; type?: string }[]) => void;
+  options: { id: number; name: string; type?: string }[];
+  onChangeValue: (value: { id: number; name: string; type?: string }[]) => void;
   tabList: { text: string; type: string }[];
   width?: string;
   className?: string;
   defaultValue?: string;
 }
 
-function MultiSelectDropdown<T extends string>({
+function MultiSelectDropdown({
   label,
   options,
   width,
@@ -24,19 +25,20 @@ function MultiSelectDropdown<T extends string>({
   defaultValue,
   className,
   onChangeValue,
-}: MultiSelectDropdownProps<T>) {
+}: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(defaultValue || '');
 
   const [tabOptions, setTabOptions] = useState<
-    { key: T; value: string; type?: string }[]
+    { id: number; name: string; type?: string }[]
   >(defaultValue ? options.filter(option => option.type === defaultValue) : []);
 
   const [selectedOptions, setSelectedOptions] = useState<
-    { key: T; value: string }[]
+    { id: number; name: string }[]
   >([]);
 
   const handleSelectOptionChange = useCallback(
-    (option: { key: T; value: string }) => {
+    (option: { id: number; name: string }) => {
       setSelectedOptions(prevSelectedOptions => {
         const updatedOptions = prevSelectedOptions.includes(option)
           ? prevSelectedOptions.filter(item => item !== option)
@@ -54,6 +56,7 @@ function MultiSelectDropdown<T extends string>({
       const newOption = options.filter(option => option.type === tabState);
 
       setTabOptions(tabState === 'all' ? options : newOption);
+      setTabValue(tabState);
     },
     [options],
   );
@@ -63,11 +66,12 @@ function MultiSelectDropdown<T extends string>({
       if (value) {
         setSelectedOptions(prevSelectedOptions => {
           const updatedOptions = prevSelectedOptions.filter(
-            selectItem => selectItem.value !== value,
+            selectItem => selectItem.name !== value,
           );
           onChangeValue(updatedOptions);
           return updatedOptions;
         });
+        return;
       }
       setSelectedOptions([]);
       onChangeValue([]);
@@ -84,8 +88,8 @@ function MultiSelectDropdown<T extends string>({
       >
         <span className="w-full">
           {selectedOptions.length > 1 &&
-            `${selectedOptions[0].value} 외 ${selectedOptions.length - 1}개`}
-          {selectedOptions.length === 1 && selectedOptions[0].value}
+            `${selectedOptions[0].name} 외 ${selectedOptions.length - 1}개`}
+          {selectedOptions.length === 1 && selectedOptions[0].name}
           {selectedOptions.length === 0 && label}
         </span>
         {open ? <IoIosArrowUp /> : <IoIosArrowDown />}
@@ -96,44 +100,42 @@ function MultiSelectDropdown<T extends string>({
         <TabNavigation
           tabList={tabList}
           onChangeValue={value => handleOptions(value)}
-          defaultValue={defaultValue}
+          selectValue={tabValue}
         />
         <ul
           className={`flex flex-wrap gap-2 ${selectedOptions.length === 0 && 'mb-[72px]'}`}
         >
           {tabOptions.map(option => (
             <li
-              key={option.key}
-              className={`w-fit cursor-pointer rounded-3xl border border-solid px-4 py-2 ${selectedOptions.includes(option) ? 'border-gray1' : 'border-gray4'}`}
+              key={`${label}-${option.id}`}
+              className={`w-fit cursor-pointer rounded-3xl border border-solid ${selectedOptions.includes(option) ? 'border-gray1' : 'border-gray4'}`}
             >
-              <label className="flex w-full items-center gap-2">
+              <label className="flex w-full items-center gap-2 px-4 py-2">
                 <input
                   type="checkbox"
                   onChange={() => handleSelectOptionChange(option)}
                   className="hidden"
                 />
-                {option.value}
+                {option.name}
               </label>
             </li>
           ))}
         </ul>
 
         {selectedOptions.length > 0 && (
-          <div className="mx-1 mb-4 mt-6 flex items-center gap-3">
-            <ul className="flex gap-2">
+          <div className="mx-1 mb-4 mt-6 flex items-start gap-3">
+            <ul className="flex flex-wrap gap-2">
               {selectedOptions.map(selectItem => (
                 <li
-                  key={selectItem.key}
+                  key={`${label}-${selectItem.id}`}
                   className="flex items-center gap-2 rounded-md bg-gray4 px-2 py-1"
                 >
-                  {selectItem.value}
-                  <button
-                    type="button"
-                    aria-label={`${selectItem.value}태그 삭제`}
-                    onClick={() => handleChangeTag(selectItem.value)}
-                  >
-                    <BsX size={20} />
-                  </button>
+                  <Tag
+                    color="gray"
+                    size="medium"
+                    text={selectItem.name}
+                    onDeleteClick={() => handleChangeTag(selectItem.name)}
+                  />
                 </li>
               ))}
             </ul>
@@ -142,7 +144,7 @@ function MultiSelectDropdown<T extends string>({
               type="button"
               aria-label="태그 초기화"
               onClick={() => handleChangeTag('')}
-              className="flex items-center gap-1"
+              className="flex min-w-fit items-center"
             >
               <BsArrowCounterclockwise size={20} />
               <span>초기화</span>
