@@ -45,6 +45,17 @@
     .ql-editor.ql-blank::before {
       @apply text-base not-italic text-gray2;
     }
+
+    .announcement-text-divider::after {
+      content: '|'; 
+      margin : 14px;
+      color: #b5b5b5; 
+    }
+    .lounge-text-divider::after {
+      content: '|'; 
+      margin : 8px;
+      color: #b5b5b5; 
+    }
   }
 }
 

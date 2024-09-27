@@ -8,7 +8,7 @@ import ApplicationInfoTemplate from '@/components/common/postTemplate/Applicatio
 import CommentTemplate from '@/components/common/postTemplate/CommentTemplate';
 import PostDetailsTemplate from '@/components/common/postTemplate/PostDetailsTemplate';
 
-export default function LoungeDetail() {
+export default function AnnouncementDetail() {
   const navigate = useNavigate();
   return (
     <div className="w-full">
@@ -25,19 +25,30 @@ export default function LoungeDetail() {
           <div className="w-full px-6 pb-[45px] pt-5">
             <div className="flex items-center justify-between">
               <h1 className="text-[32px] font-semibold">
-                React 프로젝트 하실 분 모집합니다.
+                국민 취업제도 관련 공지
               </h1>
               <FavoriteButton isFavorite={false} onClick={() => {}} size={24} />
             </div>
-            <Tag
-              color="green"
-              size="medium"
-              text="프로젝트"
-              className="mt-12 w-fit"
-            />
+
+            <div className="mt-12 flex gap-2">
+              <Tag
+                color="yellow"
+                size="medium"
+                text="잡코디"
+                className="w-fit"
+              />
+              <Tag color="gray" size="medium" text="특강" className="w-fit" />
+            </div>
             <ApplicationInfoTemplate />
             <PostDetailsTemplate
-              actions={[{ label: '참여하기', onClick: () => {} }]}
+              actions={[
+                { label: 'Zoom', onClick: () => {}, className: 'bg-gray2' },
+                {
+                  label: '참여하기',
+                  onClick: () => {},
+                  className: 'bg-oliveGreen1',
+                },
+              ]}
             />
           </div>
         </div>

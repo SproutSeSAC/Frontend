@@ -22,7 +22,7 @@ const mock = [
   },
 ];
 
-export default function LoungeComment() {
+export default function CommentTemplate() {
   const { register, handleSubmit } = useForm({
     defaultValues: {
       comment: '',

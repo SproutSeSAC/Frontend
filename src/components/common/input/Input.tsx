@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, forwardRef } from 'react';
 
-interface InputProps {
+export interface InputProps {
   type?: 'text' | 'email' | 'password';
   name: string;
   width?: string;
@@ -10,23 +10,30 @@ interface InputProps {
   toggleFocus?: (isFocus: boolean) => void;
   onEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   className?: string;
+  value?: string;
 }
 
-export default function Input({
-  type = 'text',
-  name,
-  placeholder,
-  width = 'w-[422px]',
-  height = 'h-[40px]',
-  onChange,
-  toggleFocus,
-  onEnter,
-  className,
-}: InputProps) {
+const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
+    type = 'text',
+    name,
+    value,
+    placeholder,
+    width = 'w-[422px]',
+    height = 'h-[40px]',
+    onChange,
+    toggleFocus,
+    onEnter,
+    className,
+  }: InputProps,
+  ref,
+) {
   return (
     <input
       type={type}
       id={name}
+      ref={ref}
+      value={value}
       name={name}
       className={`${width} ${height} mr-2 h-full w-full rounded-xl border p-2 outline-none hover:placeholder-black ${className}`}
       placeholder={placeholder}
@@ -36,4 +43,6 @@ export default function Input({
       onKeyDown={onEnter}
     />
   );
-}
+});
+
+export default Input;

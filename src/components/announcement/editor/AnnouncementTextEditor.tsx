@@ -3,7 +3,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import TextEditor from '@/components/common/textEditor/TextEditor';
 
-export default function LoungeTextEditor() {
+export default function AnnouncementTextEditor() {
   const { control } = useFormContext();
 
   return (
