@@ -9,10 +9,17 @@ import {
   useGetTechStackList,
 } from '@/services/specifications/specificationsQueries';
 
-import { UserInfo, VerifyCode } from '@/types';
+import { getQuestionListByRole } from '@/constants';
+import { KeyOfRole, UserInfo, VerifyCode } from '@/types';
 import { SubmitHandler } from 'react-hook-form';
 
-export const useHandleSignUp = (watchedCampusId?: number) => {
+export const useHandleSignUp = ({
+  watchedCampusId,
+  watchedRole,
+}: {
+  watchedCampusId?: number;
+  watchedRole: KeyOfRole;
+}) => {
   const {
     data: jobList,
     isLoading: isJobListLoading, //
@@ -49,6 +56,16 @@ export const useHandleSignUp = (watchedCampusId?: number) => {
     // mutate(rest);
   };
 
+  const questionListByRole = getQuestionListByRole(watchedRole);
+
+  const getQuestionNumber = (index: number, idx: number) => {
+    const previousQuestionsCount = questionListByRole
+      .map(list => list.length)
+      .slice(0, index)
+      .reduce((acc, count) => acc + count, 0);
+    return previousQuestionsCount + idx + 1;
+  };
+
   const isLoading =
     isCampusListLoading ||
     isDomainListLoading ||
@@ -63,5 +80,7 @@ export const useHandleSignUp = (watchedCampusId?: number) => {
     techStackList,
     onSubmit,
     isLoading,
+    questionListByRole,
+    getQuestionNumber,
   };
 };

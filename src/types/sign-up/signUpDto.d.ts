@@ -4,7 +4,7 @@ export type SignUpFormTitle = {
 };
 
 export type SignUpFormData = {
-  step: number;
+  step?: number;
   roles: KeyOfRole[];
   name: string;
   nickname: string;

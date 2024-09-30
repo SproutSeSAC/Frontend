@@ -5,8 +5,8 @@ import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 
-import ScrollContainer from '@/components/common/ScrollContainer';
 import Title from '@/components/common/Title';
+import ScrollContainer from '@/components/common/container/ScrollContainer';
 import Faq from '@/components/faq/Faq';
 import FavoritePostCard from '@/components/user/FavoritePostCard';
 import PostAndCommentCollection from '@/components/user/PostAndCommentCollection';

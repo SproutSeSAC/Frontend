@@ -1,7 +1,7 @@
 import imgUrl from '@/assets/images/food.jpg';
 import Slider from 'react-slick';
 
-import SliderArrow from '@/components/common/SliderArrow';
+import SliderArrow from '@/components/common/slider/SliderArrow';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
 
 interface StoreMenuImageSliderProps {

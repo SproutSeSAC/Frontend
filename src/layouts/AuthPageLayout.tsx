@@ -15,7 +15,7 @@ export default function AuthPageLayout({ children }: Props) {
         className="w-[68%] object-cover"
       />
 
-      <section className="flex w-[32%] flex-col overflow-auto px-[3%] py-[7%] scrollbar-hide">
+      <section className="flex w-[32%] flex-col justify-between overflow-auto px-[3%] py-[8%] scrollbar-hide">
         {children}
       </section>
     </div>

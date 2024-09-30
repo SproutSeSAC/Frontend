@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react';
 
-import OutsideClickContainer from './OutsideClickContainer';
-import TabNavigation from './TabNavigation';
-import Tag from './Tag';
+import TabNavigation from '../TabNavigation';
+import Tag from '../Tag';
 
 import { BsArrowCounterclockwise } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+
+import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 
 interface MultiSelectDropdownProps {
   label: string;

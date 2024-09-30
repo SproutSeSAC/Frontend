@@ -19,34 +19,31 @@ export default function Login() {
 
   return (
     <AuthPageLayout>
-      <img
-        src="/sprout_logo.png"
-        alt="sprout 로고"
-        className="mb-[30%] h-10 w-10"
-      />
+      <img src="/sprout_logo.png" alt="sprout 로고" className="size-10" />
+      <div className="mt-[20%]">
+        <h1 className="text-lg font-medium">
+          <span className="mr-0.5 text-2xl font-medium text-oliveGreen1">
+            SPROUT
+          </span>
+          에 오신 것을 환영합니다
+        </h1>
 
-      <h1 className="mb-[5%] text-lg font-medium">
-        <span className="mr-0.5 text-2xl font-medium text-oliveGreen1">
-          SPROUT
-        </span>
-        에 오신 것을 환영합니다
-      </h1>
-
-      <p className="tracking-tight text-gray1">
-        편리한 일정 관리를 위해 <br />
-        구글 아이디를 사용하여 구글 캘린더를 연동합니다.
-      </p>
+        <p className="mt-[4%] tracking-tight text-gray1">
+          편리한 일정 관리를 위해 <br />
+          구글 아이디를 사용하여 구글 캘린더를 연동합니다.
+        </p>
+      </div>
 
       <button
         type="button"
         onClick={handleGoogle}
-        className="my-[25%] flex w-full items-center justify-center gap-2 rounded-lg bg-black py-3 text-sm font-medium tracking-tight text-white"
+        className="my-[14%] flex w-full items-center justify-center gap-2 rounded-lg bg-black py-3 text-sm font-medium tracking-tight text-white"
       >
         <FcGoogle className="text-lg" />
         구글 계정으로 시작하기
       </button>
 
-      <p className="text-gray1">
+      <p className="mb-4 text-gray1">
         서비스 가입 시{' '}
         <button
           type="button"
@@ -66,7 +63,7 @@ export default function Login() {
         의 내용을 확인한 것으로 간주합니다
       </p>
 
-      <span className="mt-auto self-end text-sm text-gray1">
+      <span className="mt-[55%] self-end text-sm text-gray1">
         © Team Sprout 2024
       </span>
 

@@ -1,4 +1,4 @@
-import VerticalSlider from '@/components/common/VerticalSlider';
+import VerticalSlider from '@/components/common/slider/VerticalSlider';
 import MealRecruitCard from '@/components/meal-recruit/MealRecruitCard';
 
 interface MealRecruitSliderProps {

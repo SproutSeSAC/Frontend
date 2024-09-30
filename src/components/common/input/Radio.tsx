@@ -1,9 +1,9 @@
-import { KeyOfRole } from '@/types';
+import { KeyOfRole, Role } from '@/types';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 interface RadioProps {
   value: KeyOfRole | string;
-  label: string;
+  label: Role[KeyOfRole] | string;
   name: string;
   options?: RegisterOptions;
 }

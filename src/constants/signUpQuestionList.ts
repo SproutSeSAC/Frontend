@@ -1,6 +1,6 @@
-import { KeyOfRole, QuestionsByStep } from '@/types';
+import { KeyOfRole, Role, SignUpQuestionsByStep } from '@/types';
 
-const commonFirstStep: QuestionsByStep[] = [
+const commonFirstStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '회원 유형을 선택해주세요.' },
     roles: [
@@ -21,7 +21,7 @@ const commonFirstStep: QuestionsByStep[] = [
   },
 ];
 
-const commonStudentStep: QuestionsByStep[] = [
+const commonStudentStep: SignUpQuestionsByStep[] = [
   {
     title: {
       text: '본인의 스택을 선택해주세요.',
@@ -42,7 +42,7 @@ const commonStudentStep: QuestionsByStep[] = [
   },
 ];
 
-const sesacStudentStep: QuestionsByStep[] = [
+const sesacStudentStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '소속 캠퍼스를 선택해주세요.', condition: '' },
     campusId: [],
@@ -53,7 +53,7 @@ const sesacStudentStep: QuestionsByStep[] = [
   },
 ];
 
-const adminStep: QuestionsByStep[] = [
+const adminStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복 가능' },
     campusId: [],
@@ -64,14 +64,14 @@ const adminStep: QuestionsByStep[] = [
   },
 ];
 
-const indentification: QuestionsByStep[] = [
+const indentification: SignUpQuestionsByStep[] = [
   {
     title: { text: '정보 확인을 위하여 확인 코드를 입력해주세요.' },
     verifyCode: '',
   },
 ];
 
-const marketingConsent: QuestionsByStep[] = [
+const marketingConsent: SignUpQuestionsByStep[] = [
   {
     title: { text: '마케팅 활용 및 정보 수신에 동의하시나요?' },
     marketingConsent: [true, false],
@@ -80,7 +80,9 @@ const marketingConsent: QuestionsByStep[] = [
   },
 ];
 
-export const getQuestionListByRole = (role: KeyOfRole): QuestionsByStep[][] => {
+export const getQuestionListByRole = (
+  role: KeyOfRole,
+): SignUpQuestionsByStep[][] => {
   if (role === 'TRAINEE') {
     return [
       commonFirstStep,
@@ -99,8 +101,8 @@ export const getQuestionListByRole = (role: KeyOfRole): QuestionsByStep[][] => {
   ];
 };
 
-export const matchedRoleName = {
-  ADMIN: '매니저',
+export const matchedRoleName: Role = {
+  ADMIN: '관리자',
   TRAINEE: '새싹 교육생',
   EDU_MANAGER: '교육 매니저',
   CAMPUS_MANAGER: '캠퍼스 매니저',

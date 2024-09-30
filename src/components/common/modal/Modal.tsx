@@ -29,7 +29,7 @@ export default function Modal({
   return ReactDOM.createPortal(
     <>
       <section
-        className={`fixed inset-0 z-10 m-auto h-fit max-h-[80vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-3xl bg-white p-8 ${className}`}
+        className={`fixed inset-0 z-10 m-auto h-fit max-h-[80vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white p-8 ${className}`}
       >
         <header className="mb-3 flex items-center justify-between">
           <h2 className="text-xl font-semibold">{title}</h2>

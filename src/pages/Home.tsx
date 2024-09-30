@@ -9,9 +9,9 @@ import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { getCookie } from '@/utils';
 
-import ScrollContainer from '@/components/common/ScrollContainer';
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
+import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
 import InterestJobDomainSkillCard from '@/components/user/InterestJobDomainSkillCard';
