@@ -4,9 +4,9 @@ import { FaChevronLeft } from 'react-icons/fa';
 
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
-import ApplicationInfoTemplate from '@/components/common/postTemplate/ApplicationInfoTemplate';
-import CommentTemplate from '@/components/common/postTemplate/CommentTemplate';
-import PostDetailsTemplate from '@/components/common/postTemplate/PostDetailsTemplate';
+import ApplicationInfoTemplate from '@/components/common/post-template/ApplicationInfoTemplate';
+import CommentTemplate from '@/components/common/post-template/CommentTemplate';
+import PostDetailsTemplate from '@/components/common/post-template/PostDetailsTemplate';
 
 export default function LoungeDetail() {
   const navigate = useNavigate();

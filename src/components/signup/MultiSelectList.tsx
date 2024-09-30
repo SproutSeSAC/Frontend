@@ -13,7 +13,9 @@ export default function MultiSelectList({
   list,
   selectLimit,
 }: MultiSelectListProps) {
-  const { setValue, watch, getValues } = useFormContext();
+  const { setValue, getValues, watch } = useFormContext();
+
+  const watchedValue = watch(name);
 
   const handleClick = useCallback(
     (id: number) => {
@@ -21,8 +23,8 @@ export default function MultiSelectList({
 
       const removeId = currentIds.filter(currentId => currentId !== id);
 
-      const addId = [...currentIds, id];
       const limitNum = currentIds.length >= selectLimit;
+      const addId = [...currentIds, id];
       const addIdUntilLimit = limitNum ? currentIds : addId;
 
       const listValue = currentIds.includes(id) ? removeId : addIdUntilLimit;
@@ -33,11 +35,11 @@ export default function MultiSelectList({
   );
 
   return (
-    <ul className="flex flex-wrap gap-3">
+    <ul className="flex flex-wrap gap-1.5">
       {list.map(({ id, ...rest }) => (
         <li
           key={id}
-          className={`${watch(name).includes(id) ? 'bg-vividGreen1 text-white' : 'bg-white text-text'} cursor-pointer rounded border`}
+          className={`${watchedValue.includes(id) ? 'bg-vividGreen1 text-white' : 'bg-white text-text'} cursor-pointer rounded border`}
         >
           <button
             type="button"

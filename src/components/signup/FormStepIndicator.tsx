@@ -20,13 +20,18 @@ export default function FormStepIndicator({
   children,
 }: FormStepIndicatorProps) {
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
-  const { trigger } = useFormContext();
+  const {
+    formState: { isValid },
+  } = useFormContext();
 
   const goNextStep = async () => {
-    const isValid = await trigger();
     if (isValid) {
       const nextStep = currentStep === formStep ? currentStep : currentStep + 1;
       setCurrentStep(nextStep);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -44,26 +49,28 @@ export default function FormStepIndicator({
 
   return (
     <>
-      <div className="mb-[15%] flex items-center justify-between">
-        <img src="/sprout_logo.png" alt="sprout 로고" className="h-10 w-10" />
+      <div>
+        <div className="mb-[15%] flex items-center justify-between">
+          <img src="/sprout_logo.png" alt="sprout 로고" className="h-10 w-10" />
 
-        {currentStep !== 1 && (
-          <button
-            onClick={goPrevStep}
-            className="group flex size-10 items-center justify-center self-end rounded-md border border-gray2 bg-white hover:border-gray1"
-          >
-            <BiChevronLeft className="size-8 text-gray2 group-hover:text-gray1" />
-          </button>
-        )}
-      </div>
+          {currentStep !== 1 && (
+            <button
+              onClick={goPrevStep}
+              className="group flex size-10 items-center justify-center self-end rounded-md border border-gray2 bg-white hover:border-gray1"
+            >
+              <BiChevronLeft className="size-8 text-gray2 group-hover:text-gray1" />
+            </button>
+          )}
+        </div>
 
-      <div className="flex w-full gap-2">
-        {steps.map(step => (
-          <div
-            key={step}
-            className={`${step <= resolvedUnMatchStep ? 'bg-skyBlue1' : 'bg-[#C7D3EB]'} h-[10px] w-full rounded-full`}
-          />
-        ))}
+        <div className="flex w-full gap-2">
+          {steps.map(step => (
+            <div
+              key={step}
+              className={`${step <= resolvedUnMatchStep ? 'bg-skyBlue1' : 'bg-[#C7D3EB]'} h-[10px] w-full rounded-full`}
+            />
+          ))}
+        </div>
       </div>
 
       {children}
@@ -72,7 +79,7 @@ export default function FormStepIndicator({
         <SquareButton
           name="다음"
           onClick={goNextStep}
-          className="mt-14 w-[50%] self-center px-4 py-3 font-medium"
+          className="w-[50%] self-center px-4 py-3 font-medium"
         />
       )}
     </>

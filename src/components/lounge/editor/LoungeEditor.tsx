@@ -7,8 +7,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePostLoungeProject } from '@/services/lounge/loungeMutations';
 import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
 
-import MultiSelectDropdown from '../../common/MultiSelectDropdown';
-import SelectableDropdown from '../../common/SelectableDropdown';
 import Title from '../../common/Title';
 import SquareButton from '../../common/button/SquareButton';
 import LoungeTextEditor from './LoungeTextEditor';
@@ -32,6 +30,9 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { BsLink45Deg } from 'react-icons/bs';
+
+import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
+import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },

@@ -1,4 +1,4 @@
-import VerticalSlider from '@/components/common/VerticalSlider';
+import VerticalSlider from '@/components/common/slider/VerticalSlider';
 import StoreListSliderCard from '@/components/store/StoreListSliderCard';
 
 interface StoreListSliderProps {

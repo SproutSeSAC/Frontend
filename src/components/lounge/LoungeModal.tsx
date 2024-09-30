@@ -1,10 +1,11 @@
-import MultiInput from '../common/MultiInput';
-import MultiSelectDropdown from '../common/MultiSelectDropdown';
 import SquareButton from '../common/button/SquareButton';
 import Label from '../common/input/Label';
+import MultiInput from '../common/input/MultiInput';
 import Modal from '../common/modal/Modal';
 
 import { stackList } from '@/constants';
+
+import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },

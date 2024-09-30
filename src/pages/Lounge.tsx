@@ -10,10 +10,10 @@ import {
 import { progressList, sortList, stackList } from '@/constants';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 
-import MultiSelectDropdown from '@/components/common/MultiSelectDropdown';
 import Pagination from '@/components/common/Pagination';
-import SelectableDropdown from '@/components/common/SelectableDropdown';
 import SquareButton from '@/components/common/button/SquareButton';
+import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
+import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import LoungeEditor from '@/components/lounge/editor/LoungeEditor';

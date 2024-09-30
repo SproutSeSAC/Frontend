@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import OutsideClickContainer from './OutsideClickContainer';
-
 import { FilterType } from '@/types';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+
+import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 
 interface SingleOption {
   id: number;

@@ -1,29 +1,21 @@
-import { usePostUserInfo } from '@/services/auth/authQueries';
-import {
-  useGetCampusList,
-  useGetCourseList,
-} from '@/services/course/courseQueries';
-import {
-  useGetDomainList,
-  useGetJobList,
-  useGetTechStackList,
-} from '@/services/specifications/specificationsQueries';
-
 import { currentStepAtom } from '@/atoms/formStepAtom';
 
-import { getQuestionListByRole, matchedRoleName } from '@/constants';
+import { matchedRoleName, stackList } from '@/constants';
+import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
-import { UserInfo, VerifyCode } from '@/types';
+import { KeyOfRole, UserInfo, VerifyCode } from '@/types';
 import { useAtom } from 'jotai';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
-import Dropdown from '@/components/common/form/Dropdown';
-import FormStepIndicator from '@/components/common/form/FormStepIndicator';
-import MultiSelectList from '@/components/common/form/MultiSelectList';
-import QuestionItem from '@/components/common/form/QuestionItem';
+import VerifyCodeButton from '@/components/common/button/VerifyCodeButton';
+import Dropdown from '@/components/common/dropdown/Dropdown';
+import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import Radio from '@/components/common/input/Radio';
 import UnControlledInput from '@/components/common/input/UnControlledInput';
+import FormQuestionItem from '@/components/signup/FormQuestionItem';
+import FormStepIndicator from '@/components/signup/FormStepIndicator';
+import MultiSelectList from '@/components/signup/MultiSelectList';
 
 const defaultValues: UserInfo & VerifyCode = {
   name: '',
@@ -31,8 +23,8 @@ const defaultValues: UserInfo & VerifyCode = {
   role: 'TRAINEE',
   campusId: 1,
   courseId: 1,
-  domainIdList: [],
-  jobIdList: [],
+  domainIdList: [1, 2],
+  jobIdList: [1, 2],
   techStackIdList: [],
   marketingConsent: false,
   verifyCode: '',
@@ -45,48 +37,39 @@ export default function SignUp() {
     mode: 'onSubmit',
     defaultValues,
   });
-  const { handleSubmit, watch } = methods;
 
-  const campusIdValue = watch('campusId');
+  const { handleSubmit, control } = methods;
 
-  const { data: jobList, isLoading: isJobListLoading } = useGetJobList();
+  const watchedRole = useWatch({ control, name: 'role' });
+  const watchedCampusId = useWatch({ control, name: 'campusId' });
+  const watchedVerifyCode = useWatch({ control, name: 'verifyCode' });
 
-  const { data: domainList, isLoading: isDomainListLoading } =
-    useGetDomainList();
+  const {
+    jobList,
+    domainList,
+    campusList,
+    courseList,
+    techStackList,
+    onSubmit,
+    isLoading,
+    questionListByRole,
+    getQuestionNumber,
+  } = useHandleSignUp({ watchedCampusId, watchedRole });
 
-  const { data: techStackList, isLoading: isTechStackListLoading } =
-    useGetTechStackList();
+  if (isLoading) return null;
 
-  const { data: campusList, isLoading: isCampusListLoading } =
-    useGetCampusList();
+  const TAB_LIST = [
+    { text: '프론트엔드', type: 'frontend' },
+    { text: '백엔드', type: 'backend' },
+    { text: '모바일', type: 'mobile' },
+    { text: '컴퓨터', type: 'computer' },
+    { text: 'pm/ui/ux', type: 'pm' },
+    { text: '데이터', type: 'data' },
+    { text: '모두보기', type: 'all' },
+  ];
 
-  const { data: courseList } = useGetCourseList(campusIdValue);
-
-  const { mutate } = usePostUserInfo();
-
-  const onSubmit: SubmitHandler<UserInfo> = formData => {
-    const data = {
-      ...formData,
-      courseId: +formData.courseId,
-      marketingConsent:
-        (formData.marketingConsent as unknown as string) === 'true',
-    };
-
-    const { verifyCode, campusId, ...rest } = data as UserInfo & VerifyCode;
-
-    mutate(rest);
-  };
-
-  const questionListByRole = getQuestionListByRole(watch('role'));
-
-  if (
-    isCampusListLoading ||
-    isDomainListLoading ||
-    isJobListLoading ||
-    isTechStackListLoading
-  ) {
-    return null;
-  }
+  const defaultInputStyle =
+    'rounded-2xl border border-solid border-gray4 px-[15px] py-4 h-[50px] bg-white';
 
   return (
     <AuthPageLayout>
@@ -95,32 +78,26 @@ export default function SignUp() {
         {/* 폼 단계 표시 */}
         <FormStepIndicator formStep={4} totalStep={questionListByRole.length}>
           <form
-            className="mt-[15%] flex flex-col"
+            className="mt-[10%] flex flex-1 flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="h-[600px]">
+            <div className="mb-[5%] flex-1">
               {questionListByRole.map(
                 (questionList, index) =>
                   currentStep === index + 1 &&
                   questionList.map((question, idx) => {
-                    const previousQuestionsCount = questionListByRole
-                      .map(list => list.length)
-                      .slice(0, index)
-                      .reduce((acc, count) => acc + count, 0);
-
-                    const currentQuestionNumber =
-                      previousQuestionsCount + idx + 1;
+                    const questionNumber = getQuestionNumber(index, idx);
 
                     return (
                       question && (
-                        <QuestionItem
+                        <FormQuestionItem
                           key={question.title.text}
-                          title={`${currentQuestionNumber}. ${question.title.text}`}
+                          title={`${questionNumber}. ${question.title.text}`}
                           condition={question.title.condition}
                         >
                           {'roles' in question && (
                             <fieldset className="flex flex-wrap gap-x-12 gap-y-3">
-                              {question.roles.map(role => (
+                              {question.roles.map((role: KeyOfRole) => (
                                 <Radio
                                   key={role}
                                   value={role}
@@ -175,6 +152,29 @@ export default function SignUp() {
                             />
                           )}
 
+                          {'techStackIdList' in question && techStackList && (
+                            <Controller
+                              control={control}
+                              name="techStackIdList"
+                              render={({ field: { onChange } }) => {
+                                return (
+                                  <MultiSelectDropdown
+                                    label="기술스택을 등록해주세요"
+                                    tabList={TAB_LIST}
+                                    width="100%"
+                                    defaultValue="frontend"
+                                    className={`${defaultInputStyle}`}
+                                    options={stackList}
+                                    onChangeValue={data => {
+                                      const ids = data.map(item => item.id);
+                                      onChange(ids);
+                                    }}
+                                  />
+                                );
+                              }}
+                            />
+                          )}
+
                           {'jobIdList' in question && jobList && (
                             <MultiSelectList
                               list={jobList}
@@ -191,14 +191,6 @@ export default function SignUp() {
                             />
                           )}
 
-                          {'techStackIdList' in question && techStackList && (
-                            <MultiSelectList
-                              list={techStackList}
-                              selectLimit={3}
-                              name="techStackIdList"
-                            />
-                          )}
-
                           {'verifyCode' in question && (
                             <div className="relative pb-10">
                               <UnControlledInput
@@ -209,13 +201,9 @@ export default function SignUp() {
                                   required: '코드를 입력해주세요.',
                                 }}
                               />
-                              <button
-                                type="button"
-                                className="absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 text-gray1"
-                                onClick={() => {}}
-                              >
-                                인증 확인
-                              </button>
+                              <VerifyCodeButton
+                                currentCode={watchedVerifyCode}
+                              />
                             </div>
                           )}
 
@@ -237,13 +225,13 @@ export default function SignUp() {
                               </fieldset>
                             </>
                           )}
-                        </QuestionItem>
+                        </FormQuestionItem>
                       )
                     );
                   }),
               )}
 
-              {watch('role') === 'PRE_TRAINEE' && (
+              {watchedRole === 'PRE_TRAINEE' && (
                 <span className="mt-10 inline-block text-center text-gray2">
                   예비 수강생은 제한된 서비스만 이용 가능합니다.
                 </span>
@@ -253,8 +241,8 @@ export default function SignUp() {
             {currentStep === questionListByRole.length && (
               <SquareButton
                 type="submit"
-                name="제출"
-                className="mx-auto mt-14 w-[50%] px-4 py-3 font-medium"
+                name="시작하기"
+                className="mx-auto w-[50%] px-4 py-3 font-medium"
               />
             )}
           </form>

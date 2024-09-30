@@ -1,4 +1,4 @@
-import CollapsibleSideView from '@/components/common/CollapsibleSideView';
+import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
 import MealRecruitSlider from '@/components/meal-recruit/MealRecruitSlider';
 
 interface MealRecruitSideViewProps {

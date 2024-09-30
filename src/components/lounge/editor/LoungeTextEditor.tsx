@@ -1,7 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 
-import TextEditor from '@/components/common/textEditor/TextEditor';
+import TextEditor from '@/components/common/text-editor/TextEditor';
 
 export default function LoungeTextEditor() {
   const { control } = useFormContext();
