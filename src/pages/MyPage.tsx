@@ -18,9 +18,9 @@ export default function MyPage() {
   const { data } = useGetUserProfile();
 
   const userInfoList = [
-    { label: 'E-mail', value: 'dashboard@gmail.com' },
-    { label: '캠퍼스', value: '도봉 캠퍼스' },
-    { label: '담당 교육과정', value: '데이터 드리븐 기획자 과정' },
+    { label: 'E-mail', value: data?.email },
+    { label: '캠퍼스', value: `${data?.campusName} 캠퍼스` },
+    { label: '담당 교육과정', value: data?.courseTitle },
   ];
 
   return (

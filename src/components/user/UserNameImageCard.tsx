@@ -33,6 +33,7 @@ export default function UserNameImageCard({
 
   const { mutate } = useUpdateUserProfile({
     onSuccess: data => console.log('성공시', data),
+    onError: error => console.log(error),
   });
 
   const onSubmit = (formData: Partial<UpdateableUserProfile>) => {

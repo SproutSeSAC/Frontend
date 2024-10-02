@@ -4,6 +4,8 @@ import { axiosInstance } from '@/services/axiosInstance';
 
 import { UpdateableUserProfile, UserInfo } from '@/types';
 
+// eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNCIsImlzRXNzZW50aWFsIjp0cnVlLCJleHAiOjE3Mjc4OTIzNTQsImlhdCI6MTcyNzg4ODc1NH0.eQgAvRRnpPIwUgOzGFArSJCN5Nf7NRcKaga-i5RjVW4MnWTn-UUHzZhWXvWuV526
+
 export const usePostUserInfo = (
   options?: UseMutationOptions<unknown, Error, UserInfo, unknown>,
 ) => {
@@ -14,14 +16,6 @@ export const usePostUserInfo = (
   return useMutation<unknown, Error, UserInfo, unknown>({
     mutationFn: postUserInfo,
     mutationKey: ['posts'],
-    onSuccess: (data, variables, context) => {
-      console.log('onSuccess', data, variables, context);
-    },
-    onSettled: (data, error, variables, context) => {
-      console.log('onSettled', data, error, variables, context);
-    },
-    retry: 3,
-    retryDelay: 500,
     ...options,
   });
 };

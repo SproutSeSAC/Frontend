@@ -131,7 +131,7 @@ export default function SignUp() {
                           {'techStackIdList' in question && techStackList && (
                             <MultiSelectList
                               list={techStackList}
-                              selectLimit={5}
+                              selectLimit={50}
                               name="techStackIdList"
                               errorMsg={errors.techStackIdList?.message}
                             />
@@ -158,7 +158,7 @@ export default function SignUp() {
                           {'verifyCode' in question && (
                             <div className="relative pb-10">
                               <TextInput
-                                placeholder="코드를 입력해주세요"
+                                placeholder="인증코드를 입력해주세요"
                                 className="!h-[50px] w-full pl-4"
                                 {...register('verifyCode')}
                                 errorMsg={errors.verifyCode?.message}

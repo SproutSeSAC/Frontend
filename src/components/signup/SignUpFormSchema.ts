@@ -23,7 +23,7 @@ export const SignUpFormSchema = z.object({
     .regex(/^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]+$/, '국문, 영문, 숫자만 입력 가능합니다.')
     .max(20, '닉네임은 20자 이내로 입력해주세요.'),
 
-  verifyCode: z.string().min(1, '코드를 입력해주세요.'),
+  verifyCode: z.string().min(1, '인증코드를 입력해주세요.'),
 
   jobIdList: z //
     .array(z.number())

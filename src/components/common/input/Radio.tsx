@@ -20,7 +20,7 @@ export default function Radio({ value, label, name }: RadioProps) {
         {...register(name)}
       />
 
-      <label htmlFor={label}>{label}</label>
+      <span>{label}</span>
     </label>
   );
 }

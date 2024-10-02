@@ -61,18 +61,18 @@ const sesacStudentStep: SignUpQuestionsByStep[] = [
 
 const adminStep: SignUpQuestionsByStep[] = [
   {
-    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복 가능' },
+    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복가능' },
     campusId: [],
   },
   {
-    title: { text: '담당 교육 과정은 무엇인가요?', condition: '' },
+    title: { text: '담당 교육 과정은 무엇인가요?', condition: '(있는 경우)' },
     courseId: [],
   },
 ];
 
 const indentification: SignUpQuestionsByStep[] = [
   {
-    title: { text: '정보 확인을 위하여 확인 코드를 입력해주세요.' },
+    title: { text: '정보 확인을 위하여 인증코드를 입력해주세요.' },
     verifyCode: '',
   },
 ];

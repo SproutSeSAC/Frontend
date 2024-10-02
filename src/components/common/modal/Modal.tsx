@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 import { BsX } from 'react-icons/bs';
 
@@ -26,7 +26,7 @@ export default function Modal({
     };
   }, []);
 
-  return ReactDOM.createPortal(
+  return createPortal(
     <>
       <section
         className={`fixed inset-0 z-10 m-auto h-fit max-h-[80vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white p-8 ${className}`}

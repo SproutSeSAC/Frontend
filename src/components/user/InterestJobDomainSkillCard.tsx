@@ -1,3 +1,5 @@
+import { useGetUserProfile } from '@/services/auth/authQueries';
+
 import { useToggleModal } from '@/hooks';
 
 import Tag from '@/components/common/Tag';
@@ -10,15 +12,13 @@ import Modal from '@/components/common/modal/Modal';
 export default function InterestJobDomainSkillCard() {
   const { modalOpen, toggleModal } = useToggleModal();
 
+  const { data, isLoading } = useGetUserProfile();
+
   const listStyle = 'flex items-center py-2.5';
 
   const itemStyle = 'font-semibold tracking-tight px-2 mt-1.5 leading-5';
 
-  const userInterestList = {
-    domainList: ['IT', '건설', '게임'],
-    interestJobList: ['서비스 기획', '데이터 분석'],
-    skillList: [1, 2, 3, 4, 5, 6, 7, 8, 0, 10, 11],
-  };
+  if (isLoading) return null;
 
   return (
     <>
@@ -27,19 +27,20 @@ export default function InterestJobDomainSkillCard() {
         className="absolute -top-[38px] right-2 text-gray2"
         onClick={toggleModal}
       />
+
       <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 shadow-card md:w-full">
         <ul className={`${listStyle} gap-1.5`}>
-          {userInterestList.domainList.map(domain => (
-            <li key={domain}>
+          {data?.domainList.map(({ id, domain }) => (
+            <li key={id}>
               <Tag text={domain} size="big" color="gray" />
             </li>
           ))}
         </ul>
 
         <ul className={listStyle}>
-          {userInterestList.interestJobList.map(interestJob => (
-            <li key={interestJob} className={itemStyle}>
-              {interestJob}
+          {data?.jobList.map(({ job, id }) => (
+            <li key={id} className={itemStyle}>
+              {job}
             </li>
           ))}
         </ul>
@@ -47,11 +48,13 @@ export default function InterestJobDomainSkillCard() {
         {/* 기술스택 */}
         <div className="overflow-x-scroll scrollbar-hide">
           <ul className={`${listStyle} flex w-full max-w-0 flex-1 gap-x-3`}>
-            {userInterestList.skillList.map(skill => (
+            {data?.techStackList.map(({ id, techStack, iconImageUrl }) => (
               <li
-                key={skill}
+                key={id}
                 className="size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
-              />
+              >
+                <img src={iconImageUrl} alt={techStack} />
+              </li>
             ))}
           </ul>
         </div>
@@ -62,8 +65,8 @@ export default function InterestJobDomainSkillCard() {
           <form className="mt-3 flex w-[350px] flex-col">
             <Label htmlFor="관심 도메인" />
             <ul className="mb-2 flex gap-1">
-              {userInterestList.domainList.map(domain => (
-                <li key={domain}>
+              {data?.domainList.map(({ id, domain }) => (
+                <li key={id}>
                   <Tag
                     text={domain}
                     color="green"
@@ -82,10 +85,10 @@ export default function InterestJobDomainSkillCard() {
 
             <Label htmlFor="관심 직무" />
             <ul className="mb-2 flex gap-1">
-              {userInterestList.interestJobList.map(interestJob => (
-                <li key={interestJob}>
+              {data?.jobList.map(({ id, job }) => (
+                <li key={id}>
                   <Tag
-                    text={interestJob}
+                    text={job}
                     color="olivegreen"
                     size="medium"
                     onDeleteClick={() => {}}
@@ -93,7 +96,6 @@ export default function InterestJobDomainSkillCard() {
                 </li>
               ))}
             </ul>
-
             {/* 드롭다운 */}
             <TextInput
               name="관심 직무"
@@ -103,6 +105,16 @@ export default function InterestJobDomainSkillCard() {
             />
 
             <Label htmlFor="기술 스택" />
+            <ul className="mb-2 flex gap-1">
+              {data?.techStackList.map(({ id, techStack, iconImageUrl }) => (
+                <li
+                  key={id}
+                  className="size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
+                >
+                  <img src={iconImageUrl} alt={techStack} />
+                </li>
+              ))}
+            </ul>
             <TextInput
               name="기술 스택"
               placeholder="기술 스택을 등록해주세요."

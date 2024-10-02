@@ -14,11 +14,13 @@ export default function FormQuestionItem({
       <h4 className="mb-4 block text-lg font-medium">
         {title}
 
-        <span className="ml-2 text-base font-normal text-vividGreen2">
+        <span className="ml-2 text-base font-normal text-red-500">
           {condition?.includes('최대') ? (
             <>
               <span className="text-gray2">*최대</span>
-              {condition.split('최대')[1]}
+              <span className="text-vividGreen2">
+                {condition.split('최대')[1]}
+              </span>
             </>
           ) : (
             condition

@@ -1,4 +1,6 @@
-// import { usePostUserInfo } from '@/services/auth/authMutations';
+import { useNavigate } from 'react-router-dom';
+
+import { usePostUserInfo } from '@/services/auth/authMutations';
 import {
   useGetCampusList,
   useGetCourseList,
@@ -42,7 +44,12 @@ export const useHandleSignUp = ({
 
   const { data: courseList } = useGetCourseList(watchedCampusId);
 
-  // const { mutate } = usePostUserInfo();
+  const navigate = useNavigate();
+
+  const { mutate } = usePostUserInfo({
+    onSuccess: () => navigate('/'),
+    onError: error => console.log(error),
+  });
 
   const onSubmit: SubmitHandler<UserInfo & VerifyCode> = formData => {
     const data = {
@@ -50,9 +57,10 @@ export const useHandleSignUp = ({
       marketingConsent: formData.marketingConsent === '동의',
     };
 
-    const { verifyCode, campusId, ...rest } = data;
-    console.log(rest);
-    // mutate(rest);
+    const { verifyCode, campusId, ...rest } = data as unknown as UserInfo &
+      VerifyCode;
+
+    mutate(rest);
   };
 
   const questionListByRole = getQuestionListByRole(watchedRole);

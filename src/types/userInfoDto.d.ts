@@ -22,10 +22,13 @@ export type UserInfo = {
 };
 
 export type UserProfile = {
+  email: string;
+  campusName: string;
+  courseTitle: string;
   name: string;
-  domainList: number[];
-  jobList: number[];
-  techStackList: number[];
+  domainList: { id: number; domain: string }[];
+  jobList: { id: number; job: string }[];
+  techStackList: { id: number; techStack: string; iconImageUrl: string }[];
   nickname: string;
   profileImageUrl: string;
 };
