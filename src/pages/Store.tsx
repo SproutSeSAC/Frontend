@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+// import { useGetInfiniteStoreList } from '@/services/store/storeQueries';
 // import useObserver from '@/hooks/useObserver';
 import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
@@ -26,7 +27,7 @@ export default function Store() {
 
   // TODO : 무한스크롤 구현부
   // const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-  //   useGetInfiniteStoreCardList({});
+  //   useGetInfiniteStoreList({});
 
   // const onIntersect = useCallback(
   //   (entry: IntersectionObserverEntry) => {
@@ -86,9 +87,23 @@ export default function Store() {
       </MainView>
 
       {isModalOpen && (
-        <div className="bg-red absolute left-[65%] top-1/2 z-20 h-full w-full -translate-x-[45%] -translate-y-1/2 transform">
-          <StoreModal onClose={() => setIsModalOpen(false)} />
-        </div>
+        <>
+          <div className="bg-red fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform bg-red-300">
+            <StoreModal onClose={() => setIsModalOpen(false)} />
+          </div>
+          <div
+            className="fixed inset-0"
+            onClick={() => setIsModalOpen(false)}
+            onKeyDown={event => {
+              if (event.key === 'Escape') {
+                setIsModalOpen(false);
+              }
+            }}
+            tabIndex={-1}
+            role="button"
+            aria-label="모달 닫기"
+          />
+        </>
       )}
 
       <MealRecruitSideView

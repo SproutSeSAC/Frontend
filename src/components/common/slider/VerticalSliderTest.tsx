@@ -1,16 +1,11 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IoIosArrowDown } from 'react-icons/io';
 import { Swiper as SwiperType } from 'swiper';
-import { Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-interface VerticalSliderProps {
-  slideList: number[];
-  children: ReactNode;
-  spaceBetween: number;
-  slideItemHeight: number;
-}
+import MealRecruitCard from '@/components/meal-recruit/MealRecruitCard';
 
 function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
   return (
@@ -25,13 +20,9 @@ function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
   );
 }
 
-export default function VerticalSlider({
-  slideList,
-  children,
-  spaceBetween,
-  slideItemHeight,
-}: VerticalSliderProps) {
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+export default function VerticalSlider() {
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null); // Proper typing
+
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   useEffect(() => {
@@ -52,15 +43,18 @@ export default function VerticalSlider({
           pagination={{
             clickable: true,
           }}
-          spaceBetween={spaceBetween}
-          slidesPerView={(windowHeight - 240) / slideItemHeight}
-          modules={[Pagination]}
+          spaceBetween={32}
+          navigation
+          slidesPerView={3}
+          modules={[Pagination, Navigation]}
           cssMode
-          style={{ height: 'inherit' }}
+          style={{ height: '800px' }}
           onSwiper={setSwiperInstance}
         >
-          {slideList.map(item => (
-            <SwiperSlide key={item}>{children}</SwiperSlide>
+          {Array.from({ length: 10 }, (_, idx) => (
+            <SwiperSlide key={idx}>
+              <MealRecruitCard />
+            </SwiperSlide>
           ))}
         </Swiper>
       </div>

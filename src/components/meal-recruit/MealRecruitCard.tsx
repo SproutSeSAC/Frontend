@@ -1,6 +1,6 @@
 export default function MealRecruitCard() {
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full text-start">
       <div className="rounded-lg bg-white px-5 py-4 shadow-card">
         <header className="mb-4 font-semibold">
           [성북 2기] 햄버거 드실 분 모집합니다!

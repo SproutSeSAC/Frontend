@@ -1,20 +1,14 @@
-import VerticalSlider from '@/components/common/slider/VerticalSlider';
-import MealRecruitCard from '@/components/meal-recruit/MealRecruitCard';
+import VerticalSlider from '../common/slider/VerticalSlider';
+import MealRecruitCard from './MealRecruitCard';
 
-interface MealRecruitSliderProps {
-  sideViewOpen: boolean;
-}
-
-export default function MealRecruitSlider({
-  sideViewOpen,
-}: MealRecruitSliderProps) {
+export default function MealRecruitSlider() {
   return (
-    <VerticalSlider sideViewOpen={sideViewOpen} slidesToShow={3}>
-      {Array.from({ length: 10 }, (_, idx) => (
-        <div key={idx} className="py-4">
-          <MealRecruitCard />
-        </div>
-      ))}
+    <VerticalSlider
+      slideList={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+      spaceBetween={60}
+      slideItemHeight={224}
+    >
+      <MealRecruitCard />
     </VerticalSlider>
   );
 }

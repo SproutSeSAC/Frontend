@@ -5,7 +5,7 @@ export default function SliderArrow({
   onClick,
 }: {
   direction: string;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) {
   return (
     <button
