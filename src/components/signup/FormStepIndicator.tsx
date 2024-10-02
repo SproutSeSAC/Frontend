@@ -2,6 +2,12 @@ import { ReactNode } from 'react';
 
 import { currentStepAtom } from '@/atoms/formStepAtom';
 
+import {
+  SignUpFormTitle,
+  SignUpQuestionsByStep,
+  UserInfo,
+  VerifyCode,
+} from '@/types';
 import { useAtom } from 'jotai';
 import { useFormContext } from 'react-hook-form';
 import { BiChevronLeft } from 'react-icons/bi';
@@ -9,28 +15,45 @@ import { BiChevronLeft } from 'react-icons/bi';
 import SquareButton from '@/components/common/button/SquareButton';
 
 interface FormStepIndicatorProps {
+  resolvedUnMatchCurrentStep: number;
   formStep: number;
-  totalStep: number;
+  questionListByRole: SignUpQuestionsByStep[][];
   children: ReactNode;
 }
 
 export default function FormStepIndicator({
+  resolvedUnMatchCurrentStep,
   formStep,
-  totalStep,
+  questionListByRole,
   children,
 }: FormStepIndicatorProps) {
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
   const { trigger } = useFormContext();
 
+  const formItemsByStepArr = questionListByRole.map(item => {
+    return item
+      .map(i => {
+        const { additionalInfo, title, ...rest } =
+          i as unknown as SignUpFormTitle;
+        return Object.keys(rest);
+      })
+      .flat()
+      .map(key => (key === 'roles' ? 'role' : key));
+  }) as unknown as (keyof UserInfo & VerifyCode)[][];
+
   const goNextStep = async () => {
-    const isValid = await trigger();
-    if (isValid) {
+    const currentFormItems = formItemsByStepArr[currentStep - 1];
+
+    const checkValid = await Promise.all(
+      currentFormItems.map(async key => {
+        const isValids = await trigger(key);
+        return isValids;
+      }),
+    );
+
+    if (!checkValid.includes(false)) {
       const nextStep = currentStep === formStep ? currentStep : currentStep + 1;
       setCurrentStep(nextStep);
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
     }
   };
 
@@ -40,11 +63,6 @@ export default function FormStepIndicator({
   };
 
   const steps = Array.from({ length: formStep }, (_, i) => i + 1);
-
-  const resolvedUnMatchStep =
-    totalStep === formStep - 1 && currentStep >= formStep - 2
-      ? currentStep + 1
-      : currentStep;
 
   return (
     <>
@@ -66,7 +84,7 @@ export default function FormStepIndicator({
           {steps.map(step => (
             <div
               key={step}
-              className={`${step <= resolvedUnMatchStep ? 'bg-skyBlue1' : 'bg-[#C7D3EB]'} h-[10px] w-full rounded-full`}
+              className={`${step <= resolvedUnMatchCurrentStep ? 'bg-skyBlue1' : 'bg-[#C7D3EB]'} h-[10px] w-full rounded-full`}
             />
           ))}
         </div>
@@ -74,7 +92,7 @@ export default function FormStepIndicator({
 
       {children}
 
-      {currentStep !== formStep && (
+      {resolvedUnMatchCurrentStep !== formStep && (
         <SquareButton
           name="다음"
           onClick={goNextStep}

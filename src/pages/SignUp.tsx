@@ -1,13 +1,10 @@
 import { currentStepAtom } from '@/atoms/formStepAtom';
 
-import {
-  defaultSignUpFormValues,
-  formCondition,
-  matchedRoleName,
-} from '@/constants';
+import { defaultSignUpFormValues, matchedRoleName } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { KeyOfRole, UserInfo, VerifyCode } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -19,6 +16,7 @@ import TextInput from '@/components/common/input/TextInput';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
 import MultiSelectList from '@/components/signup/MultiSelectList';
+import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
 
 export default function SignUp() {
   const [currentStep] = useAtom(currentStepAtom);
@@ -26,6 +24,7 @@ export default function SignUp() {
   const methods = useForm<UserInfo & VerifyCode>({
     mode: 'onSubmit',
     defaultValues: defaultSignUpFormValues,
+    resolver: zodResolver(SignUpFormSchema),
   });
 
   const {
@@ -53,16 +52,25 @@ export default function SignUp() {
 
   if (isLoading) return null;
 
+  const resolvedUnMatchCurrentStep =
+    questionListByRole.length === 3 && currentStep >= 2
+      ? currentStep + 1
+      : currentStep;
+
   return (
     <AuthPageLayout>
       <FormProvider {...methods}>
         {/* 폼 단계 표시 */}
-        <FormStepIndicator formStep={4} totalStep={questionListByRole.length}>
+        <FormStepIndicator
+          formStep={4}
+          resolvedUnMatchCurrentStep={resolvedUnMatchCurrentStep}
+          questionListByRole={questionListByRole}
+        >
           <form
             className="mt-[10%] flex flex-1 flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="mb-[5%] flex-1">
+            <div className="mb-[5%] flex flex-1 flex-col">
               {questionListByRole.map(
                 (questionList, index) =>
                   currentStep === index + 1 &&
@@ -93,7 +101,7 @@ export default function SignUp() {
                             <TextInput
                               placeholder="성함을 입력해주세요"
                               className="!h-[50px] w-full pl-4"
-                              {...register('name', { ...formCondition.name })}
+                              {...register('name')}
                               errorMsg={errors.name?.message}
                             />
                           )}
@@ -102,9 +110,7 @@ export default function SignUp() {
                             <TextInput
                               placeholder="사용하실 닉네임을 입력해주세요"
                               className="h-[50px] w-full pl-4"
-                              {...register('nickname', {
-                                ...formCondition.nickname,
-                              })}
+                              {...register('nickname')}
                               errorMsg={errors.nickname?.message}
                             />
                           )}
@@ -127,6 +133,7 @@ export default function SignUp() {
                               list={techStackList}
                               selectLimit={5}
                               name="techStackIdList"
+                              errorMsg={errors.techStackIdList?.message}
                             />
                           )}
 
@@ -135,6 +142,7 @@ export default function SignUp() {
                               list={jobList}
                               selectLimit={5}
                               name="jobIdList"
+                              errorMsg={errors.jobIdList?.message}
                             />
                           )}
 
@@ -143,6 +151,7 @@ export default function SignUp() {
                               list={domainList}
                               selectLimit={3}
                               name="domainIdList"
+                              errorMsg={errors.domainIdList?.message}
                             />
                           )}
 
@@ -167,11 +176,11 @@ export default function SignUp() {
                               </p>
 
                               <fieldset className="flex flex-wrap gap-x-8 gap-y-3">
-                                {question.marketingConsent.map(consent => (
+                                {question.marketingConsent.map(label => (
                                   <Radio
-                                    key={`${consent}`}
-                                    label={consent ? '동의' : '동의하지 않음'}
-                                    value={`${consent}`}
+                                    key={label}
+                                    label={label}
+                                    value={label}
                                     name="marketingConsent"
                                   />
                                 ))}
@@ -184,11 +193,12 @@ export default function SignUp() {
                   }),
               )}
 
-              {watchedRole === 'PRE_TRAINEE' && (
-                <span className="mt-10 inline-block text-center text-gray2">
-                  예비 수강생은 제한된 서비스만 이용 가능합니다.
-                </span>
-              )}
+              {watchedRole === 'PRE_TRAINEE' &&
+                currentStep === questionListByRole.length && (
+                  <span className="mb-14 mt-auto inline-block w-full text-center text-gray1">
+                    예비 수강생은 제한된 서비스만 이용 가능합니다.
+                  </span>
+                )}
             </div>
 
             {currentStep === questionListByRole.length && (

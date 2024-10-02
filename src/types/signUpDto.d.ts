@@ -14,7 +14,7 @@ export type SignUpFormData = {
   domainIdList: number[];
   techStackIdList: number[];
   verifyCode: string;
-  marketingConsent: [true, false];
+  marketingConsent: ['동의', '동의하지 않음'];
 };
 
 export type SignUpQuestionsByStep = {

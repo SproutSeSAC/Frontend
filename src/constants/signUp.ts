@@ -80,7 +80,7 @@ const indentification: SignUpQuestionsByStep[] = [
 const marketingConsent: SignUpQuestionsByStep[] = [
   {
     title: { text: '마케팅 활용 및 정보 수신에 동의하시나요?' },
-    marketingConsent: [true, false],
+    marketingConsent: ['동의', '동의하지 않음'],
     additionalInfo:
       '스프라우트가 제공하는 이벤트, 혜택, 다양한 정보(뉴스레터, 취업, 교육 등) 안내 목적으로 이메일을 통한 정보수신을 위해 이용하고자 합니다. 마케팅 및 정보 수신을원하지 않는 경우, 동의하지 않아도 됩니다.',
   },
@@ -125,30 +125,6 @@ export const defaultSignUpFormValues: UserInfo & VerifyCode = {
   domainIdList: [1, 2],
   jobIdList: [1, 2],
   techStackIdList: [1, 2],
-  marketingConsent: false,
+  marketingConsent: '동의',
   verifyCode: '',
-};
-
-export const formCondition = {
-  name: {
-    required: '성함이 작성되지 않았습니다.',
-    pattern: {
-      value: /^[가-힣a-zA-Z]+$/,
-      message: '국문, 영문만 입력 가능합니다.',
-    },
-  },
-  nickname: {
-    required: '닉네임을 입력해주세요.',
-    pattern: {
-      value: /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]+$/,
-      message: '국문, 영문, 숫자만 입력 가능합니다.',
-    },
-    maxLength: {
-      value: 20,
-      message: '닉네임은 20자 이내로 입력해주세요.',
-    },
-  },
-  verfiyCode: {
-    required: '코드를 입력해주세요.',
-  },
 };

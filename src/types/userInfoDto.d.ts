@@ -17,7 +17,7 @@ export type UserInfo = {
   jobIdList: number[];
   domainIdList: number[];
   techStackIdList: number[];
-  marketingConsent: boolean;
+  marketingConsent: '동의' | '동의하지 않음';
   campusId?: number;
 };
 

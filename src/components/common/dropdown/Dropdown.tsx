@@ -15,7 +15,9 @@ export default function Dropdown({
 
   return (
     <select
-      {...register(name)}
+      {...register(name, {
+        setValueAs: value => parseInt(value, 10),
+      })}
       className="w-full appearance-none rounded-xl border bg-[url('src/assets/icons/chevron-down.svg')] bg-[center_right_12px] bg-no-repeat p-3 pr-10"
     >
       {options.map(({ id, name: optionName }) => (

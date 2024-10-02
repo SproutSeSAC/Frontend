@@ -1,6 +1,5 @@
 import { useUpdateUserProfile } from '@/services/auth/authMutations';
 
-import { formCondition } from '@/constants';
 import { useToggleModal } from '@/hooks';
 import { UpdateableUserProfile } from '@/types';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -81,7 +80,7 @@ export default function UserNameImageCard({
               <TextInput
                 placeholder={nickname}
                 className="h-[50px] w-full pl-4"
-                {...register('nickname', { ...formCondition.nickname })}
+                {...register('nickname')}
               />
 
               <SquareButton

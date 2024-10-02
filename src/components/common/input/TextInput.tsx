@@ -1,6 +1,8 @@
 import { ChangeEvent, ForwardedRef, forwardRef } from 'react';
 
-interface FormStateProps {
+import ErrorMsg from '@/components/common/input/ErrorMsg';
+
+export interface FormStateProps {
   errorMsg?: string;
 }
 
@@ -42,11 +44,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
         onKeyDown={onEnter}
         className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${className}`}
       />
-      {errorMsg && (
-        <span className="ml-4 mt-1.5 inline-block text-sm text-[#FF3939]">
-          {errorMsg}
-        </span>
-      )}
+
+      {errorMsg && <ErrorMsg msg={errorMsg} className="ml-4" />}
     </>
   );
 });

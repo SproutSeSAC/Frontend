@@ -44,14 +44,13 @@ export const useHandleSignUp = ({
 
   // const { mutate } = usePostUserInfo();
 
-  const onSubmit: SubmitHandler<UserInfo> = formData => {
+  const onSubmit: SubmitHandler<UserInfo & VerifyCode> = formData => {
     const data = {
       ...formData,
-      courseId: +formData.courseId,
-      marketingConsent:
-        (formData.marketingConsent as unknown as string) === 'true',
+      marketingConsent: formData.marketingConsent === '동의',
     };
-    const { verifyCode, campusId, ...rest } = data as UserInfo & VerifyCode;
+
+    const { verifyCode, campusId, ...rest } = data;
     console.log(rest);
     // mutate(rest);
   };
