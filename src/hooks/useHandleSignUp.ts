@@ -1,4 +1,4 @@
-// import { usePostUserInfo } from '@/services/auth/authQueries';
+// import { usePostUserInfo } from '@/services/auth/authMutations';
 import {
   useGetCampusList,
   useGetCourseList,

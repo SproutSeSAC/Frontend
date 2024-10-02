@@ -3,8 +3,8 @@ import { useToggleModal } from '@/hooks';
 import Tag from '@/components/common/Tag';
 import EditButton from '@/components/common/button/EditButton';
 import SquareButton from '@/components/common/button/SquareButton';
-import Input from '@/components/common/input/Input';
 import Label from '@/components/common/input/Label';
+import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
 
 export default function InterestJobDomainSkillCard() {
@@ -73,7 +73,7 @@ export default function InterestJobDomainSkillCard() {
                 </li>
               ))}
             </ul>
-            <Input
+            <TextInput
               name="관심 도메인"
               placeholder="관심 도메인을 입력해주세요."
               onChange={() => {}}
@@ -93,8 +93,9 @@ export default function InterestJobDomainSkillCard() {
                 </li>
               ))}
             </ul>
+
             {/* 드롭다운 */}
-            <Input
+            <TextInput
               name="관심 직무"
               placeholder="관심 직무을 선택해주세요."
               onChange={() => {}}
@@ -102,7 +103,7 @@ export default function InterestJobDomainSkillCard() {
             />
 
             <Label htmlFor="기술 스택" />
-            <Input
+            <TextInput
               name="기술 스택"
               placeholder="기술 스택을 등록해주세요."
               onChange={() => {}}

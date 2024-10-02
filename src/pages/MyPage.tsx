@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
+
 import imgUrl from '@/assets/images/faq.png';
 import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
@@ -13,6 +15,8 @@ import PostAndCommentCollection from '@/components/user/PostAndCommentCollection
 import UserNameImageCard from '@/components/user/UserNameImageCard';
 
 export default function MyPage() {
+  const { data } = useGetUserProfile();
+
   const userInfoList = [
     { label: 'E-mail', value: 'dashboard@gmail.com' },
     { label: '캠퍼스', value: '도봉 캠퍼스' },
@@ -24,18 +28,22 @@ export default function MyPage() {
       <Header title="회원 정보 수정" />
 
       <section className="mb-16 flex gap-4">
-        <UserNameImageCard />
+        {data && (
+          <UserNameImageCard
+            name={data.name}
+            nickname={data.nickname}
+            profileImageUrl={data.profileImageUrl}
+          />
+        )}
 
         <ul className="flex w-[55%] max-w-[405px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
-          {userInfoList.map(info => (
+          {userInfoList.map(({ value, label }) => (
             <li
-              key={info.label}
+              key={label}
               className="flex items-center justify-between py-2.5"
             >
-              <span className="font-medium text-vividGreen3">
-                {info.label}:{' '}
-              </span>
-              <span className="font-medium text-white">{info.value}</span>
+              <span className="font-medium text-vividGreen3">{label}: </span>
+              <span className="font-medium text-white">{value}</span>
             </li>
           ))}
         </ul>

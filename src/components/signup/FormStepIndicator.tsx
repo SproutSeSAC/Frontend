@@ -20,11 +20,10 @@ export default function FormStepIndicator({
   children,
 }: FormStepIndicatorProps) {
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
-  const {
-    formState: { isValid },
-  } = useFormContext();
+  const { trigger } = useFormContext();
 
   const goNextStep = async () => {
+    const isValid = await trigger();
     if (isValid) {
       const nextStep = currentStep === formStep ? currentStep : currentStep + 1;
       setCurrentStep(nextStep);

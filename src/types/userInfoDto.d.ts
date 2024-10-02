@@ -20,3 +20,20 @@ export type UserInfo = {
   marketingConsent: boolean;
   campusId?: number;
 };
+
+export type UserProfile = {
+  name: string;
+  domainList: number[];
+  jobList: number[];
+  techStackList: number[];
+  nickname: string;
+  profileImageUrl: string;
+};
+
+export type UpdateableUserProfile = {
+  nickname: string;
+  profileImageUrl: string;
+  domainList: number[];
+  jobList: number[];
+  techStackList: number[];
+};

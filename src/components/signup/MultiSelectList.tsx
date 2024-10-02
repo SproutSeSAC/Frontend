@@ -4,7 +4,13 @@ import { useFormContext } from 'react-hook-form';
 
 interface MultiSelectListProps {
   name: string;
-  list: { id: number; job?: string; domain?: string; techStack?: string }[];
+  list: {
+    id: number;
+    job?: string;
+    domain?: string;
+    techStack?: string;
+    iconImageUrl?: string;
+  }[];
   selectLimit: number;
 }
 
@@ -36,7 +42,7 @@ export default function MultiSelectList({
 
   return (
     <ul className="flex flex-wrap gap-1.5">
-      {list.map(({ id, ...rest }) => (
+      {list.map(({ id, iconImageUrl, ...rest }) => (
         <li
           key={id}
           className={`${watchedValue.includes(id) ? 'bg-vividGreen1 text-white' : 'bg-white text-text'} cursor-pointer rounded border`}
@@ -44,9 +50,13 @@ export default function MultiSelectList({
           <button
             type="button"
             onClick={() => handleClick(id)}
-            className="px-2 py-0.5 font-medium"
+            className="flex items-center justify-center gap-1 px-2 py-0.5 font-medium"
           >
-            {rest.domain || rest.job || rest.techStack}
+            {/* <img
+              src={iconImageUrl}
+              alt={rest.domain || rest.job || rest.techStack}
+            /> */}
+            <span>{rest.domain || rest.job || rest.techStack}</span>
           </button>
         </li>
       ))}

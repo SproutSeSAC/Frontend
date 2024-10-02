@@ -1,4 +1,10 @@
-import { KeyOfRole, Role, SignUpQuestionsByStep } from '@/types';
+import {
+  KeyOfRole,
+  Role,
+  SignUpQuestionsByStep,
+  UserInfo,
+  VerifyCode,
+} from '@/types';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
   {
@@ -108,4 +114,41 @@ export const matchedRoleName: Role = {
   CAMPUS_MANAGER: '캠퍼스 매니저',
   JOB_COORDINATOR: '잡코디',
   PRE_TRAINEE: '예비 수강생',
+};
+
+export const defaultSignUpFormValues: UserInfo & VerifyCode = {
+  name: '',
+  nickname: '',
+  role: 'TRAINEE',
+  campusId: 1,
+  courseId: 1,
+  domainIdList: [1, 2],
+  jobIdList: [1, 2],
+  techStackIdList: [1, 2],
+  marketingConsent: false,
+  verifyCode: '',
+};
+
+export const formCondition = {
+  name: {
+    required: '성함이 작성되지 않았습니다.',
+    pattern: {
+      value: /^[가-힣a-zA-Z]+$/,
+      message: '국문, 영문만 입력 가능합니다.',
+    },
+  },
+  nickname: {
+    required: '닉네임을 입력해주세요.',
+    pattern: {
+      value: /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]+$/,
+      message: '국문, 영문, 숫자만 입력 가능합니다.',
+    },
+    maxLength: {
+      value: 20,
+      message: '닉네임은 20자 이내로 입력해주세요.',
+    },
+  },
+  verfiyCode: {
+    required: '코드를 입력해주세요.',
+  },
 };
