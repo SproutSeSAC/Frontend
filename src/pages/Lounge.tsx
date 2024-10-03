@@ -1,14 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
-
 import {
   useGetLoungePositionsFilterList,
-  useGetLoungeProjects, // useGetLoungeTechStackFilterList,
+  useGetLoungeProjects,
 } from '@/services/lounge/loungeQueries';
 
 import { progressList, sortList, stackList } from '@/constants';
-import { LoungeDto } from '@/types/lounge/loungeDto';
+import { GetLoungeProjects } from '@/types/lounge/loungeDto';
 
 import Pagination from '@/components/common/Pagination';
 import SquareButton from '@/components/common/button/SquareButton';
@@ -16,7 +14,6 @@ import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdow
 import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
-import LoungeEditor from '@/components/lounge/editor/LoungeEditor';
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },
@@ -34,16 +31,14 @@ const commonOptionBoxClass = 'px-1.5 py-2.5';
 const commonOptionClass = 'hover:rounded-sm hover:bg-gray3 pl-1';
 
 export default function Lounge() {
-  const [searchParams] = useSearchParams();
-  const pType = searchParams.get('pType');
-
-  const [filterData, setFilterData] =
-    useState<LoungeDto.Request.GetLoungeProjects>({ page: 1, size: 20 });
+  const [filterData, setFilterData] = useState<GetLoungeProjects>({
+    page: 1,
+    size: 20,
+  });
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   // 로딩 추가
   const { data } = useGetLoungeProjects(filterData);
-  // const { data: techStackList } = useGetLoungeTechStackFilterList();
   const { data: positionsList } = useGetLoungePositionsFilterList();
 
   const handleChangeFilterValue = useCallback(
@@ -62,10 +57,6 @@ export default function Lounge() {
   const handleSearchSubmit = useCallback(() => {
     setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
   }, []);
-
-  if (pType === 'EDIT') {
-    return <LoungeEditor />;
-  }
 
   return (
     <>

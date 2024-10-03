@@ -96,7 +96,7 @@ function MultiSelectDropdown({
         {open ? <IoIosArrowUp /> : <IoIosArrowDown />}
       </button>
       <article
-        className={`absolute z-20 mt-1 w-full list-none ${open ? 'block overflow-auto' : 'hidden overflow-hidden'} flex max-h-72 flex-col gap-2 rounded-lg bg-white px-1.5 py-2.5 shadow-card`}
+        className={`absolute z-20 mt-1 w-full list-none ${open ? 'block overflow-auto' : 'hidden overflow-hidden'} flex max-h-72 flex-col gap-2 rounded-lg bg-white px-4 py-[15px] shadow-card`}
       >
         <TabNavigation
           tabList={tabList}

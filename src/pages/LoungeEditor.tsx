@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -7,10 +7,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePostLoungeProject } from '@/services/lounge/loungeMutations';
 import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
 
-import Title from '../../common/Title';
-import SquareButton from '../../common/button/SquareButton';
-import LoungeTextEditor from './LoungeTextEditor';
-import { loungeEditorSchema } from './loungeEditorSchema';
+import Title from '../components/common/Title';
+import SquareButton from '../components/common/button/SquareButton';
+import LoungeTextEditor from '../components/lounge/editor/LoungeTextEditor';
+import { loungeEditorSchema } from '../components/lounge/editor/loungeEditorSchema';
 
 import {
   Progress,
@@ -19,6 +19,7 @@ import {
   progressList,
   stackList,
 } from '@/constants';
+import { useToggleModal } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Control,
@@ -33,6 +34,7 @@ import { BsLink45Deg } from 'react-icons/bs';
 
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
+import Alert from '@/components/common/modal/Alert';
 
 const TAB_LIST = [
   { text: '프론트엔드', type: 'frontend' },
@@ -116,6 +118,8 @@ export default function LoungeEditor() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const { modalOpen, toggleModal } = useToggleModal();
+
   const methods = useForm<FormValues>({
     defaultValues: {
       recruitmentCount: 0,
@@ -135,6 +139,18 @@ export default function LoungeEditor() {
   const { mutateAsync } = usePostLoungeProject();
 
   const { handleSubmit, control } = methods;
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
     const params = {
@@ -375,13 +391,50 @@ export default function LoungeEditor() {
           <button
             type="button"
             className="mr-2 rounded-lg bg-gray2 px-4 py-2 tracking-tight text-white"
-            onClick={() => navigate(-1)}
+            onClick={() => toggleModal()}
           >
             취소
           </button>
           <SquareButton name="등록하기" type="submit" />
         </div>
       </form>
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={toggleModal}
+          onKeyDown={event => {
+            if (event.key === 'Escape') {
+              toggleModal();
+            }
+          }}
+          tabIndex={-1}
+          role="button"
+          aria-label="모달 닫기"
+        >
+          <Alert
+            className="z-30"
+            text="정말 나가시겠어요?"
+            subText="저장하지 않은 내용을 잃어버릴 수 있어요."
+          >
+            <SquareButton
+              color="gray"
+              name="계속 작성하기"
+              onClick={toggleModal}
+              type="button"
+              className="mt-6"
+            />
+            <SquareButton
+              name="나가기"
+              onClick={() => {
+                navigate(`/lounge`);
+                toggleModal();
+              }}
+              type="button"
+              className="mt-6"
+            />
+          </Alert>
+        </div>
+      )}
     </FormProvider>
   );
 }
