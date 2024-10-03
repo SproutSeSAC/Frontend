@@ -1,4 +1,10 @@
-import { KeyOfRole, Role, SignUpQuestionsByStep } from '@/types';
+import {
+  KeyOfRole,
+  Role,
+  SignUpQuestionsByStep,
+  UserInfo,
+  VerifyCode,
+} from '@/types';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
   {
@@ -55,18 +61,18 @@ const sesacStudentStep: SignUpQuestionsByStep[] = [
 
 const adminStep: SignUpQuestionsByStep[] = [
   {
-    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복 가능' },
+    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복가능' },
     campusId: [],
   },
   {
-    title: { text: '담당 교육 과정은 무엇인가요?', condition: '' },
+    title: { text: '담당 교육 과정은 무엇인가요?', condition: '(있는 경우)' },
     courseId: [],
   },
 ];
 
 const indentification: SignUpQuestionsByStep[] = [
   {
-    title: { text: '정보 확인을 위하여 확인 코드를 입력해주세요.' },
+    title: { text: '정보 확인을 위하여 인증코드를 입력해주세요.' },
     verifyCode: '',
   },
 ];
@@ -74,7 +80,7 @@ const indentification: SignUpQuestionsByStep[] = [
 const marketingConsent: SignUpQuestionsByStep[] = [
   {
     title: { text: '마케팅 활용 및 정보 수신에 동의하시나요?' },
-    marketingConsent: [true, false],
+    marketingConsent: ['동의', '동의하지 않음'],
     additionalInfo:
       '스프라우트가 제공하는 이벤트, 혜택, 다양한 정보(뉴스레터, 취업, 교육 등) 안내 목적으로 이메일을 통한 정보수신을 위해 이용하고자 합니다. 마케팅 및 정보 수신을원하지 않는 경우, 동의하지 않아도 됩니다.',
   },
@@ -108,4 +114,17 @@ export const matchedRoleName: Role = {
   CAMPUS_MANAGER: '캠퍼스 매니저',
   JOB_COORDINATOR: '잡코디',
   PRE_TRAINEE: '예비 수강생',
+};
+
+export const defaultSignUpFormValues: UserInfo & VerifyCode = {
+  name: '',
+  nickname: '',
+  role: 'TRAINEE',
+  campusId: undefined,
+  courseId: undefined,
+  domainIdList: [1, 2],
+  jobIdList: [1, 2],
+  techStackIdList: [1, 2],
+  marketingConsent: '동의',
+  verifyCode: '',
 };

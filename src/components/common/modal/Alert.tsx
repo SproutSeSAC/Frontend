@@ -1,13 +1,30 @@
-import Modal from '@/components/common/modal/Modal';
+import { ReactNode } from 'react';
+
+import { createPortal } from 'react-dom';
 
 interface AlertProps {
-  toggleModal: () => void;
+  children: ReactNode;
+  text: string;
+  subText?: string;
+  className?: string;
 }
 
-export default function Alert({ toggleModal }: AlertProps) {
-  return (
-    <Modal title="인증 확인" onToggleClick={toggleModal}>
-      <div>인증ㅇ...</div>
-    </Modal>
+export default function Alert({
+  className,
+  children,
+  text,
+  subText,
+}: AlertProps) {
+  const el = document.getElementById('modal') as Element;
+
+  return createPortal(
+    <section
+      className={`fixed inset-0 z-10 m-auto flex h-fit w-fit min-w-[300px] flex-col items-center justify-between rounded-2xl bg-white p-8 ${className}`}
+    >
+      <p className="text-center text-lg font-semibold">{text}</p>
+      <p className="text-center text-sm text-gray2">{subText}</p>
+      <div className="flex items-center gap-2">{children}</div>
+    </section>,
+    el,
   );
 }

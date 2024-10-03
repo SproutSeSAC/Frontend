@@ -11,12 +11,32 @@ export type KeyOfRole = keyof Role;
 
 export type UserInfo = {
   role: KeyOfRole;
-  courseId: number;
   name: string;
   nickname: string;
   jobIdList: number[];
   domainIdList: number[];
   techStackIdList: number[];
-  marketingConsent: boolean;
-  campusId?: number;
+  marketingConsent: '동의' | '동의하지 않음';
+  courseId: number | undefined;
+  campusId?: number | undefined;
+};
+
+export type UserProfile = {
+  email: string;
+  campusName: string;
+  courseTitle: string;
+  name: string;
+  domainList: { id: number; domain: string }[];
+  jobList: { id: number; job: string }[];
+  techStackList: { id: number; techStack: string; iconImageUrl: string }[];
+  nickname: string;
+  profileImageUrl: string;
+};
+
+export type UpdateableUserProfile = {
+  nickname: string;
+  profileImageUrl: string;
+  updatedDomainIdList: number[];
+  updatedJobIdList: number[];
+  updatedTechStackIdList: number[];
 };

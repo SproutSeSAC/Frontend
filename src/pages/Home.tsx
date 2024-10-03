@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
 import Header from '@/layouts/Header';
@@ -14,13 +15,18 @@ import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
-import InterestJobDomainSkillCard from '@/components/user/InterestJobDomainSkillCard';
+import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
 
 export default function Home() {
+  const { data: loungeList } = useGetLoungeProjects({ page: 1, size: 10 });
+
+  const { data: userProfile, isLoading: isGetUserProfileLoading } =
+    useGetUserProfile();
+
   const courseData = {
-    course: 'UXUI 디자인 과정',
-    campus: '마포캠퍼스',
+    course: userProfile ? userProfile.courseTitle : '',
+    campus: userProfile ? `${userProfile.campusName} 캠퍼스` : '',
     startDate: '2024.08.01',
     endDate: '2024.08.31',
   };
@@ -36,20 +42,30 @@ export default function Home() {
     }
   }, [navigate]);
 
-  const { data: loungeList } = useGetLoungeProjects({ page: 1, size: 10 });
+  // useEffect(() => {
+  //   if (!isGetUserProfileLoading && !userProfile) {
+  //     navigate('/signup');
+  //   } else {
+  //     navigate('/');
+  //   }
+  // }, [isGetUserProfileLoading, navigate, userProfile]);
+
+  if (isGetUserProfileLoading) return null;
 
   return (
     <>
       <MainView>
-        <Header title="김철수 스프님 환영합니다!" />
+        <Header title={`${userProfile?.name} 스프님 환영합니다!`} />
 
         <section>
           <Title title="나의 새싹 정보" className="mb-[10px]" />
 
-          <div className="relative flex items-center gap-4 md:flex-col">
-            <CourseDDayRadialBarCard data={courseData} />
-            <InterestJobDomainSkillCard />
-          </div>
+          {userProfile && (
+            <div className="relative flex items-center gap-4 md:flex-col">
+              <CourseDDayRadialBarCard data={courseData} />
+              <DomainJobTechStackCard />
+            </div>
+          )}
 
           <ThisMonthOfMealPriceChart />
         </section>

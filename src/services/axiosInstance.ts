@@ -1,6 +1,6 @@
 import { getNewAccessToken } from '@/services/auth/authQueries';
 
-import { getCookie } from '@/utils';
+import { getCookie, setCookie } from '@/utils';
 import axios, {
   AxiosHeaders,
   AxiosResponse,
@@ -43,22 +43,26 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async error => {
-    if (error.response && error.response.status === 401) {
+    const originalRequest = error.config;
+
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest.retry
+    ) {
+      originalRequest.retry = true;
+
       try {
         const response = await getNewAccessToken();
-        const newAccessToken = response.data.accessToken;
+        const newAccessToken = response.data.access_token;
 
-        const modifiedErrorConfig: InternalAxiosRequestConfig = {
-          ...error.config,
-          headers: {
-            ...error.config.headers,
-            'Access-Token': newAccessToken,
-          },
-        };
+        originalRequest.headers['Access-Token'] = newAccessToken;
 
-        return await axiosInstance(modifiedErrorConfig);
+        setCookie('access_token', newAccessToken, 1);
+
+        return await axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error('failed to refresh token:', refreshError);
+        console.error('refreshError', refreshError);
       }
     }
     return Promise.reject(error);
