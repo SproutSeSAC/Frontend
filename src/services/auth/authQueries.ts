@@ -8,6 +8,9 @@ import { AxiosResponse } from 'axios';
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
 
+// 캘린더 인증
+export const getCalendar = () => axiosInstance.get('/user/calendar');
+
 // 리프레시 토큰
 export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
 

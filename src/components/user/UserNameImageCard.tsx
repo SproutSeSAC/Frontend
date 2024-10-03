@@ -32,7 +32,6 @@ export default function UserNameImageCard({
   const { handleSubmit, register } = methods;
 
   const { mutate } = useUpdateUserProfile({
-    onSuccess: data => console.log('성공시', data),
     onError: error => console.log(error),
   });
 

@@ -15,7 +15,7 @@ import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
-import InterestJobDomainSkillCard from '@/components/user/InterestJobDomainSkillCard';
+import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
 
 export default function Home() {
@@ -42,18 +42,20 @@ export default function Home() {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    if (!isGetUserProfileLoading && !userProfile) {
-      navigate('/signup');
-    } else {
-      navigate('/');
-    }
-  }, [isGetUserProfileLoading, navigate, userProfile]);
+  // useEffect(() => {
+  //   if (!isGetUserProfileLoading && !userProfile) {
+  //     navigate('/signup');
+  //   } else {
+  //     navigate('/');
+  //   }
+  // }, [isGetUserProfileLoading, navigate, userProfile]);
+
+  if (isGetUserProfileLoading) return null;
 
   return (
     <>
       <MainView>
-        <Header title="김철수 스프님 환영합니다!" />
+        <Header title={`${userProfile?.name} 스프님 환영합니다!`} />
 
         <section>
           <Title title="나의 새싹 정보" className="mb-[10px]" />
@@ -61,7 +63,7 @@ export default function Home() {
           {userProfile && (
             <div className="relative flex items-center gap-4 md:flex-col">
               <CourseDDayRadialBarCard data={courseData} />
-              <InterestJobDomainSkillCard />
+              <DomainJobTechStackCard />
             </div>
           )}
 

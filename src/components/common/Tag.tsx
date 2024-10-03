@@ -53,7 +53,7 @@ export default function Tag({
       {onDeleteClick && (
         <button
           type="button"
-          onClick={() => {}}
+          onClick={onDeleteClick}
           aria-label={`${text} 태그 삭제하기`}
           className="-mr-1 ml-1"
         >

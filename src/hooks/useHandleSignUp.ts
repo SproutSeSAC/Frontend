@@ -52,10 +52,8 @@ export const useHandleSignUp = ({
   });
 
   const onSubmit: SubmitHandler<UserInfo & VerifyCode> = formData => {
-    const data = {
-      ...formData,
-      marketingConsent: formData.marketingConsent === '동의',
-    };
+    const marketingConsent = formData.marketingConsent === '동의';
+    const data = { ...formData, marketingConsent };
 
     const { verifyCode, campusId, ...rest } = data as unknown as UserInfo &
       VerifyCode;

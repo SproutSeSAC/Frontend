@@ -37,7 +37,23 @@ export const SignUpFormSchema = z.object({
     .array(z.number())
     .min(1, '최소 하나의 도메인을 선택해야 합니다.'),
 
-  courseId: z.number().int('코스 ID는 숫자여야 합니다.'),
+  campusId: z
+    .union([
+      z.number().min(1, '캠퍼스 ID는 1 이상의 숫자여야 합니다.'),
+      z.undefined(),
+    ])
+    .refine(value => value !== undefined, {
+      message: '캠퍼스를 선택해주세요.',
+    }),
+
+  courseId: z
+    .union([
+      z.number().min(1, '교육과정 ID는 1 이상의 숫자여야 합니다.'),
+      z.undefined(),
+    ])
+    .refine(value => value !== undefined, {
+      message: '교육과정을 선택해주세요.',
+    }),
 
   role: z
     .enum([

@@ -11,14 +11,14 @@ export type KeyOfRole = keyof Role;
 
 export type UserInfo = {
   role: KeyOfRole;
-  courseId: number;
   name: string;
   nickname: string;
   jobIdList: number[];
   domainIdList: number[];
   techStackIdList: number[];
   marketingConsent: '동의' | '동의하지 않음';
-  campusId?: number;
+  courseId: number | undefined;
+  campusId?: number | undefined;
 };
 
 export type UserProfile = {
@@ -36,7 +36,7 @@ export type UserProfile = {
 export type UpdateableUserProfile = {
   nickname: string;
   profileImageUrl: string;
-  domainList: number[];
-  jobList: number[];
-  techStackList: number[];
+  updatedDomainIdList: number[];
+  updatedJobIdList: number[];
+  updatedTechStackIdList: number[];
 };

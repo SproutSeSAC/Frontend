@@ -4,8 +4,6 @@ import { axiosInstance } from '@/services/axiosInstance';
 
 import { UpdateableUserProfile, UserInfo } from '@/types';
 
-// eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNCIsImlzRXNzZW50aWFsIjp0cnVlLCJleHAiOjE3Mjc4OTIzNTQsImlhdCI6MTcyNzg4ODc1NH0.eQgAvRRnpPIwUgOzGFArSJCN5Nf7NRcKaga-i5RjVW4MnWTn-UUHzZhWXvWuV526
-
 export const usePostUserInfo = (
   options?: UseMutationOptions<unknown, Error, UserInfo, unknown>,
 ) => {

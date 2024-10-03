@@ -37,13 +37,6 @@ export default function VerifyCodeButton({
           className="gap-1"
         >
           <SquareButton
-            name="계속 작성하기"
-            onClick={toggleModal}
-            type="button"
-            className="mt-5"
-            color="gray"
-          />
-          <SquareButton
             name="나가기"
             onClick={toggleModal}
             type="button"

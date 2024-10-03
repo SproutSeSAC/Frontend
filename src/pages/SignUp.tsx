@@ -6,11 +6,12 @@ import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { KeyOfRole, UserInfo, VerifyCode } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import VerifyCodeButton from '@/components/common/button/VerifyCodeButton';
 import Dropdown from '@/components/common/dropdown/Dropdown';
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 import Radio from '@/components/common/input/Radio';
 import TextInput from '@/components/common/input/TextInput';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
@@ -32,10 +33,13 @@ export default function SignUp() {
     control,
     register,
     formState: { errors },
+    watch,
+    trigger,
   } = methods;
 
   const watchedRole = useWatch({ control, name: 'role' });
   const watchedCampusId = useWatch({ control, name: 'campusId' });
+  const watchedCourseId = useWatch({ control, name: 'courseId' });
   const watchedVerifyCode = useWatch({ control, name: 'verifyCode' });
 
   const {
@@ -116,16 +120,71 @@ export default function SignUp() {
                           )}
 
                           {'campusId' in question && campusList && (
-                            <Dropdown name="campusId" options={campusList} />
+                            <Controller
+                              control={control}
+                              name="campusId"
+                              render={({ field: { onChange } }) => {
+                                return (
+                                  <>
+                                    <Dropdown
+                                      label="소속 캠퍼스"
+                                      selectedOptionId={watchedCampusId}
+                                      options={campusList}
+                                      selectBoxClassName={`${!watchedCampusId && '[&>span]:text-gray2'}`}
+                                      onChangeValue={data => {
+                                        onChange(data[0].id);
+                                      }}
+                                    />
+                                    {errors.campusId?.message && (
+                                      <ErrorMsg
+                                        msg={errors.campusId?.message}
+                                        className="pl-4"
+                                      />
+                                    )}
+                                  </>
+                                );
+                              }}
+                            />
                           )}
 
-                          {'courseId' in question && courseList && (
-                            <Dropdown
-                              name="courseId"
-                              options={courseList.map(course => {
-                                return { id: course.id, name: course.title };
-                              })}
-                            />
+                          {'courseId' in question && (
+                            <>
+                              <Controller
+                                control={control}
+                                name="courseId"
+                                render={({ field: { onChange } }) => {
+                                  const options = courseList?.length
+                                    ? courseList?.map(({ id, title }) => {
+                                        return { id, name: title };
+                                      })
+                                    : [];
+                                  return (
+                                    <Dropdown
+                                      label="소속 교육과정"
+                                      selectedOptionId={watchedCourseId}
+                                      options={options}
+                                      selectBoxClassName={`${!watch('courseId') && '[&>span]:text-gray2'}`}
+                                      onChangeValue={data => {
+                                        onChange(data[0].id);
+                                      }}
+                                      onSelectBoxClick={() => {
+                                        if (!watchedCampusId) {
+                                          trigger('campusId');
+                                          return true;
+                                        }
+                                        return false;
+                                      }}
+                                    />
+                                  );
+                                }}
+                              />
+                              {errors.courseId?.message && (
+                                <ErrorMsg
+                                  msg={errors.courseId?.message}
+                                  className="pl-4"
+                                />
+                              )}
+                            </>
                           )}
 
                           {'techStackIdList' in question && techStackList && (
