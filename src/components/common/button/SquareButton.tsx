@@ -1,6 +1,6 @@
 interface SquareButtonProps {
   name: string;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
   type?: 'button' | 'submit';
   color?: 'gray' | 'oliveGreen';

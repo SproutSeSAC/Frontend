@@ -399,18 +399,7 @@ export default function LoungeEditor() {
         </div>
       </form>
       {modalOpen && (
-        <div
-          className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={toggleModal}
-          onKeyDown={event => {
-            if (event.key === 'Escape') {
-              toggleModal();
-            }
-          }}
-          tabIndex={-1}
-          role="button"
-          aria-label="모달 닫기"
-        >
+        <>
           <Alert
             className="z-30"
             text="정말 나가시겠어요?"
@@ -433,7 +422,19 @@ export default function LoungeEditor() {
               className="mt-6"
             />
           </Alert>
-        </div>
+          <div
+            className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
+            onClick={toggleModal}
+            onKeyDown={event => {
+              if (event.key === 'Escape') {
+                toggleModal();
+              }
+            }}
+            tabIndex={-1}
+            role="button"
+            aria-label="모달 닫기"
+          />
+        </>
       )}
     </FormProvider>
   );
