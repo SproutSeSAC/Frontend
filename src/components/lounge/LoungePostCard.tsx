@@ -12,14 +12,14 @@ import {
 import { dateFormat } from '@/utils/dateFormat';
 
 import { PTYPE_STUDY, Ptype, progressDisplay, ptypeDisplay } from '@/constants';
-import { LoungeDto } from '@/types/lounge/loungeDto';
+import { Lounge } from '@/types/lounge/loungeDto';
 import { BsEye } from 'react-icons/bs';
 
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
 interface LoungePostCardProps {
-  card: LoungeDto.Lounge;
+  card: Lounge;
 }
 
 const getTagColor = (tag: Ptype) => {
@@ -89,9 +89,8 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         </div>
       </div>
 
-      <span className="mt-3 text-sm text-gray2">여긴 어떤값이 들어가나요?</span>
       <h4
-        className="line-clamp-2 overflow-hidden text-ellipsis whitespace-normal font-medium"
+        className="mt-3 line-clamp-2 overflow-hidden text-ellipsis whitespace-normal font-medium"
         style={{ wordBreak: 'break-word' }}
       >
         {card.title}
@@ -121,7 +120,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         <div className="flex">
           <span className="lounge-text-divider leading-4 text-gray2">직무</span>
 
-          <ul className="flex gap-1 overflow-hidden">
+          <ul className="flex flex-1 gap-1 overflow-hidden">
             {card.positionNames.map(tag => (
               <Tag
                 key={tag}

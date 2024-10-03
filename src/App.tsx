@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AnnouncementLayout from './layouts/AnnouncementLayout';
 import Announcement from './pages/Announcement';
 import AnnouncementDetail from './pages/AnnouncementDetail';
+import LoungeEditor from './pages/LoungeEditor';
 
 import Layout from '@/layouts/Layout';
 import LoungeLayout from '@/layouts/LoungeLayout';
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
           {
             path: 'post/:postId',
             element: <LoungeDetail />,
+          },
+          {
+            path: '/lounge/editor',
+            element: <LoungeEditor />,
           },
         ],
       },
