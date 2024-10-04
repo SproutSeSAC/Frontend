@@ -53,7 +53,7 @@ export default function AnnouncementDetail() {
           </div>
         </div>
       </div>
-      <CommentTemplate />
+      <CommentTemplate commentList={[]} onSubmit={() => {}} />
     </div>
   );
 }
