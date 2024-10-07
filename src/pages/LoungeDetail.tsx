@@ -93,7 +93,7 @@ export default function LoungeDetail() {
                 {projectsDetail?.title}
               </h1>
               <FavoriteButton
-                isFavorite={false}
+                isFavorite={projectsDetail?.isScraped ?? false}
                 onClick={onScrapProject}
                 size={24}
               />
@@ -110,9 +110,11 @@ export default function LoungeDetail() {
               personRecruited={projectsDetail?.recruitmentCount}
               positionNames={projectsDetail?.positionNames}
               contactMethod={projectsDetail?.contactMethod}
+              contactDetail={projectsDetail?.contactDetail}
               meetingType={projectsDetail?.meetingType}
             />
             <PostDetailsTemplate
+              // imgUrl={projectsDetail?.imgUrl}
               nickName={projectsDetail?.writerNickName}
               createdAt={projectsDetail?.createdAt}
               viewCount={projectsDetail?.viewCount}
@@ -129,6 +131,7 @@ export default function LoungeDetail() {
             content: comment.content,
             createdAt: comment.createdAt,
             writer: comment.writer,
+            imgUrl: comment.imgUrl,
           })) || []
         }
       />

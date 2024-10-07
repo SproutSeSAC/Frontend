@@ -53,7 +53,12 @@ export default function LoungeTabNavigation() {
   );
 
   const handelChangeValue = useCallback(
-    (type: string, e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    (
+      type: string,
+      e?:
+        | React.MouseEvent<HTMLLIElement, MouseEvent>
+        | React.KeyboardEvent<HTMLLIElement>,
+    ) => {
       if (location.pathname === '/lounge/editor') {
         e?.preventDefault();
         setTemporaryTab(type);
@@ -71,6 +76,7 @@ export default function LoungeTabNavigation() {
       selectValue={tab}
       tabList={TAB_LIST}
       onChangeValue={(type, e) => handelChangeValue(type, e)}
+      tabClassName="w-20"
     >
       <div
         className={`box-border w-20 cursor-pointer justify-center pb-[19px] ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}

@@ -7,6 +7,7 @@ import { axiosInstance } from '../axiosInstance';
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
 import { FilterType } from '@/types';
 import {
+  GetEndingTomorrowProjects,
   GetLoungeProject,
   GetLoungeProjectComment,
   GetLoungeProjectDetail,
@@ -34,8 +35,14 @@ export const useGetLoungeProjects = (params: GetLoungeProjects) => {
   const newParams = {
     ...params,
     ...newSearchParams,
-    position: params.position?.join(','),
-    techStack: params.techStack?.join(','),
+    position:
+      params.position && params.position.length > 0
+        ? params.position.join(',')
+        : undefined,
+    techStack:
+      params.techStack && params.techStack?.length > 0
+        ? params.techStack.join(',')
+        : undefined,
   };
 
   return useQuery({
@@ -77,6 +84,18 @@ export const useGetLoungeProjectsComment = (projectId: number) => {
     queryFn: async () => {
       const { data } = await axiosInstance.get<GetLoungeProjectComment[]>(
         `/project/${projectId}/comment`,
+      );
+      return data;
+    },
+  });
+};
+
+export const useGetEndingTomorrowProjects = () => {
+  return useQuery({
+    queryKey: ['useGetEndingTomorrowProjects'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<GetEndingTomorrowProjects[]>(
+        `/project/ending-tomorrow`,
       );
       return data;
     },
