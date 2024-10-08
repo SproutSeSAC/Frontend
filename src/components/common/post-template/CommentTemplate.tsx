@@ -11,6 +11,7 @@ interface CommentItem {
   content: string;
   createdAt: string;
   writer: string;
+  imgUrl: string | null;
 }
 
 interface CommentTemplateProps {
@@ -62,7 +63,10 @@ export default function CommentTemplate({
             className="flex w-full flex-col gap-4 text-lg"
           >
             <div className="flex items-center gap-2">
-              <UserImage className="size-[30px] p-0.5" />
+              <UserImage
+                className="size-[30px] p-0.5"
+                profileImageUrl={commentItem.imgUrl || ''}
+              />
               <div>{`@${commentItem.writer}`}</div>
             </div>
 
