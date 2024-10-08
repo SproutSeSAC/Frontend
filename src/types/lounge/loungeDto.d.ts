@@ -11,11 +11,15 @@ export interface Lounge {
   recruitmentStart: string;
   recruitmentEnd: string;
   viewCount: number;
+  contactDetail: string;
   positionNames: string[];
   ptype: Ptype;
 }
 export interface PostLoungeProject
-  extends Pick<Lounge, 'recruitmentCount' | 'meetingType' | 'contactMethod'> {
+  extends Pick<
+    Lounge,
+    'recruitmentCount' | 'meetingType' | 'contactMethod' | 'contactDetail'
+  > {
   recruitmentType: string;
   startDate: string;
   endDate: string;
@@ -53,7 +57,10 @@ export interface GetLoungeProjectDetail {
   description: string;
   recruitmentCount: number;
   contactMethod: ContactMethodType;
+  contactDetail: string;
   recruitmentStart: string;
+  imgUrl: string | null;
+  isScraped: boolean;
   recruitmentEnd: string;
   viewCount: number;
   projectStatus: ProjectStatusType;
@@ -69,4 +76,13 @@ export interface GetLoungeProjectComment {
   createdAt: string;
   writer: string;
   projectId: number;
+  imgUrl: string | null;
+}
+
+export interface GetEndingTomorrowProjects {
+  projectId: number;
+  title: string;
+  content: string;
+  userNickname: string;
+  imgUrl: string;
 }

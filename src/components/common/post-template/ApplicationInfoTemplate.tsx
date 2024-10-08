@@ -1,11 +1,14 @@
 import { dateFormat } from '@/utils/dateFormat';
 
 import {
+  CONTACT_METHOD_EMAIL,
+  CONTACT_METHOD_MESSENGER,
   ContactMethodType,
   Progress,
   contactMethodDisplay,
   progressDisplay,
 } from '@/constants';
+import { BsCopy, BsLink45Deg } from 'react-icons/bs';
 
 interface LoungeApplicationInfoProps {
   startPeriod?: string;
@@ -13,8 +16,11 @@ interface LoungeApplicationInfoProps {
   personRecruited?: number;
   positionNames?: string[];
   contactMethod?: ContactMethodType;
+  contactDetail?: string;
   meetingType?: Progress;
 }
+const commonContactMethodStyle =
+  'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
 
 export default function ApplicationInfoTemplate({
   startPeriod,
@@ -22,8 +28,22 @@ export default function ApplicationInfoTemplate({
   personRecruited,
   positionNames,
   contactMethod,
+  contactDetail,
   meetingType,
 }: LoungeApplicationInfoProps) {
+  const handleCopyClick = () => {
+    navigator.clipboard
+      .writeText(contactDetail || '')
+      .then(() => {
+        alert(
+          `${contactMethod === CONTACT_METHOD_EMAIL ? '이메일 주소' : '연락처'}가 복사되었습니다!`,
+        );
+      })
+      .catch(err => {
+        alert('복사에 실패했습니다.');
+        console.error('복사 실패:', err);
+      });
+  };
   return (
     <div>
       <div className="mt-4 flex w-full gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
@@ -80,8 +100,24 @@ export default function ApplicationInfoTemplate({
             <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
               연락
             </div>
-            <div className="">
-              {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
+            <div>
+              {contactMethod === CONTACT_METHOD_MESSENGER ? (
+                <div className={commonContactMethodStyle}>
+                  <a href={contactDetail}>
+                    {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
+                  </a>
+                  <BsLink45Deg size={22} className="mt-1" />
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleCopyClick}
+                  className={commonContactMethodStyle}
+                >
+                  {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
+                  <BsCopy className="ml-1 mt-1" size={22} />
+                </button>
+              )}
             </div>
           </div>
         </div>

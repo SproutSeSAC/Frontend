@@ -13,6 +13,7 @@ interface PostDetailsTemplateProps {
   createdAt?: string;
   viewCount?: number;
   description?: string;
+  // imgUrl?: string | null;
 }
 
 export default function PostDetailsTemplate({
@@ -21,6 +22,7 @@ export default function PostDetailsTemplate({
   createdAt,
   viewCount,
   description,
+  // imgUrl,
 }: PostDetailsTemplateProps) {
   const { toggleModal, modalOpen } = useToggleModal();
   return (
@@ -28,7 +30,11 @@ export default function PostDetailsTemplate({
       <div className="border-b-solid mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
         <div>
           <div className="mt-2 flex items-center gap-2 text-[22px]">
-            <UserImage className="size-[30px] p-0.5" />
+            <UserImage
+              className="size-[30px] p-0.5"
+              // TODO: img 수정
+              // profileImageUrl={imgUrl || ''}
+            />
             <div>{nickName || '-'}</div>
           </div>
 

@@ -36,7 +36,7 @@ export default function Announcement() {
 
   return (
     <div>
-      <div className="flex items-center gap-10">
+      <div className="mt-6 flex items-center gap-10">
         <SearchInput
           name="search"
           ref={searchRef}

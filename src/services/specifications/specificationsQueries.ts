@@ -22,6 +22,8 @@ type TechStackListData = {
   techStackList: {
     id: number;
     techStack: string;
+    iconImageUrl: string;
+    jobName: string;
   }[];
 };
 
