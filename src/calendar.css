@@ -1,0 +1,156 @@
+/* 공통 Full Calendar CSS */
+.fc {
+  @apply w-full;
+  /* .fc-toolbar */
+  .fc-toolbar {
+    @apply m-0 p-0;
+    &.fc-header-toolbar {
+      @apply mb-0;
+    }
+    .fc-button {
+      @apply border-0 bg-transparent text-gray1 !shadow-none;
+    }
+    .fc-button-primary:disabled {
+      @apply border border-gray2 bg-white text-sm text-text;
+    }
+  }
+  .fc-col-header-cell-cushion {
+    @apply p-0 text-[11px] font-normal text-[#70757a];
+  }
+  .fc-daygrid-day-top {
+    @apply flex min-h-7 items-center justify-center p-0 text-xs;
+  }
+  .fc-h-event .fc-event-title {
+    @apply text-xs;
+  }
+  .fc-daygrid-day.fc-day-today {
+    @apply bg-transparent;
+  }
+  .fc-daygrid-day-number {
+    @apply flex p-0;
+  }
+  .fc-daygrid-day.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
+    @apply size-6 items-center justify-center rounded-full text-white;
+  }
+}
+
+.big-calendar {
+  .fc {
+    /* .fc-toolbar */
+    .fc-toolbar {
+      &.fc-header-toolbar {
+        @apply mb-0 px-8 py-4;
+      }
+      .fc-toolbar-title {
+        @apply text-2xl font-medium tracking-wide text-text;
+      }
+      .fc-button {
+        @apply h-10 rounded-lg !shadow-none;
+      }
+      .fc-prev-button,
+      .fc-next-button {
+        @apply w-10 bg-text text-xs text-white;
+      }
+      .fc-today-button {
+        @apply border border-gray2 text-base font-medium text-text;
+      }
+      .fc-button-primary:disabled {
+        @apply h-10 border border-gray2 text-gray2 !shadow-none;
+      }
+    }
+    /* 요일 표시 */
+    .fc-col-header-cell-cushion {
+      @apply border-0 p-0 text-[11px] font-normal text-text;
+    }
+    /* 날짜 박스 */
+    .fc-daygrid-day-top {
+      @apply flex items-center justify-center p-0 text-xs;
+    }
+    .fc-daygrid-day.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
+      @apply size-6 items-center justify-center rounded-full bg-text text-white;
+    }
+    .fc-daygrid-day-frame {
+      @apply h-full min-h-28;
+    }
+    .fc-daygrid-day-number {
+      @apply flex p-0;
+    }
+    /* 이벤트 박스 */
+    .fc-h-event {
+      @apply mx-0.5 rounded-lg border-0 bg-vividGreen1 px-1.5 py-[1px];
+      .fc-event-title-container {
+        @apply flex items-center;
+        .fc-event-title {
+          @apply text-[11px] leading-4 text-white;
+        }
+      }
+    }
+  }
+
+  .fc-theme-standard {
+    .fc-scrollgrid {
+      @apply border-0;
+    }
+    td,
+    th {
+      @apply border-0 border-l border-t border-gray4 first:border-l-0;
+    }
+    th {
+      @apply border-b-0;
+    }
+    td {
+      @apply border-b-red-500 first:border-t;
+    }
+  }
+}
+
+.small-calendar {
+  @apply mb-4 mt-2 rounded-xl bg-white shadow-card;
+  .fc {
+    .fc-toolbar {
+      @apply mb-1 justify-between;
+      .fc-toolbar-title {
+        @apply ml-1.5 text-xs font-semibold;
+      }
+      .fc-button {
+        @apply bg-transparent text-[10px];
+      }
+    }
+    .fc-view {
+      @apply border-0;
+    }
+    .fc-day {
+      @apply h-fit font-medium text-gray1;
+    }
+    .fc-daygrid-body-unbalanced {
+      .fc-daygrid-day-events {
+        @apply min-h-0;
+      }
+    }
+  }
+  .fc-theme-standard {
+    .fc-scrollgrid {
+      @apply border-0;
+      /* 요일 표시 */
+      .fc-col-header-cell-cushion {
+        @apply pb-2 text-[11px] font-medium tracking-wider text-text;
+      }
+    }
+    td,
+    th {
+      @apply border-0;
+    }
+  }
+  .fc-daygrid-day {
+    @apply pt-0.5;
+    &.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
+      @apply size-6 items-center justify-center rounded-full bg-black text-white;
+    }
+  }
+  .fc-daygrid-body-natural .fc-daygrid-day-events {
+    @apply mb-0;
+  }
+  .fc-day-other .fc-daygrid-day-top {
+    @apply hidden;
+  }
+}

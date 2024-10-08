@@ -25,7 +25,7 @@ export default function MyPage() {
 
   return (
     <MainView>
-      <Header title="회원 정보 수정" />
+      <Header title="마이페이지" />
 
       <section className="mb-16 flex gap-4">
         {data && (

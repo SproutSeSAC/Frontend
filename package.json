@@ -21,6 +21,10 @@
     ]
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/google-calendar": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
     "@hookform/resolvers": "^3.9.0",
     "@tanstack/react-query": "^5.51.23",
     "apexcharts": "^3.53.0",
