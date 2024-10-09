@@ -1,21 +1,12 @@
+import { useTechStackList } from '@/hooks/useTechStackList';
+
 import SquareButton from '../common/button/SquareButton';
 import Label from '../common/input/Label';
 import MultiInput from '../common/input/MultiInput';
 import Modal from '../common/modal/Modal';
 
-import { stackList } from '@/constants';
-
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 
-const TAB_LIST = [
-  { text: '프론트엔드', type: 'frontend' },
-  { text: '백엔드', type: 'backend' },
-  { text: '모바일', type: 'mobile' },
-  { text: '컴퓨터', type: 'computer' },
-  { text: 'pm/ui/ux', type: 'pm' },
-  { text: '데이터', type: 'data' },
-  { text: '모두보기', type: 'all' },
-];
 const defaultInputStyle =
   'rounded-2xl border border-solid border-gray4 px-[15px] py-4 bg-white';
 
@@ -24,17 +15,21 @@ interface LoungeModalProps {
 }
 
 export default function LoungeModal({ toggleModal }: LoungeModalProps) {
+  const { techStackList, isTechStackListLoading } = useTechStackList();
+
   return (
     <Modal onToggleClick={toggleModal} title="참여하기">
       <form className="relative mt-3 flex w-[350px] flex-col">
         <Label htmlFor="기술 스택" />
+
         <MultiSelectDropdown
           label="기술스택"
+          defaultValue="백엔드"
           width="100%"
-          tabList={TAB_LIST}
-          defaultValue="frontend"
-          className={`${defaultInputStyle} mb-6`}
-          options={stackList}
+          isLoading={isTechStackListLoading}
+          buttonClassName={`${defaultInputStyle} mb-6`}
+          contentClassName="mt-[14px]"
+          options={techStackList}
           onChangeValue={data => {
             const newData = data.map(item => item.name);
             console.log(newData);

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import ErrorMsg from '../input/ErrorMsg';
+
 import { FilterType } from '@/types';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
@@ -19,6 +21,7 @@ interface SelectableDropdownProps {
   selectBoxClassName?: string;
   selectOptionBoxClassName?: string;
   selectOptionClassName?: string;
+  errorMsg?: string;
   isCheckBox?: boolean;
 }
 
@@ -30,6 +33,7 @@ function SelectableDropdown({
   selectOptionBoxClassName,
   selectOptionClassName,
   isCheckBox,
+  errorMsg,
   onChangeValue,
 }: SelectableDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -96,6 +100,7 @@ function SelectableDropdown({
         </span>
         {open ? <IoIosArrowUp /> : <IoIosArrowDown />}
       </button>
+
       <article
         className={`relative left-0 ${open ? 'block' : 'none'} z-20 w-full`}
       >
@@ -105,7 +110,7 @@ function SelectableDropdown({
           >
             {options.map(option => (
               <li
-                key={option.key}
+                key={option.id}
                 className={`w-full cursor-pointer ${selectOptionClassName}`}
               >
                 {/* TODO:isCheckBox모드 삭제될수도있음 */}
@@ -133,6 +138,8 @@ function SelectableDropdown({
           </ul>
         )}
       </article>
+
+      {errorMsg && <ErrorMsg msg={errorMsg} className="ml-2" />}
     </OutsideClickContainer>
   );
 }

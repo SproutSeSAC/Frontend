@@ -1,6 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import 'react-quill/dist/quill.snow.css';
 
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 import TextEditor from '@/components/common/text-editor/TextEditor';
 
 export default function LoungeTextEditor() {
@@ -10,7 +11,7 @@ export default function LoungeTextEditor() {
     <Controller
       control={control}
       name="projectDescription"
-      render={({ field: { onChange, value } }) => {
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
         const handleChange = (e: string | { native?: string }) => {
           let newValue;
 
@@ -28,12 +29,15 @@ export default function LoungeTextEditor() {
         };
 
         return (
-          <TextEditor
-            value={value}
-            onChange={handleChange}
-            className="h-[523px] w-full whitespace-pre-wrap"
-            placeholder="프로젝트 상세 정보를 작성해 주세요"
-          />
+          <div className="flex flex-col">
+            <TextEditor
+              value={value}
+              onChange={handleChange}
+              className="h-[523px] w-full"
+              placeholder="프로젝트 상세 정보를 작성해 주세요"
+            />
+            {error && <ErrorMsg msg={error?.message || ''} className="ml-2" />}
+          </div>
         );
       }}
     />

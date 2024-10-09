@@ -1,14 +1,14 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useTechStackList } from '@/hooks/useTechStackList';
 
 import {
   useGetLoungePositionsFilterList,
-  useGetLoungeProjects, // useGetLoungeTechStackFilterList,
+  useGetLoungeProjects,
 } from '@/services/lounge/loungeQueries';
 
-import { progressList, sortList, stackList } from '@/constants';
-import { LoungeDto } from '@/types/lounge/loungeDto';
+import { progressList, sortList } from '@/constants';
+import { GetLoungeProjects } from '@/types/lounge/loungeDto';
 
 import Pagination from '@/components/common/Pagination';
 import SquareButton from '@/components/common/button/SquareButton';
@@ -16,17 +16,6 @@ import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdow
 import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
-import LoungeEditor from '@/components/lounge/editor/LoungeEditor';
-
-const TAB_LIST = [
-  { text: '프론트엔드', type: 'frontend' },
-  { text: '백엔드', type: 'backend' },
-  { text: '모바일', type: 'mobile' },
-  { text: '컴퓨터', type: 'computer' },
-  { text: 'pm/ui/ux', type: 'pm' },
-  { text: '데이터', type: 'data' },
-  { text: '모두보기', type: 'all' },
-];
 
 const commonSelectBoxClass =
   'rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1';
@@ -34,17 +23,17 @@ const commonOptionBoxClass = 'px-1.5 py-2.5';
 const commonOptionClass = 'hover:rounded-sm hover:bg-gray3 pl-1';
 
 export default function Lounge() {
-  const [searchParams] = useSearchParams();
-  const pType = searchParams.get('pType');
-
-  const [filterData, setFilterData] =
-    useState<LoungeDto.Request.GetLoungeProjects>({ page: 1, size: 20 });
+  const [filterData, setFilterData] = useState<GetLoungeProjects>({
+    page: 1,
+    size: 20,
+  });
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   // 로딩 추가
   const { data } = useGetLoungeProjects(filterData);
-  // const { data: techStackList } = useGetLoungeTechStackFilterList();
   const { data: positionsList } = useGetLoungePositionsFilterList();
+
+  const { techStackList, isTechStackListLoading } = useTechStackList();
 
   const handleChangeFilterValue = useCallback(
     (value: { id: number; name: string }[], name: string) => {
@@ -63,13 +52,9 @@ export default function Lounge() {
     setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
   }, []);
 
-  if (pType === 'EDIT') {
-    return <LoungeEditor />;
-  }
-
   return (
     <>
-      <div className="flex items-center gap-10">
+      <div className="mt-6 flex items-center gap-10">
         <SearchInput
           name="search"
           ref={searchRef}
@@ -90,10 +75,11 @@ export default function Lounge() {
         <div className="flex gap-4">
           <MultiSelectDropdown
             label="기술스택"
-            tabList={TAB_LIST}
-            defaultValue="frontend"
-            className="rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1"
-            options={stackList}
+            defaultValue="백엔드"
+            isLoading={isTechStackListLoading}
+            buttonClassName="bg-bg px-3 py-1"
+            contentClassName="mt-[14px]"
+            options={techStackList}
             onChangeValue={value => handleChangeFilterValue(value, 'techStack')}
           />
 

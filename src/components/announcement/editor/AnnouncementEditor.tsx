@@ -11,13 +11,7 @@ import SquareButton from '../../common/button/SquareButton';
 // import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
 import AnnouncementTextEditor from './AnnouncementTextEditor';
 
-import {
-  Progress,
-  PtypeList,
-  positionList,
-  progressList,
-  stackList,
-} from '@/constants';
+import { Progress, PtypeList, positionList, progressList } from '@/constants';
 import {
   Controller,
   FormProvider,
@@ -30,15 +24,6 @@ import { BsLink45Deg } from 'react-icons/bs';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 
-const TAB_LIST = [
-  { text: '프론트엔드', type: 'frontend' },
-  { text: '백엔드', type: 'backend' },
-  { text: '모바일', type: 'mobile' },
-  { text: '컴퓨터', type: 'computer' },
-  { text: 'pm/ui/ux', type: 'pm' },
-  { text: '데이터', type: 'data' },
-  { text: '모두보기', type: 'all' },
-];
 const defaultInputStyle =
   'rounded-2xl border border-solid border-gray4 px-[15px] py-4 bg-white';
 
@@ -52,6 +37,7 @@ export interface FormValues {
   contactMethod: string;
   recruitmentType: string;
   startDate: string;
+  contactDetail: string;
   endDate: string;
   positions: number[];
   requiredStacks: number[];
@@ -84,6 +70,7 @@ export default function AnnouncementEditor() {
       meetingType: 'ONLINE',
       contactMethod: '',
       recruitmentType: '',
+      contactDetail: '',
       startDate: '',
       endDate: '',
       positions: [],
@@ -278,11 +265,11 @@ export default function AnnouncementEditor() {
                 return (
                   <MultiSelectDropdown
                     label="기술스택"
-                    tabList={TAB_LIST}
+                    defaultValue="백엔드"
                     width="100%"
-                    defaultValue="frontend"
-                    className={`${defaultInputStyle} `}
-                    options={stackList}
+                    buttonClassName={`${defaultInputStyle} `}
+                    contentClassName="mt-[14px]"
+                    options={[]}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
                       onChange(ids);

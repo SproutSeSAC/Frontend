@@ -6,7 +6,13 @@ import { axiosInstance } from '../axiosInstance';
 
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
 import { FilterType } from '@/types';
-import { LoungeDto } from '@/types/lounge/loungeDto';
+import {
+  GetEndingTomorrowProjects,
+  GetLoungeProject,
+  GetLoungeProjectComment,
+  GetLoungeProjectDetail,
+  GetLoungeProjects,
+} from '@/types/lounge/loungeDto';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
   return Object.fromEntries(
@@ -19,9 +25,7 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
   );
 };
 
-export const useGetLoungeProjects = (
-  params: LoungeDto.Request.GetLoungeProjects,
-) => {
+export const useGetLoungeProjects = (params: GetLoungeProjects) => {
   const [searchParams] = useSearchParams();
   const newSearchParams =
     extractValidParams(searchParams).pType === 'onlyScraped'
@@ -31,30 +35,22 @@ export const useGetLoungeProjects = (
   const newParams = {
     ...params,
     ...newSearchParams,
-    position: params.position?.join(','),
-    techStack: params.techStack?.join(','),
+    position:
+      params.position && params.position.length > 0
+        ? params.position.join(',')
+        : undefined,
+    techStack:
+      params.techStack && params.techStack?.length > 0
+        ? params.techStack.join(',')
+        : undefined,
   };
 
   return useQuery({
     queryKey: ['useGetLoungeProjects', newParams],
     queryFn: async () => {
-      const { data } =
-        await axiosInstance.get<LoungeDto.Response.GetLoungeProject>(
-          '/project',
-          {
-            params: newParams,
-          },
-        );
-      return data;
-    },
-  });
-};
-
-export const useGetLoungeTechStackFilterList = () => {
-  return useQuery({
-    queryKey: ['useGetLoungeTechStackFilterList'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<FilterType[]>('/techStack');
+      const { data } = await axiosInstance.get<GetLoungeProject>('/project', {
+        params: newParams,
+      });
       return data;
     },
   });
@@ -65,6 +61,42 @@ export const useGetLoungePositionsFilterList = () => {
     queryKey: ['useGetLoungePositionsFilterList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get<FilterType[]>('/positions');
+      return data;
+    },
+  });
+};
+
+export const useGetLoungeProjectsDetail = (projectId: number) => {
+  return useQuery({
+    queryKey: ['useGetLoungeProjectsDetail'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<GetLoungeProjectDetail>(
+        `/project/${projectId}`,
+      );
+      return data;
+    },
+  });
+};
+
+export const useGetLoungeProjectsComment = (projectId: number) => {
+  return useQuery({
+    queryKey: ['useGetLoungeProjectsComment'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<GetLoungeProjectComment[]>(
+        `/project/${projectId}/comment`,
+      );
+      return data;
+    },
+  });
+};
+
+export const useGetEndingTomorrowProjects = () => {
+  return useQuery({
+    queryKey: ['useGetEndingTomorrowProjects'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<GetEndingTomorrowProjects[]>(
+        `/project/ending-tomorrow`,
+      );
       return data;
     },
   });
