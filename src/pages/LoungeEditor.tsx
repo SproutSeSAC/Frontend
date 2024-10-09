@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -36,6 +36,7 @@ import { BsLink45Deg } from 'react-icons/bs';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
+import LabeledSection from '@/components/common/input/LabeledSection';
 import Alert from '@/components/common/modal/Alert';
 
 const defaultInputStyle =
@@ -61,21 +62,6 @@ export interface FormValues {
   requiredStacks: number[];
   projectTitle: string;
   projectDescription: string;
-}
-
-interface LabeledSectionProps {
-  label: string | ReactNode;
-  children: ReactNode;
-  className?: string;
-}
-
-function LabeledSection({ label, children, className }: LabeledSectionProps) {
-  return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="text-lg font-medium">{label}</div>
-      {children}
-    </div>
-  );
 }
 
 function ContactMethodContainer({ control }: { control: Control<FormValues> }) {

@@ -17,7 +17,7 @@ export default function MealRecruitSideView({
     </span>
   );
 
-  const mainContent = <MealRecruitSlider />;
+  const mainContent = <MealRecruitSlider sideViewOpen={sideViewOpen} />;
 
   return (
     <CollapsibleSideView

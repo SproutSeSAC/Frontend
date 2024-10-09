@@ -115,7 +115,7 @@ export default function Store() {
         <button
           type="button"
           aria-label="사이드뷰 펼치기"
-          className="fixed right-0 mt-24 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
+          className="fixed right-0 mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
           onClick={openSideView}
         >
           <FaChevronLeft />

@@ -113,7 +113,7 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
       <button
         type="button"
         onClick={() => setOpen(prev => !prev)}
-        className={`flex w-full items-center justify-between gap-5 rounded-2xl border border-solid border-gray2 text-start ${buttonClassName}`}
+        className={`flex w-full items-center justify-between gap-5 rounded-2xl border border-solid border-gray2 text-start ${selectedOptions.length > 0 ? 'text-text' : 'text-[#9ca3af]'} ${buttonClassName}`}
       >
         {isLoading && <div>Loading...</div>}
         {!isLoading &&
