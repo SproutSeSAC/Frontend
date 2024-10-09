@@ -9,14 +9,13 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { getCookie } from '@/utils';
-import koLocale from '@fullcalendar/core/locales/ko';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import FullCalendar from '@fullcalendar/react';
 
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
+import Calendar from '@/components/schedule/Calendar';
+import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
 import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
 import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
@@ -94,45 +93,20 @@ export default function Home() {
       </MainView>
 
       <SideView>
-        <Title title="주요일정" />
-        <div className="small-calendar px-3 pb-4 pt-3">
-          <FullCalendar
-            weekends
-            height="auto"
-            plugins={[dayGridPlugin]}
-            initialView="dayGridMonth"
-            timeZone="Asia/Seoul"
-            locale="en"
-            locales={[koLocale]}
-            titleFormat={({ date: { year, month } }) =>
-              `${month + 1}월 ${year}년`
-            }
-            headerToolbar={{
-              left: 'title',
-              right: 'prev,next',
-            }}
-            dayHeaderContent={date => date.text.slice(0, 2)}
-            // events={events}
-          />
-          <ul className="mt-6 flex flex-col gap-3">
+        <Title title="주요일정" className="mb-2" />
+        <Calendar type="small" events={[]}>
+          <ul className="mb-2 mt-3 flex flex-col gap-3">
             {[
               { title: '백엔드 특강일정' },
               { title: '프론트엔드 특강일정' },
             ].map(event => (
-              <li key={event.title} className="leading-3 text-gray1">
-                <span className="border-r-2 border-gray2 pr-1.5 text-xs text-gray2">
-                  11:00 ~ 13:00
-                </span>
-                <span className="pl-1.5 text-[13px] font-medium">
-                  {event.title}
-                </span>
-              </li>
+              <SmallCalendarBottomEvent key={event.title} title={event.title} />
             ))}
           </ul>
-        </div>
+        </Calendar>
 
         {/* 공지사항 */}
-        <div className="mb-2 flex items-center justify-between">
+        <div className="mb-2 mt-6 flex items-center justify-between">
           <Title title="공지사항" className="!pl-0 text-sm" />
           <Link
             to="/announcement"

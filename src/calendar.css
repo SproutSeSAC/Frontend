@@ -86,7 +86,6 @@
       }
     }
   }
-
   .fc-theme-standard {
     .fc-scrollgrid {
       @apply border-0;
@@ -105,15 +104,15 @@
 }
 
 .small-calendar {
-  @apply mb-4 mt-2 rounded-xl bg-white shadow-card;
+  @apply p-3 pb-2;
   .fc {
     .fc-toolbar {
-      @apply mb-1 justify-between;
+      @apply mb-1 items-center justify-between;
       .fc-toolbar-title {
         @apply ml-1.5 text-xs font-semibold;
       }
       .fc-button {
-        @apply bg-transparent text-[10px];
+        @apply mb-0.5 bg-transparent py-0.5 text-[10px];
       }
     }
     .fc-view {
@@ -125,6 +124,22 @@
     .fc-daygrid-body-unbalanced {
       .fc-daygrid-day-events {
         @apply min-h-0;
+      }
+    }
+    /* 이벤트 박스 */
+    .fc-daygrid-day-events {
+      @apply m-0 flex items-center justify-center p-0;
+      .fc-h-event {
+        @apply size-[5px] rounded-full bg-vividGreen1;
+        .fc-event-title-container {
+          @apply flex items-center;
+          .fc-event-title {
+            @apply hidden;
+          }
+        }
+      }
+      .fc-daygrid-day-bottom {
+        @apply hidden border;
       }
     }
   }

@@ -1,6 +1,4 @@
+import { Calendar } from '@/types/calendarDto';
 import { atom } from 'jotai';
 
-export const calendarAtom = atom<null | {
-  id: string;
-  title: string;
-}>(null);
+export const calendarAtom = atom<null | Calendar>(null);

@@ -4,6 +4,8 @@ interface CheckboxProps {
   count?: number;
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  textClassName?: string;
+  checkBoxColor?: string;
 }
 
 /**
@@ -12,6 +14,8 @@ interface CheckboxProps {
  * @param count - 동일한 카테고리의 요소가 몇개있는지 나타내는 숫자
  * @param checked - 체크 상태를 나타내는 boolean 값
  * @param onChange - 체크 상태가 바뀔 때 호출되는 함수
+ * @param textClassName - 체크박스 라벨 클래스네임
+ * @param checkBoxColor - 체크박스 클래스네임
  */
 export default function Checkbox({
   id,
@@ -19,6 +23,8 @@ export default function Checkbox({
   count,
   checked,
   onChange,
+  textClassName = '',
+  checkBoxColor = '',
 }: CheckboxProps) {
   return (
     <label htmlFor={id} className="flex w-fit items-center">
@@ -28,9 +34,12 @@ export default function Checkbox({
         name={id}
         checked={checked}
         onChange={onChange}
-        className="mr-2 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-blue-500 checked:bg-[url('./assets/images/check.png')] checked:bg-contain"
+        className={`mr-2 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-blue-500 checked:bg-[url('./assets/images/check.png')] checked:bg-contain`}
+        style={{ backgroundColor: checked ? checkBoxColor : '' }}
       />
-      {text && <span className="mr-1 text-[#646567]">{text}</span>}
+      {text && (
+        <span className={`mr-1 text-[#646567] ${textClassName}`}>{text}</span>
+      )}
       {count && <span className="text-[#989B9E]">({count})</span>}
     </label>
   );
