@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ import {
   contactMethodList,
   progressList,
 } from '@/constants';
-import { useToggleModal } from '@/hooks';
+import { useDialogContext } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Control,
@@ -36,7 +36,7 @@ import { BsLink45Deg } from 'react-icons/bs';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
-import Alert from '@/components/common/modal/Alert';
+import LabeledSection from '@/components/common/input/LabeledSection';
 
 const defaultInputStyle =
   'rounded-2xl border border-solid px-[15px] py-4 bg-white';
@@ -61,21 +61,6 @@ export interface FormValues {
   requiredStacks: number[];
   projectTitle: string;
   projectDescription: string;
-}
-
-interface LabeledSectionProps {
-  label: string | ReactNode;
-  children: ReactNode;
-  className?: string;
-}
-
-function LabeledSection({ label, children, className }: LabeledSectionProps) {
-  return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="text-lg font-medium">{label}</div>
-      {children}
-    </div>
-  );
 }
 
 function ContactMethodContainer({ control }: { control: Control<FormValues> }) {
@@ -134,7 +119,7 @@ export default function LoungeEditor() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { modalOpen, toggleModal } = useToggleModal();
+  const { hideDialog, alert } = useDialogContext();
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -179,13 +164,41 @@ export default function LoungeEditor() {
 
     try {
       await mutateAsync(params);
-      console.log('성공');
-      queryClient.invalidateQueries({
-        queryKey: ['useGetLoungeProjects', {}],
+      alert({
+        showDim: true,
+        className: 'z-30',
+        text: '프로젝트를 등록했습니다.',
+        children: (
+          <SquareButton
+            name="닫기"
+            onClick={() => {
+              hideDialog();
+              queryClient.invalidateQueries({
+                queryKey: ['useGetLoungeProjects', {}],
+              });
+              navigate('/lounge');
+            }}
+            type="button"
+            className="mt-6 w-[137px]"
+          />
+        ),
       });
-      navigate('/lounge');
     } catch (err) {
       console.error(err);
+
+      alert({
+        showDim: true,
+        className: 'z-30',
+        text: '프로젝트 등록을 실패했습니다.',
+        children: (
+          <SquareButton
+            name="닫기"
+            onClick={hideDialog}
+            type="button"
+            className="mt-6 w-[137px]"
+          />
+        ),
+      });
     }
   };
 
@@ -197,10 +210,22 @@ export default function LoungeEditor() {
       });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
       if (firstErrorMessage) {
-        alert(firstErrorMessage);
+        alert({
+          showDim: true,
+          className: 'z-30',
+          text: firstErrorMessage,
+          children: (
+            <SquareButton
+              name="닫기"
+              onClick={hideDialog}
+              type="button"
+              className="mt-6 w-[137px]"
+            />
+          ),
+        });
       }
     },
-    [methods],
+    [alert, hideDialog, methods],
   );
 
   const recruitmentCountList = useMemo(() => {
@@ -217,6 +242,35 @@ export default function LoungeEditor() {
       };
     });
   }, []);
+
+  const handleLeave = useCallback(() => {
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: '정말 나가시겠어요?',
+      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
+      children: (
+        <>
+          <SquareButton
+            color="gray"
+            name="계속 작성하기"
+            onClick={hideDialog}
+            type="button"
+            className="mt-6"
+          />
+          <SquareButton
+            name="나가기"
+            onClick={() => {
+              navigate(`/lounge`);
+              hideDialog();
+            }}
+            type="button"
+            className="mt-6"
+          />
+        </>
+      ),
+    });
+  }, [alert, hideDialog, navigate]);
 
   return (
     <FormProvider {...methods}>
@@ -456,51 +510,13 @@ export default function LoungeEditor() {
           <button
             type="button"
             className="mr-2 rounded-lg bg-gray2 px-4 py-2 tracking-tight text-white"
-            onClick={() => toggleModal()}
+            onClick={handleLeave}
           >
             취소
           </button>
           <SquareButton name="등록하기" type="submit" />
         </div>
       </form>
-      {modalOpen && (
-        <>
-          <Alert
-            className="z-30"
-            text="정말 나가시겠어요?"
-            subText="저장하지 않은 내용을 잃어버릴 수 있어요."
-          >
-            <SquareButton
-              color="gray"
-              name="계속 작성하기"
-              onClick={toggleModal}
-              type="button"
-              className="mt-6"
-            />
-            <SquareButton
-              name="나가기"
-              onClick={() => {
-                navigate(`/lounge`);
-                toggleModal();
-              }}
-              type="button"
-              className="mt-6"
-            />
-          </Alert>
-          <div
-            className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
-            onClick={toggleModal}
-            onKeyDown={event => {
-              if (event.key === 'Escape') {
-                toggleModal();
-              }
-            }}
-            tabIndex={-1}
-            role="button"
-            aria-label="모달 닫기"
-          />
-        </>
-      )}
     </FormProvider>
   );
 }

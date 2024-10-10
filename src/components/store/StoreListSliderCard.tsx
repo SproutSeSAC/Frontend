@@ -3,7 +3,12 @@ import imgUrl from '@/assets/images/food.jpg';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
 
-export default function StoreListSliderCard() {
+export default function StoreListSliderCard({
+  slideItem,
+}: {
+  slideItem: number;
+}) {
+  console.log(slideItem);
   return (
     <article className="flex w-full gap-[11px]">
       <StoreMenuImage width="w-[147px]" height="h-[147px]" src={imgUrl} />

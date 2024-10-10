@@ -1,34 +1,52 @@
-import imgUrl from '@/assets/images/food.jpg';
-import Slider from 'react-slick';
+import { ReactNode, useState } from 'react';
+
+import { Swiper as SwiperType } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import SliderArrow from '@/components/common/slider/SliderArrow';
-import StoreMenuImage from '@/components/store/StoreMenuImage';
 
 interface StoreMenuImageSliderProps {
-  width: string;
-  height: string;
+  slideList: number[];
+  children: ReactNode;
 }
 
 export default function StoreMenuImageSlider({
-  width,
-  height,
+  slideList,
+  children,
 }: StoreMenuImageSliderProps) {
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    prevArrow: <SliderArrow direction="left" onClick={() => {}} />,
-    nextArrow: <SliderArrow direction="right" onClick={() => {}} />,
-  };
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
 
   return (
     <div className="slider-container">
-      <Slider {...settings}>
-        <StoreMenuImage src={imgUrl} width={width} height={height} />
-        <StoreMenuImage src={imgUrl} width={width} height={height} />
-      </Slider>
+      <Swiper
+        pagination={{
+          clickable: true,
+        }}
+        loop
+        slidesPerView={1}
+        style={{ height: 'inherit' }}
+        onSwiper={setSwiperInstance}
+      >
+        {slideList.map(item => (
+          <SwiperSlide key={item}>
+            <SliderArrow
+              direction="left"
+              onClick={e => {
+                e.stopPropagation();
+                swiperInstance?.slidePrev();
+              }}
+            />
+            {children}
+            <SliderArrow
+              direction="right"
+              onClick={e => {
+                e.stopPropagation();
+                swiperInstance?.slideNext();
+              }}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }

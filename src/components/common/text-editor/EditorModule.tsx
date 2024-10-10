@@ -1,4 +1,14 @@
-export default function EditorModule() {
+import { useState } from 'react';
+
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+
+interface EditorModuleProps {
+  onChange: (value: string) => void;
+}
+
+export default function EditorModule({ onChange }: EditorModuleProps) {
+  const [showPicker, setShowPicker] = useState(false);
   return (
     <div>
       <div className="ql-formats">
@@ -57,7 +67,22 @@ export default function EditorModule() {
           aria-label="ql-code-block"
           className="ql-code-block"
         />
+        <button
+          className="z-10"
+          type="button"
+          onClick={() => setShowPicker(prev => !prev)}
+        >
+          😊
+        </button>
       </div>
+      {showPicker && (
+        <Picker
+          className="w-72 rounded-lg border border-gray-300 bg-gray-100 p-4" // Tailwind CSS 클래스 적용
+          data={data}
+          onEmojiSelect={onChange}
+          // onClickOutside={() => setShowPicker(false)}
+        />
+      )}
     </div>
   );
 }

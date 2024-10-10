@@ -120,3 +120,45 @@ export const contactMethodDisplay: { [key in ContactMethodType]: string } = {
   PHONE: '휴대폰',
   MESSENGER: '메신저',
 };
+
+// food type filter
+
+export const FOOD_FILTER_KOREAN = 'KOREAN';
+export const FOOD_FILTER_CHINESE = 'CHINESE';
+export const FOOD_FILTER_JAPANESE = 'JAPANESE';
+export const FOOD_FILTER_WESTERN = 'WESTERN';
+export const FOOD_FILTER_ASIAN = 'ASIAN';
+export const FOOD_FILTER_SNACK = 'SNACK';
+export const FOOD_FILTER_CAFE = 'CAFE';
+export type FoodFilterType =
+  | typeof FOOD_FILTER_KOREAN
+  | typeof FOOD_FILTER_CHINESE
+  | typeof FOOD_FILTER_JAPANESE
+  | typeof FOOD_FILTER_WESTERN
+  | typeof FOOD_FILTER_JAPANESE
+  | typeof FOOD_FILTER_ASIAN
+  | typeof FOOD_FILTER_SNACK
+  | typeof FOOD_FILTER_CAFE;
+
+export const foodFilterList: Array<{
+  key: string;
+  value: FoodFilterType;
+}> = [
+  { key: '한식', value: FOOD_FILTER_KOREAN },
+  { key: '양식', value: FOOD_FILTER_WESTERN },
+  { key: '중식', value: FOOD_FILTER_CHINESE },
+  { key: '일식', value: FOOD_FILTER_JAPANESE },
+  { key: '아시아', value: FOOD_FILTER_ASIAN },
+  { key: '분식', value: FOOD_FILTER_SNACK },
+  { key: '카페', value: FOOD_FILTER_CAFE },
+];
+
+// export const foodFilterDisplay: { [key in FoodFilterType]: string } = {
+//   KOREAN: '한식',
+//   CHINESE: '중식',
+//   JAPANESE: '일식',
+//   WESTERN: '양식',
+//   ASIAN: '아시아',
+//   SNACK: '분식',
+//   CAFE: '카페',
+// };

@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { createPortal } from 'react-dom';
 
-interface AlertProps {
+export interface AlertProps {
   children: ReactNode;
   text: string;
   subText?: string;

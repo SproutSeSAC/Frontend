@@ -1,20 +1,16 @@
 import VerticalSlider from '@/components/common/slider/VerticalSlider';
 import StoreListSliderCard from '@/components/store/StoreListSliderCard';
 
-interface StoreListSliderProps {
-  sideViewOpen: boolean;
-}
-
-export default function StoreListSlider({
-  sideViewOpen,
-}: StoreListSliderProps) {
+export default function StoreListSlider() {
   return (
-    <VerticalSlider sideViewOpen={sideViewOpen} slidesToShow={4}>
-      {Array.from({ length: 10 }, (_, idx) => (
-        <div key={idx} className="py-2">
-          <StoreListSliderCard />
-        </div>
-      ))}
+    <VerticalSlider
+      slideList={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+      slideItemHeight={147}
+      spaceBetween={40}
+      containerHeightOffset={280}
+      paginationHeightOffset={360}
+    >
+      {item => <StoreListSliderCard slideItem={item} />}
     </VerticalSlider>
   );
 }

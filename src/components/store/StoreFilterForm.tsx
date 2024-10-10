@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -46,11 +46,15 @@ const temporaryCategory = [
     count: 41,
   },
   {
-    text: '분식',
+    text: '아시아',
     count: 20,
   },
   {
-    text: '간편식',
+    text: '분식',
+    count: 200,
+  },
+  {
+    text: '카페',
     count: 200,
   },
 ];
@@ -71,11 +75,11 @@ export default function StoreFilterForm() {
       새싹: [],
       메뉴별: [],
     },
-    values: {
-      campus: searchParams.get('campus') || '강북캠퍼스',
-      새싹: searchParams.getAll('새싹')[0]?.split(',') || [],
-      메뉴별: searchParams.getAll('메뉴별')[0]?.split(',') || [],
-    },
+    // values: {
+    //   campus: searchParams.get('campus') || '강북캠퍼스',
+    //   새싹: searchParams.getAll('새싹')[0]?.split(',') || [],
+    //   메뉴별: searchParams.getAll('메뉴별')[0]?.split(',') || [],
+    // },
   });
 
   const handleCheckboxChange = useCallback(
@@ -103,6 +107,13 @@ export default function StoreFilterForm() {
     reset();
     setSearchParams('', { replace: true });
   }, [reset, setSearchParams]);
+
+  useEffect(() => {
+    if (searchParams.size > 0) {
+      handleReset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <form action="" className="flex w-[200px] flex-shrink-0 flex-col gap-8">

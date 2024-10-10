@@ -1,8 +1,5 @@
 import { dateFormat, timeFormat } from '@/utils/dateFormat';
 
-import LoungeModal from '../../lounge/LoungeModal';
-
-import { useToggleModal } from '@/hooks';
 import { BsEye } from 'react-icons/bs';
 
 import UserImage from '@/components/user/UserImage';
@@ -24,7 +21,6 @@ export default function PostDetailsTemplate({
   description,
   // imgUrl,
 }: PostDetailsTemplateProps) {
-  const { toggleModal, modalOpen } = useToggleModal();
   return (
     <>
       <div className="border-b-solid mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
@@ -69,8 +65,6 @@ export default function PostDetailsTemplate({
         className="mt-6 text-lg"
         dangerouslySetInnerHTML={{ __html: description || '' }}
       />
-
-      {modalOpen && <LoungeModal toggleModal={toggleModal} />}
     </>
   );
 }

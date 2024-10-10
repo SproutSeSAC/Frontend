@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import StoreMenuImage from './StoreMenuImage';
+
+import imgUrl from '@/assets/images/food.jpg';
 import {
   BsClockFill,
   BsFillGeoAltFill,
@@ -29,7 +32,9 @@ export default function StoreCard({
 
   return (
     <article className={`${width} gap-[11px]`}>
-      <StoreMenuImageSlider width={width} height={height} />
+      <StoreMenuImageSlider slideList={[1, 2]}>
+        <StoreMenuImage src={imgUrl} width={width} height={height} />
+      </StoreMenuImageSlider>
 
       <section className="mt-3 flex flex-col gap-6">
         <header className="flex items-center justify-between font-semibold">
@@ -43,20 +48,39 @@ export default function StoreCard({
         </header>
 
         <div className="flex flex-col gap-4">
-          <p className="flex items-center">
-            <BsFillGeoAltFill className="mr-[10px] text-gray2" size={15} />
-            <span className="text-gray1">서울 용산구 이촌로64길 61</span>
+          <p className="flex items-center gap-2.5">
+            <BsFillGeoAltFill className="text-gray2" size={15} />
+            <span className="text-gray1">도봉캠퍼스</span>
+            <span className="text-gray1">도보</span>
+            <span className="flex gap-1 text-gray1">
+              <button
+                className="text-skyBlue1"
+                onClick={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                16
+              </button>
+              <span>분</span>
+            </span>
           </p>
           <p className="flex items-center">
             <BsClockFill className="mr-[10px] text-gray2" size={15} />
             <span className="text-gray1">영업 중</span>
             <span className="mx-1 text-gray3">|</span>
-            <p className="relative flex items-center gap-1.5 text-gray1">
-              <span>15:00에 브레이크타임</span>
+            <p className="relative text-gray1">
               <button
                 type="button"
-                onClick={() => setOpenHoursModal(prev => !prev)}
+                className="flex items-center gap-1.5"
+                onClick={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setOpenHoursModal(prev => !prev);
+                }}
               >
+                <span>15:00에 브레이크타임</span>
+
                 {openHoursModal ? <IoIosArrowUp /> : <IoIosArrowDown />}
               </button>
               {openHoursModal && (
