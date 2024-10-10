@@ -2,7 +2,7 @@ import VerticalSlider from '../common/slider/VerticalSlider';
 import MealRecruitCard from './MealRecruitCard';
 import MealRecruitModal from './MealRecruitModal';
 
-import { useToggleModal } from '@/hooks';
+import { useDialogContext } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
 
 const list = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -14,13 +14,19 @@ interface MealRecruitSliderProps {
 export default function MealRecruitSlider({
   sideViewOpen,
 }: MealRecruitSliderProps) {
-  const { modalOpen, toggleModal } = useToggleModal();
+  const { showDialog } = useDialogContext();
+
   return (
     <>
       {sideViewOpen && (
         <button
           className={`mb-7 flex w-full flex-col items-center rounded-lg bg-gray5 px-5 shadow-card ${list.length > 0 ? 'h-[105px] py-6' : 'h-full py-8'}`}
-          onClick={toggleModal}
+          onClick={async () => {
+            await showDialog({
+              key: 'MEAL-RECRUIT-TYPE',
+              element: <MealRecruitModal />,
+            });
+          }}
         >
           <div className="w-fit rounded-full bg-vividGreen1 text-white">
             <BsPlus size={30} />
@@ -40,11 +46,17 @@ export default function MealRecruitSlider({
           )}
         </button>
       )}
-      <VerticalSlider slideList={list} spaceBetween={84} slideItemHeight={224}>
-        <MealRecruitCard />
-      </VerticalSlider>
-
-      {modalOpen && <MealRecruitModal toggleModal={toggleModal} />}
+      <div className="mb-10">
+        <VerticalSlider
+          slideList={list}
+          spaceBetween={24}
+          slideItemHeight={224}
+          containerHeightOffset={360}
+          paginationHeightOffset={380}
+        >
+          {item => <MealRecruitCard slideItem={item} />}
+        </VerticalSlider>
+      </div>
     </>
   );
 }

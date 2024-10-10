@@ -5,11 +5,13 @@ import { Swiper as SwiperType } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-interface VerticalSliderProps {
-  slideList: number[];
-  children: ReactNode;
+interface VerticalSliderProps<T> {
+  slideList: T[];
+  children: (item: T) => ReactNode;
   spaceBetween: number;
   slideItemHeight: number;
+  containerHeightOffset: number; // TODO : 개선필요
+  paginationHeightOffset: number; // TODO : 개선필요
 }
 
 function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
@@ -17,7 +19,7 @@ function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
     <button
       type="button"
       aria-label="더 보기"
-      className="fixed bottom-[-30px] left-0 right-0 z-10 flex justify-center pb-5"
+      className="z-10 pb-5"
       onClick={() => swiper?.slideNext()}
     >
       <IoIosArrowDown size={40} opacity={0.4} />
@@ -25,12 +27,14 @@ function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
   );
 }
 
-export default function VerticalSlider({
+export default function VerticalSlider<T>({
   slideList,
   children,
   spaceBetween,
   slideItemHeight,
-}: VerticalSliderProps) {
+  containerHeightOffset,
+  paginationHeightOffset,
+}: VerticalSliderProps<T>) {
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
@@ -45,7 +49,7 @@ export default function VerticalSlider({
     <div className="relative">
       <div
         className="overflow-hidden"
-        style={{ height: `${windowHeight - 240}px` }}
+        style={{ height: `${windowHeight - containerHeightOffset}px` }}
       >
         <Swiper
           direction="vertical"
@@ -53,19 +57,24 @@ export default function VerticalSlider({
             clickable: true,
           }}
           spaceBetween={spaceBetween}
-          slidesPerView={(windowHeight - 240) / slideItemHeight}
+          slidesPerView={
+            (windowHeight - paginationHeightOffset) / slideItemHeight
+          }
           modules={[Pagination]}
           cssMode
           style={{ height: 'inherit' }}
           onSwiper={setSwiperInstance}
         >
           {slideList.map(item => (
-            <SwiperSlide key={item}>{children}</SwiperSlide>
+            <SwiperSlide key={JSON.stringify(item)}>
+              {children(item)}
+            </SwiperSlide>
           ))}
         </Swiper>
       </div>
-
-      <SlideNextButton swiper={swiperInstance} />
+      <div className="mt-10 flex w-full justify-center">
+        <SlideNextButton swiper={swiperInstance} />
+      </div>
     </div>
   );
 }

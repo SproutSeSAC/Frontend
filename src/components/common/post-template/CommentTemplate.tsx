@@ -65,7 +65,7 @@ export default function CommentTemplate({
             <div className="flex items-center gap-2">
               <UserImage
                 className="size-[30px] p-0.5"
-                profileImageUrl={commentItem.imgUrl || ''}
+                profileImageUrl="" // commentItem.imgUrl ||
               />
               <div>{`@${commentItem.writer}`}</div>
             </div>

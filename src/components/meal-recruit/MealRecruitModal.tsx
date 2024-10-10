@@ -8,15 +8,13 @@ import LabeledSection from '../common/input/LabeledSection';
 import TextInput from '../common/input/TextInput';
 import Modal from '../common/modal/Modal';
 
+import { useDialogContext } from '@/hooks';
 import { Controller, useForm } from 'react-hook-form';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 const defaultStyle =
   'rounded-xl border border-solid border-gray2 px-6 py-[13px] text-lg';
 
-interface MealRecruitModalProps {
-  toggleModal: () => void;
-}
 interface FormValues {
   title: string;
   date: string;
@@ -103,9 +101,8 @@ function CustomSelectBox({
   );
 }
 
-export default function MealRecruitModal({
-  toggleModal,
-}: MealRecruitModalProps) {
+export default function MealRecruitModal() {
+  const { hideDialog } = useDialogContext();
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
       title: '',
@@ -167,7 +164,7 @@ export default function MealRecruitModal({
   return (
     <Modal
       className="p-[50px]"
-      onToggleClick={toggleModal}
+      onToggleClick={hideDialog}
       title={
         <>
           <div className="mb-4 text-2xl">한끼팟 만들기</div>
@@ -306,7 +303,12 @@ export default function MealRecruitModal({
           </LabeledSection>
         </div>
         <div className="flex justify-end">
-          <SquareButton name="저장하기" type="submit" className="self-end" />
+          <SquareButton
+            color="vividGreen"
+            name="저장하기"
+            type="submit"
+            className="self-end"
+          />
         </div>
       </form>
     </Modal>
