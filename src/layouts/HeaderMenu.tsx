@@ -15,6 +15,7 @@ export default function HeaderMenu() {
     if (confirm) {
       deleteCookie('access_token');
       deleteCookie('refresh_token');
+      deleteCookie('calendar_access_token');
       navigate('/login');
     }
   };

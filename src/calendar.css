@@ -30,7 +30,7 @@
     @apply flex p-0;
   }
   .fc-daygrid-day.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
-    @apply size-6 items-center justify-center rounded-full text-white;
+    /* @apply items-center justify-center rounded-full text-white; */
   }
 }
 
@@ -76,12 +76,25 @@
       @apply flex p-0;
     }
     /* 이벤트 박스 */
-    .fc-h-event {
-      @apply mx-0.5 rounded-lg border-0 bg-vividGreen1 px-1.5 py-[1px];
-      .fc-event-title-container {
-        @apply flex items-center;
-        .fc-event-title {
-          @apply text-[11px] leading-4 text-white;
+    .fc-daygrid-dot-event {
+      @apply p-0;
+      .fc-event-time {
+        @apply text-[11px];
+      }
+      .fc-event-title {
+        @apply text-[11px];
+      }
+    }
+
+    .fc-daygrid-day-events {
+      @apply flex flex-col gap-0.5;
+      .fc-h-event {
+        @apply mx-0.5 rounded-sm border-0 px-1 py-0;
+        .fc-event-title-container {
+          @apply flex items-center;
+          .fc-event-title {
+            @apply text-[11px] leading-[14px];
+          }
         }
       }
     }
@@ -129,8 +142,14 @@
     /* 이벤트 박스 */
     .fc-daygrid-day-events {
       @apply m-0 flex items-center justify-center p-0;
+      .fc-daygrid-event-harness {
+        @apply m-0;
+      }
+      .fc-event-main {
+        @apply hidden;
+      }
       .fc-h-event {
-        @apply size-[5px] rounded-full bg-vividGreen1;
+        @apply border-0;
         .fc-event-title-container {
           @apply flex items-center;
           .fc-event-title {
@@ -156,11 +175,8 @@
       @apply border-0;
     }
   }
-  .fc-daygrid-day {
-    @apply pt-0.5;
-    &.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
-      @apply size-6 items-center justify-center rounded-full bg-black text-white;
-    }
+  .fc-daygrid-day.fc-day-today .fc-daygrid-day-number div span {
+    @apply flex size-5 items-center justify-center rounded-full bg-black text-white;
   }
   .fc-daygrid-body-natural .fc-daygrid-day-events {
     @apply mb-0;

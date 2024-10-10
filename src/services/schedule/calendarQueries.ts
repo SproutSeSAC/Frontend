@@ -1,4 +1,4 @@
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance } from '@/services/axiosInstance';
 
@@ -36,5 +36,28 @@ export const useGetCalendarEvents = (
     queryFn: getCalendarEvents,
     enabled: !!calendarId,
     ...options,
+  });
+};
+
+export const useGetEventsByCalendar = (
+  calendarIds: string[],
+  options?: UseQueryOptions<CalenderEvents>,
+) => {
+  const getCalendarEvents = async (calendarId: string) => {
+    const res: AxiosResponse<CalenderEvents> = await axiosCalendarInstance.get(
+      `/calendars/${calendarId}/events`,
+    );
+    return res.data;
+  };
+
+  return useQueries({
+    queries: calendarIds.map(calendarId => {
+      return {
+        queryKey: ['eventsByCalenderId', calendarId],
+        queryFn: () => getCalendarEvents(calendarId),
+        enabled: !!calendarId,
+        ...options,
+      };
+    }),
   });
 };
