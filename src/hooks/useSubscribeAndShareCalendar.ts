@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useCreateCalendar } from '@/services/schedule/calendarMutations';
+
 import { AdminCalendarLabel } from '@/constants';
 
 interface SubscribeAndShareCalendarProps {
@@ -12,8 +14,11 @@ export const useSubscribeAndShareCalendar = ({
   const [currentAdminCalendar, setCurrentAdminCalendar] =
     useState<AdminCalendarLabel>('교육 매니저의 새싹 캘린더');
 
-  /* 매니저의 공유 버튼 */
-  const onConfirmShareClick = () => {
+  const { mutate } = useCreateCalendar();
+
+  /* 매니저의 캘린더 생성 버튼 */
+  const onConfirmCreateClick = () => {
+    mutate();
     toggleModal();
   };
 
@@ -23,15 +28,15 @@ export const useSubscribeAndShareCalendar = ({
     toggleModal();
   };
 
-  const onAdminCalendarClick = (type: AdminCalendarLabel) => {
-    setCurrentAdminCalendar(type);
+  const onAdminCalendarClick = (label: AdminCalendarLabel) => {
+    setCurrentAdminCalendar(label);
     toggleModal();
   };
 
   return {
     currentAdminCalendar,
     onConfirmSubscribeClick,
-    onConfirmShareClick,
+    onConfirmCreateClick,
     onAdminCalendarClick,
   };
 };

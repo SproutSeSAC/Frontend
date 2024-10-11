@@ -2,11 +2,10 @@ import { useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useCalendarData } from '@/hooks/useCalendarData';
-
 import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
+import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';

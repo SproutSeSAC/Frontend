@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import {
   useGetCalendarList,
@@ -8,12 +8,12 @@ import {
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { Calendar, Event } from '@/types/calendarDto';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 
 const CALENDAR_ADDRESS_ID = 'addressbook#contacts@group.v.calendar.google.com';
 
 export const useCalendarData = () => {
-  const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
+  const currentCalendarIds = useAtomValue(calendarIdsAtom);
 
   const {
     data: calendarList,
@@ -69,13 +69,6 @@ export const useCalendarData = () => {
         }))
       : [];
   }, [eventList]);
-
-  useEffect(() => {
-    const subscribeList = calendarListByType?.subscribeCalendarList;
-    const subscribeCalendarIds = subscribeList?.map(calendar => calendar?.id);
-    setCurrentCalendarIds(subscribeCalendarIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calendarListByType?.subscribeCalendarList]);
 
   return {
     isCalendarListLoading,

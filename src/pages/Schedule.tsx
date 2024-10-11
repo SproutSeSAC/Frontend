@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 
-import { useCalendarData } from '@/hooks/useCalendarData';
-
 import {
   getCalendarToken,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
+import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { setCookie } from '@/utils';
@@ -40,11 +39,14 @@ export default function Schedule() {
         highlight="새싹"
       />
       <div className="flex h-full gap-4">
-        <div className="flex w-80 flex-col gap-4">
+        <div className="flex w-[350px] min-w-[280px] flex-col gap-4">
           <Calendar type="small" events={fullCalendarEvents} />
 
           {calendarListByType && (
-            <CalendarCheckBoxList calendarListByType={calendarListByType} />
+            <CalendarCheckBoxList
+              calendarListByType={calendarListByType}
+              userRole="TRAINEE"
+            />
           )}
         </div>
 
