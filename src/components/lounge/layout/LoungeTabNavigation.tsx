@@ -3,12 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
-import { useToggleModal } from '@/hooks';
+import { useDialogContext } from '@/hooks';
 import { updateQueryParams } from '@/utils';
 
 import TabNavigation from '@/components/common/TabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
-import Alert from '@/components/common/modal/Alert';
 
 const TAB_LIST = [
   { text: '전체', type: 'ALL' },
@@ -25,7 +24,7 @@ export default function LoungeTabNavigation() {
 
   const location = useLocation();
 
-  const { modalOpen, toggleModal } = useToggleModal();
+  const { hideDialog, alert } = useDialogContext();
 
   useEffect(() => {
     if (tab === 'ALL') {
@@ -52,6 +51,35 @@ export default function LoungeTabNavigation() {
     [navigate, searchParams, setSearchParams],
   );
 
+  const handleLeave = useCallback(() => {
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: '정말 나가시겠어요?',
+      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
+      children: (
+        <>
+          <SquareButton
+            color="gray"
+            name="계속 작성하기"
+            onClick={hideDialog}
+            type="button"
+            className="mt-6"
+          />
+          <SquareButton
+            name="나가기"
+            onClick={() => {
+              hideDialog();
+              tabChange(temporaryTab);
+            }}
+            type="button"
+            className="mt-6"
+          />
+        </>
+      ),
+    });
+  }, [alert, hideDialog, tabChange, temporaryTab]);
+
   const handelChangeValue = useCallback(
     (
       type: string,
@@ -62,13 +90,13 @@ export default function LoungeTabNavigation() {
       if (location.pathname === '/lounge/editor') {
         e?.preventDefault();
         setTemporaryTab(type);
-        toggleModal();
+        handleLeave();
         return;
       }
 
       tabChange(type);
     },
-    [location.pathname, tabChange, toggleModal],
+    [handleLeave, location.pathname, tabChange],
   );
 
   return (
@@ -91,46 +119,6 @@ export default function LoungeTabNavigation() {
           모집하기
         </button>
       </div>
-      {modalOpen && (
-        <>
-          <Alert
-            className="z-30"
-            text="정말 나가시겠어요?"
-            subText="저장하지 않은 내용을 잃어버릴 수 있어요."
-          >
-            <SquareButton
-              color="gray"
-              name="계속 작성하기"
-              onClick={() => {
-                toggleModal();
-              }}
-              type="button"
-              className="mt-6"
-            />
-            <SquareButton
-              name="나가기"
-              onClick={() => {
-                toggleModal();
-                tabChange(temporaryTab);
-              }}
-              type="button"
-              className="mt-6"
-            />
-          </Alert>
-          <div
-            className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
-            onClick={toggleModal}
-            onKeyDown={event => {
-              if (event.key === 'Escape') {
-                toggleModal();
-              }
-            }}
-            tabIndex={-1}
-            role="button"
-            aria-label="모달 닫기"
-          />
-        </>
-      )}
     </TabNavigation>
   );
 }

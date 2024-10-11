@@ -90,7 +90,7 @@ function SelectableDropdown({
       <button
         type="button"
         onClick={() => setOpen(prev => !prev)}
-        className={`relative flex w-full items-center gap-5 text-start ${selectBoxClassName}`}
+        className={`relative flex w-full items-center gap-5 text-start ${selectedOptions.length > 0 || selectedLabel ? 'text-text' : 'text-[#9ca3af]'} ${selectBoxClassName}`}
       >
         <span className="w-full">
           {selectedOptions.length > 1 &&

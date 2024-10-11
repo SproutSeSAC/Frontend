@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import DialogProvider from './components/context/DialogContextProvider';
 import AnnouncementLayout from './layouts/AnnouncementLayout';
 import Announcement from './pages/Announcement';
 import AnnouncementDetail from './pages/AnnouncementDetail';
@@ -9,8 +10,7 @@ import LoungeEditor from './pages/LoungeEditor';
 
 import Layout from '@/layouts/Layout';
 import LoungeLayout from '@/layouts/LoungeLayout';
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
+import 'swiper/css';
 
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
@@ -105,8 +105,10 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <DialogProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </DialogProvider>
   );
 }

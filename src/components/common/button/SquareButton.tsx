@@ -5,7 +5,7 @@ interface SquareButtonProps {
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit';
-  color?: 'gray' | 'oliveGreen';
+  color?: 'gray' | 'oliveGreen' | 'vividGreen';
   children?: ReactNode;
 }
 
@@ -18,8 +18,9 @@ export default function SquareButton({
   children,
 }: SquareButtonProps) {
   const styleByColor = {
-    oliveGreen: 'bg-oliveGreen1 text-white ',
+    oliveGreen: 'bg-oliveGreen1 text-white',
     gray: 'bg-gray2 text-text',
+    vividGreen: 'bg-vividGreen1 text-white',
   };
 
   const colorStyle = styleByColor[color];
