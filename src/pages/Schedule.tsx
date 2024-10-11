@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useHandleCalendar } from '@/hooks/useHandleCalendar';
+import { useCalendarData } from '@/hooks/useCalendarData';
 
 import {
   getCalendarToken,
@@ -10,9 +10,7 @@ import {
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { setCookie } from '@/utils';
-import { FaPlus } from 'react-icons/fa6';
 
-import SquareButton from '@/components/common/button/SquareButton';
 import Calendar from '@/components/schedule/Calendar';
 import CalendarCheckBoxList from '@/components/schedule/CalendarCheckBoxList';
 
@@ -25,7 +23,7 @@ export default function Schedule() {
     calendarListByType,
     fullCalendarEvents,
     isCalendarListLoading, //
-  } = useHandleCalendar();
+  } = useCalendarData();
 
   useEffect(() => {
     getCalendarToken().then(res => {
@@ -48,18 +46,6 @@ export default function Schedule() {
           {calendarListByType && (
             <CalendarCheckBoxList calendarListByType={calendarListByType} />
           )}
-
-          <ul className="flex flex-col gap-3">
-            {['캠퍼스 매니저', '교육 매니저'].map(calendar => (
-              <SquareButton
-                key={calendar}
-                name={`${calendar} 구독`}
-                className="flex items-center gap-1 py-3 text-sm font-semibold shadow-[15px]"
-              >
-                <FaPlus className="text-sm" />
-              </SquareButton>
-            ))}
-          </ul>
         </div>
 
         <Calendar type="big" events={fullCalendarEvents} />

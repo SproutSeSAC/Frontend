@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useCalendarData } from '@/hooks/useCalendarData';
+
 import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
@@ -9,6 +11,7 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { getCookie } from '@/utils';
+import { FiChevronRight } from 'react-icons/fi';
 
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
@@ -25,6 +28,8 @@ export default function Home() {
 
   const { data: userProfile, isLoading: isGetUserProfileLoading } =
     useGetUserProfile();
+
+  const { fullCalendarEvents } = useCalendarData();
 
   const courseData = {
     course: userProfile ? userProfile.courseTitle : '',
@@ -93,16 +98,27 @@ export default function Home() {
       </MainView>
 
       <SideView>
-        <Title title="주요일정" className="mb-2" />
-        <Calendar type="small" events={[]}>
-          <ul className="mb-2 mt-3 flex flex-col gap-3">
-            {[
-              { title: '백엔드 특강일정' },
-              { title: '프론트엔드 특강일정' },
-            ].map(event => (
-              <SmallCalendarBottomEvent key={event.title} title={event.title} />
+        <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
+        <Calendar type="small" events={fullCalendarEvents}>
+          <ul className="mb-1 flex flex-col gap-2">
+            {fullCalendarEvents.map(event => (
+              <SmallCalendarBottomEvent
+                key={event.title}
+                date={new Date(event.start).toLocaleDateString()}
+                title={event.title}
+              />
             ))}
           </ul>
+          <Link
+            to="/schedule"
+            type="button"
+            className="my-2 flex w-full items-center justify-end"
+          >
+            <span className="text-sm text-gray1">
+              새싹 캘린더 구독하러 가기
+            </span>
+            <FiChevronRight className="text-sm text-gray1" />
+          </Link>
         </Calendar>
 
         {/* 공지사항 */}

@@ -12,7 +12,7 @@ import { useAtom } from 'jotai';
 
 const CALENDAR_ADDRESS_ID = 'addressbook#contacts@group.v.calendar.google.com';
 
-export const useHandleCalendar = () => {
+export const useCalendarData = () => {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
   const {
@@ -57,14 +57,6 @@ export const useHandleCalendar = () => {
     })
     .flat() as (Event & { backgroundColor: string })[];
 
-  useEffect(() => {
-    const subscribeCalendarIds = calendarListByType?.subscribeCalendarList?.map(
-      calendar => calendar?.id,
-    );
-    setCurrentCalendarIds(subscribeCalendarIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calendarListByType?.subscribeCalendarList]);
-
   const fullCalendarEvents = useMemo(() => {
     return eventList[0]?.summary
       ? eventList?.map(event => ({
@@ -77,6 +69,13 @@ export const useHandleCalendar = () => {
         }))
       : [];
   }, [eventList]);
+
+  useEffect(() => {
+    const subscribeList = calendarListByType?.subscribeCalendarList;
+    const subscribeCalendarIds = subscribeList?.map(calendar => calendar?.id);
+    setCurrentCalendarIds(subscribeCalendarIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calendarListByType?.subscribeCalendarList]);
 
   return {
     isCalendarListLoading,

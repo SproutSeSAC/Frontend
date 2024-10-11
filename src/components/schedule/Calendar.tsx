@@ -26,7 +26,6 @@ export default function Calendar({ type, events, children }: CalendarProps) {
   const renderDayCellContent = useCallback(
     (info: DayCellContentArg, cellEvents?: Event[]) => {
       const date = info.date.getDate();
-
       const dateHours = info.date.setHours(0, 0, 0, 0);
 
       const eventDots = cellEvents?.filter(event => {
@@ -34,6 +33,7 @@ export default function Calendar({ type, events, children }: CalendarProps) {
         const end = new Date(event.end).setHours(0, 0, 0, 0);
 
         const isAllDayEvent = event.allDay || start !== end;
+
         return (
           dateHours >= start &&
           (isAllDayEvent ? dateHours < end : dateHours <= end)
@@ -103,13 +103,7 @@ export default function Calendar({ type, events, children }: CalendarProps) {
             }}
             dayHeaderContent={date => date.text.slice(0, 2)}
             dayCellContent={info => renderDayCellContent(info, events)}
-            eventDisplay="block" // 시간 이벤트도 block 형태로 표시
-            // eventTimeFormat={{
-            // 시간 숨기기
-            // hour: 'numeric',
-            // minute: '2-digit',
-            // meridiem: false,
-            // }}
+            eventDisplay="block"
           />
           {children}
         </>

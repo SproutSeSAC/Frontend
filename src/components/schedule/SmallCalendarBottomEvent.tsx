@@ -1,16 +1,16 @@
 interface SmallCalendarBottomEventProps {
   title: string;
+  date: string;
 }
 
 export default function SmallCalendarBottomEvent({
+  date,
   title,
 }: SmallCalendarBottomEventProps) {
   return (
-    <li key={title} className="leading-3 text-gray1">
-      <span className="border-r-2 border-gray2 pr-1.5 text-xs text-gray2">
-        11:00 ~ 13:00
-      </span>
-      <span className="pl-1.5 text-[13px] font-medium">{title}</span>
+    <li key={title} className="text-gray1">
+      <span className="text-[13px] font-medium">{title}</span>
+      <span className="block text-xs text-gray2">{date}</span>
     </li>
   );
 }
