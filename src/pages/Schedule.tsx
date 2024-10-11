@@ -39,7 +39,7 @@ export default function Schedule() {
         highlight="새싹"
       />
       <div className="flex h-full gap-4">
-        <div className="flex w-[350px] min-w-[280px] flex-col gap-4">
+        <div className="flex max-w-[265px] flex-col gap-4">
           <Calendar type="small" events={fullCalendarEvents} />
 
           {calendarListByType && (
