@@ -12,7 +12,7 @@ export default function StoreListSideView({
 }: StoreListSideViewProps) {
   const headerContent = <span className="text-[27px]">식당 리스트</span>;
 
-  const mainContent = <StoreListSlider sideViewOpen={sideViewOpen} />;
+  const mainContent = <StoreListSlider />;
 
   return (
     <CollapsibleSideView

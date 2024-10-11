@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import EditorModule from './EditorModule';
 
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
 
 interface TextEditorProps {
   value: string;
@@ -46,12 +46,12 @@ export default function TextEditor({
     }),
     [],
   );
-
   return (
     <div>
       <div id="toolBar">
-        <EditorModule />
+        <EditorModule onChange={onChange} />
       </div>
+
       <ReactQuill
         value={value}
         onChange={onChange}
