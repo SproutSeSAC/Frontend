@@ -9,7 +9,6 @@ import axios, {
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_API_URL,
-  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
@@ -65,6 +64,30 @@ axiosInstance.interceptors.response.use(
         console.error('refreshError', refreshError);
       }
     }
+    return Promise.reject(error);
+  },
+);
+
+export const axiosCalendarInstance = axios.create({
+  baseURL: 'https://www.googleapis.com/calendar/v3',
+});
+
+axiosCalendarInstance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+    const accessToken = getCookie('calendar_access_token');
+
+    const headers = new AxiosHeaders(config.headers || {});
+
+    headers.set('Authorization', `Bearer ${accessToken}`);
+
+    const modifiedConfig: InternalAxiosRequestConfig = {
+      ...config,
+      headers,
+    };
+
+    return modifiedConfig;
+  },
+  error => {
     return Promise.reject(error);
   },
 );

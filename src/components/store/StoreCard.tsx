@@ -48,7 +48,7 @@ export default function StoreCard({
         </header>
 
         <div className="flex flex-col gap-4">
-          <p className="flex items-center gap-2.5">
+          <section className="flex items-center gap-2.5">
             <BsFillGeoAltFill className="text-gray2" size={15} />
             <span className="text-gray1">도봉캠퍼스</span>
             <span className="text-gray1">도보</span>
@@ -64,8 +64,9 @@ export default function StoreCard({
               </button>
               <span>분</span>
             </span>
-          </p>
-          <p className="flex items-center">
+          </section>
+
+          <section className="flex items-center">
             <BsClockFill className="mr-[10px] text-gray2" size={15} />
             <span className="text-gray1">영업 중</span>
             <span className="mx-1 text-gray3">|</span>
@@ -84,44 +85,46 @@ export default function StoreCard({
                 {openHoursModal ? <IoIosArrowUp /> : <IoIosArrowDown />}
               </button>
               {openHoursModal && (
-                <div className="absolute right-0 top-6 z-10 flex w-[175px] flex-col justify-center gap-2 rounded-lg bg-white px-2.5 py-3 text-sm shadow-card">
-                  <p className="flex gap-4 pl-2">
+                <ul className="absolute right-0 top-6 z-10 flex w-[175px] flex-col justify-center gap-2 rounded-lg bg-white px-2.5 py-3 text-sm shadow-card">
+                  li
+                  <li className="flex gap-4 pl-2">
                     <span>월요일</span>
                     <span>11:30 ~ 21:00</span>
-                  </p>
-                  <p className="flex gap-4 pl-2">
+                  </li>
+                  <li className="flex gap-4 pl-2">
                     <span>화요일</span>
                     <span>11:30 ~ 21:00</span>
-                  </p>
-                  <p className="flex gap-4 pl-2">
+                  </li>
+                  <li className="flex gap-4 pl-2">
                     <span>수요일</span>
                     <span>11:30 ~ 21:00</span>
-                  </p>
-                  <p className="flex gap-4 pl-2">
+                  </li>
+                  <li className="flex gap-4 pl-2">
                     <span>목요일</span>
                     <span>11:30 ~ 21:00</span>
-                  </p>
-                  <p className="flex gap-4 pl-2">
+                  </li>
+                  <li className="flex gap-4 pl-2">
                     <span>금요일</span>
                     <span>11:30 ~ 21:00</span>
-                  </p>
-                  <p className="flex gap-4 pl-2">
+                  </li>
+                  <li className="flex gap-4 pl-2">
                     <span>토요일</span>
                     <span>11:30 ~ 21:00</span>
-                  </p>
-                  <p className="flex gap-4 pl-2">
+                  </li>
+                  <li className="flex gap-4 pl-2">
                     <span>일요일</span>
                     <span>정기휴무</span>
-                  </p>
-                </div>
+                  </li>
+                </ul>
               )}
             </p>
-          </p>
+          </section>
+
           {phoneNumber && (
-            <p className="flex items-center">
+            <section className="flex items-center">
               <BsFillTelephoneFill className="mr-[10px] text-gray2" size={15} />
               <span className="text-gray1">{phoneNumber}</span>
-            </p>
+            </section>
           )}
         </div>
 

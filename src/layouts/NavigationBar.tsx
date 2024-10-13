@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import StoreIcon from '@/assets/icons/store.svg?react';
 import Logo from '@/layouts/Logo';
 import { BsCalendar, BsGear, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
+import { FaChevronRight } from 'react-icons/fa6';
+
+import ToggleButton from '@/components/common/button/ToggleButton';
 
 export default function NavigationBar() {
   const { pathname } = useLocation();
@@ -32,31 +35,61 @@ export default function NavigationBar() {
     },
   ];
 
+  const onLeaveClick = () => {
+    console.log('회원 탈퇴');
+  };
+
   return (
     <nav className="sticky top-0 flex h-[100vh] w-[100px] flex-col items-center justify-between px-5 pb-[4%] pt-11">
       <Logo />
 
-      <ul className="flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-white px-4 py-8 shadow-lg">
-        {menuList.map(menu => (
-          <li key={menu.title}>
-            <Link
-              to={menu.to}
-              title={menu.title}
-              className={`flex h-10 w-10 items-center justify-center ${menu.to === pathname && 'rounded-xl border shadow-md [&>svg]:text-text'}`}
-            >
-              {menu.icon}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-[70%] flex-1">
+        <ul className="flex w-[60px] flex-col items-center justify-center gap-y-7 rounded-full bg-white px-4 py-8 shadow-lg">
+          {menuList.map(menu => (
+            <li key={menu.title}>
+              <Link
+                to={menu.to}
+                title={menu.title}
+                className={`flex h-10 w-10 items-center justify-center ${menu.to === pathname && 'rounded-xl border shadow-md [&>svg]:text-text'}`}
+              >
+                {menu.icon}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <Link
-        to="/mypage"
-        title="마이페이지 이동"
-        className="flex h-8 w-8 items-center justify-center"
-      >
-        <BsGear className="size-6 text-gray1" />
-      </Link>
+      {pathname === '/mypage' && (
+        <div className="group relative flex size-8 items-center justify-center">
+          <BsGear className="size-6 text-gray1" />
+          <div className="absolute bottom-0 left-4 hidden px-4 group-hover:block">
+            <ul className="w-32 rounded-md bg-white p-2 shadow-card">
+              {['알림', '회원탈퇴'].map(label => (
+                <li
+                  key={label}
+                  className="flex items-center justify-between gap-1 rounded-lg p-2 hover:bg-gray4"
+                >
+                  <span
+                    className={`font-semibold ${label === '회원탈퇴' && 'text-red-600'}`}
+                  >
+                    {label}
+                  </span>
+                  {label === '알림' && <ToggleButton />}
+                  {label === '회원탈퇴' && (
+                    <button
+                      className="px-1 py-2"
+                      type="button"
+                      onClick={onLeaveClick}
+                    >
+                      <FaChevronRight className="text-[13px] text-gray1" />
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       screens: {
+        lg: { max: '1280px' },
         md: { max: '1023px' },
         sm: { max: '767px' },
       },
@@ -45,7 +46,7 @@ export default {
     animation: {
       'slide-fade-in-dropdown': 'slide-fade-in-dropdown-animation 0.4s ease',
       'slide-fade-out-dropdown': 'slide-fade-out-dropdown-animation 0.4s ease',
-      spin: 'spin 1s linear infinite',
+      spin: 'spin 1.3s linear infinite',
     },
     keyframes: {
       'slide-fade-in-dropdown-animation': {

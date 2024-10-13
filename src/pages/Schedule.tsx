@@ -1,23 +1,56 @@
-import { getCalendar } from '@/services/auth/authQueries';
+import { useEffect } from 'react';
 
+import {
+  getCalendarToken,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
+
+import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { setCookie } from '@/utils';
+
+import Calendar from '@/components/schedule/Calendar';
+import CalendarCheckBoxList from '@/components/schedule/CalendarCheckBoxList';
+
+const CALENDAR_COOKIE = 'calendar_access_token';
 
 export default function Schedule() {
-  const onClick = async () => {
-    try {
-      await getCalendar();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { data: userProfile } = useGetUserProfile();
+
+  const {
+    calendarListByType,
+    fullCalendarEvents,
+    isCalendarListLoading, //
+  } = useCalendarData();
+
+  useEffect(() => {
+    getCalendarToken().then(res => {
+      setCookie(CALENDAR_COOKIE, res.data.access_token, 1);
+    });
+  }, []);
+
+  if (isCalendarListLoading) return null;
 
   return (
     <MainView>
-      <Header title="김철수 스프님 새싹 일정" highlight="새싹" />
-      <div className="">
-        일정관리페이지
-        <button onClick={onClick}>캘린더 불러오기</button>
+      <Header
+        title={`${userProfile?.name} 스프님 새싹 일정`}
+        highlight="새싹"
+      />
+      <div className="flex h-full gap-4">
+        <div className="flex max-w-[265px] flex-col gap-4">
+          <Calendar type="small" events={fullCalendarEvents} />
+
+          {calendarListByType && (
+            <CalendarCheckBoxList
+              calendarListByType={calendarListByType}
+              userRole="TRAINEE"
+            />
+          )}
+        </div>
+
+        <Calendar type="big" events={fullCalendarEvents} />
       </div>
     </MainView>
   );

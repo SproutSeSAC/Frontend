@@ -25,7 +25,7 @@ export default function MyPage() {
 
   return (
     <MainView>
-      <Header title="회원 정보 수정" />
+      <Header title="마이페이지" />
 
       <section className="mb-16 flex gap-4">
         {data && (
@@ -78,7 +78,7 @@ export default function MyPage() {
         </h2>
 
         <div className="flex justify-between">
-          <ul className="mr-2 w-full">
+          <ul className="mr-2 flex w-full flex-col gap-2">
             {faqList.map(faq => (
               <Faq key={faq.title} faq={faq} />
             ))}

@@ -29,7 +29,7 @@ export default function Modal({
   return createPortal(
     <>
       <section
-        className={`fixed inset-0 z-20 m-auto h-fit max-h-[80vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white p-8 ${className}`}
+        className={`fixed inset-0 z-40 m-auto h-fit max-h-[80vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white p-8 ${className}`}
       >
         <header className="mb-3 flex items-start justify-between">
           <h2 className="text-xl font-semibold">{title}</h2>
@@ -52,7 +52,7 @@ export default function Modal({
           }
         }}
         onClick={onToggleClick}
-        className="fixed inset-0 z-10 h-[100vh] w-full bg-[rgba(43,43,43,0.6)]"
+        className="fixed inset-0 z-30 h-[100vh] w-full bg-[rgba(43,43,43,0.6)]"
       />
     </>,
     el,

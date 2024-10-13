@@ -9,7 +9,7 @@ import { AxiosResponse } from 'axios';
 export const loginCheck = () => axiosInstance.get('/login/check');
 
 // 캘린더 인증
-export const getCalendar = () => axiosInstance.get('/user/calendar');
+export const getCalendarToken = () => axiosInstance.get('/user/calendar');
 
 // 리프레시 토큰
 export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
