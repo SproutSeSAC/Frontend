@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+import MainView from '@/layouts/MainView';
+
 import SquareButton from '@/components/common/button/SquareButton';
 
 export default function NotFound() {
@@ -8,7 +10,7 @@ export default function NotFound() {
   const onGoHomeClick = () => navigate('/');
 
   return (
-    <main className="my-11 flex flex-1 flex-col items-center justify-center rounded-l-[80px] bg-white shadow-card">
+    <MainView isEmpty>
       <img
         src="src/assets/images/404.png"
         alt="존재하지 않는 페이지"
@@ -30,6 +32,6 @@ export default function NotFound() {
         onClick={onGoHomeClick}
         className="mt-[2%] px-8 text-lg font-bold"
       />
-    </main>
+    </MainView>
   );
 }

@@ -57,9 +57,9 @@
       color: #b5b5b5;
     }
     .meal-recruit-text-divider::after {
-      content: '|'; 
-      margin : 8px;
-      color: #6d6d6d; 
+      content: '|';
+      margin: 8px;
+      color: #6d6d6d;
     }
   }
 }

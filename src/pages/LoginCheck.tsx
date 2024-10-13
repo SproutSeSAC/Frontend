@@ -7,6 +7,8 @@ import { loginCheck } from '@/services/auth/authQueries';
 import { setCookie } from '@/utils';
 import axios from 'axios';
 
+import LoopLoading from '@/components/common/LoopLoading';
+
 export default function LoginCheck() {
   const navigate = useNavigate();
 
@@ -43,10 +45,7 @@ export default function LoginCheck() {
 
   return (
     <div className="flex h-[100vh] flex-col items-center justify-center gap-4">
-      <div className="h-20 w-20 rounded-full border-[7px] border-gray3 border-b-gray1" />
-      <span className="text-sm text-gray1">로그인 검증중...</span>
+      <LoopLoading size={200} />
     </div>
   );
 }
-
-// animate-spin
