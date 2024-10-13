@@ -115,13 +115,15 @@ export default function Lounge() {
           }}
         />
       </div>
-      <ul className="mb-[90px] flex flex-wrap gap-6">
+
+      <ul className="mb-[90px] grid grid-cols-3 gap-6 lg:grid-cols-2">
         {(data?.projects || []).map(card => (
-          <li key={card.id} className="[&>div]:w-full">
+          <li key={card.id} className="[&>a]:!w-full">
             <LoungePostCard card={card} />
           </li>
         ))}
       </ul>
+
       {(data?.projects || []).length > 0 && (
         <Pagination
           totalPages={data?.totalPages || 0}
