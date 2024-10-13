@@ -64,9 +64,9 @@ export default function Dropdown({
       </button>
 
       {/* Options */}
-      <article className={`${open ? 'block' : 'hidden'} relative z-20 w-full`}>
+      <article className="relative z-20 w-full">
         <ul
-          className={`${open ? 'animate-slide-fade-in-dropdown overflow-auto' : 'animate-slide-fade-out-dropdown overflow-hidden'} absolute mt-1 flex max-h-72 w-full flex-col gap-2 rounded-lg border bg-white p-3 py-2.5 shadow-card ${selectOptionBoxClassName}`}
+          className={`${open ? 'max-h-72 border-gray3 py-1.5' : 'max-h-0 border-white'} absolute mt-1 flex w-full flex-col overflow-hidden rounded-lg border bg-white shadow-card transition-all duration-500 ${selectOptionBoxClassName}`}
         >
           {options.map(option => (
             <li
@@ -75,7 +75,7 @@ export default function Dropdown({
             >
               <button
                 type="button"
-                className="w-full px-3 py-1 text-start"
+                className="w-full px-3 py-2 text-start"
                 onClick={() => handleChangeValue(option)}
               >
                 {option.name}
