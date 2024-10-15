@@ -16,15 +16,16 @@ export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
 
 // 나의 회원 정보 얻기
 export const useGetUserProfile = (options?: UseQueryOptions<UserProfile>) => {
-  const getUserInfo = async () => {
+  const getUserProfile = async () => {
     const res: AxiosResponse<UserProfile> =
       await axiosInstance.get('/user/check');
+
     return res.data;
   };
 
   return useQuery({
-    queryKey: ['userInfo'],
-    queryFn: getUserInfo,
+    queryKey: ['userProfile'],
+    queryFn: getUserProfile,
     ...options,
   });
 };

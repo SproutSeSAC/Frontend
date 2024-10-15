@@ -56,7 +56,7 @@ export default function DomainJobTechStackCard() {
         onClick={toggleModal}
       />
 
-      <div className="flex h-[190px] flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 shadow-card md:w-full">
+      <div className="flex h-[190px] w-full flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 shadow-card">
         <ul className={`${listStyle} gap-1.5`}>
           {domainList?.map(({ id, domain }) => (
             <li key={id}>

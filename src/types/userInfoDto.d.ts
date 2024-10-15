@@ -21,16 +21,23 @@ export type UserInfo = {
   campusId?: number | undefined;
 };
 
+export type Domain = { id: number; domain: string };
+export type Job = { id: number; job: string };
+export type TechStack = { id: number; techStack: string; iconImageUrl: string };
+
 export type UserProfile = {
   email: string;
   campusName: string;
   courseTitle: string;
+  courseStartDate: string;
+  courseEndDate: string;
   name: string;
-  domainList: { id: number; domain: string }[];
-  jobList: { id: number; job: string }[];
-  techStackList: { id: number; techStack: string; iconImageUrl: string }[];
+  domainList: Domain[];
+  jobList: Job[];
+  techStackList: TechStack[];
   nickname: string;
   profileImageUrl: string;
+  role: KeyOfRole;
 };
 
 export type UpdateableUserProfile = {
@@ -39,4 +46,19 @@ export type UpdateableUserProfile = {
   updatedDomainIdList: number[];
   updatedJobIdList: number[];
   updatedTechStackIdList: number[];
+};
+
+export type CourseGrowthLevelLabel =
+  | '두잎 새싹'
+  | '세잎 새싹'
+  | '튼튼 줄기'
+  | '어린 나무'
+  | '꽃핀 나무'
+  | '열매 나무';
+
+export type CourseGrowthLevel = {
+  level: number;
+  label: CourseGrowthLevelLabel;
+  maxProgress: number;
+  image: string;
 };

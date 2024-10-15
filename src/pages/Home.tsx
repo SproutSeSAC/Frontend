@@ -5,11 +5,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
+import { userProfileAtom } from '@/atoms/userProfileAtom';
+
 import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { getCookie } from '@/utils';
+import { useAtom } from 'jotai';
 import { FiChevronRight } from 'react-icons/fi';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -19,24 +22,21 @@ import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import Calendar from '@/components/schedule/Calendar';
 import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
-import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
 import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
+import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
 
 export default function Home() {
+  const [userProfile, setUserProfile] = useAtom(userProfileAtom);
+
   const { data: loungeList } = useGetLoungeProjects({ page: 1, size: 10 });
 
-  const { data: userProfile, isLoading: isGetUserProfileLoading } =
-    useGetUserProfile();
+  const {
+    data: profile,
+    isLoading: isGetUserProfileLoading, //
+  } = useGetUserProfile();
 
   const { fullCalendarEvents } = useCalendarData();
-
-  const courseData = {
-    course: userProfile ? userProfile.courseTitle : '',
-    campus: userProfile ? `${userProfile.campusName} 캠퍼스` : '',
-    startDate: '2024.08.01',
-    endDate: '2024.08.31',
-  };
 
   const navigate = useNavigate();
 
@@ -48,6 +48,13 @@ export default function Home() {
       navigate('/login');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (profile) {
+      setUserProfile(profile);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
 
   // useEffect(() => {
   //   if (!isGetUserProfileLoading && !userProfile) {
@@ -73,19 +80,21 @@ export default function Home() {
   return (
     <>
       <MainView>
-        <Header title={`${userProfile?.name} 스프님 환영합니다!`} />
+        <Header title={`${userProfile?.name}, 스프님 환영합니다!`} />
 
         <section>
           <Title title="나의 새싹 정보" className="mb-[10px]" />
-
-          {userProfile && (
-            <div className="relative flex items-center gap-4 md:flex-col">
-              <CourseDDayRadialBarCard data={courseData} />
-              <DomainJobTechStackCard />
-            </div>
-          )}
-
-          <ThisMonthOfMealPriceChart />
+          <div className="mb-14 flex h-full max-h-[380px] gap-4">
+            {userProfile && (
+              <>
+                <MyCourseProgressCard userProfile={userProfile} />
+                <div className="relative max-h-[400px] w-full items-center gap-2">
+                  <DomainJobTechStackCard />
+                  <ThisMonthOfMealPriceChart />
+                </div>
+              </>
+            )}
+          </div>
         </section>
 
         <section>

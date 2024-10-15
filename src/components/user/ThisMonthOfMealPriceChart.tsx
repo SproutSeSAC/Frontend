@@ -29,11 +29,6 @@ function ChartDataControlButton({
 
 export default function ThisMonthOfMealPriceChart() {
   const data = [
-    { x: new Date('2024-09-10').getTime(), y: 8000 },
-    { x: new Date('2024-09-11').getTime(), y: 9000 },
-    { x: new Date('2024-09-12').getTime(), y: 8500 },
-    { x: new Date('2024-09-13').getTime(), y: 9500 },
-    { x: new Date('2024-09-14').getTime(), y: 9000 },
     { x: new Date('2024-09-15').getTime(), y: 10000 },
     { x: new Date('2024-09-16').getTime(), y: 9500 },
     { x: new Date('2024-09-17').getTime(), y: 9200 },
@@ -42,8 +37,6 @@ export default function ThisMonthOfMealPriceChart() {
     { x: new Date('2024-09-20').getTime(), y: 10100 },
     { x: new Date('2024-09-21').getTime(), y: 10100 },
     { x: new Date('2024-09-22').getTime(), y: 10100 },
-    { x: new Date('2024-09-23').getTime(), y: 10100 },
-    { x: new Date('2024-09-24').getTime(), y: 10100 },
   ];
 
   const firstNullDataIndex = data.findIndex(item => item.y === null);
@@ -193,7 +186,7 @@ export default function ThisMonthOfMealPriceChart() {
   ];
 
   return (
-    <div className="my-6 h-[216px] rounded-2xl bg-white px-6 pb-10 pt-5 shadow-card">
+    <div className="mt-4 h-[190px] w-full rounded-2xl bg-white px-6 pb-10 pt-5 shadow-card">
       <header className="mb-2 flex justify-between">
         <h2 className="font-semibold">이번달 식대 금액</h2>
         <div className="flex items-center">
