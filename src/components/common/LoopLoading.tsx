@@ -3,10 +3,11 @@ interface LoopLoadingProps {
 }
 
 export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
-  const loadingSize = `h-[${size}px] w-[${size}px]`;
-
   return (
-    <div className={`relative flex items-center justify-center ${loadingSize}`}>
+    <div
+      className="relative flex items-center justify-center"
+      style={{ height: `${size}px`, width: `${size}px` }}
+    >
       <svg
         width="200"
         height="200"
