@@ -1,9 +1,7 @@
 export { useStoreMap } from '@/hooks/useStoreMap';
 export { useCollapsibleSideView } from '@/hooks/useCollapsibleSideView';
-export { useToggleModal } from '@/hooks/useToggleModal';
 export { useTermsAndPolicy } from '@/hooks/useTermsAndPolicy';
 export { useHandleSignUp } from '@/hooks/useHandleSignUp';
 export { useDialogContext } from '@/hooks/useDialogContext';
 export { useCalendarData } from '@/hooks/useCalendarData';
-export { useSubscribeAndShareCalendar } from '@/hooks/useSubscribeAndShareCalendar';
 export { useUpdateProfile } from '@/hooks/useUpdateProfile';
