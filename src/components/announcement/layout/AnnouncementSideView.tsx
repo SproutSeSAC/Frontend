@@ -1,4 +1,6 @@
 import { useCalendarData } from '@/hooks';
+import { RoleValues } from '@/types';
+import { getColorByRole } from '@/utils';
 
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
@@ -10,7 +12,7 @@ export default function AnnouncementSideView() {
 
   return (
     <>
-      <Title title="주요일정" />
+      <Title title="주요일정" className="mb-2" />
       <Calendar type="small" events={fullCalendarEvents}>
         <ul className="mb-1 flex flex-col gap-2">
           {fullCalendarEvents.map(event => (
@@ -23,18 +25,27 @@ export default function AnnouncementSideView() {
         </ul>
       </Calendar>
 
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 mt-8 flex items-center justify-between">
         <Title title="최근 본 공지사항" className="!pl-0 text-sm" />
       </div>
 
       <ul className="flex flex-col gap-2">
-        {[1, 2, 3, 4, 5].map(item => (
-          <li key={item} className="flex h-7 w-full gap-1.5">
+        {(
+          [
+            '캠퍼스 매니저',
+            '잡코디',
+            '잡코디',
+            '교육 매니저',
+            '교육 매니저',
+          ] as RoleValues[]
+        ).map(item => (
+          <li key={item} className="flex h-7 w-full items-center gap-1.5">
             <Tag
-              size="small"
-              color="green"
-              text="엑스퍼트"
-              className="h-6 !px-1 font-semibold"
+              size="big"
+              color={getColorByRole(item)}
+              text={item}
+              className="!p-0 font-medium"
+              emphasisText
             />
             <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
               1세대에게 직접 배우는 안드로이드 앱

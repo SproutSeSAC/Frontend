@@ -9,6 +9,8 @@ export type Role = {
 
 export type KeyOfRole = keyof Role;
 
+export type RoleValues = Role[keyof Role];
+
 export type UserInfo = {
   role: KeyOfRole;
   name: string;

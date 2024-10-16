@@ -11,7 +11,8 @@ import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
-import { getCookie } from '@/utils';
+import { RoleValues } from '@/types';
+import { getColorByRole, getCookie } from '@/utils';
 import { useAtom } from 'jotai';
 import { FiChevronRight } from 'react-icons/fi';
 
@@ -153,13 +154,22 @@ export default function Home() {
         </div>
 
         <ul className="flex flex-col gap-2">
-          {[1, 2, 3, 4, 5].map(item => (
-            <li key={item} className="flex h-7 w-full gap-1.5">
+          {(
+            [
+              '캠퍼스 매니저',
+              '잡코디',
+              '잡코디',
+              '교육 매니저',
+              '교육 매니저',
+            ] as RoleValues[]
+          ).map(item => (
+            <li key={item} className="flex h-7 w-full items-center gap-1.5">
               <Tag
-                size="small"
-                color="green"
-                text="엑스퍼트"
-                className="h-6 !px-1 font-semibold"
+                size="big"
+                color={getColorByRole(item)}
+                text={item}
+                className="!p-0 font-medium"
+                emphasisText
               />
               <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
                 1세대에게 직접 배우는 안드로이드 앱
