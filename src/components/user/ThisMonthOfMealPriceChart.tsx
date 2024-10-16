@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react';
+
 import { ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
@@ -27,22 +29,56 @@ function ChartDataControlButton({
   );
 }
 
+const SHOW_NUM = 8;
+
 export default function ThisMonthOfMealPriceChart() {
-  const data = [
-    { x: new Date('2024-09-15').getTime(), y: 10000 },
-    { x: new Date('2024-09-16').getTime(), y: 9500 },
-    { x: new Date('2024-09-17').getTime(), y: 9200 },
-    { x: new Date('2024-09-18').getTime(), y: 9600 },
-    { x: new Date('2024-09-19').getTime(), y: 10100 },
-    { x: new Date('2024-09-20').getTime(), y: 10100 },
-    { x: new Date('2024-09-21').getTime(), y: 10100 },
-    { x: new Date('2024-09-22').getTime(), y: 10100 },
-  ];
+  const [showData, setShowData] = useState(0);
 
-  const firstNullDataIndex = data.findIndex(item => item.y === null);
+  const data = useMemo(
+    () => [
+      { x: new Date('2024-10-01').getTime(), y: 10000 },
+      { x: new Date('2024-10-02').getTime(), y: 11000 },
+      { x: new Date('2024-10-03').getTime(), y: 9200 },
+      { x: new Date('2024-10-04').getTime(), y: 9600 },
+      { x: new Date('2024-10-05').getTime(), y: 10100 },
+      { x: new Date('2024-10-06').getTime(), y: 10100 },
+      { x: new Date('2024-10-07').getTime(), y: 10100 },
+      { x: new Date('2024-10-08').getTime(), y: 10100 },
+      { x: new Date('2024-10-09').getTime(), y: 10000 },
+      { x: new Date('2024-10-10').getTime(), y: 9500 },
 
-  const lastDataIndex =
-    firstNullDataIndex === -1 ? data.length - 1 : firstNullDataIndex - 1;
+      { x: new Date('2024-10-11').getTime(), y: 10000 },
+      { x: new Date('2024-10-12').getTime(), y: 11000 },
+      { x: new Date('2024-10-13').getTime(), y: 9200 },
+      { x: new Date('2024-10-14').getTime(), y: 9600 },
+      { x: new Date('2024-10-15').getTime(), y: 10100 },
+      { x: new Date('2024-10-16').getTime(), y: 10100 },
+      { x: new Date('2024-10-17').getTime(), y: 10100 },
+      { x: new Date('2024-10-18').getTime(), y: 10100 },
+      { x: new Date('2024-10-19').getTime(), y: 10000 },
+      { x: new Date('2024-10-20').getTime(), y: 9500 },
+
+      { x: new Date('2024-10-21').getTime(), y: 9500 },
+      { x: new Date('2024-10-22').getTime(), y: 9500 },
+      { x: new Date('2024-10-23').getTime(), y: 9500 },
+      { x: new Date('2024-10-24').getTime(), y: 9500 },
+      { x: new Date('2024-10-25').getTime(), y: 9500 },
+      { x: new Date('2024-10-26').getTime(), y: 9500 },
+      { x: new Date('2024-10-27').getTime(), y: 9500 },
+      { x: new Date('2024-10-28').getTime(), y: 9500 },
+      { x: new Date('2024-10-29').getTime(), y: 9500 },
+      { x: new Date('2024-10-30').getTime(), y: 9500 },
+
+      { x: new Date('2024-10-31').getTime(), y: 9500 },
+    ],
+    [],
+  );
+
+  const slicedData = useMemo(() => {
+    return data.slice(showData * SHOW_NUM, (showData + 1) * SHOW_NUM);
+  }, [showData, data]);
+
+  const dateNums = slicedData.map(date => new Date(date.x).getDate());
 
   const options: ApexOptions = {
     labels: ['이번달 식대 금액'],
@@ -57,9 +93,9 @@ export default function ThisMonthOfMealPriceChart() {
     grid: {
       show: false,
       padding: {
-        top: 30,
+        top: 15,
         right: 33,
-        bottom: -10,
+        bottom: -20,
         left: 33,
       },
     },
@@ -91,7 +127,7 @@ export default function ThisMonthOfMealPriceChart() {
       axisTicks: {
         show: false,
       },
-      tickAmount: data.length - 2,
+      tickAmount: slicedData.length - 2,
       labels: {
         showDuplicates: false,
         show: true,
@@ -117,24 +153,10 @@ export default function ThisMonthOfMealPriceChart() {
     },
     annotations: {
       xaxis: data.map(point => {
-        const date = new Date(point.x).getDate();
         return {
           x: point.x,
           strokeDashArray: 0,
           borderColor: '#e1e1e1',
-          label: {
-            text: `${date}`,
-            orientation: 'horizontal',
-            offsetY: -20,
-            borderWidth: 0,
-            style: {
-              color: '#000',
-              background: 'transparent',
-              fontWeight: 700,
-              fontSize: '12px',
-              textAlign: 'center',
-            },
-          },
         };
       }),
     },
@@ -161,7 +183,7 @@ export default function ThisMonthOfMealPriceChart() {
         },
       },
       formatter(value, { dataPointIndex }) {
-        if (dataPointIndex === lastDataIndex) {
+        if (dataPointIndex === slicedData.length - 1) {
           return `W${value.toLocaleString()}`;
         }
         return '';
@@ -170,20 +192,41 @@ export default function ThisMonthOfMealPriceChart() {
     tooltip: {
       shared: false,
       enabled: true,
+      x: {
+        formatter(val) {
+          return `${new Date(val).toLocaleDateString('ko')}`;
+        },
+      },
+      y: {
+        formatter(val) {
+          return `${val.toLocaleString('ko')}원`;
+        },
+        title: {
+          formatter: seriesName => `${seriesName}`,
+        },
+      },
     },
     markers: {
       hover: {
         size: 3,
       },
+      colors: '#626262',
     },
   };
 
-  const series = [
-    {
-      name: '금액',
-      data,
-    },
-  ];
+  const series = useMemo(
+    () => [
+      {
+        name: '식대 금액',
+        data: slicedData,
+      },
+    ],
+    [slicedData],
+  );
+
+  const totalAmountOfMeal = useMemo(() => {
+    return data.reduce((acc, curr) => acc + (curr.y || 0), 0);
+  }, [data]);
 
   return (
     <div className="mt-4 h-[190px] w-full rounded-2xl bg-white px-6 pb-10 pt-5 shadow-card">
@@ -191,17 +234,31 @@ export default function ThisMonthOfMealPriceChart() {
         <h2 className="font-semibold">이번달 식대 금액</h2>
         <div className="flex items-center">
           <span className="pr-1.5 text-xs font-semibold tracking-tight text-gray1">
-            8월
+            {new Date().getMonth() + 1}월
           </span>
           <span className="pr-0.5 text-sm font-semibold tracking-tight text-oliveGreen1">
-            240,320
+            {totalAmountOfMeal.toLocaleString('ko')}
           </span>
           <span className="text-xs font-semibold text-oliveGreen1">원</span>
         </div>
       </header>
 
-      <div className="flex w-full">
-        <ChartDataControlButton direction="left" onClick={() => {}} />
+      <div className="relative flex h-full w-full">
+        <ChartDataControlButton
+          direction="left"
+          onClick={() => setShowData(prev => (prev === 0 ? prev : prev - 1))}
+        />
+
+        <ul className="absolute inset-x-0 top-5 flex justify-between px-12">
+          {dateNums.map(num => (
+            <li
+              key={num}
+              className="w-6 text-center text-xs font-semibold text-gray1"
+            >
+              {num}
+            </li>
+          ))}
+        </ul>
         <Chart
           type="area"
           options={options}
@@ -210,7 +267,15 @@ export default function ThisMonthOfMealPriceChart() {
           height="100%"
           style={{ flex: 1 }}
         />
-        <ChartDataControlButton direction="right" onClick={() => {}} />
+
+        <ChartDataControlButton
+          direction="right"
+          onClick={() =>
+            setShowData(prev =>
+              prev >= Math.floor(data.length / SHOW_NUM) ? prev : prev + 1,
+            )
+          }
+        />
       </div>
     </div>
   );
