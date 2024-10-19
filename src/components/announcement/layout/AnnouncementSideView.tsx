@@ -30,28 +30,22 @@ export default function AnnouncementSideView() {
       </div>
 
       <ul className="flex flex-col gap-2">
-        {(
-          [
-            '캠퍼스 매니저',
-            '잡코디',
-            '잡코디',
-            '교육 매니저',
-            '교육 매니저',
-          ] as RoleValues[]
-        ).map(item => (
-          <li key={item} className="flex h-7 w-full items-center gap-1.5">
-            <Tag
-              size="big"
-              color={getColorByRole(item)}
-              text={item}
-              className="!p-0 font-medium"
-              emphasisText
-            />
-            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-              1세대에게 직접 배우는 안드로이드 앱
-            </span>
-          </li>
-        ))}
+        {(['캠퍼스 매니저', '잡코디', '교육 매니저'] as RoleValues[]).map(
+          item => (
+            <li key={item} className="flex h-7 w-full items-center gap-1.5">
+              <Tag
+                size="big"
+                color={getColorByRole(item)}
+                text={item}
+                className="!p-0 font-medium"
+                emphasisText
+              />
+              <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                1세대에게 직접 배우는 안드로이드 앱
+              </span>
+            </li>
+          ),
+        )}
       </ul>
     </>
   );

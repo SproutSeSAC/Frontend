@@ -115,7 +115,7 @@ export default function ThisMonthOfMealPriceChart() {
     yaxis: {
       show: false,
       stepSize: 2500,
-      max: 11000,
+      max: 11100,
     },
     xaxis: {
       offsetY: -135,

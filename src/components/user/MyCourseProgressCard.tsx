@@ -1,43 +1,23 @@
 import { useCallback } from 'react';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
+
 import { courseGrowthLevelList } from '@/constants';
 import { UserProfile } from '@/types';
-import { getDDay } from '@/utils';
+import { getDDay, getDateProgress } from '@/utils';
 
 import CircularGauge from '@/components/common/CircularGauge';
 
-interface MyCourseProgressCardProps {
-  userProfile: UserProfile;
-}
+export default function MyCourseProgressCard() {
+  const { data: userProfile } = useGetUserProfile();
 
-export default function MyCourseProgressCard({
-  userProfile,
-}: MyCourseProgressCardProps) {
-  const { courseEndDate, courseStartDate, campusName } = userProfile;
+  const { name, courseEndDate, courseStartDate, campusName } =
+    userProfile as UserProfile;
 
-  const getProgress = useCallback(() => {
-    const startDate = new Date(courseStartDate);
-    const endDate = new Date(courseEndDate);
-    const today = new Date();
-
-    startDate.setHours(0, 0, 0, 0);
-    endDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    if (today.getTime() >= endDate.getTime()) return 100;
-
-    if (today.getTime() <= startDate.getTime()) return 0;
-
-    const totalDays =
-      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-
-    const elapsedDays =
-      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-
-    const progress = (elapsedDays / totalDays) * 100;
-
-    return Math.round(progress);
-  }, [courseEndDate, courseStartDate]);
+  const getProgress = useCallback(
+    () => getDateProgress(courseStartDate, courseEndDate),
+    [courseEndDate, courseStartDate],
+  );
 
   const progress = getProgress();
 
@@ -56,7 +36,7 @@ export default function MyCourseProgressCard({
         </span>
 
         <p className="text-sm font-semibold">
-          김철수 스프님은
+          {name} 스프님은
           <span className="mx-1 inline-block border-b border-b-oliveGreen1 px-1 text-oliveGreen1">
             {progress}%
           </span>
