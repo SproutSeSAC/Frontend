@@ -19,13 +19,26 @@ export const useGetUserProfile = (options?: UseQueryOptions<UserProfile>) => {
   const getUserProfile = async () => {
     const res: AxiosResponse<UserProfile> =
       await axiosInstance.get('/user/check');
-
     return res.data;
   };
 
-  return useQuery({
-    queryKey: ['userProfile'],
+  return useQuery<UserProfile>({
+    queryKey: ['useGetUserProfile'],
     queryFn: getUserProfile,
+    initialData: {
+      email: '',
+      campusName: '',
+      courseTitle: '',
+      courseStartDate: '',
+      courseEndDate: '',
+      name: '',
+      domainList: [],
+      jobList: [],
+      techStackList: [],
+      nickname: '',
+      profileImageUrl: '',
+      role: 'TRAINEE',
+    } as UserProfile,
     ...options,
   });
 };

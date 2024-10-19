@@ -11,7 +11,7 @@ interface Option {
 
 interface DropdownProps {
   label: string;
-  selectedOptionId: number | undefined;
+  selectedOptions: Option[];
   options: Option[];
   onChangeValue: (value: Option[]) => void;
   onSelectBoxClick?: () => boolean;
@@ -22,7 +22,7 @@ interface DropdownProps {
 
 export default function Dropdown({
   label,
-  selectedOptionId,
+  selectedOptions,
   options,
   onChangeValue,
   onSelectBoxClick,
@@ -49,7 +49,13 @@ export default function Dropdown({
   };
 
   const selectedOptionLabel =
-    options.find(({ id }) => id === selectedOptionId)?.name || label;
+    options.find(
+      ({ id }) => id === selectedOptions[selectedOptions.length - 1]?.id,
+    )?.name || label;
+
+  const checkIsSelected = (option: Option) => {
+    return !!selectedOptions.find(({ name }) => name === option.name);
+  };
 
   return (
     <OutsideClickContainer onClose={setOpen} width="100%">
@@ -64,25 +70,28 @@ export default function Dropdown({
       </button>
 
       {/* Options */}
-      <article className="relative z-20 w-full">
-        <ul
-          className={`${open ? 'max-h-72 border-gray3 py-1.5' : 'max-h-0 border-white'} absolute mt-1 flex w-full flex-col overflow-hidden rounded-lg border bg-white shadow-card transition-all duration-500 ${selectOptionBoxClassName}`}
+      <article className="relative z-30 w-full">
+        <div
+          className={`${open ? 'max-h-44 border border-gray4 py-2' : 'max-h-0'} absolute mt-1 flex w-full flex-col overflow-hidden rounded-lg bg-white px-2 shadow-card transition-all duration-500 ${selectOptionBoxClassName}`}
         >
-          {options.map(option => (
-            <li
-              key={option.id}
-              className={`w-full cursor-pointer hover:rounded-lg hover:bg-gray4 ${selectOptionClassName}`}
-            >
-              <button
-                type="button"
-                className="w-full px-3 py-2 text-start"
-                onClick={() => handleChangeValue(option)}
+          <ul className="overflow-scroll">
+            {options.map(option => (
+              <li
+                key={option.id}
+                className={`w-full cursor-pointer hover:rounded-lg hover:bg-gray4 ${selectOptionClassName}`}
               >
-                {option.name}
-              </button>
-            </li>
-          ))}
-        </ul>
+                <button
+                  type="button"
+                  className={`w-full px-3 py-2 text-start ${checkIsSelected(option) ? 'text-gray2' : 'text-text'}`}
+                  onClick={() => handleChangeValue(option)}
+                  disabled={checkIsSelected(option)}
+                >
+                  {option.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </article>
     </OutsideClickContainer>
   );

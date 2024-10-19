@@ -1,42 +1,33 @@
 import { useGetUserProfile } from '@/services/auth/authQueries';
-import {
-  useGetDomainList,
-  useGetJobList,
-} from '@/services/specifications/specificationsQueries';
 
 import { useDialogContext } from '@/hooks';
+import { UserProfile } from '@/types';
 
 import Tag from '@/components/common/Tag';
 import EditButton from '@/components/common/button/EditButton';
 import DomainJobTechStackModal from '@/components/user/DomainJobTechStackModal';
 
+const listStyle = 'flex items-center py-2.5';
+const itemStyle = 'font-semibold tracking-tight px-2 mt-1.5 leading-5';
+
 export default function DomainJobTechStackCard() {
-  const listStyle = 'flex items-center py-2.5';
-  const itemStyle = 'font-semibold tracking-tight px-2 mt-1.5 leading-5';
+  const {
+    data: userProfile,
+    isLoading: isGetUserProfileLoading, //
+  } = useGetUserProfile();
 
-  const { data: userProfile, isLoading: isUserProfileLoading } =
-    useGetUserProfile();
-  const { data: allJobList } = useGetJobList();
-  const { data: allDomainList } = useGetDomainList();
-
-  const { jobList, techStackList, domainList } = userProfile || {};
+  const { jobList, techStackList, domainList } = userProfile as UserProfile;
 
   const { showDialog } = useDialogContext();
 
   const openModalClick = async () => {
     await showDialog({
       key: 'DOMAIN_JOB_TECH_STACK_CARD',
-      element: userProfile && allDomainList && allJobList && (
-        <DomainJobTechStackModal
-          userProfile={userProfile}
-          allDomainList={allDomainList}
-          allJobList={allJobList}
-        />
-      ),
+      element: <DomainJobTechStackModal />,
     });
   };
 
-  if (isUserProfileLoading) return null;
+  if (isGetUserProfileLoading) return null;
 
   return (
     <>

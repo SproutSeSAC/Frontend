@@ -105,10 +105,10 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <DialogProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <DialogProvider>
         <RouterProvider router={router} />
-      </QueryClientProvider>
-    </DialogProvider>
+      </DialogProvider>
+    </QueryClientProvider>
   );
 }

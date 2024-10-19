@@ -1,7 +1,10 @@
-import { UseMutateFunction } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+
+import { useUpdateUserProfile } from '@/services/auth/authMutations';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { useDialogContext } from '@/hooks';
-import { UpdateableUserProfile } from '@/types';
+import { UpdateableUserProfile, UserProfile } from '@/types';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import CameraButton from '@/components/common/button/CameraButton';
@@ -11,19 +14,20 @@ import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
 import UserImage from '@/components/user/UserImage';
 
-export default function UserNameImageModal({
-  nickname,
-  mutate,
-}: {
-  nickname: string;
-  mutate: UseMutateFunction<
-    unknown,
-    Error,
-    Partial<UpdateableUserProfile>,
-    unknown
-  >;
-}) {
+export default function UserNameImageModal() {
   const { hideDialog } = useDialogContext();
+
+  const queryClient = useQueryClient();
+
+  const { data: userProfile } = useGetUserProfile();
+
+  const { nickname } = userProfile as UserProfile;
+
+  const { mutateAsync } = useUpdateUserProfile({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+    },
+  });
 
   const methods = useForm({
     defaultValues: { nickname },
@@ -32,7 +36,8 @@ export default function UserNameImageModal({
   const { handleSubmit, register } = methods;
 
   const onSubmit = (formData: Partial<UpdateableUserProfile>) => {
-    mutate(formData);
+    mutateAsync(formData);
+    hideDialog('USERNAME-IMAGE-CARD-TYPE');
   };
 
   return (
@@ -52,7 +57,7 @@ export default function UserNameImageModal({
 
           <Label htmlFor="별명" />
           <TextInput
-            placeholder={nickname}
+            placeholder="별명을 수정해주세요"
             className="h-[50px] w-full pl-4"
             {...register('nickname')}
           />

@@ -50,8 +50,8 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
   width,
   label = '',
   buttonContent,
-  buttonClassName,
-  contentClassName,
+  buttonClassName = '',
+  contentClassName = '',
   isLoading,
   errorMsg,
 }: MultiSelectDropdownProps) {
@@ -136,8 +136,9 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
           </button>
         )}
       </button>
+
       {open && (
-        <article className="absolute z-20 mt-1 flex w-full list-none flex-col gap-2 rounded-lg bg-white px-4 py-[15px] shadow-card">
+        <article className="absolute z-20 mt-1 flex w-full list-none flex-col gap-2 rounded-lg border bg-white px-4 py-[15px] shadow-card">
           <TabNavigation
             tabList={tabList}
             onChangeValue={handleOptions}

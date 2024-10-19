@@ -2,29 +2,19 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { Domain, Job, TechStack } from '@/types';
 import { AxiosResponse } from 'axios';
 
 type JobListData = {
-  jobList: {
-    id: number;
-    job: string;
-  }[];
+  jobList: Job[];
 };
 
 type DomainListData = {
-  domainList: {
-    id: number;
-    domain: string;
-  }[];
+  domainList: Domain[];
 };
 
 type TechStackListData = {
-  techStackList: {
-    id: number;
-    techStack: string;
-    iconImageUrl: string;
-    jobName: string;
-  }[];
+  techStackList: TechStack[];
 };
 
 export const useGetJobList = (
@@ -40,6 +30,7 @@ export const useGetJobList = (
   return useQuery<JobListData['jobList']>({
     queryKey: ['jobList'],
     queryFn: getJobList,
+    initialData: [],
     ...options,
   });
 };
@@ -57,6 +48,7 @@ export const useGetDomainList = (
   return useQuery<DomainListData['domainList']>({
     queryKey: ['domainList'],
     queryFn: getDomainList,
+    initialData: [],
     ...options,
   });
 };
@@ -74,6 +66,7 @@ export const useGetTechStackList = (
   return useQuery<TechStackListData['techStackList']>({
     queryKey: ['techStackList'],
     queryFn: getTechStackList,
+    initialData: [],
     ...options,
   });
 };

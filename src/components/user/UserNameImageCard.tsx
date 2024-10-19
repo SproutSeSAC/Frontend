@@ -1,33 +1,24 @@
-import { useUpdateUserProfile } from '@/services/auth/authMutations';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { useDialogContext } from '@/hooks';
+import { UserProfile } from '@/types';
 
 import CameraButton from '@/components/common/button/CameraButton';
 import EditButton from '@/components/common/button/EditButton';
 import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
 
-interface UserNameImageCardProps {
-  name: string;
-  nickname: string;
-  profileImageUrl: string;
-}
+export default function UserNameImageCard() {
+  const { data: userProfile } = useGetUserProfile();
 
-export default function UserNameImageCard({
-  name,
-  nickname,
-  profileImageUrl,
-}: UserNameImageCardProps) {
+  const { name, nickname, profileImageUrl } = userProfile as UserProfile;
+
   const { showDialog } = useDialogContext();
-
-  const { mutate } = useUpdateUserProfile({
-    onError: error => console.log(error),
-  });
 
   const openModalClick = () => {
     showDialog({
       key: 'USERNAME-IMAGE-CARD-TYPE',
-      element: <UserNameImageModal nickname={nickname} mutate={mutate} />,
+      element: <UserNameImageModal />,
     });
   };
 
