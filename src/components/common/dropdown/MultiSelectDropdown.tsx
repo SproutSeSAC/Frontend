@@ -1,4 +1,11 @@
-import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import {
+  ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import TabNavigation from '../TabNavigation';
 import ErrorMsg from '../input/ErrorMsg';
@@ -6,9 +13,10 @@ import ErrorMsg from '../input/ErrorMsg';
 import { BsArrowCounterclockwise } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
+import XButton from '@/components/common/button/XButton';
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 
-interface OptionItem {
+export interface OptionItem {
   id: number;
   name: string;
   iconImageUrl?: string;
@@ -26,6 +34,7 @@ interface MultiSelectDropdownProps {
   contentClassName?: string;
   isLoading?: boolean;
   errorMsg?: string;
+  initialSelectedOptions?: OptionItem[];
 }
 
 /**
@@ -41,6 +50,7 @@ interface MultiSelectDropdownProps {
  * @param contentClassName? - 드롭다운 옵션 목록의 CSS 클래스. 드롭다운 내용의 스타일을 설정합니다.
  * @param isLoading? - 로딩 상태를 나타내는 부울 값. true일 경우 버튼에 로딩 UI가 표시됩니다.
  * @param errorMsg? - 에러메세지. 에러 메세지가 있을경우 에러메세지가 버튼 하단에 표시됩니다.
+ * @param initialSelectedOptions? - 이미 선택된 옵션들
  */
 
 const MultiSelectDropdown = memo(function MultiSelectDropdown({
@@ -54,6 +64,7 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
   contentClassName = '',
   isLoading,
   errorMsg,
+  initialSelectedOptions,
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
   const [tabValue, setTabValue] = useState(defaultValue);
@@ -61,9 +72,11 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
 
   const handleSelectOptionChange = useCallback(
     (option: OptionItem) => {
-      const isSelected = selectedOptions.some(item => item.id === option.id);
+      const isSelected = selectedOptions.some(
+        item => item.name === option.name,
+      );
       const updatedOptions = isSelected
-        ? selectedOptions.filter(item => item.id !== option.id)
+        ? selectedOptions.filter(item => item.name !== option.name)
         : [...selectedOptions, option];
 
       setSelectedOptions(updatedOptions);
@@ -71,6 +84,12 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
     },
     [onChangeValue, selectedOptions],
   );
+
+  const onDeleteOption = (name: string) => {
+    const filteredData = selectedOptions.filter(item => item.name !== name);
+    setSelectedOptions(filteredData);
+    onChangeValue(filteredData);
+  };
 
   const handleOptions = useCallback((tabState: string) => {
     setTabValue(tabState);
@@ -108,34 +127,59 @@ const MultiSelectDropdown = memo(function MultiSelectDropdown({
     return selectedOptions.length === 1 ? selectedOptions[0].name : label;
   }, [selectedOptions, label]);
 
+  useEffect(() => {
+    if (initialSelectedOptions) {
+      setSelectedOptions(initialSelectedOptions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <OutsideClickContainer onClose={setOpen} width={width}>
-      <button
-        type="button"
-        onClick={() => setOpen(prev => !prev)}
-        className={`flex w-full items-center justify-between gap-5 rounded-2xl border border-solid text-start ${selectedOptions.length > 0 ? 'text-text' : 'text-[#9ca3af]'} ${errorMsg ? 'border-[#FF3939]' : 'border-gray2'} ${buttonClassName}`}
-      >
-        {isLoading && <div>Loading...</div>}
-        {!isLoading &&
-          (buttonContent || (
-            <>
-              <span className="w-full">{buttonDisplayContent}</span>
+      <ul className="mb-2 flex gap-3.5">
+        {selectedOptions?.map(({ id, name, iconImageUrl }) => (
+          <li
+            key={id}
+            className="relative size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
+          >
+            <img src={iconImageUrl} alt={name} />
+            <XButton
+              className="absolute -right-1 -top-1 rounded-full bg-black"
+              onDeleteClick={() => onDeleteOption(name)}
+            />
+          </li>
+        ))}
+      </ul>
 
-              {selectedOptions.length === 0 &&
-                (open ? <IoIosArrowUp /> : <IoIosArrowDown />)}
-            </>
-          ))}
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen(prev => !prev)}
+          className={`flex w-full items-center justify-between gap-5 rounded-2xl border border-solid text-start ${selectedOptions.length > 0 ? 'text-text' : 'text-[#9ca3af]'} ${errorMsg ? 'border-[#FF3939]' : 'border-gray2'} ${buttonClassName}`}
+        >
+          {isLoading && <div>Loading...</div>}
+          {!isLoading &&
+            (buttonContent || (
+              <>
+                <span className="w-full">{buttonDisplayContent}</span>
+
+                {selectedOptions.length === 0 &&
+                  (open ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+              </>
+            ))}
+        </button>
+
         {selectedOptions.length > 0 && (
           <button
             type="button"
             aria-label="태그 초기화"
             onClick={() => handleChangeTag()}
-            className="flex min-w-fit items-center"
+            className="absolute inset-y-0 right-3 flex min-w-fit items-center"
           >
             <BsArrowCounterclockwise />
           </button>
         )}
-      </button>
+      </div>
 
       {open && (
         <article className="absolute z-20 mt-1 flex w-full list-none flex-col gap-2 rounded-lg border bg-white px-4 py-[15px] shadow-card">

@@ -1,21 +1,26 @@
-import { useTechStackList } from '@/hooks/useTechStackList';
-
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import { useDialogContext, useUpdateProfile } from '@/hooks';
 import {
-  useGetDomainList,
-  useGetJobList,
-} from '@/services/specifications/specificationsQueries';
-
-import { useDialogContext } from '@/hooks';
-import { Domain, Job, TechStack, UserProfile } from '@/types';
+  Domain,
+  Job,
+  TechStack,
+  UpdateableUserProfile,
+  UserProfile,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 
 import Tag from '@/components/common/Tag';
 import SquareButton from '@/components/common/button/SquareButton';
-import XButton from '@/components/common/button/XButton';
-import Dropdown from '@/components/common/dropdown/Dropdown';
-import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
+import Dropdown, { Option } from '@/components/common/dropdown/Dropdown';
+import MultiSelectDropdown, {
+  OptionItem,
+} from '@/components/common/dropdown/MultiSelectDropdown';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import { DomainJobTechStackSchema } from '@/components/user/DomainJobTechStackSchema';
@@ -26,20 +31,19 @@ type FormValue = {
   updatedDomainList: Domain[];
 };
 
+type GetOptions = (type: 'domain' | 'job', list: Domain[] | Job[]) => Option[];
+
 export default function DomainJobTechStackModal() {
   const { hideDialog } = useDialogContext();
 
-  const { data: userProfile } = useGetUserProfile();
-
-  const { data: allJobList, isLoading: isGetJobListLoading } = useGetJobList();
-
-  const { data: allDomainList, isLoading: isGetDomainListLoading } =
-    useGetDomainList();
-
   const {
+    userProfile,
+    domainList: allDomainList,
+    jobList: allJobList,
     techStackList: allTechStackList,
-    isTechStackListLoading, //
-  } = useTechStackList();
+    // mutateAsync,
+    isLoading,
+  } = useUpdateProfile();
 
   const {
     jobList: userJobList,
@@ -61,24 +65,20 @@ export default function DomainJobTechStackModal() {
 
   const { handleSubmit, control } = methods;
 
-  const watchedDomainList = useWatch({ control, name: 'updatedDomainList' });
-  const watchedJobList = useWatch({ control, name: 'updatedJobList' });
-  const watchedTechStackList = useWatch({
-    control,
-    name: 'updatedTechStackList',
-  });
+  const onSubmit: SubmitHandler<FormValue> = (formData: FormValue) => {
+    const { updatedTechStackList, updatedDomainList, updatedJobList } =
+      formData;
 
-  const onSubmit = (formData: FormValue) => {
-    console.log(formData);
-
-    // const updatableValue: Partial<UpdateableUserProfile> = {
-    //   updatedDomainIdList: [1, 2, 3],
-    // };
-
-    // mutateAsync(updatableValue);
+    const updatableValue: Partial<UpdateableUserProfile> = {
+      updatedDomainIdList: updatedDomainList.map(({ id }) => id),
+      updatedJobIdList: updatedJobList.map(({ id }) => id),
+      updatedTechStackIdList: updatedTechStackList.map(({ id }) => id),
+    };
+    console.log(updatableValue);
+    // mutateAsync(updatableValue); // 이후 테스트 예정
   };
 
-  const getOptions = (type: 'domain' | 'job', list: Domain[] | Job[]) => {
+  const getOptions: GetOptions = (type, list) => {
     switch (type) {
       case 'domain':
         return (list as Domain[]).map(({ id, domain }) => {
@@ -93,11 +93,21 @@ export default function DomainJobTechStackModal() {
     }
   };
 
-  const jobOptions = getOptions('job', watchedJobList);
-  const domainOptions = getOptions('domain', watchedDomainList);
+  const getTechStackOptions = () => {
+    return userTechStackList.map(({ jobName, techStack, ...rest }) => {
+      return { name: techStack, type: jobName, ...rest };
+    });
+  };
 
-  if (isTechStackListLoading || isGetJobListLoading || isGetDomainListLoading)
-    return null;
+  const watchedDomainList = useWatch({ control, name: 'updatedDomainList' });
+  const watchedJobList = useWatch({ control, name: 'updatedJobList' });
+
+  const jobOptions = getOptions('job', watchedJobList);
+
+  const domainOptions: Option[] = getOptions('domain', watchedDomainList);
+  const initialTechStackOptions: OptionItem[] = getTechStackOptions();
+
+  if (isLoading) return null;
 
   return (
     <Modal onToggleClick={hideDialog} title="도메인 정보">
@@ -116,7 +126,7 @@ export default function DomainJobTechStackModal() {
                   return (
                     <>
                       <ul className="flex gap-1">
-                        {watchedDomainList?.map(({ id, domain }) => (
+                        {watchedDomainList.map(({ id, domain }) => (
                           <li key={id}>
                             <Tag
                               text={domain}
@@ -208,51 +218,18 @@ export default function DomainJobTechStackModal() {
               name="updatedTechStackList"
               render={({ field: { onChange } }) => {
                 return (
-                  <>
-                    <ul className="mb-2 flex gap-3.5">
-                      {watchedTechStackList?.map(
-                        ({ id, techStack, iconImageUrl }) => (
-                          <li
-                            key={id}
-                            className="relative size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
-                          >
-                            <img src={iconImageUrl} alt={techStack} />
-                            <XButton
-                              className="absolute -right-1 -top-1 rounded-full bg-black"
-                              onDeleteClick={() => {
-                                const filteredData =
-                                  watchedTechStackList.filter(
-                                    item => item.id !== id,
-                                  );
-                                onChange(filteredData);
-                              }}
-                            />
-                          </li>
-                        ),
-                      )}
-                    </ul>
-
-                    <MultiSelectDropdown
-                      label="기술스택"
-                      defaultValue="백엔드"
-                      width="100%"
-                      buttonClassName="p-3 border-gray4"
-                      contentClassName="w-full"
-                      options={allTechStackList}
-                      onChangeValue={data => {
-                        const newArr = [
-                          ...watchedTechStackList,
-                          ...data.filter(
-                            item =>
-                              !watchedTechStackList.some(
-                                existing => existing.id === item.id,
-                              ),
-                          ),
-                        ];
-                        onChange(newArr);
-                      }}
-                    />
-                  </>
+                  <MultiSelectDropdown
+                    label="기술스택"
+                    defaultValue="백엔드"
+                    width="100%"
+                    buttonClassName="p-3 border-gray4"
+                    contentClassName="w-full"
+                    options={allTechStackList}
+                    initialSelectedOptions={
+                      initialTechStackOptions as OptionItem[]
+                    }
+                    onChangeValue={data => onChange(data)}
+                  />
                 );
               }}
             />

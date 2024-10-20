@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useTechStackList } from '@/hooks/useTechStackList';
 
 import { useUpdateUserProfile } from '@/services/auth/authMutations';
@@ -7,10 +9,9 @@ import {
   useGetJobList,
 } from '@/services/specifications/specificationsQueries';
 
-import { UpdateableUserProfile } from '@/types';
-import { SubmitHandler } from 'react-hook-form';
-
 export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: jobList,
     isLoading: isJobListLoading, //
@@ -36,20 +37,16 @@ export const useUpdateProfile = () => {
   const userDomainIdList = userProfile?.domainList?.map(({ id }) => id);
 
   const isLoading =
-    isDomainListLoading || isJobListLoading || isTechStackListLoading;
+    isDomainListLoading ||
+    isJobListLoading ||
+    isTechStackListLoading ||
+    isUserProfileLoading;
 
-  const { mutate } = useUpdateUserProfile({
-    onError: error => console.log(error),
+  const { mutateAsync } = useUpdateUserProfile({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+    },
   });
-
-  const onSubmit: SubmitHandler<Partial<UpdateableUserProfile>> = formData => {
-    // const data = {
-    //   updatedDomainIdList: [1, 2],
-    //   updatedJobIdList: [1, 2],
-    //   updatedTechStackIdList: [8, 9],
-    // };
-    mutate(formData);
-  };
 
   return {
     userProfile,
@@ -60,7 +57,7 @@ export const useUpdateProfile = () => {
     jobList,
     domainList,
     techStackList,
-    onSubmit,
+    mutateAsync,
     isLoading,
   };
 };

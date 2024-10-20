@@ -39,32 +39,38 @@ export default function DomainJobTechStackCard() {
 
       <div className="flex h-[190px] w-full flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 shadow-card">
         <ul className={`${listStyle} gap-1.5`}>
-          {domainList?.map(({ id, domain }) => (
-            <li key={id}>
-              <Tag text={domain} size="big" color="gray" />
-            </li>
-          ))}
+          {domainList
+            ?.sort((a, b) => a.id - b.id)
+            ?.map(({ id, domain }) => (
+              <li key={id}>
+                <Tag text={domain} size="big" color="gray" />
+              </li>
+            ))}
         </ul>
 
         <ul className={listStyle}>
-          {jobList?.map(({ job, id }) => (
-            <li key={id} className={itemStyle}>
-              {job}
-            </li>
-          ))}
+          {jobList
+            ?.sort((a, b) => a.id - b.id)
+            ?.map(({ job, id }) => (
+              <li key={id} className={itemStyle}>
+                {job}
+              </li>
+            ))}
         </ul>
 
         {/* 기술스택 */}
         <div className="overflow-x-scroll scrollbar-hide">
           <ul className={`${listStyle} flex w-full max-w-0 flex-1 gap-x-3`}>
-            {techStackList?.map(({ id, techStack, iconImageUrl }) => (
-              <li
-                key={id}
-                className="size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
-              >
-                <img src={iconImageUrl} alt={techStack} />
-              </li>
-            ))}
+            {techStackList
+              ?.sort((a, b) => a.id - b.id)
+              ?.map(({ id, techStack, iconImageUrl }) => (
+                <li
+                  key={id}
+                  className="size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
+                >
+                  <img src={iconImageUrl} alt={techStack} />
+                </li>
+              ))}
           </ul>
         </div>
       </div>

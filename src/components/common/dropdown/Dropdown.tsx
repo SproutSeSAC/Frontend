@@ -4,7 +4,7 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 
-interface Option {
+export interface Option {
   id: number;
   name: string;
 }
