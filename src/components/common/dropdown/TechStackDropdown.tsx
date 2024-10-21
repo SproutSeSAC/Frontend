@@ -26,6 +26,7 @@ interface MultiSelectDropdownProps {
   initialSelectedOptions?: OptionItem[];
   isMarkTechStackList?: boolean;
   boxShape?: SelectBoxShape;
+  selectBoxClassName?: string;
 }
 
 /**
@@ -39,6 +40,7 @@ interface MultiSelectDropdownProps {
  * @param initialSelectedOptions? - 이미 선택된 옵션들
  * @param isMarkTechStackList? - 선택한 옵션을 위에 표시할지 여부입니다.
  * @param boxShape - 라운지에서의 버튼 모양이거나 모집글에서의 input 모양 둘중 하나를 선택할 수 있습니다. props로 설정하지 않았을 시 기본값은 input 모양입니다.
+ * @param selectBoxClassName - 셀렉트 박스 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  */
 
 const TechStackDropdown = memo(function TechStackDropdown({
@@ -50,6 +52,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
   initialSelectedOptions,
   isMarkTechStackList = false,
   boxShape = 'inputShape',
+  selectBoxClassName = '',
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
   const [tabValue, setTabValue] = useState(defaultTabValue);
@@ -115,11 +118,11 @@ const TechStackDropdown = memo(function TechStackDropdown({
   return (
     <>
       {isMarkTechStackList && (
-        <ScrollContainer gap={3.5}>
+        <ScrollContainer gap={3}>
           {selectedOptions?.map(option => (
             <li
               key={option.id}
-              className="relative mb-2 size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
+              className="relative size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
             >
               <img src={option.iconImageUrl} alt={option.name} />
               <XButton
@@ -139,6 +142,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
         errorMsg={errorMsg}
         onResetClick={onResetClick}
         boxShape={boxShape}
+        className={selectBoxClassName}
       >
         <TabNavigation
           tabList={tabList}

@@ -67,7 +67,7 @@ export default function DomainJobTechStackModal() {
   const { handleSubmit, control } = methods;
 
   const onSubmit: SubmitHandler<FormValue> = (formData: FormValue) => {
-    const { updatedTechStackList, updatedDomainList, updatedJobList } =
+    const { updatedDomainList, updatedJobList, updatedTechStackList } =
       formData;
 
     const updatableValue: Partial<UpdateableUserProfile> = {
@@ -76,7 +76,9 @@ export default function DomainJobTechStackModal() {
       updatedTechStackIdList: updatedTechStackList.map(({ id }) => id),
     };
     console.log(updatableValue);
+
     // mutateAsync(updatableValue); // 이후 테스트 예정
+    hideDialog();
   };
 
   const getOptions: GetOptions = (type, list) => {
@@ -117,11 +119,15 @@ export default function DomainJobTechStackModal() {
               <Controller
                 control={control}
                 name="updatedDomainList"
-                render={({ field: { onChange, value } }) => {
+                render={({
+                  field: { onChange, value },
+                  formState: { errors },
+                }) => {
                   const selectedOptions = value?.map(({ id, domain }) => ({
                     id,
                     name: domain,
                   }));
+
                   return (
                     <>
                       <ScrollContainer gap={1}>
@@ -154,7 +160,8 @@ export default function DomainJobTechStackModal() {
                           const newArr = [...value, ...newData];
                           onChange(newArr);
                         }}
-                        selectBoxClassName="h-[50px]"
+                        selectBoxClassName="h-[50px] !text-base"
+                        errorMsg={errors.updatedDomainList?.message}
                       />
                     </>
                   );
@@ -169,7 +176,10 @@ export default function DomainJobTechStackModal() {
               <Controller
                 control={control}
                 name="updatedJobList"
-                render={({ field: { onChange, value } }) => {
+                render={({
+                  field: { onChange, value },
+                  formState: { errors },
+                }) => {
                   const selectedOptions = value?.map(({ id, job }) => ({
                     id,
                     name: job,
@@ -206,7 +216,8 @@ export default function DomainJobTechStackModal() {
                           const newArr = [...value, ...newData];
                           onChange(newArr);
                         }}
-                        selectBoxClassName="h-[50px]"
+                        selectBoxClassName="h-[50px] !text-base"
+                        errorMsg={errors.updatedJobList?.message}
                       />
                     </>
                   );
@@ -220,7 +231,7 @@ export default function DomainJobTechStackModal() {
             <Controller
               control={control}
               name="updatedTechStackList"
-              render={({ field: { onChange } }) => {
+              render={({ field: { onChange }, formState: { errors } }) => {
                 return (
                   <TechStackDropdown
                     defaultLabel="기술스택"
@@ -229,6 +240,8 @@ export default function DomainJobTechStackModal() {
                     initialSelectedOptions={initialTechStackOptions}
                     onChangeValue={onChange}
                     isMarkTechStackList
+                    errorMsg={errors.updatedTechStackList?.message}
+                    selectBoxClassName="h-[50px] !text-base"
                   />
                 );
               }}

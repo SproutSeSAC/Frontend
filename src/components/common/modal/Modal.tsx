@@ -38,7 +38,7 @@ export default function Modal({
           </button>
         </header>
 
-        <div className="mb-4 max-h-[58vh] overflow-scroll p-3 scrollbar-hide">
+        <div className="max-h-[58vh] overflow-scroll p-3 scrollbar-hide">
           {children}
         </div>
       </section>
