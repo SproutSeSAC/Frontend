@@ -19,8 +19,10 @@ export default function AnnouncementPostCard() {
       <div className="flex w-full items-center justify-between">
         <Tag
           color={getColorByRole('캠퍼스 매니저')}
-          size="medium"
+          size="big"
           text="캠퍼스 매니저"
+          emphasisText
+          className="px-[10px] py-[5px]"
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-gray2">
