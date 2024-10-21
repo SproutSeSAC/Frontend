@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
 import Tag from '@/components/common/Tag';
@@ -9,17 +10,6 @@ import FavoriteButton from '@/components/common/button/FavoriteButton';
 //   card?: number;
 // }
 
-const getTagColor = (tag: string) => {
-  switch (tag) {
-    case '잡코디':
-      return 'yellow';
-    case '기관매니저':
-      return 'pink';
-    default:
-      return 'purple';
-  }
-};
-
 export default function AnnouncementPostCard() {
   return (
     <Link
@@ -28,9 +18,11 @@ export default function AnnouncementPostCard() {
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getTagColor('기관매니저')}
-          size="medium"
-          text="기관 매니저"
+          color={getColorByRole('캠퍼스 매니저')}
+          size="big"
+          text="캠퍼스 매니저"
+          emphasisText
+          className="px-[10px] py-[5px]"
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-gray2">

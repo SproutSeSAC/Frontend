@@ -3,29 +3,30 @@ import { currentStepAtom } from '@/atoms/formStepAtom';
 import { defaultSignUpFormValues, matchedRoleName } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
-import { KeyOfRole, UserInfo, VerifyCode } from '@/types';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { KeyOfRole } from '@/types';
+// import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import VerifyCodeButton from '@/components/common/button/VerifyCodeButton';
-import Dropdown from '@/components/common/dropdown/Dropdown';
-import ErrorMsg from '@/components/common/input/ErrorMsg';
+import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import Radio from '@/components/common/input/Radio';
 import TextInput from '@/components/common/input/TextInput';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
 import MultiSelectList from '@/components/signup/MultiSelectList';
-import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
+
+// import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
 
 export default function SignUp() {
   const [currentStep] = useAtom(currentStepAtom);
 
-  const methods = useForm<UserInfo & VerifyCode>({
+  const methods = useForm({
     mode: 'onSubmit',
     defaultValues: defaultSignUpFormValues,
-    resolver: zodResolver(SignUpFormSchema),
+    // resolver: zodResolver(SignUpFormSchema),
   });
 
   const {
@@ -33,13 +34,13 @@ export default function SignUp() {
     control,
     register,
     formState: { errors },
-    watch,
-    trigger,
+    // watch,
+    // trigger,
   } = methods;
 
   const watchedRole = useWatch({ control, name: 'role' });
-  const watchedCampusId = useWatch({ control, name: 'campusId' });
-  const watchedCourseId = useWatch({ control, name: 'courseId' });
+  const watchedCampus = useWatch({ control, name: 'campus' });
+  // const watchedCourseId = useWatch({ control, name: 'course' });
   const watchedVerifyCode = useWatch({ control, name: 'verifyCode' });
 
   const {
@@ -52,7 +53,7 @@ export default function SignUp() {
     isLoading,
     questionListByRole,
     getQuestionNumber,
-  } = useHandleSignUp({ watchedCampusId, watchedRole });
+  } = useHandleSignUp({ watchedCampus, watchedRole });
 
   if (isLoading) return null;
 
@@ -122,78 +123,75 @@ export default function SignUp() {
                           {'campusId' in question && campusList && (
                             <Controller
                               control={control}
-                              name="campusId"
-                              render={({ field: { onChange } }) => {
+                              name="campus"
+                              render={({ field: { onChange, value } }) => {
                                 return (
-                                  <>
-                                    <Dropdown
-                                      label="소속 캠퍼스"
-                                      selectedOptionId={watchedCampusId}
-                                      options={campusList}
-                                      selectBoxClassName={`${!watchedCampusId && '[&>span]:text-gray2'}`}
-                                      onChangeValue={data => {
-                                        onChange(data[0].id);
-                                      }}
-                                    />
-                                    {errors.campusId?.message && (
-                                      <ErrorMsg
-                                        msg={errors.campusId?.message}
-                                        className="pl-4"
-                                      />
-                                    )}
-                                  </>
+                                  <SingleSelectDropdown
+                                    defaultLabel="소속 캠퍼스"
+                                    options={campusList}
+                                    selectedOption={value[0]}
+                                    onChangeValue={onChange}
+                                    errorMsg={errors.campus?.message}
+                                  />
                                 );
                               }}
                             />
                           )}
 
                           {'courseId' in question && (
-                            <>
+                            <Controller
+                              control={control}
+                              name="course"
+                              render={({ field: { onChange, value } }) => {
+                                const options = courseList?.length
+                                  ? courseList?.map(({ id, title }) => {
+                                      return { id, name: title };
+                                    })
+                                  : [];
+
+                                return (
+                                  <SingleSelectDropdown
+                                    defaultLabel="소속 교육과정"
+                                    options={options}
+                                    selectedOption={value?.[0]}
+                                    onChangeValue={onChange}
+                                    errorMsg={errors.campus?.message}
+                                  />
+                                  //   onSelectBoxClick={() => {
+                                  //     if (!watchedCampusId) {
+                                  //       trigger('campusId');
+                                  //       return true;
+                                  //     }
+                                  //     return false;
+                                  //   }}
+                                );
+                              }}
+                            />
+                          )}
+
+                          {'techStackIdList' in question && techStackList && (
+                            <div className="relative">
                               <Controller
                                 control={control}
-                                name="courseId"
+                                name="techStackIdList"
                                 render={({ field: { onChange } }) => {
-                                  const options = courseList?.length
-                                    ? courseList?.map(({ id, title }) => {
-                                        return { id, name: title };
-                                      })
-                                    : [];
                                   return (
-                                    <Dropdown
-                                      label="소속 교육과정"
-                                      selectedOptionId={watchedCourseId}
-                                      options={options}
-                                      selectBoxClassName={`${!watch('courseId') && '[&>span]:text-gray2'}`}
+                                    <TechStackDropdown
+                                      defaultLabel="기술스택"
+                                      defaultTabValue="백엔드"
+                                      options={techStackList}
                                       onChangeValue={data => {
-                                        onChange(data[0].id);
+                                        const newData = data.map(
+                                          ({ id }) => id,
+                                        );
+                                        onChange(newData);
                                       }}
-                                      onSelectBoxClick={() => {
-                                        if (!watchedCampusId) {
-                                          trigger('campusId');
-                                          return true;
-                                        }
-                                        return false;
-                                      }}
+                                      isMarkTechStackList
                                     />
                                   );
                                 }}
                               />
-                              {errors.courseId?.message && (
-                                <ErrorMsg
-                                  msg={errors.courseId?.message}
-                                  className="pl-4"
-                                />
-                              )}
-                            </>
-                          )}
-
-                          {'techStackIdList' in question && techStackList && (
-                            <MultiSelectList
-                              list={techStackList}
-                              selectLimit={50}
-                              name="techStackIdList"
-                              errorMsg={errors.techStackIdList?.message}
-                            />
+                            </div>
                           )}
 
                           {'jobIdList' in question && jobList && (

@@ -1,9 +1,8 @@
 import {
   KeyOfRole,
   Role,
+  SignUpFormValue,
   SignUpQuestionsByStep,
-  UserInfo,
-  VerifyCode,
 } from '@/types';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
@@ -59,13 +58,16 @@ const sesacStudentStep: SignUpQuestionsByStep[] = [
   },
 ];
 
-const adminStep: SignUpQuestionsByStep[] = [
+const adminCampusStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복가능' },
     campusId: [],
   },
+];
+
+const adminCourseStep: SignUpQuestionsByStep[] = [
   {
-    title: { text: '담당 교육 과정은 무엇인가요?', condition: '(있는 경우)' },
+    title: { text: '담당 교육 과정은 무엇인가요?' },
     courseId: [],
   },
 ];
@@ -100,9 +102,16 @@ export const getQuestionListByRole = (
   if (role === 'PRE_TRAINEE') {
     return [commonFirstStep, commonStudentStep, marketingConsent];
   }
+  if (role === 'CAMPUS_MANAGER') {
+    return [
+      commonFirstStep,
+      adminCampusStep,
+      [...indentification, ...marketingConsent],
+    ];
+  }
   return [
     commonFirstStep,
-    adminStep,
+    [...adminCampusStep, ...adminCourseStep],
     [...indentification, ...marketingConsent],
   ];
 };
@@ -116,15 +125,15 @@ export const matchedRoleName: Role = {
   PRE_TRAINEE: '예비 수강생',
 };
 
-export const defaultSignUpFormValues: UserInfo & VerifyCode = {
+export const defaultSignUpFormValues: SignUpFormValue = {
   name: '',
   nickname: '',
   role: 'TRAINEE',
-  campusId: undefined,
-  courseId: undefined,
-  domainIdList: [1, 2],
-  jobIdList: [1, 2],
-  techStackIdList: [1, 2],
+  campus: [],
+  course: [],
+  domainIdList: [],
+  jobIdList: [],
+  techStackIdList: [],
   marketingConsent: '동의',
   verifyCode: '',
 };

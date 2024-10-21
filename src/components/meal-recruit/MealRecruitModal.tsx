@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react';
 
 import SquareButton from '../common/button/SquareButton';
 import OutsideClickContainer from '../common/container/OutsideClickContainer';
-import SelectableDropdown from '../common/dropdown/SelectableDropdown';
 import ErrorMsg from '../common/input/ErrorMsg';
 import LabeledSection from '../common/input/LabeledSection';
 import TextInput from '../common/input/TextInput';
@@ -11,6 +10,8 @@ import Modal from '../common/modal/Modal';
 import { useDialogContext } from '@/hooks';
 import { Controller, useForm } from 'react-hook-form';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+
+import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 
 const defaultStyle =
   'rounded-xl border border-solid border-gray2 px-6 py-[13px] text-lg';
@@ -263,17 +264,23 @@ export default function MealRecruitModal() {
             <Controller
               control={control}
               name="personnel"
-              render={({ field: { onChange }, fieldState: { error } }) => {
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => {
+                const selectedOption = recruitmentCountList.find(
+                  ({ id }) => id === value,
+                );
+
                 return (
-                  <SelectableDropdown
-                    label="모집 인원"
-                    width="100%"
-                    errorMsg={error?.message}
+                  <SingleSelectDropdown
+                    defaultLabel="모집 인원"
                     options={recruitmentCountList}
-                    selectOptionBoxClassName="rounded-2xl border border-solid border-gray2 bg-white px-3 py-[15px] max-h-40"
-                    selectOptionClassName="px-4 py-[5px] hover:rounded-lg hover:bg-vividGreen3"
-                    selectBoxClassName={defaultStyle}
-                    onChangeValue={data => onChange(data[0].name)}
+                    selectedOption={selectedOption}
+                    onChangeValue={data => onChange(data[0].id)}
+                    errorMsg={error?.message}
+                    selectBoxClassName="h-[50px] border-gray2 rounded-xl"
+                    optionClassName="hover:bg-vividGreen3"
                   />
                 );
               }}

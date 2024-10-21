@@ -1,9 +1,10 @@
-import { useToggleModal } from '@/hooks';
+import { getVerifyCodeResult } from '@/services/auth/authQueries';
+
+import { useDialogContext } from '@/hooks';
 
 import SquareButton from '@/components/common/button/SquareButton';
-import Alert from '@/components/common/modal/Alert';
 
-const CODE = '새싹';
+const VERIFIED_CODE = 'Sprout123456789!@#$%^&*';
 
 interface VerifyCodeButtonProps {
   currentCode: string;
@@ -12,38 +13,52 @@ interface VerifyCodeButtonProps {
 export default function VerifyCodeButton({
   currentCode,
 }: VerifyCodeButtonProps) {
-  const { modalOpen, toggleModal } = useToggleModal();
+  const { alert, hideDialog } = useDialogContext();
 
-  const onVerifyCodeClick = () => {
-    toggleModal();
-  };
-
-  const verified = CODE === currentCode;
-
-  return (
-    <>
-      <button
-        type="button"
-        className="absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 text-gray1"
-        onClick={onVerifyCodeClick}
-      >
-        인증 확인
-      </button>
-
-      {modalOpen && (
-        <Alert
-          text={verified ? '인증 확인되었습니다!' : '인증에 실패했습니다.'}
-          subText={!verified ? '관리자에게 문의해주세요' : undefined}
-          className="gap-1"
-        >
+  const onVerifyCodeClick = async () => {
+    console.log(currentCode);
+    try {
+      const response = await getVerifyCodeResult(VERIFIED_CODE);
+      if (response.status === 200) {
+        alert({
+          showDim: true,
+          className: 'z-30',
+          text: '인증 확인되었습니다!',
+          children: (
+            <SquareButton
+              name="나가기"
+              onClick={hideDialog}
+              type="button"
+              className="mt-5"
+            />
+          ),
+        });
+      }
+    } catch (error) {
+      alert({
+        showDim: true,
+        className: 'z-30',
+        text: '인증에 실패했습니다.',
+        subText: '관리자에게 문의해주세요',
+        children: (
           <SquareButton
             name="나가기"
-            onClick={toggleModal}
+            onClick={hideDialog}
             type="button"
             className="mt-5"
           />
-        </Alert>
-      )}
-    </>
+        ),
+      });
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      className="absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 text-gray1"
+      onClick={onVerifyCodeClick}
+    >
+      인증 확인
+    </button>
   );
 }

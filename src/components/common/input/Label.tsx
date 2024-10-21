@@ -5,10 +5,7 @@ interface LabelProps {
 
 export default function Label({ htmlFor, className = '' }: LabelProps) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className={`mb-1.5 text-sm font-medium ${className}`}
-    >
+    <label htmlFor={htmlFor} className={`text-sm font-medium ${className}`}>
       {htmlFor}
     </label>
   );

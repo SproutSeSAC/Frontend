@@ -6,6 +6,7 @@ import imgUrl from '@/assets/images/faq.png';
 import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { UserProfile } from '@/types';
 
 import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
@@ -15,26 +16,24 @@ import PostAndCommentCollection from '@/components/user/PostAndCommentCollection
 import UserNameImageCard from '@/components/user/UserNameImageCard';
 
 export default function MyPage() {
-  const { data } = useGetUserProfile();
+  const { data: userProfile, isLoading } = useGetUserProfile();
+
+  const { name, email, campusName, courseTitle } = userProfile as UserProfile;
 
   const userInfoList = [
-    { label: 'E-mail', value: data?.email },
-    { label: '캠퍼스', value: `${data?.campusName} 캠퍼스` },
-    { label: '담당 교육과정', value: data?.courseTitle },
+    { label: 'E-mail', value: email },
+    { label: '캠퍼스', value: `${campusName} 캠퍼스` },
+    { label: '담당 교육과정', value: courseTitle },
   ];
+
+  if (isLoading) return null;
 
   return (
     <MainView>
       <Header title="마이페이지" />
 
       <section className="mb-16 flex gap-4">
-        {data && (
-          <UserNameImageCard
-            name={data.name}
-            nickname={data.nickname}
-            profileImageUrl={data.profileImageUrl}
-          />
-        )}
+        <UserNameImageCard />
 
         <ul className="flex w-[55%] max-w-[405px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
           {userInfoList.map(({ value, label }) => (
@@ -50,13 +49,13 @@ export default function MyPage() {
       </section>
 
       <section className="mb-16">
-        <Title title="김철수님이 작성한 글 모음" className="mb-[10px]" />
+        <Title title={`${name}님이 작성한 글 모음`} className="mb-[10px]" />
         <PostAndCommentCollection />
       </section>
 
       <section className="mb-16 w-full flex-1">
         <div className="mb-[10px] flex items-center justify-between">
-          <Title title="김철수님이 찜한 글 모음" />
+          <Title title={`${name}님이 찜한 글 모음`} />
           <Link
             to="/lounge"
             className="text-sm font-semibold tracking-tight text-gray1"

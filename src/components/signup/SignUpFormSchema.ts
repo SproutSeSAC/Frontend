@@ -26,15 +26,15 @@ export const SignUpFormSchema = z.object({
   verifyCode: z.string().min(1, '인증코드를 입력해주세요.'),
 
   jobIdList: z //
-    .array(z.number())
+    .array(z.any())
     .min(1, '최소 하나의 직무를 선택해야 합니다.'),
 
   techStackIdList: z
-    .array(z.number())
+    .array(z.any())
     .min(1, '최소 하나의 기술 스택을 선택해야 합니다.'),
 
   domainIdList: z
-    .array(z.number())
+    .array(z.any())
     .min(1, '최소 하나의 도메인을 선택해야 합니다.'),
 
   campusId: z

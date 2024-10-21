@@ -14,6 +14,7 @@ interface TagProps {
   size?: 'small' | 'medium' | 'big';
   onDeleteClick?: () => void;
   className?: string;
+  emphasisText?: boolean;
 }
 
 export default function Tag({
@@ -22,6 +23,7 @@ export default function Tag({
   size = 'small',
   onDeleteClick,
   className,
+  emphasisText,
 }: TagProps) {
   const styleBySize = {
     small: 'text-xs px-1.5 rounded',
@@ -34,9 +36,15 @@ export default function Tag({
     olivegreen: 'bg-oliveGreen1 text-white',
     black: 'bg-text text-gray3',
     gray: 'bg-gray4 text-text',
-    blue: 'bg-skyBlue1 text-white',
-    yellow: 'bg-[#FFE450] text-white',
-    pink: 'bg-[#E94159] text-white',
+    blue: emphasisText
+      ? 'bg-[#E8EFFE] text-[#332FD0]'
+      : 'bg-skyBlue1 text-white',
+    yellow: emphasisText
+      ? 'bg-[#FEFAE0] text-[#FF6D28]'
+      : 'bg-[#FFE450] text-white',
+    pink: emphasisText
+      ? 'bg-[#FFF3F4] text-[#F5004F]'
+      : 'bg-[#E94159] text-white',
     purple: 'bg-[#6B5FFD] text-white',
   };
 

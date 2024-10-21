@@ -1,7 +1,9 @@
+import { useCreateCalendar } from '@/services/schedule/calendarMutations';
+
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { adminCalendarListLabel } from '@/constants';
-import { useSubscribeAndShareCalendar, useToggleModal } from '@/hooks';
+import { AdminCalendarLabel, adminCalendarListLabel } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { KeyOfRole } from '@/types';
 import { Calendar } from '@/types/calendarDto';
 import { useAtom } from 'jotai';
@@ -10,7 +12,6 @@ import Accordion from '@/components/common/Accordion';
 import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
-import Alert from '@/components/common/modal/Alert';
 import AddSubscribeCalenderButton from '@/components/schedule/AddSubscribeCalendarButton';
 
 type CalendarListLabel = '나의 캘린더' | '구독중인 캘린더' | '공유중인 캘린더';
@@ -33,16 +34,79 @@ export default function CalendarCheckBoxList({
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
-  const { toggleModal, modalOpen } = useToggleModal();
-
-  const {
-    currentAdminCalendar,
-    onConfirmSubscribeClick,
-    onConfirmCreateClick,
-    onAdminCalendarClick,
-  } = useSubscribeAndShareCalendar({ toggleModal });
-
   const { myCalendarList, subscribeCalendarList } = calendarListByType;
+
+  const { mutate } = useCreateCalendar();
+
+  const { alert, hideDialog } = useDialogContext();
+
+  /* 학생들의 구독 버튼 */
+  const onConfirmSubscribeClick = () => {
+    window.open('', '_blank'); // 공유 캘린더 링크 넣기
+    hideDialog();
+  };
+
+  /* 매니저의 캘린더 생성 버튼 */
+  const onConfirmCreateClick = () => {
+    mutate();
+    hideDialog();
+  };
+
+  const onAdminCalendarClick = (label: AdminCalendarLabel) => {
+    const adminRole =
+      userRole === 'CAMPUS_MANAGER' || userRole === 'EDU_MANAGER';
+
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: adminRole ? '공유 캘린더 생성' : `${label} 구독`,
+      subText: adminRole
+        ? '캘린더를 생성하시겠어요?'
+        : '위의 캘린더를 구독하시겠어요?',
+      children: adminRole ? (
+        <div className="flex w-full flex-col">
+          <Title
+            as="p"
+            highlight={label}
+            title={`${label}를 생성하시겠어요?`}
+            className="pt-2 text-gray1"
+          />
+
+          <div className="flex w-full items-center justify-center gap-2">
+            <SquareButton
+              name="취소"
+              onClick={hideDialog}
+              type="button"
+              color="gray"
+              className="mt-5"
+            />
+            <SquareButton
+              name="생성"
+              onClick={onConfirmCreateClick}
+              type="button"
+              className="mt-5"
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <SquareButton
+            name="취소"
+            onClick={hideDialog}
+            type="button"
+            color="gray"
+            className="mt-5"
+          />
+          <SquareButton
+            name="구독"
+            onClick={onConfirmSubscribeClick}
+            type="button"
+            className="mt-5"
+          />
+        </>
+      ),
+    });
+  };
 
   const calendarListByLabel: CalendarListByLabel[] = [
     {
@@ -124,57 +188,6 @@ export default function CalendarCheckBoxList({
           </Accordion>
         ))}
       </ul>
-
-      {modalOpen &&
-        // 매니저인 경우
-        (userRole === 'CAMPUS_MANAGER' || userRole === 'EDU_MANAGER' ? (
-          <Alert text="공유 캘린더 생성">
-            <div className="flex w-full flex-col">
-              <Title
-                as="p"
-                highlight={currentAdminCalendar}
-                title={`${currentAdminCalendar}를 생성하시겠어요?`}
-                className="pt-2 text-gray1"
-              />
-
-              <div className="flex w-full items-center justify-center gap-2">
-                <SquareButton
-                  name="취소"
-                  onClick={toggleModal}
-                  type="button"
-                  color="gray"
-                  className="mt-5"
-                />
-                <SquareButton
-                  name="생성"
-                  onClick={onConfirmCreateClick}
-                  type="button"
-                  className="mt-5"
-                />
-              </div>
-            </div>
-          </Alert>
-        ) : (
-          <Alert
-            text={`${currentAdminCalendar} 구독`}
-            subText="위의 캘린더를 구독하시겠어요?"
-            className="gap-1"
-          >
-            <SquareButton
-              name="취소"
-              onClick={toggleModal}
-              type="button"
-              color="gray"
-              className="mt-5"
-            />
-            <SquareButton
-              name="구독"
-              onClick={onConfirmSubscribeClick}
-              type="button"
-              className="mt-5"
-            />
-          </Alert>
-        ))}
     </div>
   );
 }

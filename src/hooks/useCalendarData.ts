@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
+import { getCalendarToken } from '@/services/auth/authQueries';
 import {
   useGetCalendarList,
   useGetEventsByCalendar,
@@ -7,13 +8,21 @@ import {
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
+import { CALENDAR_ADDRESS_ID, CALENDAR_COOKIE_KEY } from '@/constants';
 import { Calendar, Event } from '@/types/calendarDto';
+import { getCookie, setCookie } from '@/utils';
 import { useAtomValue } from 'jotai';
-
-const CALENDAR_ADDRESS_ID = 'addressbook#contacts@group.v.calendar.google.com';
 
 export const useCalendarData = () => {
   const currentCalendarIds = useAtomValue(calendarIdsAtom);
+
+  useEffect(() => {
+    if (!getCookie(CALENDAR_COOKIE_KEY)) {
+      getCalendarToken().then(res => {
+        setCookie(CALENDAR_COOKIE_KEY, res.data.access_token, 1);
+      });
+    }
+  }, []);
 
   const {
     data: calendarList,

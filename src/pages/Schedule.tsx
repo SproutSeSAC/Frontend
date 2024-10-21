@@ -1,19 +1,11 @@
-import { useEffect } from 'react';
-
-import {
-  getCalendarToken,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { setCookie } from '@/utils';
 
 import Calendar from '@/components/schedule/Calendar';
 import CalendarCheckBoxList from '@/components/schedule/CalendarCheckBoxList';
-
-const CALENDAR_COOKIE = 'calendar_access_token';
 
 export default function Schedule() {
   const { data: userProfile } = useGetUserProfile();
@@ -23,12 +15,6 @@ export default function Schedule() {
     fullCalendarEvents,
     isCalendarListLoading, //
   } = useCalendarData();
-
-  useEffect(() => {
-    getCalendarToken().then(res => {
-      setCookie(CALENDAR_COOKIE, res.data.access_token, 1);
-    });
-  }, []);
 
   if (isCalendarListLoading) return null;
 

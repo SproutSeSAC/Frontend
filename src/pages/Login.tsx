@@ -71,7 +71,7 @@ export default function Login() {
         <Modal
           title={modalState.type}
           onToggleClick={toggleModal}
-          className="rounded-xl px-5 pb-5 pt-2"
+          className="rounded-xl p-4"
         >
           <div
             className={`h-[70vh] w-[500px] overflow-auto ${styles.policyContainer}`}

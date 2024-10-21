@@ -9,7 +9,8 @@ import { useCalendarData } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
-import { getCookie } from '@/utils';
+import { RoleValues, UserProfile } from '@/types';
+import { getColorByRole, getCookie } from '@/utils';
 import { FiChevronRight } from 'react-icons/fi';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -19,24 +20,24 @@ import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import Calendar from '@/components/schedule/Calendar';
 import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
-import CourseDDayRadialBarCard from '@/components/user/CourseDDayRadialBarCard';
 import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
+import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
 
 export default function Home() {
-  const { data: loungeList } = useGetLoungeProjects({ page: 1, size: 10 });
+  const {
+    data: loungeList,
+    isLoading: isGetLoungeListLoading, //
+  } = useGetLoungeProjects({ page: 1, size: 10 });
 
-  const { data: userProfile, isLoading: isGetUserProfileLoading } =
-    useGetUserProfile();
+  const {
+    data: userProfile,
+    isLoading: isGetUserProfileLoading, //
+  } = useGetUserProfile();
+
+  const { name } = userProfile as UserProfile;
 
   const { fullCalendarEvents } = useCalendarData();
-
-  const courseData = {
-    course: userProfile ? userProfile.courseTitle : '',
-    campus: userProfile ? `${userProfile.campusName} 캠퍼스` : '',
-    startDate: '2024.08.01',
-    endDate: '2024.08.31',
-  };
 
   const navigate = useNavigate();
 
@@ -57,7 +58,7 @@ export default function Home() {
   //   }
   // }, [isGetUserProfileLoading, navigate, userProfile]);
 
-  if (isGetUserProfileLoading)
+  if (isGetUserProfileLoading || isGetLoungeListLoading)
     return (
       <MainView isEmpty>
         <LoopLoading />
@@ -73,19 +74,17 @@ export default function Home() {
   return (
     <>
       <MainView>
-        <Header title={`${userProfile?.name} 스프님 환영합니다!`} />
+        <Header title={`${name}, 스프님 환영합니다!`} />
 
         <section>
           <Title title="나의 새싹 정보" className="mb-[10px]" />
-
-          {userProfile && (
-            <div className="relative flex items-center gap-4 md:flex-col">
-              <CourseDDayRadialBarCard data={courseData} />
+          <div className="mb-14 flex h-full max-h-[380px] gap-4">
+            <MyCourseProgressCard />
+            <div className="relative max-h-[400px] w-full items-center gap-2">
               <DomainJobTechStackCard />
+              <ThisMonthOfMealPriceChart />
             </div>
-          )}
-
-          <ThisMonthOfMealPriceChart />
+          </div>
         </section>
 
         <section>
@@ -144,19 +143,22 @@ export default function Home() {
         </div>
 
         <ul className="flex flex-col gap-2">
-          {[1, 2, 3, 4, 5].map(item => (
-            <li key={item} className="flex h-7 w-full gap-1.5">
-              <Tag
-                size="small"
-                color="green"
-                text="엑스퍼트"
-                className="h-6 !px-1 font-semibold"
-              />
-              <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-                1세대에게 직접 배우는 안드로이드 앱
-              </span>
-            </li>
-          ))}
+          {(['캠퍼스 매니저', '잡코디', '교육 매니저'] as RoleValues[]).map(
+            item => (
+              <li key={item} className="flex h-7 w-full items-center gap-1.5">
+                <Tag
+                  size="big"
+                  color={getColorByRole(item)}
+                  text={item}
+                  className="!p-0 font-medium"
+                  emphasisText
+                />
+                <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                  1세대에게 직접 배우는 안드로이드 앱
+                </span>
+              </li>
+            ),
+          )}
         </ul>
       </SideView>
     </>
