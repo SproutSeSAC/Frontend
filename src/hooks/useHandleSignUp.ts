@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+import { useTechStackList } from '@/hooks/useTechStackList';
+
 import { usePostUserInfo } from '@/services/auth/authMutations';
 import {
   useGetCampusList,
@@ -8,18 +10,17 @@ import {
 import {
   useGetDomainList,
   useGetJobList,
-  useGetTechStackList,
 } from '@/services/specifications/specificationsQueries';
 
 import { getQuestionListByRole } from '@/constants';
-import { KeyOfRole, UserInfo, VerifyCode } from '@/types';
+import { KeyOfRole, SignUpFormValue, UserInfo, VerifyCode } from '@/types';
 import { SubmitHandler } from 'react-hook-form';
 
 export const useHandleSignUp = ({
-  watchedCampusId,
+  watchedCampus,
   watchedRole,
 }: {
-  watchedCampusId?: number;
+  watchedCampus: { id: number; name: string }[];
   watchedRole: KeyOfRole;
 }) => {
   const {
@@ -32,17 +33,14 @@ export const useHandleSignUp = ({
     isLoading: isDomainListLoading, //
   } = useGetDomainList();
 
-  const {
-    data: techStackList,
-    isLoading: isTechStackListLoading, //
-  } = useGetTechStackList();
+  const { techStackList, isTechStackListLoading } = useTechStackList();
 
   const {
     data: campusList,
     isLoading: isCampusListLoading, //
   } = useGetCampusList();
 
-  const { data: courseList } = useGetCourseList(watchedCampusId);
+  const { data: courseList } = useGetCourseList(watchedCampus[0]?.id);
 
   const navigate = useNavigate();
 
@@ -51,7 +49,7 @@ export const useHandleSignUp = ({
     onError: error => console.log(error),
   });
 
-  const onSubmit: SubmitHandler<UserInfo & VerifyCode> = formData => {
+  const onSubmit: SubmitHandler<SignUpFormValue> = formData => {
     const marketingConsent = formData.marketingConsent === '동의';
     const data = { ...formData, marketingConsent };
 

@@ -12,15 +12,16 @@ import {
   FormProvider,
   SubmitHandler,
   useForm,
-  useWatch,
 } from 'react-hook-form';
 
 import Tag from '@/components/common/Tag';
 import SquareButton from '@/components/common/button/SquareButton';
-import Dropdown, { Option } from '@/components/common/dropdown/Dropdown';
-import MultiSelectDropdown, {
+import ScrollContainer from '@/components/common/container/ScrollContainer';
+import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import TechStackDropdown, {
   OptionItem,
-} from '@/components/common/dropdown/MultiSelectDropdown';
+} from '@/components/common/dropdown/TechStackDropdown';
+import { Option } from '@/components/common/dropdown/option/SelectOption';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import { DomainJobTechStackSchema } from '@/components/user/DomainJobTechStackSchema';
@@ -99,88 +100,39 @@ export default function DomainJobTechStackModal() {
     });
   };
 
-  const watchedDomainList = useWatch({ control, name: 'updatedDomainList' });
-  const watchedJobList = useWatch({ control, name: 'updatedJobList' });
-
-  const jobOptions = getOptions('job', watchedJobList);
-
-  const domainOptions: Option[] = getOptions('domain', watchedDomainList);
   const initialTechStackOptions: OptionItem[] = getTechStackOptions();
 
   if (isLoading) return null;
 
   return (
-    <Modal onToggleClick={hideDialog} title="도메인 정보">
+    <Modal onToggleClick={hideDialog} title="도메인 정보" className="p-4">
       <FormProvider {...methods}>
         <form
-          className="mt-3 flex w-[350px] flex-col gap-4"
+          className="flex w-[350px] flex-col gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div>
-            <Label htmlFor="관심 도메인" className="mb-2" />
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="관심 도메인" />
             {allDomainList && (
               <Controller
                 control={control}
                 name="updatedDomainList"
-                render={({ field: { onChange } }) => {
+                render={({ field: { onChange, value } }) => {
+                  const selectedOptions = value?.map(({ id, domain }) => ({
+                    id,
+                    name: domain,
+                  }));
                   return (
                     <>
-                      <ul className="flex gap-1">
-                        {watchedDomainList.map(({ id, domain }) => (
+                      <ScrollContainer gap={1}>
+                        {value.map(({ id, domain }) => (
                           <li key={id}>
                             <Tag
                               text={domain}
                               color="green"
                               size="medium"
                               onDeleteClick={() => {
-                                const filteredData = watchedDomainList.filter(
-                                  ({ id: itemId }) => itemId !== id,
-                                );
-                                onChange(filteredData);
-                              }}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-
-                      <Dropdown
-                        label="관심 도메인"
-                        selectedOptions={domainOptions}
-                        options={getOptions('domain', allDomainList)}
-                        selectBoxClassName="[&>span]:text-gray1 mt-2"
-                        onChangeValue={data => {
-                          const newData = data.map(({ id, name }) => {
-                            return { id, domain: name };
-                          });
-                          const newArr = [...watchedDomainList, ...newData];
-                          onChange(newArr);
-                        }}
-                      />
-                    </>
-                  );
-                }}
-              />
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="관심 직무" />
-            {allJobList && (
-              <Controller
-                control={control}
-                name="updatedJobList"
-                render={({ field: { onChange } }) => {
-                  return (
-                    <>
-                      <ul className="flex gap-1">
-                        {watchedJobList?.map(({ id, job }) => (
-                          <li key={id}>
-                            <Tag
-                              text={job}
-                              color="olivegreen"
-                              size="medium"
-                              onDeleteClick={() => {
-                                const filteredData = watchedJobList.filter(
+                                const filteredData = value.filter(
                                   item => item.id !== id,
                                 );
                                 onChange(filteredData);
@@ -188,20 +140,21 @@ export default function DomainJobTechStackModal() {
                             />
                           </li>
                         ))}
-                      </ul>
+                      </ScrollContainer>
 
-                      <Dropdown
-                        label="관심 직무"
-                        selectedOptions={jobOptions}
-                        options={getOptions('job', allJobList)}
-                        selectBoxClassName="[&>span]:text-gray1 mt-2"
+                      <SingleSelectDropdown
+                        defaultLabel="관심 도메인"
+                        options={getOptions('domain', allDomainList)}
+                        selectedOptions={selectedOptions}
                         onChangeValue={data => {
-                          const newData = data.map(({ id, name }) => {
-                            return { id, job: name };
-                          });
-                          const newArr = [...watchedJobList, ...newData];
+                          const newData = data.map(({ id, name }) => ({
+                            id,
+                            domain: name,
+                          }));
+                          const newArr = [...value, ...newData];
                           onChange(newArr);
                         }}
+                        selectBoxClassName="h-[50px]"
                       />
                     </>
                   );
@@ -210,25 +163,72 @@ export default function DomainJobTechStackModal() {
             )}
           </div>
 
-          <div className="relative">
-            <Label htmlFor="기술 스택" />
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="관심 직무" />
+            {allJobList && (
+              <Controller
+                control={control}
+                name="updatedJobList"
+                render={({ field: { onChange, value } }) => {
+                  const selectedOptions = value?.map(({ id, job }) => ({
+                    id,
+                    name: job,
+                  }));
+                  return (
+                    <>
+                      <ScrollContainer gap={1}>
+                        {value?.map(({ id, job }) => (
+                          <li key={id}>
+                            <Tag
+                              text={job}
+                              color="olivegreen"
+                              size="medium"
+                              onDeleteClick={() => {
+                                const filteredData = value.filter(
+                                  item => item.id !== id,
+                                );
+                                onChange(filteredData);
+                              }}
+                            />
+                          </li>
+                        ))}
+                      </ScrollContainer>
 
+                      <SingleSelectDropdown
+                        defaultLabel="관심 직무"
+                        options={getOptions('job', allJobList)}
+                        selectedOptions={selectedOptions}
+                        onChangeValue={data => {
+                          const newData = data.map(({ id, name }) => ({
+                            id,
+                            job: name,
+                          }));
+                          const newArr = [...value, ...newData];
+                          onChange(newArr);
+                        }}
+                        selectBoxClassName="h-[50px]"
+                      />
+                    </>
+                  );
+                }}
+              />
+            )}
+          </div>
+
+          <div className="relative flex flex-col gap-1.5">
+            <Label htmlFor="기술 스택" />
             <Controller
               control={control}
               name="updatedTechStackList"
               render={({ field: { onChange } }) => {
                 return (
-                  <MultiSelectDropdown
-                    label="기술스택"
-                    defaultValue="백엔드"
-                    width="100%"
-                    buttonClassName="p-3 border-gray4"
-                    contentClassName="w-full"
+                  <TechStackDropdown
+                    defaultLabel="기술스택"
+                    defaultTabValue="백엔드"
                     options={allTechStackList}
-                    initialSelectedOptions={
-                      initialTechStackOptions as OptionItem[]
-                    }
-                    onChangeValue={data => onChange(data)}
+                    initialSelectedOptions={initialTechStackOptions}
+                    onChangeValue={onChange}
+                    isMarkTechStackList
                   />
                 );
               }}

@@ -8,6 +8,10 @@ import { AxiosResponse } from 'axios';
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
 
+// 인증코드
+export const getVerifyCodeResult = (code: string) =>
+  axiosInstance.get(`/user/verification/${code}`);
+
 // 캘린더 인증
 export const getCalendarToken = () => axiosInstance.get('/user/calendar');
 

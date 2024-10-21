@@ -12,15 +12,10 @@ import { GetLoungeProjects } from '@/types/lounge/loungeDto';
 
 import Pagination from '@/components/common/Pagination';
 import SquareButton from '@/components/common/button/SquareButton';
-import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
-import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
+import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
-
-const commonSelectBoxClass =
-  'rounded-2xl border border-solid border-gray2 bg-bg px-3 py-1';
-const commonOptionBoxClass = 'px-1.5 py-2.5';
-const commonOptionClass = 'hover:rounded-sm hover:bg-gray3 pl-1';
 
 export default function Lounge() {
   const [filterData, setFilterData] = useState<GetLoungeProjects>({
@@ -73,46 +68,44 @@ export default function Lounge() {
 
       <div className="relative mb-9 mt-6 flex justify-between">
         <div className="flex gap-4">
-          <MultiSelectDropdown
-            label="기술스택"
-            defaultValue="백엔드"
-            isLoading={isTechStackListLoading}
-            buttonClassName="bg-bg px-3 py-1"
-            contentClassName="mt-[14px]"
-            options={techStackList}
-            onChangeValue={value => handleChangeFilterValue(value, 'techStack')}
+          {!isTechStackListLoading && (
+            <TechStackDropdown
+              defaultLabel="기술스택"
+              defaultTabValue="백엔드"
+              options={techStackList}
+              onChangeValue={value =>
+                handleChangeFilterValue(value, 'techStack')
+              }
+              boxShape="buttonShape"
+            />
+          )}
+
+          <SingleSelectDropdown
+            defaultLabel="포지션"
+            options={positionsList || []}
+            onChangeValue={value => handleChangeFilterValue(value, 'position')}
+            boxShape="buttonShape"
           />
 
-          <SelectableDropdown
-            label="포지션"
-            selectOptionBoxClassName={commonOptionBoxClass}
-            selectOptionClassName={commonOptionClass}
-            options={positionsList || []}
-            selectBoxClassName={commonSelectBoxClass}
-            onChangeValue={value => handleChangeFilterValue(value, 'position')}
-          />
-          <SelectableDropdown
-            label="진행방식"
-            options={progressList}
-            selectBoxClassName={commonSelectBoxClass}
-            selectOptionBoxClassName={commonOptionBoxClass}
-            selectOptionClassName={commonOptionClass}
+          <SingleSelectDropdown
+            defaultLabel="진행방식"
+            options={progressList || []}
             onChangeValue={value => {
               const newValue = value.map(item => item.key);
               setFilterData(prev => ({ ...prev, meetingType: newValue[0] }));
             }}
+            boxShape="buttonShape"
           />
         </div>
-        <SelectableDropdown
-          label="정렬"
+
+        <SingleSelectDropdown
+          defaultLabel="정렬"
           options={sortList}
-          selectBoxClassName={commonSelectBoxClass}
-          selectOptionBoxClassName={commonOptionBoxClass}
-          selectOptionClassName={commonOptionClass}
           onChangeValue={value => {
             const newValue = value.map(item => item.key);
             setFilterData(prev => ({ ...prev, sort: newValue[0] }));
           }}
+          boxShape="buttonShape"
         />
       </div>
 

@@ -34,7 +34,8 @@ import {
 import { BsLink45Deg } from 'react-icons/bs';
 
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
-import SelectableDropdown from '@/components/common/dropdown/SelectableDropdown';
+import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 
@@ -44,9 +45,6 @@ const inputStyle = {
   default: `${defaultInputStyle} border-gray4`,
   error: `${defaultInputStyle} border-[#FF3939]`,
 };
-
-const commonOptionBoxClass = 'px-4 py-[15px]';
-const commonOptionClass = 'px-4 py-1 hover:rounded-lg hover:bg-gray4';
 
 // TODO: api type 수정 필요
 export interface FormValues {
@@ -71,16 +69,17 @@ function ContactMethodContainer({ control }: { control: Control<FormValues> }) {
       <Controller
         control={control}
         name="contactMethod"
-        render={({ field: { onChange }, fieldState: { error } }) => {
+        render={({ field: { onChange, value }, fieldState: { error } }) => {
+          const selectedOption = contactMethodList.find(
+            ({ key }) => key === value,
+          );
+
           return (
-            <SelectableDropdown
-              label="연락 방법"
-              width="100%"
+            <SingleSelectDropdown
+              defaultLabel="연락 방법"
               options={contactMethodList}
+              selectedOption={selectedOption}
               errorMsg={error?.message}
-              selectBoxClassName={error ? inputStyle.error : inputStyle.default}
-              selectOptionBoxClassName={commonOptionBoxClass}
-              selectOptionClassName={commonOptionClass}
               onChangeValue={data => onChange(data[0].key)}
             />
           );
@@ -138,7 +137,7 @@ export default function LoungeEditor() {
     resolver: zodResolver(loungeEditorSchema),
   });
   const { data: positionsList } = useGetLoungePositionsFilterList();
-  const { techStackList, isTechStackListLoading } = useTechStackList();
+  const { techStackList } = useTechStackList();
 
   const { mutateAsync } = usePostLoungeProject();
 
@@ -282,23 +281,27 @@ export default function LoungeEditor() {
           <Title as="h1" title="프로젝트 필수 정보" />
         </div>
         <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
-          <LabeledSection label="모집 구분" className="col-span-2">
+          <LabeledSection
+            label="모집 구분"
+            className="col-span-2 [&>div]:w-1/2"
+          >
             <Controller
               control={control}
               name="recruitmentType"
-              render={({ field: { onChange }, fieldState: { error } }) => {
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => {
+                const selectedOption = PtypeList.find(
+                  ({ key }) => key === value,
+                );
                 return (
-                  <SelectableDropdown
-                    label="모집 구분"
-                    width="50%"
-                    errorMsg={error?.message}
+                  <SingleSelectDropdown
+                    defaultLabel="모집 구분"
                     options={PtypeList}
-                    selectBoxClassName={
-                      error ? inputStyle.error : inputStyle.default
-                    }
-                    selectOptionBoxClassName={commonOptionBoxClass}
-                    selectOptionClassName={commonOptionClass}
+                    selectedOption={selectedOption}
                     onChangeValue={data => onChange(data[0].key)}
+                    errorMsg={error?.message}
                   />
                 );
               }}
@@ -366,19 +369,20 @@ export default function LoungeEditor() {
             <Controller
               control={control}
               name="recruitmentCount"
-              render={({ field: { onChange }, fieldState: { error } }) => {
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => {
+                const selectedOption = recruitmentCountList.find(
+                  ({ name }) => name === value,
+                );
                 return (
-                  <SelectableDropdown
-                    label="모집 인원"
-                    width="100%"
-                    errorMsg={error?.message}
+                  <SingleSelectDropdown
+                    defaultLabel="모집 인원"
                     options={recruitmentCountList}
-                    selectOptionBoxClassName={commonOptionBoxClass}
-                    selectOptionClassName={commonOptionClass}
-                    selectBoxClassName={
-                      error ? inputStyle.error : inputStyle.default
-                    }
+                    selectedOption={selectedOption}
                     onChangeValue={data => onChange(data[0].name)}
+                    errorMsg={error?.message}
                   />
                 );
               }}
@@ -390,21 +394,14 @@ export default function LoungeEditor() {
               name="positions"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 return (
-                  <SelectableDropdown
-                    label="모집 직무"
-                    width="100%"
-                    isCheckBox
-                    errorMsg={error?.message}
+                  <MultiSelectDropdown
+                    defaultLabel="모집 직무"
                     options={positionsList || []}
-                    selectBoxClassName={
-                      error ? inputStyle.error : inputStyle.default
-                    }
-                    selectOptionBoxClassName={commonOptionBoxClass}
-                    selectOptionClassName={commonOptionClass}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
                       onChange(ids);
                     }}
+                    errorMsg={error?.message}
                   />
                 );
               }}
@@ -414,40 +411,36 @@ export default function LoungeEditor() {
             <Controller
               control={control}
               name="meetingType"
-              render={({ field: { onChange }, fieldState: { error } }) => {
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => {
+                const selectedOption = progressList.find(
+                  ({ key }) => key === value,
+                );
                 return (
-                  <SelectableDropdown
-                    label="모집 유형"
-                    width="100%"
+                  <SingleSelectDropdown
+                    defaultLabel="모집 유형"
                     options={progressList}
-                    selectBoxClassName={
-                      error ? inputStyle.error : inputStyle.default
-                    }
-                    errorMsg={error?.message}
-                    selectOptionBoxClassName={commonOptionBoxClass}
-                    selectOptionClassName={commonOptionClass}
+                    selectedOption={selectedOption}
                     onChangeValue={data => onChange(data[0].key)}
+                    errorMsg={error?.message}
                   />
                 );
               }}
             />
           </LabeledSection>
+
           <LabeledSection label="필요 스택">
             <Controller
               control={control}
               name="requiredStacks"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 return (
-                  <MultiSelectDropdown
-                    label="기술스택"
-                    defaultValue="백엔드"
-                    width="100%"
+                  <TechStackDropdown
+                    defaultLabel="기술스택"
+                    defaultTabValue="백엔드"
                     errorMsg={error?.message}
-                    isLoading={isTechStackListLoading}
-                    buttonClassName={
-                      error ? inputStyle.error : inputStyle.default
-                    }
-                    contentClassName="mt-[14px]"
                     options={techStackList}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
@@ -458,6 +451,7 @@ export default function LoungeEditor() {
               }}
             />
           </LabeledSection>
+
           <LabeledSection
             label={
               <div className="flex items-center gap-1.5">
