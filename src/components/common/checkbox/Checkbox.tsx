@@ -5,6 +5,7 @@ interface CheckboxProps {
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   textClassName?: string;
+  inputClassName?: string;
   checkBoxColor?: string;
 }
 
@@ -15,7 +16,8 @@ interface CheckboxProps {
  * @param checked - 체크 상태를 나타내는 boolean 값
  * @param onChange - 체크 상태가 바뀔 때 호출되는 함수
  * @param textClassName - 체크박스 라벨 클래스네임
- * @param checkBoxColor - 체크박스 클래스네임
+ * @param inputClassName - 체크박스 클래스네임
+ * @param checkBoxColor - 체크박스 체크시 색상
  */
 export default function Checkbox({
   id,
@@ -24,6 +26,7 @@ export default function Checkbox({
   checked,
   onChange,
   textClassName = '',
+  inputClassName = '',
   checkBoxColor = '',
 }: CheckboxProps) {
   return (
@@ -34,7 +37,7 @@ export default function Checkbox({
         name={id}
         checked={checked}
         onChange={onChange}
-        className={`mr-2 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-blue-500 checked:bg-[url('./assets/images/check.png')] checked:bg-contain`}
+        className={`mr-2 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-blue-500 checked:bg-[url('./assets/images/check.png')] checked:bg-contain ${inputClassName}`}
         style={{ backgroundColor: checked ? checkBoxColor : '' }}
       />
       {text && (

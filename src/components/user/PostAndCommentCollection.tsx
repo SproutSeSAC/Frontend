@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { BsChevronDown } from 'react-icons/bs';
+import { BiChevronDown, BiExpandVertical } from 'react-icons/bi';
 
 import Pagination from '@/components/common/Pagination';
 import EyeButton from '@/components/common/button/EyeButton';
@@ -9,24 +9,47 @@ import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
 import TableHeaderCell from '@/components/common/table/TableHeaderCell';
 
-type ContentType = '내가 쓴 게시글' | '내가 쓴 댓글';
+type Collection = '내가 쓴 게시글' | '내가 쓴 댓글';
 
 export const ITEMS_PER_PAGE = 6;
 
 export default function PostAndCommentCollection() {
-  const [currType, setCurrType] = useState<ContentType>('내가 쓴 게시글');
+  const [currCollection, setCurrCollection] =
+    useState<Collection>('내가 쓴 게시글');
 
-  const changeType = (type: ContentType) => setCurrType(type);
+  const changeCollection = (contentType: Collection) => {
+    setCurrCollection(contentType);
+  };
 
-  const contentTypeList: ContentType[] = ['내가 쓴 게시글', '내가 쓴 댓글'];
+  const collectionList: Collection[] = ['내가 쓴 게시글', '내가 쓴 댓글'];
 
   const headerCellList = [
-    { name: '작성일', icon: BsChevronDown },
+    {
+      name: '체크박스',
+      onChange: () => console.log('체크박스 클릭'),
+    },
+    {
+      name: '작성일',
+      icon: BiExpandVertical,
+      onIconClick: () => console.log('작성일'),
+    },
     { name: '번호', className: 'text-center' },
-    { name: '분류', icon: BsChevronDown },
+    {
+      name: '분류',
+      icon: BiChevronDown,
+      onIconClick: () => console.log('분류'),
+    },
     { name: '글제목' },
-    { name: '숨김', className: 'text-center' },
-    { name: '삭제', className: 'text-end pr-6' },
+    {
+      name: '숨김',
+      className: 'text-center',
+      onClick: () => console.log('숨김'),
+    },
+    {
+      name: '삭제',
+      className: 'text-end pr-6',
+      onClick: () => console.log('삭제'),
+    },
   ];
 
   const bodyCellList = [
@@ -66,15 +89,15 @@ export default function PostAndCommentCollection() {
     <div className="rounded-lg bg-white py-5">
       <div className="flex items-center justify-between gap-3 px-4">
         <div className="flex flex-1 gap-2">
-          {contentTypeList.map(contentType => (
+          {collectionList.map(collection => (
             <button
-              key={contentType}
+              key={collection}
               type="button"
-              aria-label={contentType}
-              onClick={() => changeType(contentType)}
-              className={`${currType === contentType && 'rounded-lg bg-oliveGreen1 font-semibold text-white underline'} cursor-pointer px-4 py-2`}
+              aria-label={collection}
+              onClick={() => changeCollection(collection)}
+              className={`${currCollection === collection && 'rounded-lg bg-oliveGreen1 font-semibold text-white underline'} cursor-pointer px-4 py-2`}
             >
-              {contentType}
+              {collection}
             </button>
           ))}
         </div>
@@ -95,18 +118,21 @@ export default function PostAndCommentCollection() {
 
         <thead>
           <tr className="text-left">
-            <TableHeaderCell className={commonCheckboxStyle}>
-              <Checkbox id="체크박스" checked={false} onChange={() => {}} />
-            </TableHeaderCell>
-
-            {headerCellList.map(cell => (
-              <TableHeaderCell
-                key={cell.name}
-                name={cell.name}
-                className={cell.className}
-                icon={cell.icon}
-              />
-            ))}
+            {headerCellList.map(cell =>
+              cell.name === '체크박스' ? (
+                <TableHeaderCell key={cell.name} name="체크박스">
+                  <Checkbox id="체크박스" checked={false} onChange={() => {}} />
+                </TableHeaderCell>
+              ) : (
+                <TableHeaderCell
+                  key={cell.name}
+                  name={cell.name}
+                  className={cell.className}
+                  icon={cell.icon}
+                  onIconClick={cell.onIconClick}
+                />
+              ),
+            )}
           </tr>
         </thead>
 
