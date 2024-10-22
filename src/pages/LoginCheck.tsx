@@ -4,12 +4,16 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginCheck } from '@/services/auth/authQueries';
 
+import { useDialogContext } from '@/hooks';
 import { setCookie } from '@/utils';
 import axios from 'axios';
 
 import LoopLoading from '@/components/common/LoopLoading';
+import SquareButton from '@/components/common/button/SquareButton';
 
 export default function LoginCheck() {
+  const { hideDialog, alert } = useDialogContext();
+
   const navigate = useNavigate();
 
   const params = new URLSearchParams(window.location.search);
@@ -39,9 +43,21 @@ export default function LoginCheck() {
     if (accessToken && refreshToken) {
       handleLoginPost();
     } else {
-      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+      alert({
+        showDim: true,
+        className: 'z-30',
+        text: '로그인에 실패했습니다. 다시 시도해주세요.',
+        children: (
+          <SquareButton
+            name="확인"
+            onClick={hideDialog}
+            type="button"
+            className="mt-5"
+          />
+        ),
+      });
     }
-  }, [accessToken, refreshToken, navigate]);
+  }, [accessToken, refreshToken, navigate, alert, hideDialog]);
 
   return (
     <div className="flex h-[100vh] flex-col items-center justify-center gap-4">
