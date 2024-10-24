@@ -33,6 +33,7 @@ import {
 } from 'react-hook-form';
 import { BsLink45Deg } from 'react-icons/bs';
 
+import CircleNumber from '@/components/common/CircleNumber';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
@@ -275,9 +276,7 @@ export default function LoungeEditor() {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-[26px]">
         <div className="flex items-center gap-1.5">
-          <div className="font-600 flex h-6 w-6 items-center justify-center rounded-full bg-skyBlue1 text-[18px] text-white">
-            1
-          </div>
+          <CircleNumber number={1} />
           <Title as="h1" title="프로젝트 필수 정보" />
         </div>
         <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
@@ -465,9 +464,7 @@ export default function LoungeEditor() {
         </div>
 
         <div className="mt-16 flex items-center gap-1.5">
-          <div className="font-600 flex h-6 w-6 items-center justify-center rounded-full bg-skyBlue1 text-[18px] text-white">
-            2
-          </div>
+          <CircleNumber number={2} />
           <Title as="h1" title="프로젝트 상세 정보" />
         </div>
         <div className="w-full">

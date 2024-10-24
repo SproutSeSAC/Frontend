@@ -4,20 +4,41 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import TabNavigation from '../../common/TabNavigation';
 
+import { Role } from '@/types';
 import { updateQueryParams } from '@/utils';
 
-const TAB_LIST = [
+type AnnouncementRole = Pick<
+  Role,
+  'CAMPUS_MANAGER' | 'EDU_MANAGER' | 'JOB_COORDINATOR'
+>;
+
+type AnnouncementText =
+  | Role[keyof AnnouncementRole]
+  | '전체'
+  | '북마크'
+  | '공지사항 등록';
+
+type AnnouncementType = keyof AnnouncementRole | 'all' | 'bookmark' | 'edit';
+
+type AnnouncementTab = {
+  text: AnnouncementText;
+  type: AnnouncementType;
+};
+
+const TAB_LIST: AnnouncementTab[] = [
   { text: '전체', type: 'all' },
-  { text: '기관매니저', type: '기관매니저' },
-  { text: '교육매니저', type: '교육매니저' },
-  { text: '잡코디', type: '잡코디' },
-  { text: '북마크', type: '북마크' },
+  { text: '캠퍼스 매니저', type: 'CAMPUS_MANAGER' },
+  { text: '교육 매니저', type: 'EDU_MANAGER' },
+  { text: '잡코디', type: 'JOB_COORDINATOR' },
+  { text: '북마크', type: 'bookmark' },
 ];
 
 export default function AnnouncementTabNavigation() {
   const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, setTab] = useState('all');
+
+  const [tab, setTab] = useState<AnnouncementType>('all');
 
   // const ptype = searchParams.get('ptype');
 
@@ -32,7 +53,7 @@ export default function AnnouncementTabNavigation() {
     navigate(`/announcement`, {
       replace: true,
     });
-    setTab(type);
+    setTab(type as AnnouncementType);
     updateQueryParams(searchParams, setSearchParams, 'ptype', type);
   };
 
@@ -41,7 +62,7 @@ export default function AnnouncementTabNavigation() {
       tabList={TAB_LIST}
       tabClassName="w-[126px]"
       selectValue={tab}
-      onChangeValue={type => handelChangeValue(type)}
+      onChangeValue={handelChangeValue}
     >
       <div
         className={`box-border w-[126px] cursor-pointer justify-center pb-[19px] text-center ${tab === 'edit' ? 'border-b-2 border-text' : 'text-gray2'}`}
@@ -55,6 +76,7 @@ export default function AnnouncementTabNavigation() {
             });
             updateQueryParams(searchParams, setSearchParams, 'ptype', 'edit');
           }}
+          className="whitespace-pre"
         >
           공지사항 등록
         </button>

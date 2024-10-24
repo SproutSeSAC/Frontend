@@ -85,7 +85,7 @@ export default function SelectBox<
   const onClose = () => setOpen(false);
 
   const styleByBoxShape = {
-    inputShape: `w-full gap-5 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg ${boxShape === 'buttonShape' && 'text-gray1'}`,
+    inputShape: `w-full gap-4 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg ${boxShape === 'buttonShape' && 'text-gray1'}`,
     buttonShape:
       'rounded-2xl border border-gray2 bg-bg px-3 py-1 gap-4 text-gray1',
   };

@@ -54,16 +54,16 @@ export default function MultiSelectDropdown({
 
   const handleCheckboxChange = useCallback(
     (option: { id: number; name: string }) => {
-      setSelectedOptions(prevSelectedOptions => {
-        const updatedOptions = prevSelectedOptions.includes(option)
-          ? prevSelectedOptions.filter(item => item !== option)
-          : [...prevSelectedOptions, option];
+      const isSelected = checkIsSelected(option);
 
-        onChangeValue(updatedOptions);
-        return updatedOptions;
-      });
+      const updatedOptions = isSelected
+        ? selectedOptions.filter(item => item !== option)
+        : [...selectedOptions, option];
+
+      setSelectedOptions(updatedOptions);
+      onChangeValue(updatedOptions);
     },
-    [onChangeValue],
+    [checkIsSelected, onChangeValue, selectedOptions],
   );
 
   const onResetClick = useCallback(() => {

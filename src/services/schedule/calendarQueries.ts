@@ -2,7 +2,7 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance } from '@/services/axiosInstance';
 
-import { CalendarList, CalenderEvents } from '@/types/calendarDto';
+import { CalendarList, CalenderEvents } from '@/types/calendar/calendarDto';
 import { AxiosResponse } from 'axios';
 
 export const useGetCalendarList = (options?: UseQueryOptions<CalendarList>) => {

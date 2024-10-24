@@ -113,7 +113,7 @@ export const contactMethodList: Array<{
 }> = [
   { id: 1, name: '이메일', key: CONTACT_METHOD_EMAIL },
   { id: 2, name: '휴대폰', key: CONTACT_METHOD_PHONE },
-  { id: 2, name: '메신저', key: CONTACT_METHOD_MESSENGER },
+  { id: 3, name: '메신저', key: CONTACT_METHOD_MESSENGER },
 ];
 export const contactMethodDisplay: { [key in ContactMethodType]: string } = {
   EMAIL: '이메일',

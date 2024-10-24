@@ -5,7 +5,7 @@ import { calendarIdsAtom } from '@/atoms/calendarAtom';
 import { AdminCalendarLabel, adminCalendarListLabel } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { KeyOfRole } from '@/types';
-import { Calendar } from '@/types/calendarDto';
+import { Calendar } from '@/types/calendar/calendarDto';
 import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';

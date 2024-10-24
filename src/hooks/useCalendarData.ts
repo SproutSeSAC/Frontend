@@ -9,7 +9,7 @@ import {
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_COOKIE_KEY } from '@/constants';
-import { Calendar, Event } from '@/types/calendarDto';
+import { Calendar, Event } from '@/types/calendar/calendarDto';
 import { getCookie, setCookie } from '@/utils';
 import { useAtomValue } from 'jotai';
 
