@@ -4,8 +4,6 @@ import { useDialogContext } from '@/hooks';
 
 import SquareButton from '@/components/common/button/SquareButton';
 
-const VERIFIED_CODE = 'Sprout123456789!@#$%^&*';
-
 interface VerifyCodeButtonProps {
   currentCode: string;
 }
@@ -16,9 +14,10 @@ export default function VerifyCodeButton({
   const { alert, hideDialog } = useDialogContext();
 
   const onVerifyCodeClick = async () => {
-    console.log(currentCode);
+    if (currentCode === '') return;
+
     try {
-      const response = await getVerifyCodeResult(VERIFIED_CODE);
+      const response = await getVerifyCodeResult(currentCode);
       if (response.status === 200) {
         alert({
           showDim: true,

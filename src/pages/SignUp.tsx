@@ -4,12 +4,13 @@ import { defaultSignUpFormValues, matchedRoleName } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { KeyOfRole } from '@/types';
-// import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import VerifyCodeButton from '@/components/common/button/VerifyCodeButton';
+import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import Radio from '@/components/common/input/Radio';
@@ -17,8 +18,7 @@ import TextInput from '@/components/common/input/TextInput';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
 import MultiSelectList from '@/components/signup/MultiSelectList';
-
-// import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
+import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
 
 export default function SignUp() {
   const [currentStep] = useAtom(currentStepAtom);
@@ -26,7 +26,7 @@ export default function SignUp() {
   const methods = useForm({
     mode: 'onSubmit',
     defaultValues: defaultSignUpFormValues,
-    // resolver: zodResolver(SignUpFormSchema),
+    resolver: zodResolver(SignUpFormSchema),
   });
 
   const {
@@ -34,13 +34,13 @@ export default function SignUp() {
     control,
     register,
     formState: { errors },
-    // watch,
-    // trigger,
+    setError,
+    clearErrors,
   } = methods;
 
   const watchedRole = useWatch({ control, name: 'role' });
-  const watchedCampus = useWatch({ control, name: 'campus' });
-  // const watchedCourseId = useWatch({ control, name: 'course' });
+  const watchedCampusList = useWatch({ control, name: 'campusList' });
+  // const watchedCourseId = useWatch({ control, name: 'courseList' });
   const watchedVerifyCode = useWatch({ control, name: 'verifyCode' });
 
   const {
@@ -53,7 +53,7 @@ export default function SignUp() {
     isLoading,
     questionListByRole,
     getQuestionNumber,
-  } = useHandleSignUp({ watchedCampus, watchedRole });
+  } = useHandleSignUp({ watchedCampusList, watchedRole });
 
   if (isLoading) return null;
 
@@ -120,28 +120,34 @@ export default function SignUp() {
                             />
                           )}
 
-                          {'campusId' in question && campusList && (
+                          {'campusList' in question && campusList && (
                             <Controller
                               control={control}
-                              name="campus"
+                              name="campusList"
                               render={({ field: { onChange, value } }) => {
                                 return (
-                                  <SingleSelectDropdown
-                                    defaultLabel="소속 캠퍼스"
+                                  <MultiSelectDropdown
+                                    defaultLabel="캠퍼스"
                                     options={campusList}
-                                    selectedOption={value[0]}
-                                    onChangeValue={onChange}
-                                    errorMsg={errors.campus?.message}
+                                    initialSelectedOptions={value}
+                                    onChangeValue={data => {
+                                      if (errors.courseList?.message) {
+                                        clearErrors('courseList');
+                                      }
+                                      onChange(data);
+                                    }}
+                                    errorMsg={errors.campusList?.message}
+                                    selectBoxClassName="!h-[50px] !text-base"
                                   />
                                 );
                               }}
                             />
                           )}
 
-                          {'courseId' in question && (
+                          {'courseList' in question && (
                             <Controller
                               control={control}
-                              name="course"
+                              name="courseList"
                               render={({ field: { onChange, value } }) => {
                                 const options = courseList?.length
                                   ? courseList?.map(({ id, title }) => {
@@ -151,29 +157,32 @@ export default function SignUp() {
 
                                 return (
                                   <SingleSelectDropdown
-                                    defaultLabel="소속 교육과정"
+                                    defaultLabel="교육과정"
                                     options={options}
                                     selectedOption={value?.[0]}
                                     onChangeValue={onChange}
-                                    errorMsg={errors.campus?.message}
+                                    errorMsg={errors.courseList?.message}
+                                    selectBoxClassName="!h-[50px] !text-base"
+                                    onSelectBoxClick={async () => {
+                                      if (!watchedCampusList.length) {
+                                        setError('courseList', {
+                                          type: 'manual',
+                                          message:
+                                            '먼저 캠퍼스를 선택해주세요.',
+                                        });
+                                      }
+                                    }}
                                   />
-                                  //   onSelectBoxClick={() => {
-                                  //     if (!watchedCampusId) {
-                                  //       trigger('campusId');
-                                  //       return true;
-                                  //     }
-                                  //     return false;
-                                  //   }}
                                 );
                               }}
                             />
                           )}
 
-                          {'techStackIdList' in question && techStackList && (
+                          {'techStackList' in question && techStackList && (
                             <div className="relative">
                               <Controller
                                 control={control}
-                                name="techStackIdList"
+                                name="techStackList"
                                 render={({ field: { onChange } }) => {
                                   return (
                                     <TechStackDropdown
@@ -187,6 +196,7 @@ export default function SignUp() {
                                         onChange(newData);
                                       }}
                                       isMarkTechStackList
+                                      selectBoxClassName="!h-[50px] !text-base"
                                     />
                                   );
                                 }}
@@ -194,21 +204,21 @@ export default function SignUp() {
                             </div>
                           )}
 
-                          {'jobIdList' in question && jobList && (
+                          {'jobList' in question && jobList && (
                             <MultiSelectList
                               list={jobList}
                               selectLimit={5}
-                              name="jobIdList"
-                              errorMsg={errors.jobIdList?.message}
+                              name="jobList"
+                              errorMsg={errors.jobList?.message}
                             />
                           )}
 
-                          {'domainIdList' in question && domainList && (
+                          {'domainList' in question && domainList && (
                             <MultiSelectList
                               list={domainList}
                               selectLimit={3}
-                              name="domainIdList"
-                              errorMsg={errors.domainIdList?.message}
+                              name="domainList"
+                              errorMsg={errors.domainList?.message}
                             />
                           )}
 

@@ -22,7 +22,8 @@ interface SelectBoxPropsBase {
   defaultLabel: string;
   children: React.ReactNode;
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
+  onSelectBoxClick: () => void;
   errorMsg?: string;
   className?: string;
   boxShape?: SelectBoxShape;
@@ -36,7 +37,8 @@ type SelectBoxProps<T> = SelectBoxPropsBase & T;
  * @param defaultLabel - 드롭다운이 선택되지 않았을 때 버튼에 표시될 기본 레이블입니다. 기본값은 빈 문자열입니다.
  * @param children - Select의 Options을 표시합니다.
  * @param open - 현재 드롭다운의 개폐 상태값입니다.
- * @param setOpen - 드롭다운을 열고 닫기 위한 상태 변경 함수입니다.
+ * @param onClose - 드롭다운을 열고 닫기 위한 상태 변경 함수입니다.
+ * @param onSelectBoxClick - 만약 드롭다운을 열고 닫는 것 이외에도 다른 로직의 함수가 필요하다면 이 props를 이용합니다.
  * @param errorMsg - 폼에 대한 에러메세지. 에러 메세지가 있을경우 에러메세지가 버튼 하단에 표시됩니다.
  * @param className - SelectBox의 스타일을 커스텀할 수 있습니다.
  *
@@ -53,7 +55,8 @@ export default function SelectBox<
 >({
   defaultLabel,
   open,
-  setOpen,
+  onClose,
+  onSelectBoxClick,
   className,
   children,
   errorMsg,
@@ -80,10 +83,6 @@ export default function SelectBox<
     [],
   );
 
-  const onToggleClick = () => setOpen(prev => !prev);
-
-  const onClose = () => setOpen(false);
-
   const styleByBoxShape = {
     inputShape: `w-full gap-5 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg ${boxShape === 'buttonShape' && 'text-gray1'}`,
     buttonShape:
@@ -97,7 +96,7 @@ export default function SelectBox<
       <div className="relative">
         <button
           type="button"
-          onClick={onToggleClick}
+          onClick={onSelectBoxClick}
           className={`relative flex items-center [&>svg]:size-5 [&>svg]:text-gray1 ${selectBoxStyle} ${errorMsg && 'border-red-500'} ${className}`}
         >
           {isSingleSelect(rest) && (

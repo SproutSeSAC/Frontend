@@ -23,19 +23,6 @@ export type UserInfo = {
   campusId?: number | undefined;
 };
 
-export type SignUpFormValue = {
-  role: KeyOfRole;
-  name: string;
-  nickname: string;
-  jobIdList: Job[];
-  domainIdList: Domain[];
-  techStackIdList: TechStack[];
-  marketingConsent: '동의' | '동의하지 않음';
-  course?: { id: number; name: string }[];
-  campus: { id: number; name: string }[];
-  verifyCode: string;
-};
-
 export type Domain = { id: number; domain: string };
 
 export type Job = { id: number; job: string };

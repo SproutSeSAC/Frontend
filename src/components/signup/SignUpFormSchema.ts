@@ -23,37 +23,35 @@ export const SignUpFormSchema = z.object({
     .regex(/^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]+$/, '국문, 영문, 숫자만 입력 가능합니다.')
     .max(20, '닉네임은 20자 이내로 입력해주세요.'),
 
-  verifyCode: z.string().min(1, '인증코드를 입력해주세요.'),
+  campusList: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+      }),
+    )
+    .min(1, '캠퍼스를 선택해주세요.'),
 
-  jobIdList: z //
+  courseList: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+      }),
+    )
+    .min(1, '교육과정을 선택해주세요.'),
+
+  jobList: z //
     .array(z.any())
     .min(1, '최소 하나의 직무를 선택해야 합니다.'),
 
-  techStackIdList: z
+  techStackList: z
     .array(z.any())
     .min(1, '최소 하나의 기술 스택을 선택해야 합니다.'),
 
-  domainIdList: z
-    .array(z.any())
-    .min(1, '최소 하나의 도메인을 선택해야 합니다.'),
+  domainList: z.array(z.any()).min(1, '최소 하나의 도메인을 선택해야 합니다.'),
 
-  campusId: z
-    .union([
-      z.number().min(1, '캠퍼스 ID는 1 이상의 숫자여야 합니다.'),
-      z.undefined(),
-    ])
-    .refine(value => value !== undefined, {
-      message: '캠퍼스를 선택해주세요.',
-    }),
-
-  courseId: z
-    .union([
-      z.number().min(1, '교육과정 ID는 1 이상의 숫자여야 합니다.'),
-      z.undefined(),
-    ])
-    .refine(value => value !== undefined, {
-      message: '교육과정을 선택해주세요.',
-    }),
+  verifyCode: z.string().min(1, '인증코드를 입력해주세요.'),
 
   role: z
     .enum([
