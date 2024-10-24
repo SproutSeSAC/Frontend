@@ -11,7 +11,7 @@ import Modal from '@/components/common/modal/Modal';
 
 export default function MembershipLeaveModal() {
   const [isActive, setIsActive] = useState(false);
-  const { hideDialog } = useDialogContext();
+  const { hideDialog, alert } = useDialogContext();
 
   const [textForLeave, setTextForLeave] = useState('');
 
@@ -28,7 +28,28 @@ export default function MembershipLeaveModal() {
     event.preventDefault();
 
     // 백엔드와 협의후 변경 예정.
-    // leaveMemberShip();
+    // Todo: leaveMemberShip();
+    // Todo: 탈퇴 이메일 전송 로직
+
+    await hideDialog();
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: '탈퇴 이메일이 발송되었습니다!',
+      children: (
+        <div className="mt-4 flex w-60 flex-col items-center">
+          <p className="text-center text-sm text-gray1">
+            {userProfile?.email}로 발송된 탈퇴 확인 메일을 확인해주세요
+          </p>
+          <SquareButton
+            name="나가기"
+            onClick={hideDialog}
+            type="button"
+            className="mt-5"
+          />
+        </div>
+      ),
+    });
   };
 
   if (isUserProfileLoading) return null;
@@ -38,7 +59,7 @@ export default function MembershipLeaveModal() {
       title="회원탈퇴"
       onToggleClick={hideDialog}
       headerType="squareBackBtn-title"
-      className="!max-h-[90vh] max-w-[430px] p-4"
+      className="!max-h-[90vh] max-w-[430px] p-6"
     >
       <p className="mt-5 text-lg font-semibold leading-6">
         {userProfile?.name} 스프님
@@ -87,7 +108,7 @@ export default function MembershipLeaveModal() {
           <SquareButton
             type="submit"
             name="탈퇴하기"
-            className={`w-full py-3 text-lg font-semibold ${isActive ? 'bg-oliveGreen1' : 'bg-gray1'}`}
+            className={`w-full py-3 text-lg font-semibold ${isActive ? '!bg-oliveGreen1' : '!bg-gray1'}`}
             disabled={!isActive}
           />
         </div>
