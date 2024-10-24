@@ -2,11 +2,15 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosCalendarInstance } from '@/services/axiosInstance';
 
-export const useCreateCalendar = (options?: UseMutationOptions) => {
+export const useCreateCalendar = (
+  summary: string,
+  emails: { CAMPUS_MANAGER: string; JOB_COORDINATOR: string },
+  options?: UseMutationOptions,
+) => {
   const createAndShareCalendar = async () => {
     try {
       const calendarData = {
-        summary: '새싹 캘린더',
+        summary,
         timeZone: 'Asia/Seoul',
         description: '',
       };
@@ -15,16 +19,49 @@ export const useCreateCalendar = (options?: UseMutationOptions) => {
         '/calendars',
         calendarData,
       );
+
       const calendarId = calendarCreateResponse.data.id;
 
-      const aclRule = {
+      const publicAclRule = {
         role: 'reader',
         scope: {
           type: 'default',
         },
       };
-      await axiosCalendarInstance.post(`/calendars/${calendarId}/acl`, aclRule);
-      window.location.reload();
+
+      const campusManagerAclData = {
+        role: 'owner',
+        scope: {
+          type: 'user',
+          value: emails.CAMPUS_MANAGER,
+        },
+      };
+
+      const jobCoordinatorAclData = {
+        role: 'owner',
+        scope: {
+          type: 'user',
+          value: emails.JOB_COORDINATOR,
+        },
+      };
+
+      await axiosCalendarInstance.post(
+        `/calendars/${calendarId}/acl`,
+        publicAclRule,
+      );
+      console.log('캘린더 공개 설정 완료');
+
+      await axiosCalendarInstance.post(
+        `/calendars/${calendarId}/acl`,
+        campusManagerAclData,
+      );
+      console.log('캠퍼스 매니저 소유권 부여 완료');
+
+      await axiosCalendarInstance.post(
+        `/calendars/${calendarId}/acl`,
+        jobCoordinatorAclData,
+      );
+      console.log('잡코디 소유권 부여 완료');
     } catch (error) {
       console.error('캘린더 생성 또는 공개 설정 중 오류 발생', error);
     }

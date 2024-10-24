@@ -40,7 +40,7 @@ export default function SignUp() {
 
   const watchedRole = useWatch({ control, name: 'role' });
   const watchedCampus = useWatch({ control, name: 'campus' });
-  // const watchedCourseId = useWatch({ control, name: 'course' });
+  // const watchedCourse = useWatch({ control, name: 'course' });
   const watchedVerifyCode = useWatch({ control, name: 'verifyCode' });
 
   const {

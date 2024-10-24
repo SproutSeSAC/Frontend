@@ -1,7 +1,8 @@
 import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
-import { axiosCalendarInstance } from '@/services/axiosInstance';
+import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
+import { KeyOfRole } from '@/types';
 import { CalendarList, CalenderEvents } from '@/types/calendarDto';
 import { AxiosResponse } from 'axios';
 
@@ -59,5 +60,43 @@ export const useGetEventsByCalendar = (
         ...options,
       };
     }),
+  });
+};
+
+export const useGetAdminEmailByCourse = (
+  roleType: KeyOfRole,
+  options?: UseQueryOptions<CalenderEvents>,
+) => {
+  const getAdminEmailByCourse = async () => {
+    const res: AxiosResponse<CalenderEvents> = await axiosInstance.get(
+      `/user/calendar/${roleType}`,
+    );
+    return res.data;
+  };
+
+  return useQuery({
+    queryKey: ['adminEmail', roleType],
+    queryFn: getAdminEmailByCourse,
+    enabled: !!roleType,
+    ...options,
+  });
+};
+
+export const useGetCalendarIdByCourse = (
+  roleType: KeyOfRole,
+  options?: UseQueryOptions<CalenderEvents>,
+) => {
+  const getAdminEmailByCourse = async () => {
+    const res: AxiosResponse<CalenderEvents> = await axiosInstance.get(
+      `/user/calendar/${roleType}`,
+    );
+    return res.data;
+  };
+
+  return useQuery({
+    queryKey: ['adminEmail', roleType],
+    queryFn: getAdminEmailByCourse,
+    enabled: !!roleType,
+    ...options,
   });
 };

@@ -8,7 +8,8 @@ import Calendar from '@/components/schedule/Calendar';
 import CalendarCheckBoxList from '@/components/schedule/CalendarCheckBoxList';
 
 export default function Schedule() {
-  const { data: userProfile } = useGetUserProfile();
+  const { data: userProfile, isLoading: isUserProfileLoading } =
+    useGetUserProfile();
 
   const {
     calendarListByType,
@@ -16,7 +17,7 @@ export default function Schedule() {
     isCalendarListLoading, //
   } = useCalendarData();
 
-  if (isCalendarListLoading) return null;
+  if (isUserProfileLoading || isCalendarListLoading) return null;
 
   return (
     <MainView>
@@ -28,10 +29,10 @@ export default function Schedule() {
         <div className="flex max-w-[265px] flex-col gap-4">
           <Calendar type="small" events={fullCalendarEvents} />
 
-          {calendarListByType && (
+          {calendarListByType && userProfile && (
             <CalendarCheckBoxList
               calendarListByType={calendarListByType}
-              userRole="TRAINEE"
+              userRole={userProfile.role}
             />
           )}
         </div>

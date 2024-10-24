@@ -1,8 +1,9 @@
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
+import { useGetAdminEmailByCourse } from '@/services/schedule/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { AdminCalendarLabel, adminCalendarListLabel } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { KeyOfRole } from '@/types';
 import { Calendar } from '@/types/calendarDto';
@@ -20,6 +21,7 @@ type CalendarListByLabel = {
   label: CalendarListLabel;
   calendarList: Calendar[];
 };
+
 interface CalendarCheckBoxListProps {
   userRole: KeyOfRole;
   calendarListByType: {
@@ -36,43 +38,38 @@ export default function CalendarCheckBoxList({
 
   const { myCalendarList, subscribeCalendarList } = calendarListByType;
 
-  const { mutate } = useCreateCalendar();
+  const { data: userProfile } = useGetUserProfile();
+
+  const { data } = useGetAdminEmailByCourse('JOB_COORDINATOR');
+  console.log(data);
+  const { mutate } = useCreateCalendar('df', {
+    CAMPUS_MANAGER: '',
+    JOB_COORDINATOR: '',
+  });
 
   const { alert, hideDialog } = useDialogContext();
 
-  /* 학생들의 구독 버튼 */
-  const onConfirmSubscribeClick = () => {
-    window.open('', '_blank'); // 공유 캘린더 링크 넣기
-    hideDialog();
-  };
-
-  /* 매니저의 캘린더 생성 버튼 */
-  const onConfirmCreateClick = () => {
-    mutate();
-    hideDialog();
-  };
-
-  const onAdminCalendarClick = (label: AdminCalendarLabel) => {
-    const adminRole =
-      userRole === 'CAMPUS_MANAGER' || userRole === 'EDU_MANAGER';
+  // '교육매니저'만 공유 캘린더 생성 가능
+  const onEduManagerCalendarClick = () => {
+    const onConfirmCreateClick = () => {
+      mutate();
+      hideDialog();
+    };
 
     alert({
       showDim: true,
       className: 'z-30',
-      text: adminRole ? '공유 캘린더 생성' : `${label} 구독`,
-      subText: adminRole
-        ? '캘린더를 생성하시겠어요?'
-        : '위의 캘린더를 구독하시겠어요?',
-      children: adminRole ? (
-        <div className="flex w-full flex-col">
+      text: `${userProfile?.courseTitle} 공유 캘린더`,
+      subText: '위 캘린더를 생성하시겠어요?',
+      children: (
+        <div className="flex max-w-60 flex-col">
           <Title
             as="p"
-            highlight={label}
-            title={`${label}를 생성하시겠어요?`}
-            className="pt-2 text-gray1"
+            highlight="캠퍼스 매니저와 잡코디, 관리자"
+            title="캠퍼스 매니저와 잡코디, 관리자가 함께 소유하는 캘린더가 생성됩니다."
+            className="mt-2 px-2 text-center leading-6"
           />
-
-          <div className="flex w-full items-center justify-center gap-2">
+          <div className="flex justify-center gap-2">
             <SquareButton
               name="취소"
               onClick={hideDialog}
@@ -88,22 +85,45 @@ export default function CalendarCheckBoxList({
             />
           </div>
         </div>
-      ) : (
-        <>
-          <SquareButton
-            name="취소"
-            onClick={hideDialog}
-            type="button"
-            color="gray"
-            className="mt-5"
+      ),
+    });
+  };
+
+  const onTraineeCalendarClick = () => {
+    const onConfirmSubscribeClick = () => {
+      window.open('', '_blank'); // 공유 캘린더 링크 넣기
+      hideDialog();
+    };
+
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: `${userProfile?.courseTitle} 캘린더`,
+      subText: `위 캘린더를 구독하시겠어요? `,
+      children: (
+        <div className="flex max-w-60 flex-col">
+          <Title
+            as="p"
+            highlight={userProfile?.courseTitle}
+            title={`${userProfile?.courseTitle}에 관련된 일정들을 확인할 수 있습니다.`}
+            className="mt-2 px-2 text-center leading-6"
           />
-          <SquareButton
-            name="구독"
-            onClick={onConfirmSubscribeClick}
-            type="button"
-            className="mt-5"
-          />
-        </>
+          <div className="flex justify-center gap-2">
+            <SquareButton
+              name="취소"
+              onClick={hideDialog}
+              type="button"
+              color="gray"
+              className="mt-5"
+            />
+            <SquareButton
+              name="구독"
+              onClick={onConfirmSubscribeClick}
+              type="button"
+              className="mt-5"
+            />
+          </div>
+        </div>
       ),
     });
   };
@@ -133,60 +153,71 @@ export default function CalendarCheckBoxList({
   return (
     <div className="h-full flex-1 rounded-xl bg-white shadow-card">
       <ul className="px-5 pb-0 pt-5">
-        {calendarListByLabel.map(({ label, calendarList }) => (
-          <Accordion
-            key={label}
-            title={label}
-            titleClassName="text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
-            className="mb-3"
-            initialOpen={
-              userRole === 'TRAINEE'
-                ? label === '구독중인 캘린더'
-                : label === '나의 캘린더'
-            }
-          >
-            <ul className="mb-4 flex flex-col gap-2">
-              {userRole === 'TRAINEE' &&
-                label === '구독중인 캘린더' &&
-                adminCalendarListLabel.map(adminLabel => (
+        {calendarListByLabel.map(({ label, calendarList }) =>
+          userRole === 'TRAINEE' ? (
+            <Accordion
+              key={label}
+              title={label}
+              titleClassName="text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
+              className="mb-3"
+              initialOpen={label === '구독중인 캘린더'}
+            >
+              <ul className="mb-4 flex flex-col gap-2">
+                {label === '구독중인 캘린더' && (
                   <AddSubscribeCalenderButton
-                    key={adminLabel}
-                    name={adminLabel}
-                    label={adminLabel}
-                    onAdminCalendarClick={onAdminCalendarClick}
-                  />
-                ))}
-
-              {label === '나의 캘린더' &&
-                (userRole === 'EDU_MANAGER' ||
-                  userRole === 'CAMPUS_MANAGER') && (
-                  <AddSubscribeCalenderButton
-                    name="새싹 캘린더 생성하기"
-                    label={
-                      userRole === 'EDU_MANAGER'
-                        ? '교육 매니저의 새싹 캘린더'
-                        : '캠퍼스 매니저의 새싹 캘린더'
-                    }
-                    onAdminCalendarClick={onAdminCalendarClick}
+                    name={`${userProfile?.courseTitle} 캘린더 구독하기`}
+                    onAdminCalendarClick={onTraineeCalendarClick}
                   />
                 )}
 
-              {calendarList?.map(
-                ({ id, summary, backgroundColor, primary }) => (
-                  <Checkbox
-                    key={id}
-                    id={id}
-                    text={primary ? '기본 캘린더' : summary}
-                    checked={!!currentCalendarIds?.includes(id)}
-                    onChange={() => onCheckBoxChange(id)}
-                    textClassName="!text-text"
-                    checkBoxColor={backgroundColor}
+                {calendarList?.map(
+                  ({ id, summary, backgroundColor, primary }) => (
+                    <Checkbox
+                      key={id}
+                      id={id}
+                      text={primary ? '기본 캘린더' : summary}
+                      checked={!!currentCalendarIds?.includes(id)}
+                      onChange={() => onCheckBoxChange(id)}
+                      textClassName="!text-text"
+                      checkBoxColor={backgroundColor}
+                    />
+                  ),
+                )}
+              </ul>
+            </Accordion>
+          ) : (
+            <Accordion
+              key={label}
+              title={label}
+              titleClassName="text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
+              className="mb-3"
+              initialOpen={label === '나의 캘린더'}
+            >
+              <ul className="mb-4 flex flex-col gap-2">
+                {label === '나의 캘린더' && userRole === 'EDU_MANAGER' && (
+                  <AddSubscribeCalenderButton
+                    name={`${userProfile?.courseTitle} 캘린더 생성하기`}
+                    onAdminCalendarClick={onEduManagerCalendarClick}
                   />
-                ),
-              )}
-            </ul>
-          </Accordion>
-        ))}
+                )}
+
+                {calendarList?.map(
+                  ({ id, summary, backgroundColor, primary }) => (
+                    <Checkbox
+                      key={id}
+                      id={id}
+                      text={primary ? '기본 캘린더' : summary}
+                      checked={!!currentCalendarIds?.includes(id)}
+                      onChange={() => onCheckBoxChange(id)}
+                      textClassName="!text-text"
+                      checkBoxColor={backgroundColor}
+                    />
+                  ),
+                )}
+              </ul>
+            </Accordion>
+          ),
+        )}
       </ul>
     </div>
   );
