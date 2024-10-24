@@ -43,7 +43,11 @@ export default function Checkbox({
       {text && (
         <span className={`mr-1 text-[#646567] ${textClassName}`}>{text}</span>
       )}
-      {count && <span className="text-[#989B9E]">({count})</span>}
+      {count !== undefined && count !== null && (
+        <span className={`text-[#989B9E] ${textClassName}`}>
+          ({count ?? 0})
+        </span>
+      )}
     </label>
   );
 }

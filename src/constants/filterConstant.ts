@@ -1,57 +1,5 @@
 // 포지션
-// TODO : api spec 나오면 타입지정 필요.
-export const POSITION_FRONTEND = 'FRONTEND';
-export const POSITION_BACKEND = 'BACKEND';
-export const POSITION_데이터분석가 = '데이터분석가';
-export const POSITION_데이터엔지니어 = '데이터엔지니어';
-export const POSITION_AI엔지니어 = 'AI엔지니어';
-export const POSITION_안드로이드개발자 = '안드로이드개발자';
-export const POSITION_IOS개발자 = 'iOS개발자';
-export const POSITION_유니티개발자 = '유니티개발자';
-export const POSITION_UIUX디자이너 = 'UI/UX디자이너';
-export const POSITION_일러스트레이터 = '일러스트레이터';
-export const POSITION_PMPO = 'PM/PO';
-export const POSITION_서비스기획자 = '서비스기획자';
-export const POSITION_게임기획자 = '게임기획자';
-export const POSITION_콘텐츠마케터 = '콘텐츠마케터';
-export const POSITION_브랜드마케터 = '브랜드마케터';
-export const POSITION_디지털마케터 = '디지털마케터';
-export type Position =
-  | typeof POSITION_FRONTEND
-  | typeof POSITION_BACKEND
-  | typeof POSITION_데이터분석가
-  | typeof POSITION_데이터엔지니어
-  | typeof POSITION_AI엔지니어
-  | typeof POSITION_안드로이드개발자
-  | typeof POSITION_IOS개발자
-  | typeof POSITION_유니티개발자
-  | typeof POSITION_UIUX디자이너
-  | typeof POSITION_일러스트레이터
-  | typeof POSITION_PMPO
-  | typeof POSITION_서비스기획자
-  | typeof POSITION_게임기획자
-  | typeof POSITION_콘텐츠마케터
-  | typeof POSITION_브랜드마케터
-  | typeof POSITION_디지털마케터;
-export const positionList: Array<{ key: Position; name: string; id: number }> =
-  [
-    { key: POSITION_FRONTEND, id: 1, name: '프론트엔드' },
-    { key: POSITION_BACKEND, id: 2, name: '백엔드' },
-    { key: POSITION_데이터분석가, id: 3, name: '데이터분석가' },
-    { key: POSITION_데이터엔지니어, id: 4, name: '데이터엔지니어' },
-    { key: POSITION_AI엔지니어, id: 5, name: 'AI엔지니어' },
-    { key: POSITION_안드로이드개발자, id: 6, name: '안드로이드개발자' },
-    { key: POSITION_IOS개발자, id: 7, name: 'iOS개발자' },
-    { key: POSITION_유니티개발자, id: 8, name: '유니티개발자' },
-    { key: POSITION_UIUX디자이너, id: 9, name: 'UI/UX디자이너' },
-    { key: POSITION_일러스트레이터, id: 10, name: '일러스트레이터' },
-    { key: POSITION_PMPO, id: 11, name: 'PM/PO' },
-    { key: POSITION_서비스기획자, id: 12, name: '서비스기획자' },
-    { key: POSITION_게임기획자, id: 13, name: '게임기획자' },
-    { key: POSITION_콘텐츠마케터, id: 14, name: '콘텐츠마케터' },
-    { key: POSITION_브랜드마케터, id: 15, name: '브랜드마케터' },
-    { key: POSITION_디지털마케터, id: 16, name: '디지털마케터' },
-  ];
+import { GetFilterCountResponse } from '@/types/store/storeDto';
 
 // 진행방식
 export const PROGRESS_ONLINE = 'ONLINE';
@@ -122,7 +70,6 @@ export const contactMethodDisplay: { [key in ContactMethodType]: string } = {
 };
 
 // food type filter
-
 export const FOOD_FILTER_KOREAN = 'KOREAN';
 export const FOOD_FILTER_CHINESE = 'CHINESE';
 export const FOOD_FILTER_JAPANESE = 'JAPANESE';
@@ -140,25 +87,77 @@ export type FoodFilterType =
   | typeof FOOD_FILTER_SNACK
   | typeof FOOD_FILTER_CAFE;
 
+export const foodFilterDisplay: { [key in FoodFilterType]: string } = {
+  KOREAN: '한식',
+  WESTERN: '양식',
+  CHINESE: '중식',
+  JAPANESE: '일식',
+  ASIAN: '아시아',
+  SNACK: '분식',
+  CAFE: '카페',
+};
+
 export const foodFilterList: Array<{
   key: string;
   value: FoodFilterType;
+  countKey: keyof Pick<
+    GetFilterCountResponse,
+    | 'koreanFoodCount'
+    | 'westernFoodCount'
+    | 'chineseFoodCount'
+    | 'japanesesFoodCount'
+    | 'asianFoodCount'
+    | 'snackCount'
+    | 'cafeCount'
+  >;
 }> = [
-  { key: '한식', value: FOOD_FILTER_KOREAN },
-  { key: '양식', value: FOOD_FILTER_WESTERN },
-  { key: '중식', value: FOOD_FILTER_CHINESE },
-  { key: '일식', value: FOOD_FILTER_JAPANESE },
-  { key: '아시아', value: FOOD_FILTER_ASIAN },
-  { key: '분식', value: FOOD_FILTER_SNACK },
-  { key: '카페', value: FOOD_FILTER_CAFE },
+  { key: '한식', value: FOOD_FILTER_KOREAN, countKey: 'koreanFoodCount' },
+  { key: '양식', value: FOOD_FILTER_WESTERN, countKey: 'westernFoodCount' },
+  { key: '중식', value: FOOD_FILTER_CHINESE, countKey: 'chineseFoodCount' },
+  { key: '일식', value: FOOD_FILTER_JAPANESE, countKey: 'japanesesFoodCount' },
+  { key: '아시아', value: FOOD_FILTER_ASIAN, countKey: 'asianFoodCount' },
+  { key: '분식', value: FOOD_FILTER_SNACK, countKey: 'snackCount' },
+  { key: '카페', value: FOOD_FILTER_CAFE, countKey: 'cafeCount' },
 ];
 
-// export const foodFilterDisplay: { [key in FoodFilterType]: string } = {
-//   KOREAN: '한식',
-//   CHINESE: '중식',
-//   JAPANESE: '일식',
-//   WESTERN: '양식',
-//   ASIAN: '아시아',
-//   SNACK: '분식',
-//   CAFE: '카페',
-// };
+// store main filter
+export const STORE_MAIN_FILTER_ZERO_PAY = 'isZeropay';
+export const STORE_MAIN_FILTER_UNDER_PRICE = 'underPrice';
+export const STORE_MAIN_FILTER_OVER_FIVE_PERSON = 'overFivePerson';
+export const STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES =
+  'walkTimeWithinFiveMinutes';
+export type StoreMainFilterType =
+  | typeof STORE_MAIN_FILTER_ZERO_PAY
+  | typeof STORE_MAIN_FILTER_UNDER_PRICE
+  | typeof STORE_MAIN_FILTER_OVER_FIVE_PERSON
+  | typeof STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES;
+
+export const storeMainFilterList: Array<{
+  key: string;
+  value: StoreMainFilterType;
+  countKey: keyof Pick<
+    GetFilterCountResponse,
+    'overPersonCount' | 'underPriceCount' | 'walkTimeCount' | 'zeropayCount'
+  >;
+}> = [
+  {
+    key: '제로페이',
+    value: STORE_MAIN_FILTER_ZERO_PAY,
+    countKey: 'zeropayCount',
+  },
+  {
+    key: '만원이하',
+    value: STORE_MAIN_FILTER_UNDER_PRICE,
+    countKey: 'underPriceCount',
+  },
+  {
+    key: '5인 이상',
+    value: STORE_MAIN_FILTER_OVER_FIVE_PERSON,
+    countKey: 'overPersonCount',
+  },
+  {
+    key: '도보 5분 이내',
+    value: STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES,
+    countKey: 'walkTimeCount',
+  },
+];

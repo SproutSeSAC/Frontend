@@ -62,7 +62,7 @@ export default function LoungeTabNavigation() {
           <SquareButton
             color="gray"
             name="계속 작성하기"
-            onClick={hideDialog}
+            onClick={() => hideDialog()}
             type="button"
             className="mt-6"
           />

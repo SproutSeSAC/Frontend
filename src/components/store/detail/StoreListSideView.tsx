@@ -1,5 +1,5 @@
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
-import StoreListSlider from '@/components/store/StoreListSlider';
+import StoreListSlider from '@/components/store/detail/StoreListSlider';
 
 interface StoreListSideViewProps {
   sideViewOpen: boolean;
@@ -12,7 +12,7 @@ export default function StoreListSideView({
 }: StoreListSideViewProps) {
   const headerContent = <span className="text-[27px]">식당 리스트</span>;
 
-  const mainContent = <StoreListSlider />;
+  const mainContent = <StoreListSlider sideViewOpen={sideViewOpen} />;
 
   return (
     <CollapsibleSideView

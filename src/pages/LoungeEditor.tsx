@@ -118,7 +118,7 @@ export default function LoungeEditor() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { hideDialog, alert } = useDialogContext();
+  const { hideDialog, showToast, alert } = useDialogContext();
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -163,41 +163,14 @@ export default function LoungeEditor() {
 
     try {
       await mutateAsync(params);
-      alert({
-        showDim: true,
-        className: 'z-30',
-        text: '프로젝트를 등록했습니다.',
-        children: (
-          <SquareButton
-            name="닫기"
-            onClick={() => {
-              hideDialog();
-              queryClient.invalidateQueries({
-                queryKey: ['useGetLoungeProjects', {}],
-              });
-              navigate('/lounge');
-            }}
-            type="button"
-            className="mt-6 w-[137px]"
-          />
-        ),
+      showToast('프로젝트를 등록했습니다.');
+      queryClient.invalidateQueries({
+        queryKey: ['useGetLoungeProjects', {}],
       });
+      navigate('/lounge');
     } catch (err) {
       console.error(err);
-
-      alert({
-        showDim: true,
-        className: 'z-30',
-        text: '프로젝트 등록을 실패했습니다.',
-        children: (
-          <SquareButton
-            name="닫기"
-            onClick={hideDialog}
-            type="button"
-            className="mt-6 w-[137px]"
-          />
-        ),
-      });
+      showToast('프로젝트 등록을 실패했습니다.');
     }
   };
 
@@ -208,23 +181,12 @@ export default function LoungeEditor() {
         error: err,
       });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
+
       if (firstErrorMessage) {
-        alert({
-          showDim: true,
-          className: 'z-30',
-          text: firstErrorMessage,
-          children: (
-            <SquareButton
-              name="닫기"
-              onClick={hideDialog}
-              type="button"
-              className="mt-6 w-[137px]"
-            />
-          ),
-        });
+        showToast(firstErrorMessage);
       }
     },
-    [alert, hideDialog, methods],
+    [methods, showToast],
   );
 
   const recruitmentCountList = useMemo(() => {

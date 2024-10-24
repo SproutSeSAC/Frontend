@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 
+import Toast from '../common/Toast';
 import Alert, { AlertProps } from '../common/modal/Alert';
 
 interface Dialog {
@@ -20,12 +21,19 @@ interface DialogContextProviderProps {
 
 interface AlertType extends AlertProps {
   showDim?: boolean;
+  key?: string;
+}
+interface ToastType {
+  id: number;
+  message: string;
+  onClose: (id: number) => void;
 }
 
 interface DialogContextProviderActions {
   showDialog: (result: { key: string; element: ReactNode }) => Promise<void>;
   hideDialog: (key?: string) => Promise<void>;
   alert: (args: AlertType) => Promise<void>;
+  showToast: (message: string, autoCloseDuration?: number) => void;
 }
 
 /**
@@ -40,6 +48,9 @@ interface DialogContextProviderActions {
  * @param alert - Alert 컴포넌트를 사용해 간편하게 alert 창을 띄우는 함수입니다.
  *                AlertProps를 전달하여 커스터마이징이 가능하며, showDim를 true로 줄 경우 백그라운드 딤처리 됩니다.
  *                'alert' 키를 사용해 Alert 컴포넌트를 Dialog로 렌더링합니다.
+ * @param showToast - Toast 컴포넌트를 사용하여 메시지를 표시하는 함수입니다.
+ *                    첫 번째 인자는 노출할 메시지이며, 두 번째 인자는
+ *                    토스트를 몇 초 동안 표시할지를 결정합니다.
  */
 
 export const DialogContext = createContext<DialogContextProviderActions>(
@@ -50,18 +61,20 @@ export default function DialogContextProvider({
   children,
 }: DialogContextProviderProps) {
   const [dialogs, setDialogs] = useState<Dialog[]>([]);
+  const [toasts, setToasts] = useState<ToastType[]>([]);
 
   // Dialog 추가하는 함수
   const showDialog = useCallback(
     (result: { key: string; element: ReactNode }): Promise<void> => {
       return new Promise(resolve => {
-        const newDialog: Dialog = {
-          key: result.key,
-          element: result.element,
-          visible: true,
-        };
-
-        setDialogs(prevDialogs => [...prevDialogs, newDialog]);
+        setDialogs(prevDialogs => {
+          const newDialog: Dialog = {
+            key: result.key,
+            element: result.element,
+            visible: true,
+          };
+          return [...prevDialogs, newDialog];
+        });
         resolve();
       });
     },
@@ -72,7 +85,7 @@ export default function DialogContextProvider({
   const hideDialog = useCallback(async (key?: string): Promise<void> => {
     setDialogs(prevDialogs => {
       if (key) {
-        prevDialogs.map(dialog =>
+        return prevDialogs.map(dialog =>
           dialog.key === key ? { ...dialog, visible: false } : dialog,
         );
       }
@@ -84,7 +97,7 @@ export default function DialogContextProvider({
   const alert = useCallback(
     async (args: AlertType): Promise<void> => {
       await showDialog({
-        key: 'alert',
+        key: args.key || 'alert',
         element: (
           <>
             <Alert {...args} />
@@ -109,13 +122,25 @@ export default function DialogContextProvider({
     [hideDialog, showDialog],
   );
 
+  const removeToast = (id: number) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+
+  const showToast = useCallback((message: string, autoCloseDuration = 3000) => {
+    const newToast = { id: Date.now(), message, onClose: removeToast };
+    setToasts(prev => [...prev, newToast]);
+
+    setTimeout(() => removeToast(newToast.id), autoCloseDuration);
+  }, []);
+
   const actions = useMemo(
     () => ({
       showDialog,
       hideDialog,
       alert,
+      showToast,
     }),
-    [showDialog, hideDialog, alert],
+    [showDialog, hideDialog, alert, showToast],
   );
 
   return (
@@ -128,6 +153,16 @@ export default function DialogContextProvider({
         .map(dialog => (
           <div key={dialog.key}>{dialog.element}</div>
         ))}
+      <div className="fixed right-4 top-4 z-50 space-y-2">
+        {toasts.length > 0 &&
+          toasts.map(toast => (
+            <Toast
+              key={toast.id}
+              message={toast.message}
+              onClose={() => toast.onClose(toast.id)}
+            />
+          ))}
+      </div>
     </DialogContext.Provider>
   );
 }
