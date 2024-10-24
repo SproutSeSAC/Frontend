@@ -2,6 +2,12 @@ import { useCallback, useEffect } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
+import { useGetCampusList } from '@/services/course/courseQueries';
+import { useGetFilterCount } from '@/services/store/storeQueries';
+
+import SingleSelectDropdown from '../common/dropdown/SingleSelectDropdown';
+
+import { foodFilterList, storeMainFilterList } from '@/constants';
 import { updateQueryParams } from '@/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { MdOutlineRefresh } from 'react-icons/md';
@@ -9,82 +15,66 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
 
-const temporaryMainFilter = [
-  {
-    text: '제로페이',
-    count: 20,
-  },
-  {
-    text: '만원이하',
-    count: 20,
-  },
-  {
-    text: '5인 이상',
-    count: 50,
-  },
-  {
-    text: '도보 5분 이내',
-    count: 5,
-  },
-];
-
-const temporaryCategory = [
-  {
-    text: '한식',
-    count: 200,
-  },
-  {
-    text: '양식',
-    count: 15,
-  },
-  {
-    text: '중식',
-    count: 3,
-  },
-  {
-    text: '일식',
-    count: 41,
-  },
-  {
-    text: '아시아',
-    count: 20,
-  },
-  {
-    text: '분식',
-    count: 200,
-  },
-  {
-    text: '카페',
-    count: 200,
-  },
-];
-
-// TODO: api type 수정 필요
 interface FormValues {
-  campus: string;
-  새싹: string[];
-  메뉴별: string[];
+  campusId: number;
+  sprout: {
+    isZeropay: boolean;
+    overFivePerson: boolean;
+    underPrice: boolean;
+    walkTimeWithinFiveMinutes: boolean;
+  };
+  foodTypeList: string[];
 }
 
 export default function StoreFilterForm() {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { data: campusList } = useGetCampusList();
+  const { data: filterCount } = useGetFilterCount(
+    campusList ? campusList[0]?.id : 0,
+  );
+
   const { control, setValue, getValues, reset } = useForm<FormValues>({
     defaultValues: {
-      campus: '강북캠퍼스',
-      새싹: [],
-      메뉴별: [],
+      campusId: 0,
+      sprout: {
+        isZeropay: false,
+        overFivePerson: false,
+        underPrice: false,
+        walkTimeWithinFiveMinutes: false,
+      },
+      foodTypeList: [],
     },
-    // values: {
-    //   campus: searchParams.get('campus') || '강북캠퍼스',
-    //   새싹: searchParams.getAll('새싹')[0]?.split(',') || [],
-    //   메뉴별: searchParams.getAll('메뉴별')[0]?.split(',') || [],
-    // },
   });
 
-  const handleCheckboxChange = useCallback(
+  const handleSproutCheckboxChange = useCallback(
     (
-      name: keyof Pick<FormValues, '새싹' | '메뉴별'>,
+      name: keyof Pick<FormValues, 'sprout'>,
+      value: string,
+      checked: boolean,
+    ) => {
+      const params = new URLSearchParams(searchParams);
+      const currentValues = getValues(name);
+
+      const newValues = {
+        ...currentValues,
+        [value]: checked,
+      };
+      setValue(name, newValues);
+
+      if (checked) {
+        params.set(value, String(checked));
+      } else {
+        params.delete(value);
+      }
+      setSearchParams(params, { replace: true });
+    },
+    [getValues, searchParams, setSearchParams, setValue],
+  );
+
+  const handleFoodTypeListCheckboxChange = useCallback(
+    (
+      name: keyof Pick<FormValues, 'foodTypeList'>,
       value: string,
       checked: boolean,
     ) => {
@@ -130,50 +120,51 @@ export default function StoreFilterForm() {
       </div>
 
       <div>
-        <h3 className="mb-[6px]">나의 위치 찾기</h3>
+        <h3 className="mb-[6px] text-sm font-semibold">나의 위치 찾기</h3>
         <Controller
           control={control}
-          name="campus"
-          render={({ field: { value, onChange } }) => (
-            <select
-              className="px-3 py-1"
-              onChange={e => {
-                onChange(e);
+          name="campusId"
+          render={({ field: { onChange }, fieldState: { error } }) => (
+            <SingleSelectDropdown
+              defaultLabel={campusList ? campusList[0].name : '선택'}
+              options={campusList || []}
+              onChangeValue={data => {
+                onChange(data[0].id);
                 updateQueryParams(
                   searchParams,
                   setSearchParams,
-                  'campus',
-                  e.target.value,
+                  'campusId',
+                  data[0].id.toString(),
                 );
               }}
-              value={value}
-            >
-              <option value="강북캠퍼스">강북캠퍼스</option>
-              <option value="도봉캠퍼스">도봉캠퍼스</option>
-              <option value="동대문캠퍼스">동대문캠퍼스</option>
-              <option value="성북캠퍼스">성북캠퍼스</option>
-            </select>
+              errorMsg={error?.message}
+              selectBoxClassName="py-[7px] px-3 bg-white rounded w-[120px] h-7 text-xs"
+              optionClassName="text-sm hover:rounded-sm hover:bg-gray3 pl-1"
+            />
           )}
         />
       </div>
 
-      <CheckboxGroup title="새싹">
-        {temporaryMainFilter.map(item => (
+      <CheckboxGroup title="새싹" className="text-sm font-semibold">
+        {storeMainFilterList.map(item => (
           <Controller
-            key={item.text}
+            key={item.key}
             control={control}
-            name="새싹"
+            name="sprout"
             render={({ field: { value } }) => {
-              const isChecked = value.includes(item.text);
-
               return (
                 <Checkbox
-                  id={item.text}
-                  text={item.text}
-                  count={item.count}
-                  checked={isChecked}
+                  id={item.key}
+                  text={item.key}
+                  textClassName="text-sm"
+                  count={filterCount ? filterCount[item.countKey] : 0}
+                  checked={value[item.value as keyof FormValues['sprout']]}
                   onChange={e =>
-                    handleCheckboxChange('새싹', item.text, e.target.checked)
+                    handleSproutCheckboxChange(
+                      'sprout',
+                      item.value,
+                      e.target.checked,
+                    )
                   }
                 />
               );
@@ -182,22 +173,27 @@ export default function StoreFilterForm() {
         ))}
       </CheckboxGroup>
 
-      <CheckboxGroup title="메뉴별">
-        {temporaryCategory.map(item => (
+      <CheckboxGroup title="메뉴별" className="text-sm font-semibold">
+        {foodFilterList.map(item => (
           <Controller
-            key={item.text}
+            key={item.key}
             control={control}
-            name="메뉴별"
+            name="foodTypeList"
             render={({ field: { value } }) => {
-              const isChecked = value.includes(item.text);
+              const isChecked = value.includes(item.value);
               return (
                 <Checkbox
-                  id={item.text}
-                  text={item.text}
-                  count={item.count}
+                  id={item.key}
+                  textClassName="text-sm"
+                  text={item.key}
+                  count={filterCount ? filterCount[item.countKey] : 0}
                   checked={isChecked}
                   onChange={e =>
-                    handleCheckboxChange('메뉴별', item.text, e.target.checked)
+                    handleFoodTypeListCheckboxChange(
+                      'foodTypeList',
+                      item.value,
+                      e.target.checked,
+                    )
                   }
                 />
               );

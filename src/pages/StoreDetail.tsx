@@ -5,8 +5,8 @@ import { FaChevronLeft } from 'react-icons/fa';
 
 import SearchInput from '@/components/common/input/SearchInput';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
-import StoreListSideView from '@/components/store/StoreListSideView';
-import StoreMap from '@/components/store/StoreMap';
+import StoreListSideView from '@/components/store/detail/StoreListSideView';
+import StoreMap from '@/components/store/detail/StoreMap';
 
 export default function StoreDetail() {
   const { sideViewOpen, openSideView, closeSideView } =

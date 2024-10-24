@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SliderArrow from '@/components/common/slider/SliderArrow';
 
 interface StoreMenuImageSliderProps {
-  slideList: number[];
-  children: ReactNode;
+  slideList: string[];
+  children: (item: string) => ReactNode;
 }
 
 export default function StoreMenuImageSlider({
@@ -22,28 +22,32 @@ export default function StoreMenuImageSlider({
         pagination={{
           clickable: true,
         }}
-        loop
+        loop={slideList.length > 1}
         slidesPerView={1}
         style={{ height: 'inherit' }}
         onSwiper={setSwiperInstance}
       >
-        {slideList.map(item => (
-          <SwiperSlide key={item}>
-            <SliderArrow
-              direction="left"
-              onClick={e => {
-                e.stopPropagation();
-                swiperInstance?.slidePrev();
-              }}
-            />
-            {children}
-            <SliderArrow
-              direction="right"
-              onClick={e => {
-                e.stopPropagation();
-                swiperInstance?.slideNext();
-              }}
-            />
+        {slideList.map((item, idx) => (
+          <SwiperSlide key={`${item}-${idx + 1}`}>
+            {slideList.length > 1 && (
+              <SliderArrow
+                direction="left"
+                onClick={e => {
+                  e.stopPropagation();
+                  swiperInstance?.slidePrev();
+                }}
+              />
+            )}
+            {children(item)}
+            {slideList.length > 1 && (
+              <SliderArrow
+                direction="right"
+                onClick={e => {
+                  e.stopPropagation();
+                  swiperInstance?.slideNext();
+                }}
+              />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
