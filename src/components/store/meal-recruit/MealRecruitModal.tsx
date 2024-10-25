@@ -156,7 +156,7 @@ export default function MealRecruitModal() {
                   <MealRecruitDateSelectBox
                     dateOptions={dateOptions}
                     errorMas={error?.message || ''}
-                    onChange={onChange}
+                    onChange={date => onChange(date?.toLocaleDateString())}
                   />
                 );
               }}
