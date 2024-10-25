@@ -85,7 +85,7 @@ export default function DialogContextProvider({
   const hideDialog = useCallback(async (key?: string): Promise<void> => {
     setDialogs(prevDialogs => {
       if (key) {
-        return prevDialogs.map(dialog =>
+        prevDialogs.map(dialog =>
           dialog.key === key ? { ...dialog, visible: false } : dialog,
         );
       }
