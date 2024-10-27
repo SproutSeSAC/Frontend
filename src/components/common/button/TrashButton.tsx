@@ -1,8 +1,25 @@
+import { useDialogContext } from '@/hooks';
 import { BsTrash } from 'react-icons/bs';
 
+import SquareButton from '@/components/common/button/SquareButton';
+
 export default function TrashButton() {
+  const { hideDialog, alert } = useDialogContext();
+
   const onDeleteClick = () => {
-    alert('정말로 삭제하시겠습니까?');
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: '정말로 삭제하시곘습니까?',
+      children: (
+        <SquareButton
+          name="나가기"
+          onClick={hideDialog}
+          type="button"
+          className="mt-5"
+        />
+      ),
+    });
   };
 
   return (

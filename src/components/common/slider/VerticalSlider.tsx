@@ -1,4 +1,12 @@
-import { ReactNode, useEffect, useState } from 'react';
+import {
+  ForwardedRef,
+  ReactNode,
+  forwardRef,
+  useEffect,
+  useState,
+} from 'react';
+
+import LoopLoading from '../LoopLoading';
 
 import { IoIosArrowDown } from 'react-icons/io';
 import { Swiper as SwiperType } from 'swiper';
@@ -12,6 +20,8 @@ interface VerticalSliderProps<T> {
   slideItemHeight: number;
   containerHeightOffset: number; // TODO : 개선필요
   paginationHeightOffset: number; // TODO : 개선필요
+  isLoading?: boolean;
+  hideNextButton?: boolean;
 }
 
 function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
@@ -27,14 +37,19 @@ function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
   );
 }
 
-export default function VerticalSlider<T>({
-  slideList,
-  children,
-  spaceBetween,
-  slideItemHeight,
-  containerHeightOffset,
-  paginationHeightOffset,
-}: VerticalSliderProps<T>) {
+const VerticalSlider = forwardRef(function VerticalSlider<T>(
+  {
+    slideList,
+    children,
+    spaceBetween,
+    slideItemHeight,
+    containerHeightOffset,
+    paginationHeightOffset,
+    isLoading,
+    hideNextButton = false,
+  }: VerticalSliderProps<T>,
+  observeRef?: ForwardedRef<HTMLDivElement>, // Forwarding the ref to the container div
+) {
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
@@ -70,11 +85,21 @@ export default function VerticalSlider<T>({
               {children(item)}
             </SwiperSlide>
           ))}
+          {observeRef && (
+            <>
+              <div ref={observeRef} />
+              {isLoading && <LoopLoading />}
+            </>
+          )}
         </Swiper>
       </div>
-      <div className="mt-10 flex w-full justify-center">
-        <SlideNextButton swiper={swiperInstance} />
-      </div>
+      {!hideNextButton && slideList.length > 0 && (
+        <div className="mt-10 flex w-full justify-center">
+          <SlideNextButton swiper={swiperInstance} />
+        </div>
+      )}
     </div>
   );
-}
+});
+
+export default VerticalSlider;

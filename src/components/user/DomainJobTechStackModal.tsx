@@ -42,11 +42,12 @@ export default function DomainJobTechStackModal() {
     domainList: allDomainList,
     jobList: allJobList,
     techStackList: allTechStackList,
-    // mutateAsync,
+    mutateAsync,
     isLoading,
   } = useUpdateProfile();
 
   const {
+    nickname,
     jobList: userJobList,
     techStackList: userTechStackList,
     domainList: userDomainList,
@@ -74,10 +75,10 @@ export default function DomainJobTechStackModal() {
       updatedDomainIdList: updatedDomainList.map(({ id }) => id),
       updatedJobIdList: updatedJobList.map(({ id }) => id),
       updatedTechStackIdList: updatedTechStackList.map(({ id }) => id),
+      nickname,
     };
-    console.log(updatableValue);
 
-    // mutateAsync(updatableValue); // 이후 테스트 예정
+    mutateAsync(updatableValue); // 이후 테스트 예정
     hideDialog();
   };
 

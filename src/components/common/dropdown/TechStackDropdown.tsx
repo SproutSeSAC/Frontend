@@ -115,6 +115,12 @@ const TechStackDropdown = memo(function TechStackDropdown({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onClose = () => setOpen(false);
+
+  const handleSelectBoxClick = () => {
+    setOpen(prev => !prev);
+  };
+
   return (
     <>
       {isMarkTechStackList && (
@@ -122,7 +128,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
           {selectedOptions?.map(option => (
             <li
               key={option.id}
-              className="relative size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
+              className="relative mb-1.5 size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
             >
               <img src={option.iconImageUrl} alt={option.name} />
               <XButton
@@ -137,7 +143,8 @@ const TechStackDropdown = memo(function TechStackDropdown({
       <SelectBox<MultiSelectProps>
         defaultLabel={defaultLabel}
         selectedOptions={selectedOptions}
-        setOpen={setOpen}
+        onClose={onClose}
+        onSelectBoxClick={handleSelectBoxClick}
         open={open}
         errorMsg={errorMsg}
         onResetClick={onResetClick}

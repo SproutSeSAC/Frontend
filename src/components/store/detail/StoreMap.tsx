@@ -5,20 +5,23 @@ import { useNavigate } from 'react-router-dom';
 import { useStoreMap } from '@/hooks';
 import { BsList } from 'react-icons/bs';
 
-import StoreModal from '@/components/store/StoreModal';
+import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function StoreMap() {
-  const { isModalOpen, setIsModalOpen, storeMapRef, addMarker } = useStoreMap({
-    lat: 37.5665,
-    lng: 126.978,
-    zoom: 13,
-  });
+  const { isModalOpen, setIsModalOpen, storeMapRef, addMarker, isMapReady } =
+    useStoreMap({
+      lat: 37.5665,
+      lng: 126.978,
+      zoom: 13,
+    });
   const navigate = useNavigate();
 
   // NOTE - 마커 클릭 시 modal 띄우는 것을 보여주기 위해 임의로 찍어놓은 마커입니다. 추후에 삭제하셔도 됩니다.
   useEffect(() => {
-    addMarker(37.5665, 126.978);
-  }, [addMarker]);
+    if (isMapReady) {
+      addMarker(37.5665, 126.978);
+    }
+  }, [addMarker, isMapReady]);
 
   return (
     <div className="relative w-full">
@@ -35,7 +38,9 @@ export default function StoreMap() {
 
       {/* {isModalOpen && <StoreModal onClose={() => setIsModalOpen(false)} />} */}
 
-      {isModalOpen && <StoreModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <StoreModal onClose={() => setIsModalOpen(false)} storeId={1} />
+      )}
 
       {isModalOpen && (
         <div

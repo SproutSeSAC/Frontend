@@ -13,6 +13,7 @@ interface SingleSelectDropdownProps {
   options: Option[];
   selectedOption?: Option;
   selectedOptions?: Option[];
+  onSelectBoxClick?: () => void;
   onChangeValue: (value: Option[]) => void;
   errorMsg?: string;
   boxShape?: SelectBoxShape;
@@ -25,6 +26,7 @@ interface SingleSelectDropdownProps {
  * @param options - 드롭다운 옵션 리스트입니다.
  * @param selectedOption - 드롭다운에서 방금 선택한 옵션입니다.
  * @param selectedOptions - 이전에 선택완료한 옵션들입니다. 드롭다운은 한번에 한가지만 선택할 수 있지만 여러번 선택하는 경우입니다.
+ * @param onSelectBoxClick - 만약 드롭다운을 열고 닫는 것 이외에도 다른 로직의 함수가 필요하다면 이 props를 이용합니다.
  * @param onChangeValue - 옵션 변경 함수입니다.
  * @param errorMsg - 폼 관련 에러 메시지입니다.
  * @param boxShape - 라운지에서의 버튼 모양이거나 모집글에서의 input 모양 둘중 하나를 선택할 수 있습니다. props로 설정하지 않았을 시 기본값은 input 모양입니다.
@@ -37,6 +39,7 @@ export default function SingleSelectDropdown({
   selectedOption,
   selectedOptions,
   options,
+  onSelectBoxClick,
   onChangeValue,
   errorMsg,
   boxShape = 'inputShape',
@@ -54,17 +57,29 @@ export default function SingleSelectDropdown({
   );
 
   const isSelected = ({ name }: Option) => {
-    if (selectedOptions?.length !== 0) {
-      return !!selectedOptions?.some(option => name === option.name);
-    }
-    return selectedOption?.name === name;
+    return selectedOptions?.length !== 0
+      ? !!selectedOptions?.some(option => name === option.name)
+      : selectedOption?.name === name;
   };
+
+  const handleSelectBoxClick = () => {
+    if (onSelectBoxClick) {
+      onSelectBoxClick();
+    }
+    // 옵션이 있는 경우에만 열고 닫기 가능
+    if (options.length) {
+      setOpen(prev => !prev);
+    }
+  };
+
+  const onSelectBoxClose = () => setOpen(false);
 
   return (
     <SelectBox<SingleSelectProps>
       defaultLabel={defaultLabel}
       open={open}
-      setOpen={setOpen}
+      onClose={onSelectBoxClose}
+      onSelectBoxClick={handleSelectBoxClick}
       errorMsg={errorMsg}
       selectedOptionLabel={selectedOption?.name}
       boxShape={boxShape}
