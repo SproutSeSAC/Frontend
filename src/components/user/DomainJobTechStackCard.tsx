@@ -4,6 +4,7 @@ import { useDialogContext } from '@/hooks';
 import { UserProfile } from '@/types';
 
 import Tag from '@/components/common/Tag';
+import TechStackIcon from '@/components/common/TechStackIcon';
 import EditButton from '@/components/common/button/EditButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import DomainJobTechStackModal from '@/components/user/DomainJobTechStackModal';
@@ -63,9 +64,12 @@ export default function DomainJobTechStackCard() {
         <ScrollContainer gap={3}>
           {techStackList
             ?.sort((a, b) => a.id - b.id)
-            ?.map(({ id, techStack, iconImageUrl }) => (
-              <li key={id} className="size-10 rounded-lg bg-vividGreen3">
-                <img src={iconImageUrl} alt={techStack} />
+            ?.map(({ id, techStack }) => (
+              <li
+                key={id}
+                className="flex size-10 items-center justify-center rounded-lg"
+              >
+                <TechStackIcon techStack={techStack} className="size-9" />
               </li>
             ))}
         </ScrollContainer>
