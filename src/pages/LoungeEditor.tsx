@@ -1,35 +1,35 @@
 import { useCallback, useEffect, useMemo } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useTechStackList } from '@/hooks/useTechStackList';
 
-import { usePostLoungeProject } from '@/services/lounge/loungeMutations';
-import { useGetLoungePositionsFilterList } from '@/services/lounge/loungeQueries';
+import {
+  usePostLoungeProject,
+  usePutLoungeProject,
+} from '@/services/lounge/loungeMutations';
+import {
+  useGetLoungePositionsFilterList,
+  useGetLoungeProjectsDetail,
+} from '@/services/lounge/loungeQueries';
 
 import Title from '../components/common/Title';
 import SquareButton from '../components/common/button/SquareButton';
 import LoungeTextEditor from '../components/lounge/editor/LoungeTextEditor';
 import { loungeEditorSchema } from '../components/lounge/editor/loungeEditorSchema';
 
-import {
-  Progress,
-  PtypeList,
-  contactMethodList,
-  progressList,
-} from '@/constants';
+import { Progress, PtypeList, progressList } from '@/constants';
 import { useDialogContext } from '@/hooks';
+import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Control,
   Controller,
   FormProvider,
   SubmitErrorHandler,
   SubmitHandler,
   useForm,
-  useWatch,
 } from 'react-hook-form';
 import { BsLink45Deg } from 'react-icons/bs';
 
@@ -39,17 +39,18 @@ import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropd
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
+import ContactMethodContainer from '@/components/lounge/editor/ContactMethodContainer';
 
 const defaultInputStyle =
   'rounded-2xl border border-solid px-[15px] py-4 bg-white';
-const inputStyle = {
+export const inputStyle = {
   default: `${defaultInputStyle} border-gray4`,
   error: `${defaultInputStyle} border-[#FF3939]`,
 };
 
 // TODO: api type 수정 필요
 export interface FormValues {
-  recruitmentCount: string;
+  recruitmentCount: number;
   meetingType: Progress;
   contactMethod: string;
   contactDetail: string;
@@ -62,85 +63,45 @@ export interface FormValues {
   projectDescription: string;
 }
 
-function ContactMethodContainer({ control }: { control: Control<FormValues> }) {
-  const contactMethod = useWatch({ control, name: 'contactMethod' });
-
-  return (
-    <div className={`${contactMethod && 'flex gap-2'}`}>
-      <Controller
-        control={control}
-        name="contactMethod"
-        render={({ field: { onChange, value }, fieldState: { error } }) => {
-          const selectedOption = contactMethodList.find(
-            ({ key }) => key === value,
-          );
-
-          return (
-            <SingleSelectDropdown
-              defaultLabel="연락 방법"
-              options={contactMethodList}
-              selectedOption={selectedOption}
-              errorMsg={error?.message}
-              onChangeValue={data => onChange(data[0].key)}
-            />
-          );
-        }}
-      />
-      {contactMethod && (
-        <Controller
-          control={control}
-          name="contactDetail"
-          render={({ field: { onChange, value }, fieldState: { error } }) => {
-            return (
-              <div className={`flex w-full ${contactMethod && 'flex-1'}`}>
-                <input
-                  type="text"
-                  className={`${error ? inputStyle.error : inputStyle.default} w-full`}
-                  onChange={onChange}
-                  value={value}
-                />
-
-                {error && (
-                  <ErrorMsg
-                    msg={error?.message || ''}
-                    className="absolute bottom-[-26px] ml-2"
-                  />
-                )}
-              </div>
-            );
-          }}
-        />
-      )}
-    </div>
-  );
-}
+const changeDataToFieldValues = (data?: GetLoungeProjectDetail) => {
+  return {
+    recruitmentCount: data?.recruitmentCount || 0,
+    meetingType: data?.meetingType || 'HYBRID',
+    contactMethod: data?.contactMethod || '',
+    contactDetail: data?.contactDetail || '',
+    recruitmentType: data?.ptype || '',
+    startDate: data?.recruitmentStart || '',
+    endDate: data?.recruitmentEnd || '',
+    positions: data && data.position ? data.position.map(item => item.id) : [],
+    requiredStacks:
+      data && data.techStack ? data.techStack.map(item => item.id) : [],
+    projectTitle: data?.title || '',
+    projectDescription: data?.description || '',
+  };
+};
 
 export default function LoungeEditor() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const modifyProjectId = searchParams.get('modifyProject');
 
   const { hideDialog, showToast, alert } = useDialogContext();
 
-  const methods = useForm<FormValues>({
-    defaultValues: {
-      recruitmentCount: '',
-      meetingType: 'HYBRID',
-      contactMethod: '',
-      contactDetail: '',
-      recruitmentType: '',
-      startDate: '',
-      endDate: '',
-      positions: [],
-      requiredStacks: [],
-      projectTitle: '',
-      projectDescription: '',
-    },
-    resolver: zodResolver(loungeEditorSchema),
-  });
+  const queryClient = useQueryClient();
   const { data: positionsList } = useGetLoungePositionsFilterList();
+  const { data: projectsDetail } = useGetLoungeProjectsDetail(
+    Number(modifyProjectId || 0),
+  );
+  const { mutateAsync: postProject } = usePostLoungeProject();
+  const { mutateAsync: putProject } = usePutLoungeProject();
+
   const { techStackList } = useTechStackList();
 
-  const { mutateAsync } = usePostLoungeProject();
+  const methods = useForm<FormValues>({
+    defaultValues: changeDataToFieldValues(),
+    values: changeDataToFieldValues(projectsDetail),
+    resolver: zodResolver(loungeEditorSchema),
+  });
 
   const { handleSubmit, control } = methods;
 
@@ -161,9 +122,23 @@ export default function LoungeEditor() {
       ...data,
       recruitmentCount: Number(data.recruitmentCount),
     };
+    if (modifyProjectId) {
+      try {
+        await putProject({ projectId: Number(modifyProjectId), params });
+        showToast('프로젝트를 수정했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: ['useGetLoungeProjects', {}],
+        });
+        navigate('/lounge');
+      } catch (err) {
+        console.error(err);
+        showToast('프로젝트 수정을 실패했습니다.');
+      }
+      return;
+    }
 
     try {
-      await mutateAsync(params);
+      await postProject(params);
       showToast('프로젝트를 등록했습니다.');
       queryClient.invalidateQueries({
         queryKey: ['useGetLoungeProjects', {}],
@@ -335,14 +310,15 @@ export default function LoungeEditor() {
                 fieldState: { error },
               }) => {
                 const selectedOption = recruitmentCountList.find(
-                  ({ name }) => name === value,
+                  ({ id }) => id === value,
                 );
+
                 return (
                   <SingleSelectDropdown
                     defaultLabel="모집 인원"
                     options={recruitmentCountList}
                     selectedOption={selectedOption}
-                    onChangeValue={data => onChange(data[0].name)}
+                    onChangeValue={data => onChange(data[0].id)}
                     errorMsg={error?.message}
                   />
                 );
@@ -353,10 +329,18 @@ export default function LoungeEditor() {
             <Controller
               control={control}
               name="positions"
-              render={({ field: { onChange }, fieldState: { error } }) => {
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => {
+                const selectedOption = positionsList?.filter(position =>
+                  value.includes(position.id),
+                );
+
                 return (
                   <MultiSelectDropdown
                     defaultLabel="모집 직무"
+                    initialSelectedOptions={selectedOption}
                     options={positionsList || []}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
@@ -396,12 +380,20 @@ export default function LoungeEditor() {
             <Controller
               control={control}
               name="requiredStacks"
-              render={({ field: { onChange }, fieldState: { error } }) => {
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => {
+                const selectedOption = techStackList?.filter(position =>
+                  value.includes(position.id),
+                );
+
                 return (
                   <TechStackDropdown
                     defaultLabel="기술스택"
                     defaultTabValue="백엔드"
                     errorMsg={error?.message}
+                    initialSelectedOptions={selectedOption}
                     options={techStackList}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
@@ -467,7 +459,10 @@ export default function LoungeEditor() {
           >
             취소
           </button>
-          <SquareButton name="등록하기" type="submit" />
+          <SquareButton
+            name={modifyProjectId ? '수정하기' : '등록하기'}
+            type="submit"
+          />
         </div>
       </form>
     </FormProvider>

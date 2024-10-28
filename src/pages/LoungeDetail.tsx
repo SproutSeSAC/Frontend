@@ -4,7 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import {
+  useDeleteLoungeProject,
   usePostProjectComment,
   usePostScrapProject,
 } from '@/services/lounge/loungeMutations';
@@ -14,10 +16,12 @@ import {
 } from '@/services/lounge/loungeQueries';
 
 import { ptypeDisplay } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { FaChevronLeft } from 'react-icons/fa';
 
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import SquareButton from '@/components/common/button/SquareButton';
 import ApplicationInfoTemplate from '@/components/common/post-template/ApplicationInfoTemplate';
 import CommentTemplate from '@/components/common/post-template/CommentTemplate';
 import PostDetailsTemplate from '@/components/common/post-template/PostDetailsTemplate';
@@ -27,16 +31,19 @@ export default function LoungeDetail() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const { showToast, hideDialog, alert } = useDialogContext();
+  const { data: userProfile } = useGetUserProfile();
   const { data: projectsDetail, isLoading } = useGetLoungeProjectsDetail(
-    Number(params.postId || 0),
+    Number(params.postId!),
   );
   const { data: commentList } = useGetLoungeProjectsComment(
-    Number(params.postId || 0),
+    Number(params.postId!),
   );
   const { mutateAsync: postScrapProject } = usePostScrapProject();
   const { mutateAsync: postComment } = usePostProjectComment(
-    Number(params.postId || 0),
+    Number(params.postId!),
   );
+  const { mutateAsync: deleteProject } = useDeleteLoungeProject();
 
   const onScrapProject = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -44,32 +51,76 @@ export default function LoungeDetail() {
       e.stopPropagation();
 
       try {
-        await postScrapProject({ projectId: Number(params.postId || 0) });
-        console.log('성공');
+        await postScrapProject({ projectId: Number(params.postId!) });
+        showToast('게시물을 찜했어요!');
         queryClient.invalidateQueries({
           queryKey: ['useGetLoungeProjectsDetail'],
         });
       } catch (err) {
         console.error(err);
+        showToast('게시물 찜하기를 실패했어요');
       }
     },
-    [params.postId, postScrapProject, queryClient],
+    [params.postId, postScrapProject, queryClient, showToast],
   );
 
   const handleSubmitComment = useCallback(
     async (data: { content: string }) => {
       try {
         await postComment(data);
-        console.log('성공');
+        showToast('댓글을 등록했어요!');
         queryClient.invalidateQueries({
           queryKey: ['useGetLoungeProjectsComment'],
         });
       } catch (err) {
         console.error(err);
+        showToast('댓글등록을 실패했어요');
       }
     },
-    [postComment, queryClient],
+    [postComment, queryClient, showToast],
   );
+
+  const handleDeleteProject = async () => {
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: '정말 프로젝트를 삭제하시겠어요?',
+      subText:
+        '삭제하면 모든 정보가 사라지며, 복구할 수 없어요.\n 그래도 계속하시겠어요?',
+      children: (
+        <>
+          <SquareButton
+            color="gray"
+            name="닫기"
+            onClick={() => hideDialog()}
+            type="button"
+            className="mt-6"
+          />
+          <SquareButton
+            name="삭제"
+            onClick={async () => {
+              try {
+                await deleteProject({ projectId: Number(params.postId!) });
+
+                showToast('프로젝트를 삭제했습니다.');
+                navigate('/lounge');
+                queryClient.invalidateQueries({
+                  queryKey: ['useGetLoungeProjects'],
+                });
+              } catch (err) {
+                console.error(err);
+                showToast('프로젝트 삭제를 실패했습니다.');
+              }
+
+              hideDialog();
+            }}
+            type="button"
+            className="mt-6"
+          />
+        </>
+      ),
+    });
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -108,12 +159,33 @@ export default function LoungeDetail() {
               startPeriod={projectsDetail?.recruitmentStart}
               endPeriod={projectsDetail?.recruitmentEnd}
               personRecruited={projectsDetail?.recruitmentCount}
-              positionNames={projectsDetail?.positionNames}
+              position={projectsDetail?.position}
               contactMethod={projectsDetail?.contactMethod}
               contactDetail={projectsDetail?.contactDetail}
               meetingType={projectsDetail?.meetingType}
+              techStack={projectsDetail?.techStack}
             />
             <PostDetailsTemplate
+              actions={
+                userProfile?.nickname === projectsDetail?.writerNickName
+                  ? [
+                      {
+                        label: '삭제하기',
+                        onClick: handleDeleteProject,
+                        className: 'bg-gray2',
+                      },
+                      {
+                        label: '수정하기',
+                        onClick: () => {
+                          navigate(
+                            `/lounge/editor?modifyProject=${params.postId!}`,
+                          );
+                        },
+                        className: 'bg-oliveGreen1',
+                      },
+                    ]
+                  : []
+              }
               // imgUrl={projectsDetail?.imgUrl}
               nickName={projectsDetail?.writerNickName}
               createdAt={projectsDetail?.createdAt}

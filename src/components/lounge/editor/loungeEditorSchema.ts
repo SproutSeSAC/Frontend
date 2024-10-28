@@ -17,7 +17,7 @@ export const loungeEditorSchema = z.object({
   ]),
 
   recruitmentCount: z.union([
-    z.string().min(1, '모집인원을 선택해 주세요.'),
+    z.number().min(1, '모집인원을 선택해 주세요.'),
     z.undefined().refine(() => false, '모집인원을 선택해 주세요.'),
   ]),
 

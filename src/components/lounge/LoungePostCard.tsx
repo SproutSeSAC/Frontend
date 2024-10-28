@@ -120,12 +120,12 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         <div className="flex">
           <span className="lounge-text-divider leading-4 text-gray2">직무</span>
 
-          <ul className="flex flex-1 gap-1 overflow-hidden">
+          <ul className="flex flex-1 flex-wrap gap-1 overflow-hidden">
             {card.positionNames.map(tag => (
               <Tag
                 key={tag}
                 text={tag}
-                color="black"
+                color="gray"
                 size="small"
                 className="text-xs"
               />

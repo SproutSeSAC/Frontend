@@ -10,7 +10,12 @@ export default function LoungeSideView() {
   return (
     <div className="flex flex-col gap-10">
       <div className="max-h-[90vh] overflow-y-scroll rounded-lg bg-white p-4 shadow-card">
-        <Title as="h2" title="마감 하루전!" className="mb-6" highlight="마감" />
+        <Title
+          as="h2"
+          title="곧 마감합니다!"
+          className="mb-6"
+          highlight="마감"
+        />
 
         <div className="flex flex-col gap-6">
           {EndingTomorrowProjectList?.map(project => (
