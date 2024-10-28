@@ -41,21 +41,21 @@ export default function UserNameImageModal() {
   };
 
   return (
-    <Modal onToggleClick={hideDialog} title="개인정보">
+    <Modal onToggleClick={hideDialog} title="개인정보" className="p-4">
       <FormProvider {...methods}>
         <form
           className="flex w-[350px] flex-col"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <UserImage className="mx-auto mb-6 size-[220px] p-10">
+          <UserImage className="mx-auto mb-6 size-[220px] p-12">
             <CameraButton
               onClick={() => {}}
-              className="bottom-5 right-3"
+              className="bottom-5 right-2"
               iconSize={6}
             />
           </UserImage>
 
-          <Label htmlFor="별명" />
+          <Label htmlFor="별명" className="mb-1 ml-2" />
           <TextInput
             placeholder="별명을 수정해주세요"
             className="h-[50px] w-full pl-4"

@@ -5,12 +5,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
-import { useCalendarData } from '@/hooks';
+import { useCalendarData, useCheckLogin } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { RoleValues, UserProfile } from '@/types';
-import { getColorByRole, getCookie } from '@/utils';
+import { getColorByRole } from '@/utils';
 import { FiChevronRight } from 'react-icons/fi';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -39,24 +39,15 @@ export default function Home() {
 
   const { fullCalendarEvents } = useCalendarData();
 
+  const { isLogin } = useCheckLogin();
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const accessToken = getCookie('access_token');
-    const refreshToken = getCookie('refresh_token');
-
-    if (!accessToken || !refreshToken) {
+    if (!isLogin) {
       navigate('/login');
     }
-  }, [navigate]);
-
-  // useEffect(() => {
-  //   if (!isGetUserProfileLoading && !userProfile) {
-  //     navigate('/signup');
-  //   } else {
-  //     navigate('/');
-  //   }
-  // }, [isGetUserProfileLoading, navigate, userProfile]);
+  }, [isLogin, navigate]);
 
   if (isGetUserProfileLoading || isGetLoungeListLoading)
     return (

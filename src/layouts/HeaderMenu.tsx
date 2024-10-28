@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 
+import { ACCESS_TOKEN_KEY, CALENDAR_KEY, REFRESH_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { deleteCookie } from '@/utils';
 
@@ -25,9 +26,9 @@ export default function HeaderMenu() {
           <SquareButton
             name="확인"
             onClick={() => {
-              deleteCookie('access_token');
-              deleteCookie('refresh_token');
-              deleteCookie('calendar_access_token');
+              deleteCookie(ACCESS_TOKEN_KEY);
+              deleteCookie(REFRESH_TOKEN_KEY);
+              deleteCookie(CALENDAR_KEY);
               navigate('/login');
               hideDialog();
             }}

@@ -1,6 +1,6 @@
 export const dateFormat = (
   date: string | undefined | Date | null,
-  format: 'YYYY.MM.DD' | 'MM/DD/YYYY' = 'YYYY.MM.DD',
+  format: 'YYYY년 MM월 DD일' | 'YYYY.MM.DD' | 'MM/DD/YYYY' = 'YYYY.MM.DD',
 ): string | null => {
   if (!date) {
     console.warn('Invalid date', { date, format });
@@ -22,6 +22,8 @@ export const dateFormat = (
       return `${year}.${month}.${day}`;
     case 'MM/DD/YYYY':
       return `${month}/${day}/${year}`;
+    case 'YYYY년 MM월 DD일':
+      return `${year}년 ${month}월 ${day}일`;
     default:
       console.warn('Unsupported format', { format });
       return null;

@@ -45,9 +45,6 @@ export default function MultiSelectDropdown({
 
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
 
-  // 여기 버그.......!!!!!!!
-  // 뒤로 돌아오면 초기화되는 버그. 뭐 때문일까?
-
   const checkIsSelected = useCallback(
     (option: Option) => {
       return selectedOptions.some(({ name }) => name === option.name);

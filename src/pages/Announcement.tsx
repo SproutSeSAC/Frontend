@@ -2,29 +2,33 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
+import { announcementCategoryOptions } from '@/constants/announcement';
+import { AnnouncementCategoryKey } from '@/types';
+
 import AnnouncementPostCard from '@/components/announcement/AnnouncementPostCard';
 import AnnouncementEditor from '@/components/announcement/editor/AnnouncementEditor';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 
-const FILTER_LIST = [
-  { key: '통합', value: '통합' },
-  { key: '특강', value: '특강' },
-  { key: '취업 꿀팁', value: '취업 꿀팁' },
-];
-
 export default function Announcement() {
-  const [announcementType, setAnnouncementType] = useState('통합');
+  const [announcementType, setAnnouncementType] =
+    useState<AnnouncementCategoryKey>('GENERAL');
+
   const [searchParams] = useSearchParams();
 
   const ptype = searchParams.get('ptype');
 
   const searchRef = useRef<HTMLInputElement | null>(null);
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (searchRef.current) {
-      searchRef.current.value = e.target.value;
-    }
-  }, []);
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      if (searchRef.current) {
+        searchRef.current.value = value;
+      }
+    },
+    [],
+  );
 
   const handleSearchSubmit = useCallback(() => {
     // setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
@@ -43,7 +47,7 @@ export default function Announcement() {
           placeholder="찾으시는 공지사항 내용을 입력해 주세요"
           width="w-full"
           height="h-12"
-          onChange={handleChange}
+          onChange={handleSearchChange}
         />
         <SquareButton
           name="검색하기"
@@ -53,18 +57,17 @@ export default function Announcement() {
       </div>
 
       <ul className="mt-6 flex items-center gap-2.5">
-        {FILTER_LIST.map(filterItem => (
+        {announcementCategoryOptions.map(({ key, name }) => (
           <li
-            key={filterItem.key}
-            className={`rounded-2xl px-4 py-2.5 ${announcementType === filterItem.value ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}
+            key={key}
+            className={`rounded-2xl ${announcementType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}
           >
             <button
               type="button"
-              onClick={() => {
-                setAnnouncementType(filterItem.value);
-              }}
+              onClick={() => setAnnouncementType(key)}
+              className="px-4 py-2.5"
             >
-              {filterItem.key}
+              {name}
             </button>
           </li>
         ))}

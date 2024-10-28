@@ -22,7 +22,7 @@ export default function MyPage() {
 
   const userInfoList = [
     { label: 'E-mail', value: email },
-    { label: '캠퍼스', value: `${campusName} 캠퍼스` },
+    { label: '캠퍼스', value: campusName },
     { label: '담당 교육과정', value: courseTitle },
   ];
 

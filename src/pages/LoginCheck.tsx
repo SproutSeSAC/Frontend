@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginCheck } from '@/services/auth/authQueries';
 
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { setCookie } from '@/utils';
 import axios from 'axios';
@@ -17,21 +18,19 @@ export default function LoginCheck() {
   const navigate = useNavigate();
 
   const params = new URLSearchParams(window.location.search);
-  const accessToken = params.get('access_token');
-  const refreshToken = params.get('refresh_token');
+  const accessToken = params.get(ACCESS_TOKEN_KEY);
+  const refreshToken = params.get(REFRESH_TOKEN_KEY);
 
   useEffect(() => {
     const handleLoginPost = async () => {
       if (accessToken && refreshToken) {
-        setCookie('access_token', accessToken, 1);
-        setCookie('refresh_token', refreshToken, 1);
+        setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
+        setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
       }
-
       try {
         const response = await loginCheck();
         if (response.status === 200) {
           navigate('/');
-          window.location.reload();
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.status === 304) {
