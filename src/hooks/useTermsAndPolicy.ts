@@ -7,38 +7,21 @@ import {
   getPolicyContent,
 } from '@/services/auth/termsAndPolicy';
 
-type ModalState = {
-  type: TermsAndPolicyType;
-  isOpen: boolean;
-};
-
-const initialModalState: ModalState = {
-  type: '서비스 이용약관',
-  isOpen: false,
-};
-
 export const useTermsAndPolicy = () => {
-  const [modalState, setModalState] = useState<ModalState>(initialModalState);
+  const [contentType, setContentType] =
+    useState<TermsAndPolicyType>('서비스 이용약관');
 
-  const { data: htmlContent, isLoading } = useQuery({
-    queryKey: ['policyContent'],
-    queryFn: () => getPolicyContent(modalState.type),
-    enabled: modalState.isOpen,
+  const toggleContentType = (type: TermsAndPolicyType) => setContentType(type);
+
+  const { data: htmlContent, isLoading: isContentLoading } = useQuery({
+    queryKey: ['policyContent', contentType],
+    queryFn: () => getPolicyContent(contentType),
   });
 
-  const toggleModal = (type?: TermsAndPolicyType) => {
-    setModalState(({ isOpen, type: prevType }) => {
-      return {
-        isOpen: !isOpen,
-        type: type || prevType,
-      };
-    });
-  };
-
   return {
-    modalState,
-    toggleModal,
-    isLoading,
+    contentType,
+    toggleContentType,
+    isContentLoading,
     htmlContent,
   };
 };

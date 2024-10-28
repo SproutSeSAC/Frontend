@@ -8,9 +8,7 @@ export const getPolicyContent = async (type: TermsAndPolicyType) => {
       ? 'termsAndConditionsOfService'
       : 'policyOfHandlingPersonalInformation';
 
-  const response = await axios.get(
-    `/src/assets/terms-and-policy/${filename}.html`,
-  );
+  const response = await axios.get(`/terms-and-policy/${filename}.html`);
 
   return response.data;
 };
