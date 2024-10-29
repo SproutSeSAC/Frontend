@@ -2,7 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { announcementCategoryOptions } from '@/constants/announcement';
+// import { useGetAnnouncementList } from '@/services/announcement/announcementQueries';
+import { announcementCategoryFilterList } from '@/constants/announcement';
 import { AnnouncementCategoryKey } from '@/types';
 
 import AnnouncementPostCard from '@/components/announcement/AnnouncementPostCard';
@@ -13,6 +14,8 @@ import SearchInput from '@/components/common/input/SearchInput';
 export default function Announcement() {
   const [announcementType, setAnnouncementType] =
     useState<AnnouncementCategoryKey>('GENERAL');
+
+  // const { data } = useGetAnnouncementList();
 
   const [searchParams] = useSearchParams();
 
@@ -57,7 +60,7 @@ export default function Announcement() {
       </div>
 
       <ul className="mt-6 flex items-center gap-2.5">
-        {announcementCategoryOptions.map(({ key, name }) => (
+        {announcementCategoryFilterList.map(({ key, name }) => (
           <li
             key={key}
             className={`rounded-2xl ${announcementType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}

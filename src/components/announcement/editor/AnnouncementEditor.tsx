@@ -8,9 +8,10 @@ import {
   announcementCategoryOptions,
   defaultAnnouncementFormValues,
   meetingTypeOptions,
+  tooltip,
 } from '@/constants/announcement';
 import { AnnouncementDto } from '@/types';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import AnnouncementTextEditor from '@/components/announcement/editor/AnnouncementTextEditor';
 import CircleNumber from '@/components/common/CircleNumber';
@@ -41,6 +42,11 @@ export default function AnnouncementEditor() {
 
   const { data: courseList } = useGetCourseList(userCampus?.id);
 
+  const watchedNoticeType = useWatch({ control, name: 'noticeType' });
+
+  const needMoreInfoNoticeType =
+    watchedNoticeType === 'SPECIAL_LECTURE' || watchedNoticeType === 'EVENT';
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(() => {})} className="mt-[26px]">
@@ -48,7 +54,7 @@ export default function AnnouncementEditor() {
           <CircleNumber number={1} />
           <Title as="h1" title="공지사항 대상 과정" />
         </div>
-        <div className="relative mb-20 mt-8 grid grid-cols-2 gap-4 text-lg">
+        <div className="relative mb-20 mt-8 grid grid-cols-2 gap-8 text-lg">
           {courseList && (
             <Controller
               control={control}
@@ -78,7 +84,7 @@ export default function AnnouncementEditor() {
           <CircleNumber number={2} />
           <Title as="h1" title="공지사항 필수 정보" />
         </div>
-        <div className="relative mb-20 mt-8 grid grid-cols-2 gap-4">
+        <div className="relative mb-20 mt-8 grid grid-cols-2 gap-8">
           <LabeledSection label="공지 유형">
             <Controller
               control={control}
@@ -92,7 +98,7 @@ export default function AnnouncementEditor() {
                 );
                 return (
                   <SingleSelectDropdown
-                    defaultLabel="공지 유형"
+                    defaultLabel="일반공지, 특강, 취업꿀팁"
                     options={announcementCategoryOptions}
                     selectedOption={selectedOption}
                     onChangeValue={data => onChange(data[0].key)}
@@ -128,153 +134,167 @@ export default function AnnouncementEditor() {
             />
           </LabeledSection>
 
-          <LabeledSection label="신청 기간" className="col-span-2">
-            <div className="flex w-full items-center gap-2">
-              <Controller
-                control={control}
-                name="applicationStartDate"
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => {
-                  return (
-                    <DateInput
-                      value={value}
-                      onChange={onChange}
-                      errorMsg={error?.message}
-                    />
-                  );
-                }}
-              />
-              <span className="text-xl">~</span>
-              <Controller
-                control={control}
-                name="applicationEndDate"
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => {
-                  return (
-                    <DateInput
-                      value={value}
-                      onChange={onChange}
-                      errorMsg={error?.message}
-                    />
-                  );
-                }}
-              />
-            </div>
-          </LabeledSection>
-
-          <LabeledSection label="일시">
-            <Controller
-              control={control}
-              name="eventSchedule"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                return (
-                  <DateInput
-                    value={value}
-                    onChange={onChange}
-                    errorMsg={error?.message}
+          {needMoreInfoNoticeType && (
+            <>
+              <LabeledSection label="신청 기간" className="col-span-2">
+                <div className="flex w-full items-center gap-2">
+                  <Controller
+                    control={control}
+                    name="applicationStartDate"
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => {
+                      return (
+                        <DateInput
+                          value={value}
+                          onChange={onChange}
+                          errorMsg={error?.message}
+                        />
+                      );
+                    }}
                   />
-                );
-              }}
-            />
-          </LabeledSection>
-
-          <LabeledSection label="시간">
-            <Controller
-              control={control}
-              name="eventTime"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                return (
-                  <TimeInput
-                    value={value}
-                    onChange={onChange}
-                    errorMsg={error?.message}
+                  <span className="text-xl">~</span>
+                  <Controller
+                    control={control}
+                    name="applicationEndDate"
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => {
+                      return (
+                        <DateInput
+                          value={value}
+                          onChange={onChange}
+                          errorMsg={error?.message}
+                        />
+                      );
+                    }}
                   />
-                );
-              }}
-            />
-          </LabeledSection>
+                </div>
+              </LabeledSection>
 
-          <LabeledSection label="온오프라인">
-            <Controller
-              control={control}
-              name="meetingType"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                const selectedOption = meetingTypeOptions.find(
-                  ({ key }) => key === value.type,
-                );
-                return (
-                  <div className="relative">
-                    <div className="flex items-center rounded-2xl border border-gray4 bg-white">
-                      <SingleSelectDropdown
-                        defaultLabel="온오프라인"
-                        options={meetingTypeOptions}
-                        selectedOption={selectedOption}
-                        onChangeValue={data => {
-                          const option = {
-                            type: data[0].key,
-                            name: data[0].name,
-                          };
-                          onChange(option);
-                        }}
-                        selectBoxClassName="min-w-[140px] h-[40px] my-2 border-0 border-r rounded-r-none pr-3"
-                      />
-                      <TextInput
-                        name="신청 폼"
-                        placeholder="온라인, 오프라인을 먼저 선택해주세요."
-                        value={value.detail}
+              <LabeledSection label="일시">
+                <Controller
+                  control={control}
+                  name="eventSchedule"
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => {
+                    return (
+                      <DateInput
+                        value={value}
                         onChange={onChange}
-                        className="!mr-0 h-full !rounded-2xl border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
+                        errorMsg={error?.message}
                       />
-                    </div>
-                    {error && (
-                      <ErrorMsg
-                        msg={error?.message || ''}
-                        className="absolute bottom-[-26px] ml-2"
-                      />
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </LabeledSection>
+                    );
+                  }}
+                />
+              </LabeledSection>
 
-          <LabeledSection label="만족도 조사">
-            <Controller
-              control={control}
-              name="satisfactionSurvey"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                return (
-                  <div className="relative">
-                    <TextInput
-                      name="만족도 조사"
-                      placeholder="만족도 조사 링크를 적어주세요."
-                      onChange={onChange}
-                      className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
-                    />
-                    {error && (
-                      <ErrorMsg
-                        msg={error?.message || ''}
-                        className="absolute bottom-[-26px] ml-2"
+              <LabeledSection label="시간">
+                <Controller
+                  control={control}
+                  name="eventTime"
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => {
+                    return (
+                      <TimeInput
+                        value={value}
+                        onChange={onChange}
+                        errorMsg={error?.message}
                       />
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </LabeledSection>
+                    );
+                  }}
+                />
+              </LabeledSection>
+
+              <LabeledSection label="온오프라인" tooltip={tooltip.meetingType}>
+                <Controller
+                  control={control}
+                  name="meetingType"
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => {
+                    const selectedOption = meetingTypeOptions.find(
+                      ({ key }) => key === value.type,
+                    );
+
+                    return (
+                      <div className="relative">
+                        <div className="flex items-center rounded-2xl border border-gray4 bg-white">
+                          <SingleSelectDropdown
+                            defaultLabel="온오프라인"
+                            options={meetingTypeOptions}
+                            selectedOption={selectedOption}
+                            onChangeValue={data => {
+                              const type = data[0].key;
+                              onChange({ ...value, type });
+                            }}
+                            selectBoxClassName="min-w-[140px] h-[40px] my-2 border-0 border-r rounded-r-none pr-3"
+                          />
+                          <TextInput
+                            name="신청 폼"
+                            placeholder={
+                              value.type === 'ONLINE'
+                                ? 'Zoom 링크를 적어주세요.'
+                                : '장소 위치를 적어주세요.'
+                            }
+                            value={value.detail}
+                            onChange={e =>
+                              onChange({ ...value, detail: e.target.value })
+                            }
+                            className="!mr-0 h-full !rounded-2xl border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
+                          />
+                        </div>
+                        {error && (
+                          <ErrorMsg
+                            msg={error?.message || ''}
+                            className="absolute bottom-[-26px] ml-2"
+                          />
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+              </LabeledSection>
+
+              <LabeledSection
+                label="만족도 조사"
+                tooltip={tooltip.satisfactionSurvey}
+              >
+                <Controller
+                  control={control}
+                  name="satisfactionSurvey"
+                  render={({ field: { onChange }, fieldState: { error } }) => {
+                    return (
+                      <div className="relative">
+                        <TextInput
+                          name="만족도 조사"
+                          placeholder="만족도 조사 링크를 적어주세요."
+                          onChange={onChange}
+                          className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
+                        />
+                        {error && (
+                          <ErrorMsg
+                            msg={error?.message || ''}
+                            className="absolute bottom-[-26px] ml-2"
+                          />
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+                <p className="mt-8 text-end text-gray2">
+                  Zoom, 만족도 조사 링크는 추후에 등록해 주셔도 됩니다.
+                </p>
+              </LabeledSection>
+            </>
+          )}
         </div>
 
         <div className="mt-16 flex items-center gap-1.5">

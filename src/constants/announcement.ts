@@ -7,7 +7,7 @@ import {
   TooltipKeys,
 } from '@/types';
 
-export const announcementCategoryOptions: {
+export const announcementCategoryFilterList: {
   id: number;
   key: AnnouncementCategoryKey;
   name: AnnouncementCategoryValue;
@@ -15,7 +15,18 @@ export const announcementCategoryOptions: {
   { id: 1, key: 'GENERAL', name: '통합' },
   { id: 2, key: 'SPECIAL_LECTURE', name: '특강' },
   { id: 3, key: 'EMPLOYMENT', name: '취업꿀팁' },
-  { id: 4, key: 'MATCHING_DAY', name: '매칭데이' },
+];
+
+export const announcementCategoryOptions: {
+  id: number;
+  key: AnnouncementCategoryKey;
+  name: AnnouncementCategoryValue;
+}[] = [
+  { id: 1, key: 'GENERAL_ANNOUNCEMENT', name: '일반공지' },
+  { id: 2, key: 'SPECIAL_LECTURE', name: '특강' },
+  { id: 3, key: 'EMPLOYMENT', name: '취업꿀팁' },
+  { id: 4, key: 'EVENT', name: '행사' },
+  { id: 5, key: 'ETC', name: '기타' },
 ];
 
 export const meetingTypeOptions: {
