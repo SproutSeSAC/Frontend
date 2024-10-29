@@ -12,6 +12,7 @@ import {
 import { dateFormat } from '@/utils/dateFormat';
 
 import { PTYPE_STUDY, Ptype, progressDisplay, ptypeDisplay } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { Lounge } from '@/types/lounge/loungeDto';
 import { BsEye } from 'react-icons/bs';
 
@@ -34,6 +35,7 @@ const getTagColor = (tag: Ptype) => {
 export default function LoungePostCard({ card }: LoungePostCardProps) {
   const queryClient = useQueryClient();
 
+  const { showToast } = useDialogContext();
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
   const { mutateAsync: postScrapProject } = usePostScrapProject();
 
@@ -43,16 +45,23 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
       e.stopPropagation();
 
       try {
-        await postScrapProject({ projectId: card.id });
-        console.log('성공');
+        const result = await postScrapProject({ projectId: card.id });
+
+        if (result) {
+          showToast('게시물을 찜했어요!', 1000);
+        } else {
+          showToast('게시물 찜하기를 취소 했어요!', 1000);
+        }
+
         queryClient.invalidateQueries({
           queryKey: ['useGetLoungeProjects', {}],
         });
       } catch (err) {
         console.error(err);
+        showToast('게시물 찜하기를 실패했어요');
       }
     },
-    [card.id, postScrapProject, queryClient],
+    [card.id, postScrapProject, queryClient, showToast],
   );
 
   const onViewCount = useCallback(async () => {

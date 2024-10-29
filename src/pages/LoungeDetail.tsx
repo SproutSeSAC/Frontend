@@ -51,8 +51,16 @@ export default function LoungeDetail() {
       e.stopPropagation();
 
       try {
-        await postScrapProject({ projectId: Number(params.postId!) });
-        showToast('게시물을 찜했어요!');
+        const result = await postScrapProject({
+          projectId: Number(params.postId!),
+        });
+
+        if (result) {
+          showToast('게시물을 찜했어요!', 1000);
+        } else {
+          showToast('게시물 찜하기를 취소 했어요!', 1000);
+        }
+
         queryClient.invalidateQueries({
           queryKey: ['useGetLoungeProjectsDetail'],
         });
