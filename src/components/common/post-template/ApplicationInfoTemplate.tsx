@@ -9,7 +9,8 @@ import {
   progressDisplay,
 } from '@/constants';
 import { useDialogContext } from '@/hooks';
-import { FilterType, TechStack } from '@/types';
+import { FilterType } from '@/types';
+import { DetailPostTechStack } from '@/types/lounge/loungeDto';
 import { BsCopy, BsLink45Deg } from 'react-icons/bs';
 
 interface LoungeApplicationInfoProps {
@@ -20,7 +21,7 @@ interface LoungeApplicationInfoProps {
   contactMethod?: ContactMethodType;
   contactDetail?: string;
   meetingType?: Progress;
-  techStack?: TechStack[];
+  techStack?: DetailPostTechStack[];
 }
 const commonContactMethodStyle =
   'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
@@ -74,7 +75,7 @@ export default function ApplicationInfoTemplate({
             <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
               직무
             </div>
-            <ul className="flex w-full flex-1 gap-1 overflow-hidden">
+            <ul className="flex w-full flex-1 flex-wrap gap-1">
               {(position || []).map(item => (
                 <li
                   key={item.id}
@@ -92,10 +93,10 @@ export default function ApplicationInfoTemplate({
             <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
               스택
             </div>
-            <ul className="flex gap-2">
+            <ul className="flex flex-wrap gap-2">
               {techStack && techStack?.length > 0
                 ? techStack.map(stack => {
-                    return <li key={stack.id}>{stack.jobName}</li>;
+                    return <li key={stack.id}>stack</li>;
                   })
                 : '-'}
             </ul>

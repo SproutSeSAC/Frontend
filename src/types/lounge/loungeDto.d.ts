@@ -1,5 +1,3 @@
-import { TechStack } from '../userInfoDto';
-
 import { Progress, Ptype } from '@/constants';
 
 export interface Lounge {
@@ -74,7 +72,15 @@ export interface GetLoungeProjectDetail {
   createdAt: string;
   position: FilterType[];
   ptype: Ptype;
-  techStack: TechStack[];
+  techStack: DetailPostTechStack[];
+}
+
+export interface DetailPostTechStack {
+  id: number;
+  name: string;
+  isActive: boolean;
+  path: string;
+  jobName: string;
 }
 
 export interface GetLoungeProjectComment {
