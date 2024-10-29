@@ -6,10 +6,6 @@ import { BsEye } from 'react-icons/bs';
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
-// interface AnnouncementPostCardProps {
-//   card?: number;
-// }
-
 export default function AnnouncementPostCard() {
   return (
     <Link

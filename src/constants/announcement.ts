@@ -2,10 +2,19 @@ import {
   AnnouncementCategoryKey,
   AnnouncementCategoryValue,
   AnnouncementDto,
+  AnnouncementTab,
   MeetingTypeKey,
   MeetingTypeValue,
   TooltipKeys,
 } from '@/types';
+
+export const announcementTabList: AnnouncementTab[] = [
+  { text: '전체', type: 'ALL' },
+  { text: '캠퍼스 매니저', type: 'CAMPUS_MANAGER' },
+  { text: '교육 매니저', type: 'EDU_MANAGER' },
+  { text: '잡코디', type: 'JOB_COORDINATOR' },
+  { text: '북마크', type: 'BOOKMARK' },
+];
 
 export const announcementCategoryFilterList: {
   id: number;

@@ -2,9 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-// import { useGetAnnouncementList } from '@/services/announcement/announcementQueries';
 import { announcementCategoryFilterList } from '@/constants/announcement';
-import { AnnouncementCategoryKey } from '@/types';
+import { AnnouncementCategoryKey, KeyOfAnnouncementTabKind } from '@/types';
 
 import AnnouncementPostCard from '@/components/announcement/AnnouncementPostCard';
 import AnnouncementEditor from '@/components/announcement/editor/AnnouncementEditor';
@@ -15,11 +14,9 @@ export default function Announcement() {
   const [announcementType, setAnnouncementType] =
     useState<AnnouncementCategoryKey>('GENERAL');
 
-  // const { data } = useGetAnnouncementList();
-
   const [searchParams] = useSearchParams();
 
-  const ptype = searchParams.get('ptype');
+  const ptype = searchParams.get('ptype') as KeyOfAnnouncementTabKind;
 
   const searchRef = useRef<HTMLInputElement | null>(null);
 
@@ -37,7 +34,7 @@ export default function Announcement() {
     // setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
   }, []);
 
-  if (ptype === 'edit') {
+  if (ptype === 'EDIT') {
     return <AnnouncementEditor />;
   }
 

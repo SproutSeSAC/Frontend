@@ -4,62 +4,33 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import TabNavigation from '../../common/TabNavigation';
 
-import { Role } from '@/types';
+import { announcementTabList } from '@/constants/announcement';
+import { KeyOfAnnouncementTabKind } from '@/types';
 import { updateQueryParams } from '@/utils';
-
-type AnnouncementRole = Pick<
-  Role,
-  'CAMPUS_MANAGER' | 'EDU_MANAGER' | 'JOB_COORDINATOR'
->;
-
-type AnnouncementText =
-  | Role[keyof AnnouncementRole]
-  | '전체'
-  | '북마크'
-  | '공지사항 등록';
-
-type AnnouncementType = keyof AnnouncementRole | 'all' | 'bookmark' | 'edit';
-
-type AnnouncementTab = {
-  text: AnnouncementText;
-  type: AnnouncementType;
-};
-
-const TAB_LIST: AnnouncementTab[] = [
-  { text: '전체', type: 'all' },
-  { text: '캠퍼스 매니저', type: 'CAMPUS_MANAGER' },
-  { text: '교육 매니저', type: 'EDU_MANAGER' },
-  { text: '잡코디', type: 'JOB_COORDINATOR' },
-  { text: '북마크', type: 'bookmark' },
-];
 
 export default function AnnouncementTabNavigation() {
   const navigate = useNavigate();
 
+  const [tab, setTab] = useState<KeyOfAnnouncementTabKind>('ALL');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [tab, setTab] = useState<AnnouncementType>('all');
-
-  // const ptype = searchParams.get('ptype');
-
   useEffect(() => {
-    if (tab === 'all') {
+    if (tab === 'ALL') {
       setSearchParams('', { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
+  }, [setSearchParams, tab]);
 
   const handelChangeValue = (type: string) => {
     navigate(`/announcement`, {
       replace: true,
     });
-    setTab(type as AnnouncementType);
+    setTab(type as KeyOfAnnouncementTabKind);
     updateQueryParams(searchParams, setSearchParams, 'ptype', type);
   };
 
   return (
     <TabNavigation
-      tabList={TAB_LIST}
+      tabList={announcementTabList}
       tabClassName="w-[126px]"
       selectValue={tab}
       onChangeValue={handelChangeValue}
@@ -67,13 +38,13 @@ export default function AnnouncementTabNavigation() {
       <button
         type="button"
         onClick={() => {
-          setTab('edit');
+          setTab('EDIT');
           navigate('/announcement', {
             replace: true,
           });
-          updateQueryParams(searchParams, setSearchParams, 'ptype', 'edit');
+          updateQueryParams(searchParams, setSearchParams, 'ptype', 'EDIT');
         }}
-        className={`w-[126px] cursor-pointer whitespace-pre pb-[19px] text-center ${tab === 'edit' ? 'border-b-2 border-text' : 'text-gray2'}`}
+        className={`w-[126px] cursor-pointer whitespace-pre pb-[19px] text-center ${tab === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
         공지사항 등록
       </button>
