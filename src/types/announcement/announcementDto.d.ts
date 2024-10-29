@@ -31,8 +31,8 @@ type AnnouncementPostRequest = {
   }[];
   noticeType: string;
   applicationForm: string;
-  applicationStartDate: string;
-  applicationEndDate: string;
+  applicationStartDateTime: string;
+  applicationEndDateTime: string;
   eventSchedule: string;
   eventTime: string;
   meetingType: {

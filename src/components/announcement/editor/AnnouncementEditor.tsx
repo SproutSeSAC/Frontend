@@ -11,8 +11,10 @@ import {
   tooltip,
 } from '@/constants/announcement';
 import { AnnouncementDto } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import { AnnouncementEditorSchema } from '@/components/announcement/editor/AnnouncementEditorSchema';
 import AnnouncementTextEditor from '@/components/announcement/editor/AnnouncementTextEditor';
 import CircleNumber from '@/components/common/CircleNumber';
 import Title from '@/components/common/Title';
@@ -30,7 +32,7 @@ export default function AnnouncementEditor() {
 
   const methods = useForm<AnnouncementDto.PostRequest>({
     defaultValues: defaultAnnouncementFormValues,
-    // resolver: zodResolver(),
+    resolver: zodResolver(AnnouncementEditorSchema),
   });
 
   const { handleSubmit, control } = methods;
@@ -52,39 +54,35 @@ export default function AnnouncementEditor() {
       <form onSubmit={handleSubmit(() => {})} className="mt-[26px]">
         <div className="flex items-center gap-1.5">
           <CircleNumber number={1} />
-          <Title as="h1" title="공지사항 대상 과정" />
+          <Title as="h1" title="공지사항 필수 정보" />
         </div>
         <div className="relative mb-20 mt-8 grid grid-cols-2 gap-8 text-lg">
           {courseList && (
-            <Controller
-              control={control}
-              name="targetCourseList"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                const courseListOption = courseList.map(({ id, title }) => ({
-                  id,
-                  name: title,
-                }));
-                return (
-                  <MultiSelectDropdown
-                    defaultLabel="교육과정 선택"
-                    options={courseListOption}
-                    onChangeValue={data => {
-                      const ids = data.map(item => item.id);
-                      onChange(ids);
-                    }}
-                    errorMsg={error?.message}
-                  />
-                );
-              }}
-            />
+            <LabeledSection label="공지사항 대상 과정">
+              <Controller
+                control={control}
+                name="targetCourseList"
+                render={({ field: { onChange }, fieldState: { error } }) => {
+                  const courseListOption = courseList.map(({ id, title }) => ({
+                    id,
+                    name: title,
+                  }));
+                  return (
+                    <MultiSelectDropdown
+                      defaultLabel="교육과정 선택"
+                      options={courseListOption}
+                      onChangeValue={data => {
+                        const ids = data.map(item => item.id);
+                        onChange(ids);
+                      }}
+                      errorMsg={error?.message}
+                    />
+                  );
+                }}
+              />
+            </LabeledSection>
           )}
-        </div>
 
-        <div className="flex items-center gap-1.5">
-          <CircleNumber number={2} />
-          <Title as="h1" title="공지사항 필수 정보" />
-        </div>
-        <div className="relative mb-20 mt-8 grid grid-cols-2 gap-8">
           <LabeledSection label="공지 유형">
             <Controller
               control={control}
@@ -108,39 +106,70 @@ export default function AnnouncementEditor() {
               }}
             />
           </LabeledSection>
+        </div>
 
-          <LabeledSection label="신청 폼">
-            <Controller
-              control={control}
-              name="applicationForm"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                return (
-                  <div className="relative">
-                    <TextInput
-                      name="신청 폼"
-                      placeholder="Google Forms 등"
-                      onChange={onChange}
-                      className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
-                    />
-                    {error && (
-                      <ErrorMsg
-                        msg={error?.message || ''}
-                        className="absolute bottom-[-26px] ml-2"
-                      />
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </LabeledSection>
+        {needMoreInfoNoticeType && (
+          <>
+            <div className="flex items-center gap-1.5">
+              <CircleNumber number={2} />
+              <Title as="h1" title="공지사항 추가 정보" />
+            </div>
+            <div className="relative mb-20 mt-8 grid grid-cols-2 gap-8">
+              <LabeledSection label="신청 폼">
+                <Controller
+                  control={control}
+                  name="applicationForm"
+                  render={({ field: { onChange }, fieldState: { error } }) => {
+                    return (
+                      <div className="relative">
+                        <TextInput
+                          name="신청 폼"
+                          placeholder="Google Forms 등"
+                          onChange={onChange}
+                          className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
+                        />
+                        {error && (
+                          <ErrorMsg
+                            msg={error?.message || ''}
+                            className="absolute bottom-[-26px] ml-2"
+                          />
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+              </LabeledSection>
 
-          {needMoreInfoNoticeType && (
-            <>
+              <LabeledSection label="참여 인원">
+                <Controller
+                  control={control}
+                  name="applicationForm"
+                  render={({ field: { onChange }, fieldState: { error } }) => {
+                    return (
+                      <div className="relative">
+                        <TextInput
+                          name="신청 폼"
+                          placeholder="최대 40명"
+                          onChange={onChange}
+                          className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
+                        />
+                        {error && (
+                          <ErrorMsg
+                            msg={error?.message || ''}
+                            className="absolute bottom-[-26px] ml-2"
+                          />
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+              </LabeledSection>
+
               <LabeledSection label="신청 기간" className="col-span-2">
                 <div className="flex w-full items-center gap-2">
                   <Controller
                     control={control}
-                    name="applicationStartDate"
+                    name="applicationStartDateTime"
                     render={({
                       field: { onChange, value },
                       fieldState: { error },
@@ -157,7 +186,7 @@ export default function AnnouncementEditor() {
                   <span className="text-xl">~</span>
                   <Controller
                     control={control}
-                    name="applicationEndDate"
+                    name="applicationEndDateTime"
                     render={({
                       field: { onChange, value },
                       fieldState: { error },
@@ -293,13 +322,13 @@ export default function AnnouncementEditor() {
                   Zoom, 만족도 조사 링크는 추후에 등록해 주셔도 됩니다.
                 </p>
               </LabeledSection>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
 
         <div className="mt-16 flex items-center gap-1.5">
-          <CircleNumber number={2} />
-          <Title as="h1" title="프로젝트 상세 정보" />
+          <CircleNumber number={needMoreInfoNoticeType ? 3 : 2} />
+          <Title as="h1" title="공지사항 상세 정보" />
         </div>
         <div className="w-full">
           <LabeledSection label="제목" className="mb-6 mt-8">

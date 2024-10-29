@@ -49,8 +49,8 @@ export const defaultAnnouncementFormValues: AnnouncementDto.PostRequest = {
   targetCourseList: [],
   noticeType: '',
   applicationForm: '',
-  applicationStartDate: '',
-  applicationEndDate: '',
+  applicationStartDateTime: '',
+  applicationEndDateTime: '',
   eventSchedule: '',
   eventTime: '',
   meetingType: {

@@ -64,23 +64,19 @@ export default function AnnouncementTabNavigation() {
       selectValue={tab}
       onChangeValue={handelChangeValue}
     >
-      <div
-        className={`box-border w-[126px] cursor-pointer justify-center pb-[19px] text-center ${tab === 'edit' ? 'border-b-2 border-text' : 'text-gray2'}`}
+      <button
+        type="button"
+        onClick={() => {
+          setTab('edit');
+          navigate('/announcement', {
+            replace: true,
+          });
+          updateQueryParams(searchParams, setSearchParams, 'ptype', 'edit');
+        }}
+        className={`w-[126px] cursor-pointer whitespace-pre pb-[19px] text-center ${tab === 'edit' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
-        <button
-          type="button"
-          onClick={() => {
-            setTab('edit');
-            navigate('/announcement', {
-              replace: true,
-            });
-            updateQueryParams(searchParams, setSearchParams, 'ptype', 'edit');
-          }}
-          className="whitespace-pre"
-        >
-          공지사항 등록
-        </button>
-      </div>
+        공지사항 등록
+      </button>
     </TabNavigation>
   );
 }
