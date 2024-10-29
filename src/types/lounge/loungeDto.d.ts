@@ -15,6 +15,10 @@ export interface Lounge {
   positionNames: string[];
   ptype: Ptype;
 }
+export type PutLoungeProject = {
+  projectId: number;
+  params: PostLoungeProject;
+};
 export interface PostLoungeProject
   extends Pick<
     Lounge,
@@ -66,8 +70,17 @@ export interface GetLoungeProjectDetail {
   projectStatus: ProjectStatusType;
   meetingType: Progress;
   createdAt: string;
-  positionNames: string[];
+  position: FilterType[];
   ptype: Ptype;
+  techStack: DetailPostTechStack[];
+}
+
+export interface DetailPostTechStack {
+  id: number;
+  name: string;
+  isActive: boolean;
+  path: string;
+  jobName: string;
 }
 
 export interface GetLoungeProjectComment {
