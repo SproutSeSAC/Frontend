@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         element: <Store />,
       },
       {
-        path: 'stores/:storeId',
+        path: 'stores/detail-location',
         element: <StoreDetail />,
       },
       {
