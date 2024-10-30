@@ -28,7 +28,7 @@ export default function Store() {
   const observeRef = useRef(null);
 
   const { storeList, fetchNextPage, hasNextPage, isLoading } =
-    useGetStoreList();
+    useGetStoreList(); // TODO: 무한스크롤 테스트 후 hook 삭제하고 컴포넌트 내에서만 처리가능하도록 수정예정
 
   const onIntersect = useCallback(
     (entry: IntersectionObserverEntry) => {
@@ -75,36 +75,39 @@ export default function Store() {
                 type="button"
                 className="flex size-[30px] items-center justify-center rounded-full bg-white"
                 aria-label="식당 상세보기로 이동"
-                // TODO: 후에 라우팅 수정
-                onClick={() => navigate('/stores/1')}
+                onClick={() => navigate('/stores/detail-location')}
               >
                 <BsMap className="text-gray2" />
               </button>
             </div>
 
             <div className="grid gap-9 text-base xl:grid-cols-2 2xl:grid-cols-3">
-              {(storeList || []).map(storeData => {
-                return (
-                  <div
-                    className="aspect-square"
-                    onClick={() => onOpenModal(storeData.id)}
-                    key={storeData.id}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        onOpenModal(storeData.id);
-                      }
-                    }}
-                  >
-                    <StoreCard
-                      width="w-full"
-                      height="h-full"
-                      storeData={storeData}
-                    />
-                  </div>
-                );
-              })}
+              {storeList && storeList.length > 0 ? (
+                storeList.map(storeData => {
+                  return (
+                    <div
+                      className="aspect-square"
+                      onClick={() => onOpenModal(storeData.id)}
+                      key={storeData.id}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          onOpenModal(storeData.id);
+                        }
+                      }}
+                    >
+                      <StoreCard
+                        width="w-full"
+                        height="h-full"
+                        storeData={storeData}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                <div>맛집 데이터가 없습니다.</div>
+              )}
               <div ref={observeRef} />
               {isLoading && <LoopLoading />}
             </div>

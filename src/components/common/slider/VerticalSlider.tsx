@@ -48,7 +48,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
     isLoading,
     hideNextButton = false,
   }: VerticalSliderProps<T>,
-  observeRef?: ForwardedRef<HTMLDivElement>, // Forwarding the ref to the container div
+  observeRef?: ForwardedRef<HTMLDivElement>,
 ) {
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -80,7 +80,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
           style={{ height: 'inherit' }}
           onSwiper={setSwiperInstance}
         >
-          {slideList.map(item => (
+          {slideList.map((item: T) => (
             <SwiperSlide key={JSON.stringify(item)}>
               {children(item)}
             </SwiperSlide>
@@ -100,6 +100,8 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
       )}
     </div>
   );
-});
+}) as <T>(
+  props: VerticalSliderProps<T> & { ref?: ForwardedRef<HTMLDivElement> },
+) => JSX.Element;
 
 export default VerticalSlider;

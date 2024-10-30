@@ -16,6 +16,7 @@ export default function NaverMapDirections() {
   });
   useEffect(() => {
     if (isMapReady) {
+      // TODO : campusName값을 사용해서  constants/seviceConstant.ts 의 campusList로 캠퍼스 위경도값 가져오기.
       drawRoute('127.037784,37.570082', '127.041411,37.570862');
     }
   }, [isMapReady, drawRoute]);
