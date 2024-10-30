@@ -38,6 +38,6 @@ export const useUpdateUserProfile = (
 };
 
 // 회원 탈퇴
-export const leaveMemberShip = (userId: number) => {
-  return axiosInstance.put('/login/leave', { userId });
+export const leaveMemberShip = () => {
+  return axiosInstance.put('/login/leave');
 };

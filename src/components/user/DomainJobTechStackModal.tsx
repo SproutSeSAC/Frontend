@@ -34,6 +34,11 @@ type FormValue = {
 
 type GetOptions = (type: 'domain' | 'job', list: Domain[] | Job[]) => Option[];
 
+type UpdateableValue = Pick<
+  UpdateableUserProfile,
+  'updatedDomainIdList' | 'updatedJobIdList' | 'updatedTechStackIdList'
+>;
+
 export default function DomainJobTechStackModal() {
   const { hideDialog } = useDialogContext();
 
@@ -42,7 +47,7 @@ export default function DomainJobTechStackModal() {
     domainList: allDomainList,
     jobList: allJobList,
     techStackList: allTechStackList,
-    // mutateAsync,
+    mutateAsync,
     isLoading,
   } = useUpdateProfile();
 
@@ -64,20 +69,31 @@ export default function DomainJobTechStackModal() {
     resolver: zodResolver(DomainJobTechStackSchema),
   });
 
-  const { handleSubmit, control } = methods;
+  const {
+    handleSubmit,
+    control,
+    formState: { dirtyFields },
+  } = methods;
 
   const onSubmit: SubmitHandler<FormValue> = (formData: FormValue) => {
-    const { updatedDomainList, updatedJobList, updatedTechStackList } =
-      formData;
-
-    const updatableValue: Partial<UpdateableUserProfile> = {
-      updatedDomainIdList: updatedDomainList.map(({ id }) => id),
-      updatedJobIdList: updatedJobList.map(({ id }) => id),
-      updatedTechStackIdList: updatedTechStackList.map(({ id }) => id),
+    const matchedKeyObj = {
+      updatedDomainList: 'updatedDomainIdList',
+      updatedJobList: 'updatedJobIdList',
+      updatedTechStackList: 'updatedTechStackIdList',
     };
-    console.log(updatableValue);
 
-    // mutateAsync(updatableValue); // 이후 테스트 예정
+    const updatedValue = Object.entries(matchedKeyObj).reduce<
+      Partial<UpdateableValue>
+    >((acc, [originalKey, newKey]) => {
+      if (dirtyFields[originalKey as keyof FormValue]) {
+        acc[newKey as keyof UpdateableValue] = formData[
+          originalKey as keyof FormValue
+        ].map(({ id }) => id);
+      }
+      return acc;
+    }, {});
+
+    mutateAsync(updatedValue);
     hideDialog();
   };
 

@@ -1,8 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 
+import { ACCESS_TOKEN_KEY, CALENDAR_KEY, REFRESH_TOKEN_KEY } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { deleteCookie } from '@/utils';
 
+import SquareButton from '@/components/common/button/SquareButton';
+
 export default function HeaderMenu() {
+  const { alert, hideDialog } = useDialogContext();
+
   const menuList = [
     { title: '마이페이지', to: '/mypage' },
     { title: '공지사항', to: '/announcement' },
@@ -11,13 +17,34 @@ export default function HeaderMenu() {
   const navigate = useNavigate();
 
   const onLogOutClick = () => {
-    const confirm = window.confirm('정말로 로그아웃하시겠습니까?');
-    if (confirm) {
-      deleteCookie('access_token');
-      deleteCookie('refresh_token');
-      deleteCookie('calendar_access_token');
-      navigate('/login');
-    }
+    alert({
+      showDim: true,
+      className: 'z-30',
+      text: '정말 로그아웃하시겠어요?',
+      children: (
+        <>
+          <SquareButton
+            name="확인"
+            onClick={() => {
+              deleteCookie(ACCESS_TOKEN_KEY);
+              deleteCookie(REFRESH_TOKEN_KEY);
+              deleteCookie(CALENDAR_KEY);
+              navigate('/login');
+              hideDialog();
+            }}
+            type="button"
+            className="mt-6"
+          />
+          <SquareButton
+            color="gray"
+            name="취소"
+            onClick={hideDialog}
+            type="button"
+            className="mt-6"
+          />
+        </>
+      ),
+    });
   };
 
   return (

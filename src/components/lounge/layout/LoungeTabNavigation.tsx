@@ -19,20 +19,12 @@ const TAB_LIST = [
 export default function LoungeTabNavigation() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const modifyProjectId = searchParams.get('modifyProject');
   const [tab, setTab] = useState('ALL');
-  const [temporaryTab, setTemporaryTab] = useState('');
 
   const location = useLocation();
 
   const { hideDialog, alert } = useDialogContext();
-
-  useEffect(() => {
-    if (tab === 'ALL') {
-      setSearchParams('', { replace: true });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
 
   useEffect(() => {
     if (location.pathname === '/lounge/editor') {
@@ -51,34 +43,41 @@ export default function LoungeTabNavigation() {
     [navigate, searchParams, setSearchParams],
   );
 
-  const handleLeave = useCallback(() => {
-    alert({
-      showDim: true,
-      className: 'z-30',
-      text: '정말 나가시겠어요?',
-      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
-      children: (
-        <>
-          <SquareButton
-            color="gray"
-            name="계속 작성하기"
-            onClick={hideDialog}
-            type="button"
-            className="mt-6"
-          />
-          <SquareButton
-            name="나가기"
-            onClick={() => {
-              hideDialog();
-              tabChange(temporaryTab);
-            }}
-            type="button"
-            className="mt-6"
-          />
-        </>
-      ),
-    });
-  }, [alert, hideDialog, tabChange, temporaryTab]);
+  const handleLeave = useCallback(
+    (type: string) => {
+      alert({
+        showDim: true,
+        className: 'z-30',
+        text: '정말 나가시겠어요?',
+        subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
+        children: (
+          <>
+            <SquareButton
+              color="gray"
+              name="계속 작성하기"
+              onClick={() => hideDialog()}
+              type="button"
+              className="mt-6"
+            />
+            <SquareButton
+              name="나가기"
+              onClick={() => {
+                if (modifyProjectId) {
+                  searchParams.delete('modifyProject');
+                }
+
+                hideDialog();
+                tabChange(type);
+              }}
+              type="button"
+              className="mt-6"
+            />
+          </>
+        ),
+      });
+    },
+    [alert, hideDialog, modifyProjectId, searchParams, tabChange],
+  );
 
   const handelChangeValue = useCallback(
     (
@@ -89,8 +88,8 @@ export default function LoungeTabNavigation() {
     ) => {
       if (location.pathname === '/lounge/editor') {
         e?.preventDefault();
-        setTemporaryTab(type);
-        handleLeave();
+
+        handleLeave(type);
         return;
       }
 
@@ -113,10 +112,12 @@ export default function LoungeTabNavigation() {
           type="button"
           onClick={() => {
             setTab('edit');
-            navigate('/lounge/editor');
+            if (!modifyProjectId) {
+              navigate('/lounge/editor');
+            }
           }}
         >
-          모집하기
+          {modifyProjectId ? '모집수정' : '모집하기'}
         </button>
       </div>
     </TabNavigation>

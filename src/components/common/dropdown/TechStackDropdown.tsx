@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import TabNavigation from '../TabNavigation';
 
+import TechStackIcon from '@/components/common/TechStackIcon';
 import XButton from '@/components/common/button/XButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import TechStackOption from '@/components/common/dropdown/option/TechStackOption';
@@ -112,8 +113,13 @@ const TechStackDropdown = memo(function TechStackDropdown({
     if (initialSelectedOptions) {
       setSelectedOptions(initialSelectedOptions);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialSelectedOptions]);
+
+  const onClose = () => setOpen(false);
+
+  const handleSelectBoxClick = () => {
+    setOpen(prev => !prev);
+  };
 
   return (
     <>
@@ -122,11 +128,12 @@ const TechStackDropdown = memo(function TechStackDropdown({
           {selectedOptions?.map(option => (
             <li
               key={option.id}
-              className="relative size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
+              className="relative mb-1.5 flex size-10 flex-shrink-0 items-center justify-center rounded-lg"
             >
-              <img src={option.iconImageUrl} alt={option.name} />
+              {/* <img src={option.iconImageUrl} alt={option.name} /> */}
+              <TechStackIcon techStack={option.name} className="size-8" />
               <XButton
-                className="absolute -right-1 -top-1 rounded-full bg-black"
+                className="absolute -right-1 -top-1 rounded-full bg-black opacity-70"
                 onDeleteClick={() => handleSelectOptionChange(option)}
               />
             </li>
@@ -137,7 +144,8 @@ const TechStackDropdown = memo(function TechStackDropdown({
       <SelectBox<MultiSelectProps>
         defaultLabel={defaultLabel}
         selectedOptions={selectedOptions}
-        setOpen={setOpen}
+        onClose={onClose}
+        onSelectBoxClick={handleSelectBoxClick}
         open={open}
         errorMsg={errorMsg}
         onResetClick={onResetClick}

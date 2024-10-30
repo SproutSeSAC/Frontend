@@ -4,11 +4,10 @@ import { useDialogContext } from '@/hooks';
 import { UserProfile } from '@/types';
 
 import Tag from '@/components/common/Tag';
+import TechStackIcon from '@/components/common/TechStackIcon';
 import EditButton from '@/components/common/button/EditButton';
+import ScrollContainer from '@/components/common/container/ScrollContainer';
 import DomainJobTechStackModal from '@/components/user/DomainJobTechStackModal';
-
-const listStyle = 'flex items-center py-2.5';
-const itemStyle = 'font-semibold tracking-tight px-2 mt-1.5 leading-5';
 
 export default function DomainJobTechStackCard() {
   const {
@@ -37,8 +36,8 @@ export default function DomainJobTechStackCard() {
         onClick={openModalClick}
       />
 
-      <div className="flex h-[190px] w-full flex-1 flex-col justify-between divide-y rounded-3xl bg-white px-5 py-3 shadow-card">
-        <ul className={`${listStyle} gap-1.5`}>
+      <div className="flex h-[190px] w-full flex-col justify-between gap-2 divide-y rounded-3xl bg-white p-5 shadow-card">
+        <ScrollContainer gap={2}>
           {domainList
             ?.sort((a, b) => a.id - b.id)
             ?.map(({ id, domain }) => (
@@ -46,33 +45,34 @@ export default function DomainJobTechStackCard() {
                 <Tag text={domain} size="big" color="gray" />
               </li>
             ))}
-        </ul>
+        </ScrollContainer>
 
-        <ul className={listStyle}>
+        <ScrollContainer gap={2}>
           {jobList
             ?.sort((a, b) => a.id - b.id)
             ?.map(({ job, id }) => (
-              <li key={id} className={itemStyle}>
+              <li
+                key={id}
+                className="mt-1.5 px-2 font-semibold leading-5 tracking-tight"
+              >
                 {job}
               </li>
             ))}
-        </ul>
+        </ScrollContainer>
 
         {/* 기술스택 */}
-        <div className="overflow-x-scroll scrollbar-hide">
-          <ul className={`${listStyle} flex w-full max-w-0 flex-1 gap-x-3`}>
-            {techStackList
-              ?.sort((a, b) => a.id - b.id)
-              ?.map(({ id, techStack, iconImageUrl }) => (
-                <li
-                  key={id}
-                  className="size-10 flex-shrink-0 rounded-lg bg-vividGreen3"
-                >
-                  <img src={iconImageUrl} alt={techStack} />
-                </li>
-              ))}
-          </ul>
-        </div>
+        <ScrollContainer gap={3}>
+          {techStackList
+            ?.sort((a, b) => a.id - b.id)
+            ?.map(({ id, techStack }) => (
+              <li
+                key={id}
+                className="flex size-10 items-center justify-center rounded-lg"
+              >
+                <TechStackIcon techStack={techStack} className="size-9" />
+              </li>
+            ))}
+        </ScrollContainer>
       </div>
     </>
   );

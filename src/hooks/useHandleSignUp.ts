@@ -1,8 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-
+// import { useNavigate } from 'react-router-dom';
 import { useTechStackList } from '@/hooks/useTechStackList';
 
-import { usePostUserInfo } from '@/services/auth/authMutations';
+// import { usePostUserInfo } from '@/services/auth/authMutations';
 import {
   useGetCampusList,
   useGetCourseList,
@@ -12,17 +11,22 @@ import {
   useGetJobList,
 } from '@/services/specifications/specificationsQueries';
 
+import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
+
 import { getQuestionListByRole } from '@/constants';
-import { KeyOfRole, SignUpFormValue, UserInfo, VerifyCode } from '@/types';
+import { KeyOfRole, UpdateSignUpValue } from '@/types';
+import { useAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
 export const useHandleSignUp = ({
-  watchedCampus,
+  watchedCampusList,
   watchedRole,
 }: {
-  watchedCampus: { id: number; name: string }[];
+  watchedCampusList: { id: number; name: string }[];
   watchedRole: KeyOfRole;
 }) => {
+  const [isVerifiedCode] = useAtom(verifiedCodeAtom);
+
   const {
     data: jobList,
     isLoading: isJobListLoading, //
@@ -40,23 +44,24 @@ export const useHandleSignUp = ({
     isLoading: isCampusListLoading, //
   } = useGetCampusList();
 
-  const { data: courseList } = useGetCourseList(watchedCampus[0]?.id);
+  const { data: courseList } = useGetCourseList(watchedCampusList[0]?.id);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { mutate } = usePostUserInfo({
-    onSuccess: () => navigate('/'),
-    onError: error => console.log(error),
-  });
+  // const { mutate } = usePostUserInfo({
+  //   onSuccess: () => navigate('/'),
+  // });
 
-  const onSubmit: SubmitHandler<SignUpFormValue> = formData => {
+  const onSubmit: SubmitHandler<UpdateSignUpValue> = formData => {
     const marketingConsent = formData.marketingConsent === '동의';
     const data = { ...formData, marketingConsent };
-
-    const { verifyCode, campusId, ...rest } = data as unknown as UserInfo &
-      VerifyCode;
-
-    mutate(rest);
+    // const { verifyCode, campusList, ...rest } = data;
+    if (!isVerifiedCode) {
+      console.log('인증 안된 상태');
+      return;
+    }
+    console.log(data);
+    // mutate(rest);
   };
 
   const questionListByRole = getQuestionListByRole(watchedRole);

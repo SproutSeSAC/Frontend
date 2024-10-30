@@ -64,7 +64,7 @@ export default function MyCourseProgressCard() {
             alt="새싹 로고"
             className="size-5 p-1"
           />
-          <span className="mr-2 text-sm font-bold">{campusName}캠퍼스</span>
+          <span className="mr-2 text-sm font-bold">{campusName}</span>
           <span className="text-sm font-medium text-gray1">
             {courseStartDate.replaceAll('-', '.')} ~{' '}
             {courseEndDate.replaceAll('-', '.')}

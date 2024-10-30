@@ -1,47 +1,55 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-// import { useGetInfiniteStoreList } from '@/services/store/storeQueries';
-// import useObserver from '@/hooks/useObserver';
-import { useCollapsibleSideView } from '@/hooks';
+import useGetStoreList from '@/hooks/useGetStoreList';
+import useObserver from '@/hooks/useObserver';
+
+import { useCollapsibleSideView, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { BsMap } from 'react-icons/bs';
 import { FaChevronLeft } from 'react-icons/fa';
 
+import LoopLoading from '@/components/common/LoopLoading';
 import Title from '@/components/common/Title';
 import SearchInput from '@/components/common/input/SearchInput';
-import MealRecruitSideView from '@/components/meal-recruit/MealRecruitSideView';
 import StoreCard from '@/components/store/StoreCard';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
-import StoreModal from '@/components/store/StoreModal';
+import MealRecruitSideView from '@/components/store/meal-recruit/MealRecruitSideView';
+import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function Store() {
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showDialog, hideDialog } = useDialogContext();
 
   const observeRef = useRef(null);
 
-  // TODO : 무한스크롤 구현부
-  // const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-  //   useGetInfiniteStoreList({});
+  const { storeList, fetchNextPage, hasNextPage, isLoading } =
+    useGetStoreList(); // TODO: 무한스크롤 테스트 후 hook 삭제하고 컴포넌트 내에서만 처리가능하도록 수정예정
 
-  // const onIntersect = useCallback(
-  //   (entry: IntersectionObserverEntry) => {
-  //     if (entry.isIntersecting) {
-  //       if (hasNextPage) fetchNextPage();
-  //     }
-  //   },
-  //   [fetchNextPage, hasNextPage],
-  // );
+  const onIntersect = useCallback(
+    (entry: IntersectionObserverEntry) => {
+      if (entry.isIntersecting) {
+        if (hasNextPage) fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage],
+  );
 
-  // useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
+  useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
 
-  const onOpenModal = () => {
-    setIsModalOpen(true);
+  const onOpenModal = async (storeId: number) => {
+    await showDialog({
+      key: 'STORE_MODAL',
+      element: (
+        <div className="bg-red fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform bg-red-300">
+          <StoreModal onClose={() => hideDialog()} storeId={storeId} />
+        </div>
+      ),
+    });
   };
 
   return (
@@ -67,44 +75,45 @@ export default function Store() {
                 type="button"
                 className="flex size-[30px] items-center justify-center rounded-full bg-white"
                 aria-label="식당 상세보기로 이동"
-                // TODO: 후에 라우팅 수정
-                onClick={() => navigate('/stores/1')}
+                onClick={() => navigate('/stores/detail-location')}
               >
                 <BsMap className="text-gray2" />
               </button>
             </div>
 
-            <div className="flex flex-wrap justify-around gap-9 text-base">
-              {Array.from({ length: 12 }, (_, idx) => (
-                <button onClick={onOpenModal} key={idx} type="button">
-                  <StoreCard width="w-[290px]" height="h-[290px]" />
-                </button>
-              ))}
+            <div className="grid gap-9 text-base xl:grid-cols-2 2xl:grid-cols-3">
+              {storeList && storeList.length > 0 ? (
+                storeList.map(storeData => {
+                  return (
+                    <div
+                      className="aspect-square"
+                      onClick={() => onOpenModal(storeData.id)}
+                      key={storeData.id}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          onOpenModal(storeData.id);
+                        }
+                      }}
+                    >
+                      <StoreCard
+                        width="w-full"
+                        height="h-full"
+                        storeData={storeData}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                <div>맛집 데이터가 없습니다.</div>
+              )}
               <div ref={observeRef} />
+              {isLoading && <LoopLoading />}
             </div>
           </div>
         </section>
       </MainView>
-
-      {isModalOpen && (
-        <>
-          <div className="bg-red fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform bg-red-300">
-            <StoreModal onClose={() => setIsModalOpen(false)} />
-          </div>
-          <div
-            className="fixed inset-0"
-            onClick={() => setIsModalOpen(false)}
-            onKeyDown={event => {
-              if (event.key === 'Escape') {
-                setIsModalOpen(false);
-              }
-            }}
-            tabIndex={-1}
-            role="button"
-            aria-label="모달 닫기"
-          />
-        </>
-      )}
 
       <MealRecruitSideView
         sideViewOpen={sideViewOpen}

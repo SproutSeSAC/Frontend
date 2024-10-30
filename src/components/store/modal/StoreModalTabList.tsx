@@ -1,8 +1,9 @@
-type TabType = 'menu' | 'review' | 'storyTelling';
+type TabType = 'menu' | 'review' | 'directionsInfo' | 'storyTelling';
 
 const TAB_LIST = [
   { text: '메뉴', type: 'menu' },
-  { text: '새싹후기', type: 'review' },
+  { text: '새싹정보', type: 'directionsInfo' },
+  { text: '댓글후기', type: 'review' },
 ];
 
 interface StoreModalTabListProps {

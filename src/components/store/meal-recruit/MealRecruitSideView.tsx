@@ -1,5 +1,6 @@
+import MealRecruitSlider from './MealRecruitSlider';
+
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
-import MealRecruitSlider from '@/components/meal-recruit/MealRecruitSlider';
 
 interface MealRecruitSideViewProps {
   sideViewOpen: boolean;

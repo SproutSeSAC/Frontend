@@ -1,19 +1,22 @@
 import { useCallback } from 'react';
 
+import { dateFormat, timeFormat } from '@/utils/dateFormat';
+
 import MealRecruitCardModal from './MealRecruitCardModal';
 
 import { useDialogContext } from '@/hooks';
+import { Content } from '@/types/store/storeMealPostDto';
 
-export default function MealRecruitCard({ slideItem }: { slideItem: number }) {
+export default function MealRecruitCard({ slideItem }: { slideItem: Content }) {
   const { showDialog } = useDialogContext();
 
   const getButtonState = useCallback(() => {
-    if (slideItem === 2) return { text: '참여중', style: 'bg-gray2' };
-    if (slideItem === 3) return { text: '모집완료', style: 'bg-vividGreen3' };
+    // if (slideItem === 2) return { text: '참여중', style: 'bg-gray2' };
+    // if (slideItem === 3) return { text: '모집완료', style: 'bg-vividGreen3' };
     return { text: '자세히', style: 'bg-vividGreen1' };
-  }, [slideItem]);
+  }, []);
 
-  const isDisabled = slideItem === 3;
+  const isDisabled = false;
 
   return (
     <div className="h-full w-full text-start">
@@ -21,7 +24,7 @@ export default function MealRecruitCard({ slideItem }: { slideItem: number }) {
         className={`rounded-lg px-5 py-4 shadow-card ${isDisabled ? 'bg-gray4' : 'bg-white'}`}
       >
         <header className={`mb-4 font-semibold ${isDisabled && 'text-gray1'}`}>
-          [성북 2기] 햄버거 드실 분 모집합니다!
+          {slideItem.title}
         </header>
 
         <div className="mb-8 flex flex-col gap-2 text-sm">
@@ -34,7 +37,9 @@ export default function MealRecruitCard({ slideItem }: { slideItem: number }) {
               |{' '}
             </span>
             <span className={`${isDisabled && 'text-gray1'}`}>
-              2024.07.06 오후 1시
+              {slideItem
+                ? `${dateFormat(slideItem.appointmentTime)} ${timeFormat(slideItem.appointmentTime, 'A h시')}`
+                : '-'}
             </span>
           </p>
           <p>
@@ -56,7 +61,7 @@ export default function MealRecruitCard({ slideItem }: { slideItem: number }) {
               |{' '}
             </span>
             <span className={`${isDisabled && 'text-gray1'}`}>
-              월곡역 1번 출구 앞
+              {slideItem.meetingPlace}
             </span>
           </p>
         </div>
@@ -68,7 +73,7 @@ export default function MealRecruitCard({ slideItem }: { slideItem: number }) {
             <p
               className={`text-sm ${isDisabled ? 'text-gray2' : 'text-gray1'}`}
             >
-              2/4명
+              {slideItem.ordinalNumber}명
             </p>
           </div>
           <button
@@ -78,7 +83,7 @@ export default function MealRecruitCard({ slideItem }: { slideItem: number }) {
             onClick={async () => {
               await showDialog({
                 key: 'MEAL-RECRUIT-CARD-TYPE',
-                element: <MealRecruitCardModal />,
+                element: <MealRecruitCardModal id={slideItem.id} />,
               });
             }}
           >

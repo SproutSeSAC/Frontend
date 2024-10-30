@@ -1,6 +1,8 @@
-import styles from '@/assets/terms-and-policy/policy.module.css';
-import { useTermsAndPolicy } from '@/hooks';
+import { TermsAndPolicyType } from '@/services/auth/termsAndPolicy';
+
+import { useDialogContext } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
+import styles from '@/policy.module.css';
 import { FcGoogle } from 'react-icons/fc';
 
 import Modal from '@/components/common/modal/Modal';
@@ -10,12 +12,34 @@ export default function Login() {
     window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
   };
 
-  const {
-    modalState,
-    toggleModal,
-    isLoading,
-    htmlContent, //
-  } = useTermsAndPolicy();
+  const { showDialog, hideDialog } = useDialogContext();
+
+  const onContentClick = async (type: TermsAndPolicyType) => {
+    const filename =
+      type === '서비스 이용약관'
+        ? 'termsAndConditionsOfService'
+        : 'policyOfHandlingPersonalInformation';
+
+    const response = await fetch(`/terms-and-policy/${filename}.html`);
+
+    return response.text().then(content => {
+      showDialog({
+        key: 'POLICY_TERM_KEY',
+        element: (
+          <Modal
+            title={type}
+            onToggleClick={hideDialog}
+            className="rounded-xl p-4"
+          >
+            <div
+              className={`h-[70vh] w-[500px] overflow-auto ${styles.policyContainer}`}
+              dangerouslySetInnerHTML={{ __html: content ?? '' }}
+            />
+          </Modal>
+        ),
+      });
+    });
+  };
 
   return (
     <AuthPageLayout>
@@ -48,7 +72,7 @@ export default function Login() {
         <button
           type="button"
           className="underline"
-          onClick={() => toggleModal('서비스 이용약관')}
+          onClick={() => onContentClick('서비스 이용약관')}
         >
           이용약관
         </button>
@@ -56,7 +80,7 @@ export default function Login() {
         <button
           type="button"
           className="underline"
-          onClick={() => toggleModal('개인정보 처리방침')}
+          onClick={() => onContentClick('개인정보 처리방침')}
         >
           개인정보 처리방침
         </button>
@@ -66,21 +90,6 @@ export default function Login() {
       <span className="mt-[55%] self-end text-sm text-gray1">
         © Team Sprout 2024
       </span>
-
-      {modalState.isOpen && (
-        <Modal
-          title={modalState.type}
-          onToggleClick={toggleModal}
-          className="rounded-xl p-4"
-        >
-          <div
-            className={`h-[70vh] w-[500px] overflow-auto ${styles.policyContainer}`}
-            dangerouslySetInnerHTML={{
-              __html: !isLoading && htmlContent ? htmlContent : '',
-            }}
-          />
-        </Modal>
-      )}
     </AuthPageLayout>
   );
 }

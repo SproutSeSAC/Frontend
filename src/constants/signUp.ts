@@ -1,8 +1,8 @@
 import {
   KeyOfRole,
   Role,
-  SignUpFormValue,
   SignUpQuestionsByStep,
+  UpdateSignUpValue,
 } from '@/types';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
@@ -32,43 +32,43 @@ const commonStudentStep: SignUpQuestionsByStep[] = [
       text: '본인의 스택을 선택해주세요.',
       condition: '',
     },
-    techStackIdList: [],
+    techStackList: [],
   },
   {
     title: { text: '관심있는 직군을 선택해주세요.', condition: '*최대 5가지' },
-    jobIdList: [],
+    jobList: [],
   },
   {
     title: {
       text: '관심있는 도메인을 선택해주세요.',
       condition: '*최대 3가지',
     },
-    domainIdList: [],
+    domainList: [],
   },
 ];
 
 const sesacStudentStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '소속 캠퍼스를 선택해주세요.', condition: '' },
-    campusId: [],
+    campusList: [],
   },
   {
     title: { text: '소속 교육과정을 선택해주세요.', condition: '' },
-    courseId: [],
+    courseList: [],
   },
 ];
 
 const adminCampusStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복가능' },
-    campusId: [],
+    campusList: [],
   },
 ];
 
 const adminCourseStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '담당 교육 과정은 무엇인가요?' },
-    courseId: [],
+    courseList: [],
   },
 ];
 
@@ -125,15 +125,15 @@ export const matchedRoleName: Role = {
   PRE_TRAINEE: '예비 수강생',
 };
 
-export const defaultSignUpFormValues: SignUpFormValue = {
+export const defaultSignUpFormValues: UpdateSignUpValue = {
   name: '',
   nickname: '',
   role: 'TRAINEE',
-  campus: [],
-  course: [],
-  domainIdList: [],
-  jobIdList: [],
-  techStackIdList: [],
+  campusList: [],
+  courseList: [],
+  domainList: [],
+  jobList: [],
+  techStackList: [],
   marketingConsent: '동의',
   verifyCode: '',
 };

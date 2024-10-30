@@ -7,6 +7,7 @@ interface SquareButtonProps {
   type?: 'button' | 'submit';
   color?: 'gray' | 'oliveGreen' | 'vividGreen';
   children?: ReactNode;
+  disabled?: boolean;
 }
 
 export default function SquareButton({
@@ -16,6 +17,7 @@ export default function SquareButton({
   type = 'button',
   color = 'oliveGreen',
   children,
+  disabled = false,
 }: SquareButtonProps) {
   const styleByColor = {
     oliveGreen: 'bg-oliveGreen1 text-white',
@@ -30,6 +32,7 @@ export default function SquareButton({
       type={type === 'submit' ? 'submit' : 'button'}
       className={`rounded-lg ${colorStyle} px-4 py-2 tracking-tight text-white ${className}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
       {name}
