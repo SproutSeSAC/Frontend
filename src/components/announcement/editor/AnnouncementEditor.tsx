@@ -76,6 +76,7 @@ export default function AnnouncementEditor() {
                         onChange(ids);
                       }}
                       errorMsg={error?.message}
+                      hasFullCheck
                     />
                   );
                 }}

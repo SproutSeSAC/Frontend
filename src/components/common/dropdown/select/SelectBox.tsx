@@ -73,9 +73,14 @@ export default function SelectBox<
 
   const getSelectedOptionLabel = useCallback(
     (options: Option[], label: string) => {
-      if (options.length) {
-        return `${options[0].name} ${
-          options.length > 1 ? `외 ${options.length - 1}개` : ''
+      const filteredFullCheckOptions = options.filter(
+        option => option.name !== '전체',
+      );
+      if (filteredFullCheckOptions.length) {
+        return `${filteredFullCheckOptions[0].name} ${
+          filteredFullCheckOptions.length > 1
+            ? `외 ${filteredFullCheckOptions.length - 1}개`
+            : ''
         }`;
       }
       return label;
