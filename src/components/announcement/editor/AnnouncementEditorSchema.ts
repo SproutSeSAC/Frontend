@@ -23,11 +23,15 @@ export const AnnouncementEditorSchema = z.object({
     .string()
     .min(1, '신청 기간이 선택되지 않았습니다.'),
 
-  eventSchedule: z //
+  eventDate: z //
     .string()
     .min(1, '일시가 선택되지 않았습니다.'),
 
-  eventTime: z //
+  eventStartTime: z //
+    .string()
+    .min(1, '시간이 선택되지 않았습니다.'),
+
+  eventEndTime: z //
     .string()
     .min(1, '시간이 선택되지 않았습니다.'),
 

@@ -33,8 +33,9 @@ type AnnouncementPostRequest = {
   applicationForm: string;
   applicationStartDateTime: string;
   applicationEndDateTime: string;
-  eventSchedule: string;
-  eventTime: string;
+  eventDate: string;
+  eventStartTime: string;
+  eventEndTime: string;
   meetingType: {
     type: MeetingTypeKey;
     detail: '';

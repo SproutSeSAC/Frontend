@@ -89,9 +89,8 @@ export default function SelectBox<
   );
 
   const styleByBoxShape = {
-    inputShape: `w-full gap-4 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg ${boxShape === 'buttonShape' && 'text-gray1'}`,
-    buttonShape:
-      'rounded-2xl border border-gray2 bg-bg px-3 py-1 gap-4 text-gray1',
+    inputShape: `w-full bg-white px-4 py-[15px] text-start text-lg`,
+    buttonShape: 'border-gray2 bg-bg px-3 py-1 text-gray1',
   };
 
   const selectBoxStyle = styleByBoxShape[boxShape];
@@ -102,12 +101,12 @@ export default function SelectBox<
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex items-center [&>svg]:size-5 [&>svg]:text-gray1 ${selectBoxStyle} ${errorMsg && 'border-red-500'} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:text-gray1 ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
         >
           {isSingleSelect(rest) && (
             <>
               <span
-                className={`w-full ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-gray2'}`}
+                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-gray2'}`}
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>

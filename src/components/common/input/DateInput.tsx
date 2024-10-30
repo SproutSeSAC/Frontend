@@ -31,7 +31,7 @@ export default function DateInput({
         onChange={date => onChange(date || new Date())}
         dateFormat="YYYY년 MM월 dd일"
         placeholderText={`${dateFormat(new Date(), 'YYYY년 MM월 DD일')}`}
-        className={`w-full flex-1 rounded-2xl bg-white py-4 pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'}`}
+        className={`w-full flex-1 rounded-2xl border bg-white py-4 pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'}`}
       />
 
       {errorMsg && (

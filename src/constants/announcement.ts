@@ -23,7 +23,7 @@ export const announcementCategoryFilterList: {
 }[] = [
   { id: 1, key: 'GENERAL', name: '통합' },
   { id: 2, key: 'SPECIAL_LECTURE', name: '특강' },
-  { id: 3, key: 'EMPLOYMENT', name: '취업꿀팁' },
+  { id: 3, key: 'EMPLOYMENT', name: '취업정보' },
 ];
 
 export const announcementCategoryOptions: {
@@ -33,7 +33,7 @@ export const announcementCategoryOptions: {
 }[] = [
   { id: 1, key: 'GENERAL_ANNOUNCEMENT', name: '일반공지' },
   { id: 2, key: 'SPECIAL_LECTURE', name: '특강' },
-  { id: 3, key: 'EMPLOYMENT', name: '취업꿀팁' },
+  { id: 3, key: 'EMPLOYMENT', name: '취업정보' },
   { id: 4, key: 'EVENT', name: '행사' },
   { id: 5, key: 'ETC', name: '기타' },
 ];
@@ -60,8 +60,9 @@ export const defaultAnnouncementFormValues: AnnouncementDto.PostRequest = {
   applicationForm: '',
   applicationStartDateTime: '',
   applicationEndDateTime: '',
-  eventSchedule: '',
-  eventTime: '',
+  eventDate: '',
+  eventStartTime: '',
+  eventEndTime: '',
   meetingType: {
     type: 'ONLINE',
     detail: '',
