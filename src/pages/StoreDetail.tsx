@@ -1,3 +1,8 @@
+import { useCallback, useRef } from 'react';
+
+import useGetStoreList from '@/hooks/useGetStoreList';
+import useObserver from '@/hooks/useObserver';
+
 import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
@@ -11,6 +16,22 @@ import StoreMap from '@/components/store/detail/StoreMap';
 export default function StoreDetail() {
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
+
+  const observeRef = useRef(null);
+
+  const { storeList, fetchNextPage, hasNextPage, isLoading } =
+    useGetStoreList(); // TODO: 무한스크롤 테스트 후 hook 삭제하고 컴포넌트 내에서만 처리가능하도록 수정예정
+
+  const onIntersect = useCallback(
+    (entry: IntersectionObserverEntry) => {
+      if (entry.isIntersecting) {
+        if (hasNextPage) fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage],
+  );
+
+  useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
 
   return (
     <>
@@ -28,11 +49,17 @@ export default function StoreDetail() {
         <section className="flex h-full w-full gap-8">
           <StoreFilterForm />
 
-          <StoreMap />
+          <StoreMap storeList={storeList} />
         </section>
       </MainView>
 
-      <StoreListSideView sideViewOpen={sideViewOpen} onClose={closeSideView} />
+      <StoreListSideView
+        sideViewOpen={sideViewOpen}
+        onClose={closeSideView}
+        storeList={storeList}
+        isLoading={isLoading}
+        ref={observeRef}
+      />
 
       {!sideViewOpen && (
         <button

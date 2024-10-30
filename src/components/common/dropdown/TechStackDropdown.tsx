@@ -113,8 +113,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
     if (initialSelectedOptions) {
       setSelectedOptions(initialSelectedOptions);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialSelectedOptions]);
 
   const onClose = () => setOpen(false);
 

@@ -5,14 +5,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePostMeal } from '@/services/store/storeMutations';
 
 import MealRecruitDateSelectBox from './MealRecruitDateSelectBox';
-import {
-  dateOptions,
-  hours,
-  minutes,
-  recruitmentCountList,
-} from './mealRecruitDropdownOptions';
+import { dateOptions } from './mealRecruitDropdownOptions';
 import { mealRecruitSchema } from './mealRecruitSchema';
 
+import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext } from '@/hooks';
 import { PostMeal } from '@/types/store/storeMealPostDto';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,14 +52,14 @@ export default function MealRecruitModal() {
     async (data: FormValues) => {
       const newDate = data.date;
 
-      newDate?.setHours(data.hourTime, data?.minuteTime || 0, 0, 0);
-
       const date = new Date(newDate || '');
 
       if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
         showToast(`잘못된 날짜형식 : ${newDate}`);
         return;
       }
+
+      date.setHours(data.hourTime, data?.minuteTime || 0, 0, 0);
 
       const localDate = new Date(
         date.getTime() + date.getTimezoneOffset() * 60000,

@@ -8,16 +8,20 @@ import {
   contactMethodDisplay,
   progressDisplay,
 } from '@/constants';
+import { useDialogContext } from '@/hooks';
+import { FilterType } from '@/types';
+import { DetailPostTechStack } from '@/types/lounge/loungeDto';
 import { BsCopy, BsLink45Deg } from 'react-icons/bs';
 
 interface LoungeApplicationInfoProps {
   startPeriod?: string;
   endPeriod?: string;
   personRecruited?: number;
-  positionNames?: string[];
+  position?: FilterType[];
   contactMethod?: ContactMethodType;
   contactDetail?: string;
   meetingType?: Progress;
+  techStack?: DetailPostTechStack[];
 }
 const commonContactMethodStyle =
   'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
@@ -26,21 +30,24 @@ export default function ApplicationInfoTemplate({
   startPeriod,
   endPeriod,
   personRecruited,
-  positionNames,
+  position,
   contactMethod,
   contactDetail,
   meetingType,
+  techStack,
 }: LoungeApplicationInfoProps) {
+  const { showToast } = useDialogContext();
+
   const handleCopyClick = () => {
     navigator.clipboard
       .writeText(contactDetail || '')
       .then(() => {
-        alert(
+        showToast(
           `${contactMethod === CONTACT_METHOD_EMAIL ? '이메일 주소' : '연락처'}가 복사되었습니다!`,
         );
       })
       .catch(err => {
-        alert('복사에 실패했습니다.');
+        showToast('복사에 실패했습니다.');
         console.error('복사 실패:', err);
       });
   };
@@ -68,13 +75,13 @@ export default function ApplicationInfoTemplate({
             <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
               직무
             </div>
-            <ul className="flex w-full flex-1 gap-1 overflow-hidden">
-              {(positionNames || []).map(item => (
+            <ul className="flex w-full flex-1 flex-wrap gap-1">
+              {(position || []).map(item => (
                 <li
-                  key={item}
+                  key={item.id}
                   className="whitespace-nowrap rounded-sm bg-text px-1 py-0.5 text-white"
                 >
-                  {item}
+                  {item.name}
                 </li>
               ))}
             </ul>
@@ -86,7 +93,13 @@ export default function ApplicationInfoTemplate({
             <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
               스택
             </div>
-            <div className="">slack </div>
+            <ul className="flex flex-wrap gap-2">
+              {techStack && techStack?.length > 0
+                ? techStack.map(stack => {
+                    return <li key={stack.id}>stack</li>;
+                  })
+                : '-'}
+            </ul>
           </div>
           <div className="flex items-center gap-3 text-[22px]">
             <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">

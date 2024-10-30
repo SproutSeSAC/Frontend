@@ -2,8 +2,31 @@ import { useMutation } from '@tanstack/react-query';
 
 import { axiosInstance } from '../axiosInstance';
 
-import { PostLoungeProject } from '@/types/lounge/loungeDto';
+import { PostLoungeProject, PutLoungeProject } from '@/types/lounge/loungeDto';
 import { AxiosError } from 'axios';
+
+export const useDeleteLoungeProject = () => {
+  return useMutation<boolean, AxiosError, { projectId: number }>({
+    mutationFn: async requestBody => {
+      const { data } = await axiosInstance.delete(
+        `/project/${requestBody.projectId}`,
+      );
+      return data;
+    },
+  });
+};
+
+export const usePutLoungeProject = () => {
+  return useMutation<boolean, AxiosError, PutLoungeProject>({
+    mutationFn: async requestBody => {
+      const { data } = await axiosInstance.put(
+        `/project/${requestBody.projectId}`,
+        requestBody.params,
+      );
+      return data;
+    },
+  });
+};
 
 export const usePostLoungeProject = () => {
   return useMutation<boolean, AxiosError, PostLoungeProject>({

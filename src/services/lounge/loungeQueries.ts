@@ -66,15 +66,16 @@ export const useGetLoungePositionsFilterList = () => {
   });
 };
 
-export const useGetLoungeProjectsDetail = (projectId: number) => {
+export const useGetLoungeProjectsDetail = (projectId: number | null) => {
   return useQuery({
-    queryKey: ['useGetLoungeProjectsDetail'],
+    queryKey: ['useGetLoungeProjectsDetail', projectId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<GetLoungeProjectDetail>(
         `/project/${projectId}`,
       );
       return data;
     },
+    enabled: !!projectId,
   });
 };
 

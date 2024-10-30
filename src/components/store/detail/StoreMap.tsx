@@ -3,11 +3,12 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useStoreMap } from '@/hooks';
+import { Store } from '@/types/store/storeDto';
 import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
-export default function StoreMap() {
+export default function StoreMap({ storeList }: { storeList: Store[] }) {
   const { isModalOpen, setIsModalOpen, storeMapRef, addMarker, isMapReady } =
     useStoreMap({
       lat: 37.5665,
@@ -19,9 +20,12 @@ export default function StoreMap() {
   // NOTE - 마커 클릭 시 modal 띄우는 것을 보여주기 위해 임의로 찍어놓은 마커입니다. 추후에 삭제하셔도 됩니다.
   useEffect(() => {
     if (isMapReady) {
-      addMarker(37.5665, 126.978);
+      storeList.forEach(() => addMarker(37.5665, 126.978));
+
+      // addMarker(37.5665, 126.978);
+      // addMarker(37.6545122, 127.012516);
     }
-  }, [addMarker, isMapReady]);
+  }, [addMarker, isMapReady, storeList]);
 
   return (
     <div className="relative w-full">

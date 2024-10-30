@@ -1,14 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
 interface EditorModuleProps {
-  onChange: (value: string) => void;
+  onEmojiSelect: (emoji: { native: string }) => void;
 }
 
-export default function EditorModule({ onChange }: EditorModuleProps) {
+export default function EditorModule({ onEmojiSelect }: EditorModuleProps) {
   const [showPicker, setShowPicker] = useState(false);
+
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node)
+      ) {
+        setShowPicker(false);
+      }
+    }
+
+    if (showPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPicker]);
+
   return (
     <div>
       <div className="ql-formats">
@@ -67,22 +91,17 @@ export default function EditorModule({ onChange }: EditorModuleProps) {
           aria-label="ql-code-block"
           className="ql-code-block"
         />
-        <button
-          className="z-10"
-          type="button"
-          onClick={() => setShowPicker(prev => !prev)}
-        >
+      </div>
+      <div className="ql-formats relative">
+        <button type="button" onClick={() => setShowPicker(prev => !prev)}>
           😊
         </button>
+        {showPicker && (
+          <div ref={pickerRef} className="absolute right-0 top-7 z-10">
+            <Picker data={data} onEmojiSelect={onEmojiSelect} />
+          </div>
+        )}
       </div>
-      {showPicker && (
-        <Picker
-          className="w-72 rounded-lg border border-gray-300 bg-gray-100 p-4" // Tailwind CSS 클래스 적용
-          data={data}
-          onEmojiSelect={onChange}
-          // onClickOutside={() => setShowPicker(false)}
-        />
-      )}
     </div>
   );
 }
