@@ -2,6 +2,8 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosCalendarInstance } from '@/services/axiosInstance';
 
+import { ADMIN_EMAIL } from '@/constants';
+
 export const useCreateCalendar = (
   summary: string,
   emails: { CAMPUS_MANAGER: string; JOB_COORDINATOR: string },
@@ -28,40 +30,50 @@ export const useCreateCalendar = (
           type: 'default',
         },
       };
-
-      const campusManagerAclData = {
-        role: 'owner',
-        scope: {
-          type: 'user',
-          value: emails.CAMPUS_MANAGER,
-        },
-      };
-
-      const jobCoordinatorAclData = {
-        role: 'owner',
-        scope: {
-          type: 'user',
-          value: emails.JOB_COORDINATOR,
-        },
-      };
-
       await axiosCalendarInstance.post(
         `/calendars/${calendarId}/acl`,
         publicAclRule,
       );
-      console.log('캘린더 공개 설정 완료');
 
+      const adminAclData = {
+        role: 'owner',
+        scope: {
+          type: 'user',
+          value: ADMIN_EMAIL,
+        },
+      };
       await axiosCalendarInstance.post(
         `/calendars/${calendarId}/acl`,
-        campusManagerAclData,
+        adminAclData,
       );
-      console.log('캠퍼스 매니저 소유권 부여 완료');
 
-      await axiosCalendarInstance.post(
-        `/calendars/${calendarId}/acl`,
-        jobCoordinatorAclData,
-      );
-      console.log('잡코디 소유권 부여 완료');
+      if (emails.CAMPUS_MANAGER) {
+        const campusManagerAclData = {
+          role: 'owner',
+          scope: {
+            type: 'user',
+            value: emails.CAMPUS_MANAGER,
+          },
+        };
+        await axiosCalendarInstance.post(
+          `/calendars/${calendarId}/acl`,
+          campusManagerAclData,
+        );
+      }
+
+      if (emails.JOB_COORDINATOR) {
+        const jobCoordinatorAclData = {
+          role: 'owner',
+          scope: {
+            type: 'user',
+            value: emails.JOB_COORDINATOR,
+          },
+        };
+        await axiosCalendarInstance.post(
+          `/calendars/${calendarId}/acl`,
+          jobCoordinatorAclData,
+        );
+      }
     } catch (error) {
       console.error('캘린더 생성 또는 공개 설정 중 오류 발생', error);
     }
