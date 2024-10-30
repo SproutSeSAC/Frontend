@@ -1,5 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
+import NotificationSideView from './NotificationSideView';
+
 import NavigationBar from '@/layouts/NavigationBar';
 
 export default function Layout() {
@@ -7,6 +9,7 @@ export default function Layout() {
     <div className="flex min-h-[100vh] bg-bg">
       <NavigationBar />
       <Outlet />
+      <NotificationSideView />
     </div>
   );
 }
