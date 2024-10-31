@@ -3,18 +3,18 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import {
-  AdminEmailByCourse,
-  CalendarIdByCourse,
-  CalendarList,
-  CalenderEvents,
-} from '@/types/calendar/calendarDto';
+  GoogleCalendarApiDto,
+  ManagerEmailListByCourseDto,
+  SproutCalendarDto,
+} from '@/types';
 import { AxiosResponse } from 'axios';
 
-export const useGetCalendarList = (options?: UseQueryOptions<CalendarList>) => {
+export const useGetCalendarList = (
+  options?: UseQueryOptions<GoogleCalendarApiDto.GetCalendarList>,
+) => {
   const getCalendarList = async () => {
-    const res: AxiosResponse<CalendarList> = await axiosCalendarInstance.get(
-      '/users/me/calendarList',
-    );
+    const res: AxiosResponse<GoogleCalendarApiDto.GetCalendarList> =
+      await axiosCalendarInstance.get('/users/me/calendarList');
     return res.data;
   };
 
@@ -27,12 +27,11 @@ export const useGetCalendarList = (options?: UseQueryOptions<CalendarList>) => {
 
 export const useGetCalendarEvents = (
   calendarId: string | undefined,
-  options?: UseQueryOptions<CalenderEvents>,
+  options?: UseQueryOptions<GoogleCalendarApiDto.GetCalenderEvents>,
 ) => {
   const getCalendarEvents = async () => {
-    const res: AxiosResponse<CalenderEvents> = await axiosCalendarInstance.get(
-      `/calendars/${calendarId}/events`,
-    );
+    const res: AxiosResponse<GoogleCalendarApiDto.GetCalenderEvents> =
+      await axiosCalendarInstance.get(`/calendars/${calendarId}/events`);
     return res.data;
   };
 
@@ -46,12 +45,11 @@ export const useGetCalendarEvents = (
 
 export const useGetEventsByCalendar = (
   calendarIds: string[],
-  options?: UseQueryOptions<CalenderEvents>,
+  options?: UseQueryOptions<GoogleCalendarApiDto.GetCalenderEvents>,
 ) => {
   const getCalendarEvents = async (calendarId: string) => {
-    const res: AxiosResponse<CalenderEvents> = await axiosCalendarInstance.get(
-      `/calendars/${calendarId}/events`,
-    );
+    const res: AxiosResponse<GoogleCalendarApiDto.GetCalenderEvents> =
+      await axiosCalendarInstance.get(`/calendars/${calendarId}/events`);
     return res.data;
   };
 
@@ -69,10 +67,10 @@ export const useGetEventsByCalendar = (
 
 export const useGetCalendarIdByCourse = (
   courseId?: number,
-  options?: UseQueryOptions<CalendarIdByCourse>,
+  options?: UseQueryOptions<SproutCalendarDto.Get>,
 ) => {
   const getCalendarIdByCourse = async () => {
-    const res: AxiosResponse<CalendarIdByCourse[]> = await axiosInstance.get(
+    const res: AxiosResponse<SproutCalendarDto.Get[]> = await axiosInstance.get(
       `/user/calendar/${courseId}`,
     );
     return res.data?.[0] || [];
@@ -88,12 +86,11 @@ export const useGetCalendarIdByCourse = (
 
 export const useGetAdminEmailByCourse = (
   courseId?: number,
-  options?: UseQueryOptions<AdminEmailByCourse[]>,
+  options?: UseQueryOptions<ManagerEmailListByCourseDto.Get>,
 ) => {
   const getAdminEmailByCourse = async () => {
-    const res: AxiosResponse<AdminEmailByCourse[]> = await axiosInstance.get(
-      `/user/calendar/${courseId}/email`,
-    );
+    const res: AxiosResponse<ManagerEmailListByCourseDto.Get> =
+      await axiosInstance.get(`/user/calendar/${courseId}/email`);
     return res.data;
   };
 

@@ -1,7 +1,7 @@
 // import { useNavigate } from 'react-router-dom';
 import { useTechStackList } from '@/hooks/useTechStackList';
 
-// import { usePostUserInfo } from '@/services/auth/authMutations';
+// import { usePostSignUpValue } from '@/services/auth/authMutations';
 import {
   useGetCampusList,
   useGetCourseList,
@@ -14,7 +14,7 @@ import {
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { getQuestionListByRole } from '@/constants';
-import { KeyOfRole, UpdateSignUpValue } from '@/types';
+import { KeyOfRole, UserProfileDto } from '@/types';
 import { useAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
@@ -48,11 +48,11 @@ export const useHandleSignUp = ({
 
   // const navigate = useNavigate();
 
-  // const { mutate } = usePostUserInfo({
+  // const { mutate } = usePostSignUpValue({
   //   onSuccess: () => navigate('/'),
   // });
 
-  const onSubmit: SubmitHandler<UpdateSignUpValue> = formData => {
+  const onSubmit: SubmitHandler<UserProfileDto.Post> = formData => {
     const marketingConsent = formData.marketingConsent === '동의';
     const data = { ...formData, marketingConsent };
     // const { verifyCode, campusList, ...rest } = data;

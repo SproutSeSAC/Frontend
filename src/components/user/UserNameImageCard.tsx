@@ -1,7 +1,9 @@
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import { useDialogContext } from '@/hooks';
-import { UserProfile } from '@/types';
 
 import CameraButton from '@/components/common/button/CameraButton';
 import EditButton from '@/components/common/button/EditButton';
@@ -9,9 +11,9 @@ import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
 
 export default function UserNameImageCard() {
-  const { data: userProfile } = useGetUserProfile();
+  const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { name, nickname, profileImageUrl } = userProfile as UserProfile;
+  const { name, nickname, profileImageUrl } = userProfile;
 
   const { showDialog } = useDialogContext();
 

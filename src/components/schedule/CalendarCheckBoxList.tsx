@@ -7,7 +7,7 @@ import { useGetCalendarIdByCourse } from '@/services/schedule/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { Calendar, CalendarListByLabel, KeyOfRole } from '@/types';
+import { Calendar, CalendarListByCategory, KeyOfRole } from '@/types';
 import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';
@@ -35,12 +35,12 @@ export default function CalendarCheckBoxList({
 
   const { subscribeCalendarList, myCalendarList } = calendarListByType;
 
-  const calendarListByLabel: CalendarListByLabel[] = [
+  const calendarListByLabel: CalendarListByCategory[] = [
     {
-      label: '구독중인 캘린더',
+      category: '구독중인 캘린더',
       calendarList: subscribeCalendarList,
     },
-    { label: '나의 캘린더', calendarList: myCalendarList },
+    { category: '나의 캘린더', calendarList: myCalendarList },
   ];
 
   // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
@@ -79,21 +79,21 @@ export default function CalendarCheckBoxList({
 
   return (
     <ul className="h-full flex-1 rounded-xl bg-white p-5 shadow-card">
-      {calendarListByLabel.map(({ label, calendarList }) => (
+      {calendarListByLabel.map(({ category, calendarList }) => (
         <Accordion
-          key={label}
-          title={label}
+          key={category}
+          title={category}
           titleClassName="text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
           className="mb-3"
           initialOpen={
             userRole === 'TRAINEE'
-              ? label === '구독중인 캘린더'
-              : label === '나의 캘린더'
+              ? category === '구독중인 캘린더'
+              : category === '나의 캘린더'
           }
         >
           {userRole === 'TRAINEE' ? (
             <ul className="mb-4 flex flex-col gap-2">
-              {label === '구독중인 캘린더' &&
+              {category === '구독중인 캘린더' &&
                 userProfile &&
                 userCourse &&
                 !isCalenderIdLoading &&
@@ -120,7 +120,7 @@ export default function CalendarCheckBoxList({
             </ul>
           ) : (
             <ul className="mb-4 flex flex-col gap-2">
-              {label === '나의 캘린더' &&
+              {category === '나의 캘린더' &&
                 userRole === 'EDU_MANAGER' &&
                 userProfile &&
                 userCourse &&

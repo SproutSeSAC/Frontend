@@ -1,18 +1,19 @@
 import { useCallback } from 'react';
 
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import { courseGrowthLevelList } from '@/constants';
-import { UserProfile } from '@/types';
 import { getDDay, getDateProgress } from '@/utils';
 
 import CircularGauge from '@/components/common/CircularGauge';
 
 export default function MyCourseProgressCard() {
-  const { data: userProfile } = useGetUserProfile();
+  const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { name, courseEndDate, courseStartDate, campusName } =
-    userProfile as UserProfile;
+  const { name, courseEndDate, courseStartDate, campusName } = userProfile;
 
   const getProgress = useCallback(
     () => getDateProgress(courseStartDate, courseEndDate),

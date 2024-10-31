@@ -9,7 +9,7 @@ import {
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_KEY } from '@/constants';
-import { Calendar, Event } from '@/types/calendar/calendarDto';
+import { Calendar, Event } from '@/types';
 import { getCookie, setCookie } from '@/utils';
 import { useAtomValue } from 'jotai';
 
@@ -64,7 +64,7 @@ export const useCalendarData = () => {
         return { ...item, backgroundColor };
       });
     })
-    .flat() as (Event & { backgroundColor: string })[];
+    .flat() as unknown as (Event & { backgroundColor: string })[];
 
   const fullCalendarEvents = useMemo(() => {
     return eventList[0]?.summary

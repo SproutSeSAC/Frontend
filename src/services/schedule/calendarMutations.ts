@@ -3,6 +3,7 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL } from '@/constants';
+import { SproutCalendarDto } from '@/types';
 
 export const useCreateCalendar = (
   courseId: number,
@@ -25,7 +26,9 @@ export const useCreateCalendar = (
 
       const calendarId = calendarCreateResponse.data.id;
 
-      await axiosInstance.post(`/user/calendar/${courseId}`, { calendarId });
+      await axiosInstance.post(`/user/calendar/${courseId}`, {
+        calendarId,
+      } as SproutCalendarDto.Post);
 
       const publicAclRule = {
         role: 'reader',
@@ -88,5 +91,3 @@ export const useCreateCalendar = (
     ...options,
   });
 };
-
-// 교육과정별로 캘린더 id 저장하기

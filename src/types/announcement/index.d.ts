@@ -1,5 +1,7 @@
 import { AnnouncementDto } from '@/types/announcement/announcementDto';
 
+export * from '@/types/announcement/announcementDto';
+
 export type AnnouncementCategory = {
   GENERAL: '통합';
   SPECIAL_LECTURE: '특강';

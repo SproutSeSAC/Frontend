@@ -1,26 +1,4 @@
-export type CalendarIdByCourse = {
-  id: number;
-  calendarId: string;
-  registerId: number;
-  courseId: number;
-};
-
-export type AdminEmailByCourse = {
-  id: number;
-  email: string;
-  nickname: string;
-  roleType: KeyOfRole;
-};
-
-export interface CalendarList {
-  etag: string;
-  items: Calendar[];
-  primary: boolean;
-  kind: string;
-  nextSyncToken: string;
-}
-
-export interface Calendar {
+export type Calendar = {
   accessRole: AccessRole;
   backgroundColor: string;
   colorId: string;
@@ -40,7 +18,33 @@ export interface Calendar {
   deleted: boolean;
   location: string;
   hidden: boolean;
-}
+};
+
+export type Event = {
+  kind: string;
+  etag: string;
+  id: string;
+  status: 'confirmed' | 'tentative' | 'cancelled';
+  htmlLink: string;
+  created: string;
+  updated: string;
+  summary: string;
+  description?: string;
+  location?: string;
+  creator: EventCreator;
+  organizer: EventOrganizer;
+  start: EventDateTime;
+  end: EventDateTime;
+  attendees?: EventAttendee[];
+  reminders?: EventReminders;
+  transparency?: 'transparent';
+  iCalUID?: string;
+  sequence?: number;
+  reminders: {
+    useDefault: boolean;
+  };
+  eventType: 'default';
+};
 
 type AccessRole = 'freeBusyReader' | 'reader' | 'writer' | 'owner';
 
@@ -67,45 +71,6 @@ type NotificationSettings = {
     method: 'email';
   };
 };
-
-export interface CalenderEvents {
-  accessRole: AccessRole;
-  defaultReminders: Reminder;
-  description?: string;
-  kind: string;
-  etag: string;
-  summary: string;
-  updated: string;
-  timeZone: string;
-  items: Event[];
-  nextSyncToken?: string;
-}
-
-export interface Event {
-  kind: string;
-  etag: string;
-  id: string;
-  status: 'confirmed' | 'tentative' | 'cancelled';
-  htmlLink: string;
-  created: string;
-  updated: string;
-  summary: string;
-  description?: string;
-  location?: string;
-  creator: EventCreator;
-  organizer: EventOrganizer;
-  start: EventDateTime;
-  end: EventDateTime;
-  attendees?: EventAttendee[];
-  reminders?: EventReminders;
-  transparency?: 'transparent';
-  iCalUID?: string;
-  sequence?: number;
-  reminders: {
-    useDefault: boolean;
-  };
-  eventType: 'default';
-}
 
 interface EventCreator {
   email: string;

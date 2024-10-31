@@ -2,32 +2,26 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { UpdateableUserProfile, UserInfo } from '@/types';
+import { UserProfileDto } from '@/types';
 
-export const usePostUserInfo = (
-  options?: UseMutationOptions<unknown, Error, UserInfo, unknown>,
+export const usePostSignUpValue = (
+  options?: UseMutationOptions<unknown, Error, UserProfileDto.Post>,
 ) => {
-  const postUserInfo = async (formData: UserInfo) => {
+  const postUserInfo = async (formData: UserProfileDto.Post) => {
     await axiosInstance.post('/user/register', formData);
   };
 
-  return useMutation<unknown, Error, UserInfo, unknown>({
+  return useMutation<unknown, Error, UserProfileDto.Post>({
     mutationFn: postUserInfo,
     mutationKey: ['posts'],
     ...options,
   });
 };
 
-// 나의 회원 정보 수정
 export const useUpdateUserProfile = (
-  options?: UseMutationOptions<
-    unknown,
-    Error,
-    Partial<UpdateableUserProfile>,
-    unknown
-  >,
+  options?: UseMutationOptions<unknown, Error, UserProfileDto.Update>,
 ) => {
-  const updateUserProfile = (formData: Partial<UpdateableUserProfile>) =>
+  const updateUserProfile = (formData: UserProfileDto.Update) =>
     axiosInstance.put('/user/update', formData);
 
   return useMutation({
@@ -37,7 +31,6 @@ export const useUpdateUserProfile = (
   });
 };
 
-// 회원 탈퇴
 export const leaveMemberShip = () => {
   return axiosInstance.put('/login/leave');
 };
