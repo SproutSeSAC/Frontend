@@ -1,30 +1,22 @@
 import { ReactNode, useCallback } from 'react';
 
 import '@/calendar.css';
+import { FullCalendarEvent } from '@/types';
 import { DayCellContentArg } from '@fullcalendar/core';
 import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import FullCalendar from '@fullcalendar/react';
 
-type Event = {
-  allDay: boolean;
-  backgroundColor: string;
-  title: string;
-  start: string;
-  end: string;
-  id: string;
-};
-
 interface CalendarProps {
   type: 'big' | 'small';
-  events?: Event[];
+  events?: FullCalendarEvent[];
   children?: ReactNode;
 }
 
 export default function Calendar({ type, events, children }: CalendarProps) {
   const renderDayCellContent = useCallback(
-    (info: DayCellContentArg, cellEvents?: Event[]) => {
+    (info: DayCellContentArg, cellEvents?: FullCalendarEvent[]) => {
       const date = info.date.getDate();
       const dateHours = info.date.setHours(0, 0, 0, 0);
 

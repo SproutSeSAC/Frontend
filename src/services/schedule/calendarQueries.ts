@@ -2,8 +2,12 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
-import { KeyOfRole } from '@/types';
-import { CalendarList, CalenderEvents } from '@/types/calendar/calendarDto';
+import {
+  AdminEmailByCourse,
+  CalendarIdByCourse,
+  CalendarList,
+  CalenderEvents,
+} from '@/types/calendar/calendarDto';
 import { AxiosResponse } from 'axios';
 
 export const useGetCalendarList = (options?: UseQueryOptions<CalendarList>) => {
@@ -63,40 +67,40 @@ export const useGetEventsByCalendar = (
   });
 };
 
-export const useGetAdminEmailByCourse = (
-  roleType: KeyOfRole,
-  options?: UseQueryOptions<CalenderEvents>,
+export const useGetCalendarIdByCourse = (
+  courseId?: number,
+  options?: UseQueryOptions<CalendarIdByCourse>,
 ) => {
-  const getAdminEmailByCourse = async () => {
-    const res: AxiosResponse<CalenderEvents> = await axiosInstance.get(
-      `/user/calendar/${roleType}`,
+  const getCalendarIdByCourse = async () => {
+    const res: AxiosResponse<CalendarIdByCourse[]> = await axiosInstance.get(
+      `/user/calendar/${courseId}`,
     );
-    return res.data;
+    return res.data?.[0] || [];
   };
 
   return useQuery({
-    queryKey: ['adminEmail', roleType],
-    queryFn: getAdminEmailByCourse,
-    enabled: !!roleType,
+    queryKey: ['calendarIdByCourse', courseId],
+    queryFn: getCalendarIdByCourse,
+    enabled: !!courseId,
     ...options,
   });
 };
 
-export const useGetCalendarIdByCourse = (
-  roleType: KeyOfRole,
-  options?: UseQueryOptions<CalenderEvents>,
+export const useGetAdminEmailByCourse = (
+  courseId?: number,
+  options?: UseQueryOptions<AdminEmailByCourse[]>,
 ) => {
   const getAdminEmailByCourse = async () => {
-    const res: AxiosResponse<CalenderEvents> = await axiosInstance.get(
-      `/user/calendar/${roleType}`,
+    const res: AxiosResponse<AdminEmailByCourse[]> = await axiosInstance.get(
+      `/user/calendar/${courseId}/email`,
     );
     return res.data;
   };
 
   return useQuery({
-    queryKey: ['adminEmail', roleType],
+    queryKey: ['adminEmail', courseId],
     queryFn: getAdminEmailByCourse,
-    enabled: !!roleType,
+    enabled: !!courseId,
     ...options,
   });
 };

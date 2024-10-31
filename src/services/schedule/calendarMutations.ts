@@ -1,12 +1,13 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
-import { axiosCalendarInstance } from '@/services/axiosInstance';
+import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL } from '@/constants';
 
 export const useCreateCalendar = (
+  courseId: number,
   summary: string,
-  emails: { CAMPUS_MANAGER: string; JOB_COORDINATOR: string },
+  emails: { CAMPUS_MANAGER?: string; JOB_COORDINATOR?: string },
   options?: UseMutationOptions,
 ) => {
   const createAndShareCalendar = async () => {
@@ -23,6 +24,8 @@ export const useCreateCalendar = (
       );
 
       const calendarId = calendarCreateResponse.data.id;
+
+      await axiosInstance.post(`/user/calendar/${courseId}`, { calendarId });
 
       const publicAclRule = {
         role: 'reader',
@@ -81,7 +84,9 @@ export const useCreateCalendar = (
 
   return useMutation({
     mutationFn: createAndShareCalendar,
-    mutationKey: ['createCalendar'],
+    mutationKey: ['createCalendar', summary],
     ...options,
   });
 };
+
+// 교육과정별로 캘린더 id 저장하기

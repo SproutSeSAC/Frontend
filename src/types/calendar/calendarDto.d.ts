@@ -1,3 +1,17 @@
+export type CalendarIdByCourse = {
+  id: number;
+  calendarId: string;
+  registerId: number;
+  courseId: number;
+};
+
+export type AdminEmailByCourse = {
+  id: number;
+  email: string;
+  nickname: string;
+  roleType: KeyOfRole;
+};
+
 export interface CalendarList {
   etag: string;
   items: Calendar[];
@@ -28,21 +42,21 @@ export interface Calendar {
   hidden: boolean;
 }
 
-export type AccessRole = 'freeBusyReader' | 'reader' | 'writer' | 'owner';
+type AccessRole = 'freeBusyReader' | 'reader' | 'writer' | 'owner';
 
-export type AllowedConferenceSolutions = {
+type AllowedConferenceSolutions = {
   allowedConferenceSolutionTypes:
     | 'eventHangout'
     | 'eventNamedHangout'
     | 'hangoutsMeet';
 };
 
-export type Reminder = {
+type Reminder = {
   method: 'popup' | 'email';
   minutes: number;
 };
 
-export type NotificationSettings = {
+type NotificationSettings = {
   notifications: {
     type:
       | 'agenda'
@@ -93,36 +107,36 @@ export interface Event {
   eventType: 'default';
 }
 
-export interface EventCreator {
+interface EventCreator {
   email: string;
   displayName?: string;
   self: boolean;
 }
 
-export interface EventOrganizer {
+interface EventOrganizer {
   email: string;
   displayName?: string;
   self: boolean;
 }
 
-export interface EventDateTime {
+interface EventDateTime {
   date: string;
   dateTime: string;
   timeZone: string;
 }
 
-export interface EventAttendee {
+interface EventAttendee {
   email: string;
   displayName?: string;
   responseStatus: 'accepted' | 'declined' | 'tentative' | 'needsAction';
 }
 
-export interface EventReminders {
+interface EventReminders {
   useDefault: boolean;
   overrides?: ReminderOverride[];
 }
 
-export interface ReminderOverride {
+interface ReminderOverride {
   method: 'email' | 'popup';
   minutes: number;
 }
