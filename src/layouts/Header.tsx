@@ -2,7 +2,10 @@ import { ReactNode } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
+import { notificationOpenAtom } from '@/atoms/notificationAtom';
+
 import HeaderMenu from '@/layouts/HeaderMenu';
+import { useAtom } from 'jotai';
 import { BsBell } from 'react-icons/bs';
 
 import Title from '@/components/common/Title';
@@ -16,6 +19,7 @@ interface Props {
 
 export default function Header({ title, highlight, children }: Props) {
   const { pathname } = useLocation();
+  const [, setIsNotificationOpenOpen] = useAtom(notificationOpenAtom);
 
   const homePathname = pathname === '/';
 
@@ -35,11 +39,14 @@ export default function Header({ title, highlight, children }: Props) {
         <section>{children}</section>
 
         <aside className="flex items-center">
-          <div className="relative mr-6 p-1">
+          <button
+            className="relative mr-6 p-1"
+            onClick={() => setIsNotificationOpenOpen(prev => !prev)}
+          >
             <BsBell className="size-6 stroke-[0.2] font-bold text-gray1" />
             {/* 새로운 알림 시 표시 */}
             <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
-          </div>
+          </button>
 
           <UserImage className="size-[50px] p-3">
             <HeaderMenu />
