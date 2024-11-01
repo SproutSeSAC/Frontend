@@ -78,13 +78,13 @@ export default function CalendarCheckBoxList({
   };
 
   return (
-    <ul className="h-full flex-1 rounded-xl bg-white p-5 shadow-card">
+    <ul className="h-full overflow-auto rounded-xl bg-white px-5 pt-5 shadow-card scrollbar-hide">
       {calendarListByLabel.map(({ category, calendarList }) => (
         <Accordion
           key={category}
           title={category}
-          titleClassName="text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
-          className="mb-3"
+          className="mb-6"
+          titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
           initialOpen={
             userRole === 'TRAINEE'
               ? category === '구독중인 캘린더'
@@ -92,7 +92,7 @@ export default function CalendarCheckBoxList({
           }
         >
           {userRole === 'TRAINEE' ? (
-            <ul className="mb-4 flex flex-col gap-2">
+            <ul className="flex flex-col gap-2">
               {category === '구독중인 캘린더' &&
                 userProfile &&
                 userCourse &&
@@ -119,7 +119,7 @@ export default function CalendarCheckBoxList({
               )}
             </ul>
           ) : (
-            <ul className="mb-4 flex flex-col gap-2">
+            <ul className="flex flex-col gap-2 border">
               {category === '나의 캘린더' &&
                 userRole === 'EDU_MANAGER' &&
                 userProfile &&

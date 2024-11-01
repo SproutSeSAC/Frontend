@@ -45,14 +45,14 @@
         @apply text-2xl font-medium tracking-wide text-text;
       }
       .fc-button {
-        @apply h-10 rounded-lg !shadow-none;
+        @apply h-10 rounded-lg bg-inherit text-text !shadow-none;
       }
       .fc-prev-button,
       .fc-next-button {
-        @apply w-10 bg-text text-xs text-white;
+        @apply w-10 bg-oliveGreen1 text-xs text-white;
       }
       .fc-today-button {
-        @apply border border-gray2 text-base font-medium text-text;
+        @apply border border-gray2 text-base font-medium !shadow-none;
       }
       .fc-button-primary:disabled {
         @apply h-10 border border-gray2 text-gray2 !shadow-none;
@@ -67,7 +67,7 @@
       @apply flex items-center justify-center p-0 text-xs;
     }
     .fc-daygrid-day.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
-      @apply size-6 items-center justify-center rounded-full bg-text text-white;
+      @apply size-6 items-center justify-center rounded-full bg-oliveGreen1 text-white;
     }
     .fc-daygrid-day-frame {
       @apply h-full min-h-28;
@@ -176,7 +176,7 @@
     }
   }
   .fc-daygrid-day.fc-day-today .fc-daygrid-day-number div span {
-    @apply flex size-5 items-center justify-center rounded-full bg-black text-white;
+    @apply flex size-5 items-center justify-center rounded-full bg-oliveGreen1 text-white;
   }
   .fc-daygrid-body-natural .fc-daygrid-day-events {
     @apply mb-0;

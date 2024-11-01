@@ -16,7 +16,8 @@ import { RoleValues } from '@/types';
 import { getColorByRole } from '@/utils';
 import { FiChevronRight } from 'react-icons/fi';
 
-import LoopLoading from '@/components/common/LoopLoading';
+import LoadingPage from '@/pages/LoadingPage';
+
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
@@ -52,18 +53,7 @@ export default function Home() {
     }
   }, [isLogin, navigate]);
 
-  if (isGetUserProfileLoading || isGetLoungeListLoading)
-    return (
-      <MainView isEmpty>
-        <LoopLoading />
-        <span className="mb-4 mt-10 text-[40px] font-semibold">
-          잠시만 기다려주세요
-        </span>
-        <span className="text-lg font-medium text-gray1">
-          해당 페이지로 이동중입니다!
-        </span>
-      </MainView>
-    );
+  if (isGetUserProfileLoading || isGetLoungeListLoading) return <LoadingPage />;
 
   return (
     <>
