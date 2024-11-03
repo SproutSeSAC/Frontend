@@ -20,7 +20,7 @@ export type AnnouncementTab = {
 };
 
 export type AnnouncementCategory = {
-  GENERAL: '통합';
+  ALL: '통합';
   GENERAL_ANNOUNCEMENT: '일반공지';
   SPECIAL_LECTURE: '특강';
   EMPLOYMENT: '취업정보';

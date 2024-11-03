@@ -32,18 +32,18 @@ export default function AnnouncementPostCard() {
       <div className="mt-6">
         <h4 className="text-xl font-semibold">개발관련 취업 꿀팁 공지</h4>
 
-        <div className="mt-3 text-lg text-gray1">
+        <p className="mt-3 text-lg text-gray1">
           점점 더 높아지는 취업의 벽 앞에 꿈꾸던 회사로의 입사는 요원해 보이기만
           합니다. 이런 막막함 속에서 먼저 입사한 선배의 조언은 취준생에게
           길잡이가 되어주기도 하죠. 오늘은 카카오에서 3년 차 백엔드 개발자로
           근무 중인 강승현 님과 함께 취업 이야기를 나눠보았습니다. 승현 님은
           자신의 취업 준비 시절을 회고하며 유용한 취업 팁을 아낌없이
           공유해주셨습니다.
-        </div>
+        </p>
 
         <div className="mt-6 border-b border-solid border-gray4 pb-[18px]">
           <span className="announcement-text-divider leading-4 text-text">
-            기간
+            특강
           </span>
           <span className="leading-4 text-gray2">
             프론트엔드, 백엔드, 서버 개발

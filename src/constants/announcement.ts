@@ -16,16 +16,6 @@ export const announcementTabList: AnnouncementTab[] = [
   { text: '북마크', type: 'BOOKMARK' },
 ];
 
-export const announcementCategoryFilterList: {
-  id: number;
-  key: AnnouncementCategoryKey;
-  name: AnnouncementCategoryValue;
-}[] = [
-  { id: 1, key: 'GENERAL', name: '통합' },
-  { id: 2, key: 'SPECIAL_LECTURE', name: '특강' },
-  { id: 3, key: 'EMPLOYMENT', name: '취업정보' },
-];
-
 export const announcementCategoryOptions: {
   id: number;
   key: AnnouncementCategoryKey;
@@ -37,6 +27,12 @@ export const announcementCategoryOptions: {
   { id: 4, key: 'EVENT', name: '행사' },
   { id: 5, key: 'ETC', name: '기타' },
 ];
+
+export const announcementCategoryFilterList: {
+  id: number;
+  key: AnnouncementCategoryKey;
+  name: AnnouncementCategoryValue;
+}[] = [{ id: 1, key: 'ALL', name: '통합' }, ...announcementCategoryOptions];
 
 export const meetingTypeOptions: {
   id: number;

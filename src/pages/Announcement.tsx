@@ -12,7 +12,7 @@ import SearchInput from '@/components/common/input/SearchInput';
 
 export default function Announcement() {
   const [announcementType, setAnnouncementType] =
-    useState<AnnouncementCategoryKey>('GENERAL');
+    useState<AnnouncementCategoryKey>('ALL');
 
   const [searchParams] = useSearchParams();
 
