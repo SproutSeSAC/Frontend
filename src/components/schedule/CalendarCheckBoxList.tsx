@@ -3,7 +3,6 @@ import {
   useGetCampusList,
   useGetCourseList,
 } from '@/services/course/courseQueries';
-import { useGetCalendarIdByCourse } from '@/services/schedule/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
@@ -17,15 +16,14 @@ import SubscribeCalendarButton from '@/components/schedule/SubscribeCalendarButt
 
 interface CalendarCheckBoxListProps {
   userRole: KeyOfRole;
-  calendarListByType: {
-    myCalendarList: Calendar[];
-    subscribeCalendarList: Calendar[];
-  };
+  sproutCalendars: Calendar[];
+  nonSproutCalendars: Calendar[];
 }
 
 export default function CalendarCheckBoxList({
   userRole,
-  calendarListByType,
+  sproutCalendars,
+  nonSproutCalendars,
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
@@ -33,14 +31,12 @@ export default function CalendarCheckBoxList({
 
   const { data: campusList } = useGetCampusList();
 
-  const { subscribeCalendarList, myCalendarList } = calendarListByType;
-
   const calendarListByLabel: CalendarListByCategory[] = [
     {
-      category: '구독중인 캘린더',
-      calendarList: subscribeCalendarList,
+      category: 'Sprout 캘린더',
+      calendarList: sproutCalendars,
     },
-    { category: '나의 캘린더', calendarList: myCalendarList },
+    { category: '다른 캘린더', calendarList: nonSproutCalendars },
   ];
 
   // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
@@ -52,16 +48,6 @@ export default function CalendarCheckBoxList({
     course => course.title === userProfile?.courseTitle,
   );
   // -----------------------------------
-
-  const { data: calendarIdByCourse, isLoading: isCalenderIdLoading } =
-    useGetCalendarIdByCourse(userCourse?.id);
-  const sproutCalendarId = calendarIdByCourse?.calendarId;
-
-  const sproutCalendar =
-    sproutCalendarId &&
-    [...subscribeCalendarList, ...myCalendarList].find(
-      ({ id }) => id === sproutCalendarId,
-    );
 
   const onCheckBoxChange = (id: string) => {
     if (currentCalendarIds?.includes(id)) {
@@ -85,19 +71,14 @@ export default function CalendarCheckBoxList({
           title={category}
           className="mb-6"
           titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
-          initialOpen={
-            userRole === 'TRAINEE'
-              ? category === '구독중인 캘린더'
-              : category === '나의 캘린더'
-          }
+          initialOpen={category === 'Sprout 캘린더'}
         >
           {userRole === 'TRAINEE' ? (
             <ul className="flex flex-col gap-2">
-              {category === '구독중인 캘린더' &&
+              {category === 'Sprout 캘린더' &&
                 userProfile &&
                 userCourse &&
-                !isCalenderIdLoading &&
-                !sproutCalendar && (
+                !sproutCalendars && (
                   <SubscribeCalendarButton
                     courseTitle={userProfile.courseTitle}
                     courseId={userCourse.id}
@@ -120,12 +101,11 @@ export default function CalendarCheckBoxList({
             </ul>
           ) : (
             <ul className="flex flex-col gap-2 border">
-              {category === '나의 캘린더' &&
+              {category === 'Sprout 캘린더' &&
                 userRole === 'EDU_MANAGER' &&
                 userProfile &&
                 userCourse &&
-                !isCalenderIdLoading &&
-                !sproutCalendar && (
+                !sproutCalendars && (
                   <CreateCalendarButton
                     courseTitle={userProfile.courseTitle}
                     courseId={userCourse.id}
