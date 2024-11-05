@@ -7,7 +7,7 @@ import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { KeyOfRole } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
@@ -42,7 +42,7 @@ export default function SignUp() {
   } = methods;
 
   const currentRole = getValues('role');
-  const currentCampusList = getValues('campusList');
+  const currentCampusList = useWatch({ control, name: 'campusList' });
 
   const {
     jobList,
@@ -131,7 +131,7 @@ export default function SignUp() {
                               render={({ field: { onChange, value } }) => {
                                 return (
                                   <MultiSelectDropdown
-                                    defaultLabel="캠퍼스"
+                                    defaultLabel="캠퍼스 선택"
                                     options={campusList}
                                     initialSelectedOptions={value}
                                     onChangeValue={data => {

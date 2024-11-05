@@ -73,7 +73,8 @@ export default function MultiSelectDropdown({
     if (initialSelectedOptions) {
       setSelectedOptions(initialSelectedOptions);
     }
-  }, [initialSelectedOptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onClose = () => setOpen(false);
 
