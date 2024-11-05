@@ -36,7 +36,7 @@ export default function CalendarCheckBoxList({
       category: 'Sprout 캘린더',
       calendarList: sproutCalendars,
     },
-    { category: '다른 캘린더', calendarList: nonSproutCalendars },
+    { category: '나의 캘린더', calendarList: nonSproutCalendars },
   ];
 
   // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정

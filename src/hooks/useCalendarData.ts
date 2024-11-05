@@ -68,7 +68,9 @@ export const useCalendarData = () => {
 
   const nonSproutCalendars = useMemo(() => {
     return allCalendars
-      ? allCalendars?.filter(({ id }) => !sproutCalendarIds.includes(id))
+      ? allCalendars
+          ?.filter(({ id }) => !sproutCalendarIds.includes(id))
+          ?.filter(({ accessRole }) => accessRole === 'owner')
       : [];
   }, [allCalendars, sproutCalendarIds]);
 
