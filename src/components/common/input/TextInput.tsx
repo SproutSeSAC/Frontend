@@ -14,6 +14,7 @@ export interface TextInputProps extends FormStateProps {
   onEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   className?: string;
   value?: string;
+  disabled?: boolean;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
@@ -26,6 +27,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
     onEnter,
     className,
     errorMsg,
+    disabled,
   }: TextInputProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
@@ -42,6 +44,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
         onFocus={() => toggleFocus && toggleFocus(true)}
         onBlur={() => toggleFocus && toggleFocus(false)}
         onKeyDown={onEnter}
+        disabled={disabled}
         className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${className}`}
       />
 
