@@ -125,11 +125,15 @@ export default function SignUp() {
                               control={control}
                               name="campusList"
                               render={({ field: { onChange, value } }) => {
+                                const selectedOptions = campusList?.filter(
+                                  campus =>
+                                    value.some(item => item.id === campus.id),
+                                );
                                 return (
                                   <MultiSelectDropdown
                                     defaultLabel="캠퍼스"
                                     options={campusList}
-                                    initialSelectedOptions={value}
+                                    initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {
                                       if (errors.courseList?.message) {
                                         clearErrors('courseList');
