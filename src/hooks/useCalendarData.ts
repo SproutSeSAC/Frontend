@@ -66,7 +66,7 @@ export const useCalendarData = () => {
       : [];
   }, [allCalendars, sproutCalendarIds]);
 
-  const nonSproutCalendars = useMemo(() => {
+  const personalCalendars = useMemo(() => {
     return allCalendars
       ? allCalendars
           ?.filter(({ id }) => !sproutCalendarIds.includes(id))
@@ -115,7 +115,7 @@ export const useCalendarData = () => {
   return {
     isCalendarListLoading,
     sproutCalendars,
-    nonSproutCalendars,
+    personalCalendars,
     fullCalendarEvents,
   };
 };

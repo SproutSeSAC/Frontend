@@ -23,8 +23,15 @@ export default function SubscribeCalenderButton({
   const sproutCalendarId = calendarIdByCourse?.calendarId;
 
   const onConfirmSubscribeClick = () => {
+    if (sproutCalendarId) {
+      const publicCalendarUrl = `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(sproutCalendarId)}`;
+      window.open(publicCalendarUrl, '_blank');
+    }
+    hideDialog();
+  };
+
+  const onTraineeCalendarClick = () => {
     if (!sproutCalendarId) {
-      hideDialog();
       alert({
         showDim: true,
         className: 'z-30',
@@ -40,46 +47,39 @@ export default function SubscribeCalenderButton({
           />
         ),
       });
-    } else if (sproutCalendarId) {
-      const publicCalendarUrl = `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(sproutCalendarId)}`;
-      window.open(publicCalendarUrl, '_blank');
-    }
-    hideDialog();
-  };
-
-  // 훈련생 캘린더 구독 클릭시
-  const onTraineeCalendarClick = () => {
-    alert({
-      showDim: true,
-      className: 'z-30',
-      text: `${courseTitle} 캘린더`,
-      subText: `위 캘린더를 구독하시겠어요? `,
-      children: (
-        <div className="flex max-w-80 flex-col">
-          <Title
-            as="p"
-            highlight={courseTitle}
-            title={`${courseTitle}에 관련된 일정들을 확인할 수 있습니다.`}
-            className="mt-2 px-2 text-center leading-6"
-          />
-          <div className="flex justify-center gap-2">
-            <SquareButton
-              name="취소"
-              onClick={hideDialog}
-              type="button"
-              color="gray"
-              className="mt-5"
+    } else {
+      alert({
+        showDim: true,
+        className: 'z-30',
+        text: `${courseTitle} 캘린더`,
+        subText: `위 캘린더를 구독하시겠어요? `,
+        children: (
+          <div className="flex max-w-80 flex-col">
+            <Title
+              as="p"
+              highlight={courseTitle}
+              title={`${courseTitle}에 관련된 일정들을 확인할 수 있습니다.`}
+              className="mt-2 px-2 text-center leading-6"
             />
-            <SquareButton
-              name="구독"
-              onClick={onConfirmSubscribeClick}
-              type="button"
-              className="mt-5"
-            />
+            <div className="flex justify-center gap-2">
+              <SquareButton
+                name="취소"
+                onClick={hideDialog}
+                type="button"
+                color="gray"
+                className="mt-5"
+              />
+              <SquareButton
+                name="구독"
+                onClick={onConfirmSubscribeClick}
+                type="button"
+                className="mt-5"
+              />
+            </div>
           </div>
-        </div>
-      ),
-    });
+        ),
+      });
+    }
   };
 
   if (isCalenderIdLoading) return null;

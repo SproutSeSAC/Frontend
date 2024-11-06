@@ -3,12 +3,17 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL } from '@/constants';
-import { SproutCalendarDto } from '@/types';
+import { KeyOfRole, SproutCalendarDto } from '@/types';
 
 export const useCreateCalendar = (
   courseId: number,
   summary: string,
-  emails: { CAMPUS_MANAGER?: string; JOB_COORDINATOR?: string },
+  emails: {
+    EDU_MANAGER?: string;
+    CAMPUS_MANAGER?: string;
+    JOB_COORDINATOR?: string;
+  },
+  userRole: KeyOfRole,
   options?: UseMutationOptions,
 ) => {
   const createAndShareCalendar = async () => {
@@ -41,19 +46,35 @@ export const useCreateCalendar = (
         publicAclRule,
       );
 
-      const adminAclData = {
-        role: 'owner',
-        scope: {
-          type: 'user',
-          value: ADMIN_EMAIL,
-        },
-      };
-      await axiosCalendarInstance.post(
-        `/calendars/${calendarId}/acl`,
-        adminAclData,
-      );
+      if (userRole !== 'ADMIN') {
+        const adminAclData = {
+          role: 'owner',
+          scope: {
+            type: 'user',
+            value: ADMIN_EMAIL,
+          },
+        };
+        await axiosCalendarInstance.post(
+          `/calendars/${calendarId}/acl`,
+          adminAclData,
+        );
+      }
 
-      if (emails.CAMPUS_MANAGER) {
+      if (emails?.EDU_MANAGER) {
+        const eduManagerAclData = {
+          role: 'owner',
+          scope: {
+            type: 'user',
+            value: emails.EDU_MANAGER,
+          },
+        };
+        await axiosCalendarInstance.post(
+          `/calendars/${calendarId}/acl`,
+          eduManagerAclData,
+        );
+      }
+
+      if (emails?.CAMPUS_MANAGER) {
         const campusManagerAclData = {
           role: 'owner',
           scope: {
@@ -67,7 +88,7 @@ export const useCreateCalendar = (
         );
       }
 
-      if (emails.JOB_COORDINATOR) {
+      if (emails?.JOB_COORDINATOR) {
         const jobCoordinatorAclData = {
           role: 'owner',
           scope: {
@@ -80,6 +101,8 @@ export const useCreateCalendar = (
           jobCoordinatorAclData,
         );
       }
+
+      window.location.reload(); // NOTE: 아래는 테스트가 좀더 원활해지면 삭제 예정
     } catch (error) {
       console.error('캘린더 생성 또는 공개 설정 중 오류 발생', error);
     }

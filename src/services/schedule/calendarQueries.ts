@@ -65,6 +65,24 @@ export const useGetEventsByCalendar = (
   });
 };
 
+// 캘린더별 권한 데이터 가져오기
+export const useGetAclListByCalendar = (
+  calendarId?: string,
+  options?: UseQueryOptions<GoogleCalendarApiDto.GetAclList>,
+) => {
+  const getAclList = async () => {
+    const res = await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+    return res.data.items;
+  };
+
+  return useQuery<GoogleCalendarApiDto.GetAclList>({
+    queryKey: ['calendarAcl', calendarId],
+    queryFn: getAclList,
+    enabled: !!calendarId,
+    ...options,
+  });
+};
+
 export const useGetCalendarIdByCourse = (
   courseId?: number,
   options?: UseQueryOptions<SproutCalendarDto.Get>,

@@ -10,3 +10,8 @@ export type Role = {
 export type KeyOfRole = keyof Role;
 
 export type RoleValues = Role[keyof Role];
+
+export type ManagerAdminRole = Pick<
+  Role,
+  'EDU_MANAGER' | 'CAMPUS_MANAGER' | 'JOB_COORDINATOR' | 'ADMIN'
+>;

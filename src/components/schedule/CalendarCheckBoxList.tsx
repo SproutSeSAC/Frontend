@@ -17,13 +17,13 @@ import SubscribeCalendarButton from '@/components/schedule/SubscribeCalendarButt
 interface CalendarCheckBoxListProps {
   userRole: KeyOfRole;
   sproutCalendars: Calendar[];
-  nonSproutCalendars: Calendar[];
+  personalCalendars: Calendar[];
 }
 
 export default function CalendarCheckBoxList({
   userRole,
   sproutCalendars,
-  nonSproutCalendars,
+  personalCalendars,
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
@@ -36,7 +36,7 @@ export default function CalendarCheckBoxList({
       category: 'Sprout 캘린더',
       calendarList: sproutCalendars,
     },
-    { category: '나의 캘린더', calendarList: nonSproutCalendars },
+    { category: '나의 캘린더', calendarList: personalCalendars },
   ];
 
   // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
@@ -65,6 +65,7 @@ export default function CalendarCheckBoxList({
 
   return (
     <ul className="h-full overflow-auto rounded-xl bg-white px-5 pt-5 shadow-card scrollbar-hide">
+      <span className="block pb-3">{userRole}</span>
       {calendarListByLabel.map(({ category, calendarList }) => (
         <Accordion
           key={category}
@@ -73,60 +74,36 @@ export default function CalendarCheckBoxList({
           titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
           initialOpen={category === 'Sprout 캘린더'}
         >
-          {userRole === 'TRAINEE' ? (
-            <ul className="flex flex-col gap-2">
-              {category === 'Sprout 캘린더' &&
-                userProfile &&
-                userCourse &&
-                !sproutCalendars && (
-                  <SubscribeCalendarButton
-                    courseTitle={userProfile.courseTitle}
-                    courseId={userCourse.id}
-                  />
-                )}
+          <ul className="flex flex-col gap-2">
+            {category === 'Sprout 캘린더' &&
+              userProfile &&
+              userCourse &&
+              sproutCalendars.length === 0 &&
+              (userRole === 'TRAINEE' ? (
+                <SubscribeCalendarButton
+                  courseTitle={userProfile.courseTitle}
+                  courseId={userCourse.id}
+                />
+              ) : (
+                <CreateCalendarButton
+                  courseTitle={userProfile.courseTitle}
+                  courseId={userCourse.id}
+                  userRole={userRole}
+                />
+              ))}
 
-              {calendarList?.map(
-                ({ id, summary, backgroundColor, primary }) => (
-                  <Checkbox
-                    key={id}
-                    id={id}
-                    text={primary ? '기본 캘린더' : summary}
-                    checked={!!currentCalendarIds?.includes(id)}
-                    onChange={() => onCheckBoxChange(id)}
-                    textClassName="!text-text"
-                    checkBoxColor={backgroundColor}
-                  />
-                ),
-              )}
-            </ul>
-          ) : (
-            <ul className="flex flex-col gap-2 border">
-              {category === 'Sprout 캘린더' &&
-                userRole === 'EDU_MANAGER' &&
-                userProfile &&
-                userCourse &&
-                !sproutCalendars && (
-                  <CreateCalendarButton
-                    courseTitle={userProfile.courseTitle}
-                    courseId={userCourse.id}
-                  />
-                )}
-
-              {calendarList?.map(
-                ({ id, summary, backgroundColor, primary }) => (
-                  <Checkbox
-                    key={id}
-                    id={id}
-                    text={primary ? '기본 캘린더' : summary}
-                    checked={!!currentCalendarIds?.includes(id)}
-                    onChange={() => onCheckBoxChange(id)}
-                    textClassName="!text-text"
-                    checkBoxColor={backgroundColor}
-                  />
-                ),
-              )}
-            </ul>
-          )}
+            {calendarList?.map(({ id, summary, backgroundColor, primary }) => (
+              <Checkbox
+                key={id}
+                id={id}
+                text={primary ? '기본 캘린더' : summary}
+                checked={!!currentCalendarIds?.includes(id)}
+                onChange={() => onCheckBoxChange(id)}
+                textClassName="!text-text"
+                checkBoxColor={backgroundColor}
+              />
+            ))}
+          </ul>
         </Accordion>
       ))}
     </ul>

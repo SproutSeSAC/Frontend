@@ -15,7 +15,7 @@ export default function Schedule() {
 
   const {
     sproutCalendars,
-    nonSproutCalendars,
+    personalCalendars,
     fullCalendarEvents,
     isCalendarListLoading, //
   } = useCalendarData();
@@ -29,13 +29,13 @@ export default function Schedule() {
         highlight="새싹"
       />
       <div className="flex h-[85vh] min-h-[640px] gap-4">
-        <div className="flex h-full max-w-[265px] flex-col gap-4">
+        <div className="flex h-full max-w-[290px] flex-col gap-4">
           <Calendar type="small" events={fullCalendarEvents} />
 
           <CalendarCheckBoxList
             sproutCalendars={sproutCalendars}
-            nonSproutCalendars={nonSproutCalendars}
-            userRole={userProfile?.role}
+            personalCalendars={personalCalendars}
+            userRole="ADMIN"
           />
         </div>
 

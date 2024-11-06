@@ -1,6 +1,7 @@
 export namespace GoogleCalendarApiDto {
   export type GetCalendarList = CalendarList;
   export type GetCalenderEvents = CalenderEvents;
+  export type GetAclList = Acl[];
 }
 
 type CalendarList = {
@@ -22,4 +23,15 @@ type CalenderEvents = {
   timeZone: string;
   items: Event[];
   nextSyncToken?: string;
+};
+
+type Acl = {
+  kind: string;
+  etag: string;
+  id: string;
+  scope: {
+    type: string;
+    value: string;
+  };
+  role: AccessRole;
 };
