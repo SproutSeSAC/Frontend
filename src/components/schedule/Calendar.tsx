@@ -7,6 +7,7 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import FullCalendar from '@fullcalendar/react';
+import rrulePlugin from '@fullcalendar/rrule';
 
 interface CalendarProps {
   type: 'big' | 'small';
@@ -61,8 +62,7 @@ export default function Calendar({ type, events, children }: CalendarProps) {
         <FullCalendar
           weekends
           initialView="dayGridMonth"
-          timeZone="Asia/Seoul"
-          plugins={[dayGridPlugin, googleCalendarPlugin]}
+          plugins={[dayGridPlugin, rrulePlugin, googleCalendarPlugin]}
           locales={[koLocale]}
           events={events}
           height="100%"

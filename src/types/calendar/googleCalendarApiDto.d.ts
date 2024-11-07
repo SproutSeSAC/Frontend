@@ -1,3 +1,5 @@
+import { Event } from '@/types/calendar/googleCalendar';
+
 export namespace GoogleCalendarApiDto {
   export type GetCalendarList = CalendarList;
   export type GetCalenderEvents = CalenderEvents;

@@ -18,7 +18,7 @@ import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_KEY } from '@/constants';
 import { Event } from '@/types';
-import { getCookie, setCookie } from '@/utils';
+import { createRrule, getCookie, setCookie } from '@/utils';
 import { useAtom } from 'jotai';
 
 export const useCalendarData = () => {
@@ -87,14 +87,26 @@ export const useCalendarData = () => {
 
   const fullCalendarEvents = useMemo(() => {
     return eventList[0]?.summary
-      ? eventList?.map(event => ({
-          title: event?.summary,
-          start: event?.start.dateTime || event?.start.date,
-          end: event?.end.dateTime || event?.end.date,
-          id: event?.id,
-          backgroundColor: event?.backgroundColor,
-          allDay: !event?.start?.dateTime && !event?.end?.dateTime,
-        }))
+      ? eventList?.map(event => {
+          const start = event?.start?.dateTime || event?.start?.date;
+          const end = event?.end?.dateTime || event?.end?.date;
+
+          const defaultEventValue = {
+            title: event?.summary,
+            start,
+            end,
+            id: event?.id,
+            backgroundColor: event?.backgroundColor,
+            allDay: !event?.start?.dateTime && !event?.end?.dateTime,
+          };
+
+          return event.recurrence
+            ? {
+                ...defaultEventValue,
+                rrule: { ...createRrule(event?.recurrence[0]), dtstart: start },
+              }
+            : defaultEventValue;
+        })
       : [];
   }, [eventList]);
 

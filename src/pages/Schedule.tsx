@@ -35,7 +35,7 @@ export default function Schedule() {
           <CalendarCheckBoxList
             sproutCalendars={sproutCalendars}
             personalCalendars={personalCalendars}
-            userRole="ADMIN"
+            userRole={userProfile?.role}
           />
         </div>
 
