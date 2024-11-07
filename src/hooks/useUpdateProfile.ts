@@ -3,7 +3,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTechStackList } from '@/hooks/useTechStackList';
 
 import { useUpdateUserProfile } from '@/services/auth/authMutations';
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 import {
   useGetDomainList,
   useGetJobList,
@@ -28,7 +31,7 @@ export const useUpdateProfile = () => {
   } = useTechStackList();
 
   const {
-    data: userProfile,
+    data: userProfile = initialUserProfile,
     isLoading: isUserProfileLoading, //
   } = useGetUserProfile();
 

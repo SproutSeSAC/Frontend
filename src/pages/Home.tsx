@@ -2,18 +2,22 @@ import { useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
 import { useCalendarData, useCheckLogin } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
-import { RoleValues, UserProfile } from '@/types';
+import { RoleValues } from '@/types';
 import { getColorByRole } from '@/utils';
 import { FiChevronRight } from 'react-icons/fi';
 
-import LoopLoading from '@/components/common/LoopLoading';
+import LoadingPage from '@/pages/LoadingPage';
+
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
@@ -31,11 +35,11 @@ export default function Home() {
   } = useGetLoungeProjects({ page: 1, size: 10 });
 
   const {
-    data: userProfile,
+    data: userProfile = initialUserProfile,
     isLoading: isGetUserProfileLoading, //
   } = useGetUserProfile();
 
-  const { name } = userProfile as UserProfile;
+  const { name } = userProfile;
 
   const { fullCalendarEvents } = useCalendarData();
 
@@ -49,18 +53,7 @@ export default function Home() {
     }
   }, [isLogin, navigate]);
 
-  if (isGetUserProfileLoading || isGetLoungeListLoading)
-    return (
-      <MainView isEmpty>
-        <LoopLoading />
-        <span className="mb-4 mt-10 text-[40px] font-semibold">
-          잠시만 기다려주세요
-        </span>
-        <span className="text-lg font-medium text-gray1">
-          해당 페이지로 이동중입니다!
-        </span>
-      </MainView>
-    );
+  if (isGetUserProfileLoading || isGetLoungeListLoading) return <LoadingPage />;
 
   return (
     <>

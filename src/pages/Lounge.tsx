@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { useTechStackList } from '@/hooks/useTechStackList';
 
@@ -37,6 +37,7 @@ export default function Lounge() {
     },
     [],
   );
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (searchRef.current) {
       searchRef.current.value = e.target.value;
@@ -46,6 +47,21 @@ export default function Lounge() {
   const handleSearchSubmit = useCallback(() => {
     setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
   }, []);
+
+  const selectedPositionOption = useMemo(() => {
+    const { position } = filterData;
+    return positionsList?.filter(({ id }) => position?.includes(id))?.[0];
+  }, [filterData, positionsList]);
+
+  const selectedProgressOption = useMemo(() => {
+    const { meetingType } = filterData;
+    return progressList?.filter(({ key }) => meetingType?.includes(key))?.[0];
+  }, [filterData]);
+
+  const selectedSortOption = useMemo(() => {
+    const { sort } = filterData;
+    return sortList?.filter(({ key }) => sort?.includes(key))?.[0];
+  }, [filterData]);
 
   return (
     <>
@@ -85,6 +101,7 @@ export default function Lounge() {
             options={positionsList || []}
             onChangeValue={value => handleChangeFilterValue(value, 'position')}
             boxShape="buttonShape"
+            selectedOption={selectedPositionOption}
           />
 
           <SingleSelectDropdown
@@ -95,6 +112,7 @@ export default function Lounge() {
               setFilterData(prev => ({ ...prev, meetingType: newValue[0] }));
             }}
             boxShape="buttonShape"
+            selectedOption={selectedProgressOption}
           />
         </div>
 
@@ -106,6 +124,7 @@ export default function Lounge() {
             setFilterData(prev => ({ ...prev, sort: newValue[0] }));
           }}
           boxShape="buttonShape"
+          selectedOption={selectedSortOption}
         />
       </div>
 

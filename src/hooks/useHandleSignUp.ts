@@ -1,7 +1,7 @@
 // import { useNavigate } from 'react-router-dom';
 import { useTechStackList } from '@/hooks/useTechStackList';
 
-// import { usePostUserInfo } from '@/services/auth/authMutations';
+// import { usePostSignUpValue } from '@/services/auth/authMutations';
 import {
   useGetCampusList,
   useGetCourseList,
@@ -14,17 +14,19 @@ import {
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { getQuestionListByRole } from '@/constants';
-import { KeyOfRole, UpdateSignUpValue } from '@/types';
+import { KeyOfRole, UserProfileDto } from '@/types';
 import { useAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
+interface UseHandleSignUpProps {
+  currentCampusList: { id: number; name: string }[];
+  currentRole: KeyOfRole;
+}
+
 export const useHandleSignUp = ({
-  watchedCampusList,
-  watchedRole,
-}: {
-  watchedCampusList: { id: number; name: string }[];
-  watchedRole: KeyOfRole;
-}) => {
+  currentCampusList,
+  currentRole,
+}: UseHandleSignUpProps) => {
   const [isVerifiedCode] = useAtom(verifiedCodeAtom);
 
   const {
@@ -44,27 +46,26 @@ export const useHandleSignUp = ({
     isLoading: isCampusListLoading, //
   } = useGetCampusList();
 
-  const { data: courseList } = useGetCourseList(watchedCampusList[0]?.id);
+  const { data: courseList } = useGetCourseList(currentCampusList[0]?.id);
 
   // const navigate = useNavigate();
 
-  // const { mutate } = usePostUserInfo({
+  // const { mutate } = usePostSignUpValue({
   //   onSuccess: () => navigate('/'),
   // });
 
-  const onSubmit: SubmitHandler<UpdateSignUpValue> = formData => {
+  const onSubmit: SubmitHandler<UserProfileDto.Post> = formData => {
+    if (!isVerifiedCode) return;
+
+    const { verifyCode, ...rest } = formData;
     const marketingConsent = formData.marketingConsent === '동의';
-    const data = { ...formData, marketingConsent };
-    // const { verifyCode, campusList, ...rest } = data;
-    if (!isVerifiedCode) {
-      console.log('인증 안된 상태');
-      return;
-    }
+    const data = { ...rest, marketingConsent };
+
     console.log(data);
     // mutate(rest);
   };
 
-  const questionListByRole = getQuestionListByRole(watchedRole);
+  const questionListByRole = getQuestionListByRole(currentRole);
 
   const getQuestionNumber = (index: number, idx: number) => {
     const previousQuestionsCount = questionListByRole

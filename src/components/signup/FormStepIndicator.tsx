@@ -5,7 +5,7 @@ import { currentStepAtom } from '@/atoms/formStepAtom';
 import {
   SignUpFormTitle,
   SignUpQuestionsByStep,
-  UserInfo,
+  UserProfileDto,
   VerifyCode,
 } from '@/types';
 import { useAtom } from 'jotai';
@@ -39,7 +39,7 @@ export default function FormStepIndicator({
       })
       .flat()
       .map(key => (key === 'roles' ? 'role' : key));
-  }) as unknown as (keyof UserInfo & VerifyCode)[][];
+  }) as unknown as (keyof UserProfileDto.Post & VerifyCode)[][];
 
   const goNextStep = async () => {
     const currentFormItems = formItemsByStepArr[currentStep - 1];

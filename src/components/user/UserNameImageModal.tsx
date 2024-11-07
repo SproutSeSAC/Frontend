@@ -1,10 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useUpdateUserProfile } from '@/services/auth/authMutations';
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import { useDialogContext } from '@/hooks';
-import { UpdateableUserProfile, UserProfile } from '@/types';
+import { UserProfileDto } from '@/types';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import CameraButton from '@/components/common/button/CameraButton';
@@ -19,9 +22,9 @@ export default function UserNameImageModal() {
 
   const queryClient = useQueryClient();
 
-  const { data: userProfile } = useGetUserProfile();
+  const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { nickname } = userProfile as UserProfile;
+  const { nickname } = userProfile;
 
   const { mutateAsync } = useUpdateUserProfile({
     onSuccess: () => {
@@ -35,7 +38,7 @@ export default function UserNameImageModal() {
 
   const { handleSubmit, register } = methods;
 
-  const onSubmit = (formData: Partial<UpdateableUserProfile>) => {
+  const onSubmit = (formData: UserProfileDto.Update) => {
     mutateAsync(formData);
     hideDialog('USERNAME-IMAGE-CARD-TYPE');
   };

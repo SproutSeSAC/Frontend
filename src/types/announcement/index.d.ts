@@ -19,6 +19,8 @@ export type AnnouncementTab = {
   type: keyof AnnouncementTabKind;
 };
 
+export * from '@/types/announcement/announcementDto';
+
 export type AnnouncementCategory = {
   ALL: '통합';
   GENERAL_ANNOUNCEMENT: '일반공지';

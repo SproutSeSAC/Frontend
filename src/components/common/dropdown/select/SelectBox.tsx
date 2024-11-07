@@ -89,8 +89,9 @@ export default function SelectBox<
   );
 
   const styleByBoxShape = {
-    inputShape: `w-full bg-white px-4 py-[15px] text-start text-lg`,
-    buttonShape: 'border-gray2 bg-bg px-3 py-1 text-gray1',
+    inputShape: `w-full gap-4 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg`,
+    buttonShape:
+      'rounded-2xl border border-gray2 bg-bg px-3 py-1 gap-4 text-gray1',
   };
 
   const selectBoxStyle = styleByBoxShape[boxShape];
@@ -117,7 +118,7 @@ export default function SelectBox<
           {isMultiSelect(rest) && (
             <>
               <span
-                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-gray2'}`}
+                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-gray2'} ${rest.selectedOptions?.length >= 1 && 'pr-7'}`}
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
@@ -130,14 +131,14 @@ export default function SelectBox<
         {isMultiSelect(rest) && rest.selectedOptions?.length >= 1 && (
           <ResetButton
             onResetClick={rest.onResetClick}
-            className="absolute inset-y-0 right-2"
+            className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
           />
         )}
       </div>
 
       <article className={defaultLabel !== '기술스택' ? 'relative' : ''}>
         <ul
-          className={`${open ? 'max-h-64 border border-gray4' : 'max-h-0'} w-full ${defaultLabel !== '기술스택' ? 'min-w-max' : ''} absolute z-40 mt-1 overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500`}
+          className={`${open ? 'max-h-64 border border-gray4' : 'max-h-0'} w-full ${defaultLabel !== '기술스택' ? 'min-w-max' : ''} absolute z-40 mt-1 overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>

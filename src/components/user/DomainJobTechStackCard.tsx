@@ -1,7 +1,9 @@
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import { useDialogContext } from '@/hooks';
-import { UserProfile } from '@/types';
 
 import Tag from '@/components/common/Tag';
 import TechStackIcon from '@/components/common/TechStackIcon';
@@ -11,11 +13,11 @@ import DomainJobTechStackModal from '@/components/user/DomainJobTechStackModal';
 
 export default function DomainJobTechStackCard() {
   const {
-    data: userProfile,
+    data: userProfile = initialUserProfile,
     isLoading: isGetUserProfileLoading, //
   } = useGetUserProfile();
 
-  const { jobList, techStackList, domainList } = userProfile as UserProfile;
+  const { jobList, techStackList, domainList } = userProfile;
 
   const { showDialog } = useDialogContext();
 

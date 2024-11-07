@@ -1,11 +1,5 @@
 import { useDialogContext, useUpdateProfile } from '@/hooks';
-import {
-  Domain,
-  Job,
-  TechStack,
-  UpdateableUserProfile,
-  UserProfile,
-} from '@/types';
+import { Domain, Job, TechStack, UserProfileDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -35,7 +29,7 @@ type FormValue = {
 type GetOptions = (type: 'domain' | 'job', list: Domain[] | Job[]) => Option[];
 
 type UpdateableValue = Pick<
-  UpdateableUserProfile,
+  UserProfileDto.Update,
   'updatedDomainIdList' | 'updatedJobIdList' | 'updatedTechStackIdList'
 >;
 
@@ -55,7 +49,7 @@ export default function DomainJobTechStackModal() {
     jobList: userJobList,
     techStackList: userTechStackList,
     domainList: userDomainList,
-  } = userProfile as UserProfile;
+  } = userProfile;
 
   const defaultFormValues: FormValue = {
     updatedTechStackList: userTechStackList,
@@ -82,16 +76,17 @@ export default function DomainJobTechStackModal() {
       updatedTechStackList: 'updatedTechStackIdList',
     };
 
-    const updatedValue = Object.entries(matchedKeyObj).reduce<
-      Partial<UpdateableValue>
-    >((acc, [originalKey, newKey]) => {
-      if (dirtyFields[originalKey as keyof FormValue]) {
-        acc[newKey as keyof UpdateableValue] = formData[
-          originalKey as keyof FormValue
-        ].map(({ id }) => id);
-      }
-      return acc;
-    }, {});
+    const updatedValue = Object.entries(matchedKeyObj).reduce<UpdateableValue>(
+      (acc, [originalKey, newKey]) => {
+        if (dirtyFields[originalKey as keyof FormValue]) {
+          acc[newKey as keyof UpdateableValue] = formData[
+            originalKey as keyof FormValue
+          ].map(({ id }) => id);
+        }
+        return acc;
+      },
+      {},
+    );
 
     mutateAsync(updatedValue);
     hideDialog();

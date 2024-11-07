@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import imgUrl from '@/assets/images/faq.png';
 import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { UserProfile } from '@/types';
 
 import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
@@ -16,9 +18,10 @@ import PostAndCommentCollection from '@/components/user/PostAndCommentCollection
 import UserNameImageCard from '@/components/user/UserNameImageCard';
 
 export default function MyPage() {
-  const { data: userProfile, isLoading } = useGetUserProfile();
+  const { data: userProfile = initialUserProfile, isLoading } =
+    useGetUserProfile();
 
-  const { name, email, campusName, courseTitle } = userProfile as UserProfile;
+  const { name, email, campusName, courseTitle } = userProfile;
 
   const userInfoList = [
     { label: 'E-mail', value: email },

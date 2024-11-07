@@ -7,8 +7,6 @@ function DateOption({ name, date }: { name: string; date: string }) {
   );
 }
 
-const today = new Date();
-
 export const formatDate = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     month: 'long',
@@ -18,27 +16,18 @@ export const formatDate = (date: Date): string => {
   return date.toLocaleDateString('ko-KR', options);
 };
 
+const createDateOption = (dayOffset: number, name: string) => {
+  const date = new Date(Date.now() + dayOffset * 24 * 60 * 60 * 1000);
+  return {
+    id: formatDate(date),
+    name: DateOption({ name, date: formatDate(date) }),
+    value: date,
+  };
+};
+
 // 날짜선택 option
 export const dateOptions = [
-  {
-    id: formatDate(today),
-    name: DateOption({ name: '오늘', date: formatDate(today) }),
-    value: today,
-  },
-  {
-    id: formatDate(new Date(today.setDate(today.getDate() + 1))),
-    name: DateOption({
-      name: '내일',
-      date: formatDate(new Date(today.setDate(today.getDate() + 1))),
-    }),
-    value: new Date(today.setDate(today.getDate() + 1)),
-  },
-  {
-    id: formatDate(new Date(today.setDate(today.getDate() + 2))),
-    name: DateOption({
-      name: '모레',
-      date: formatDate(new Date(today.setDate(today.getDate() + 2))),
-    }),
-    value: new Date(today.setDate(today.getDate() + 2)),
-  },
+  createDateOption(0, '오늘'),
+  createDateOption(1, '내일'),
+  createDateOption(2, '모레'),
 ];
