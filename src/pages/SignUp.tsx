@@ -1,4 +1,5 @@
 import { currentStepAtom } from '@/atoms/formStepAtom';
+import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { defaultSignUpFormValues, matchedRoleName } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
@@ -9,7 +10,6 @@ import { useAtom } from 'jotai';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
-import VerifyCodeButton from '@/components/common/button/VerifyCodeButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
@@ -19,9 +19,11 @@ import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
 import MultiSelectList from '@/components/signup/MultiSelectList';
 import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
+import VerificationCode from '@/components/signup/VerificationCode';
 
 export default function SignUp() {
   const [currentStep] = useAtom(currentStepAtom);
+  const [isVerifiedCode] = useAtom(verifiedCodeAtom);
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -36,12 +38,11 @@ export default function SignUp() {
     formState: { errors },
     setError,
     clearErrors,
+    getValues,
   } = methods;
 
-  const watchedRole = useWatch({ control, name: 'role' });
-  const watchedCampusList = useWatch({ control, name: 'campusList' });
-  // const watchedCourseId = useWatch({ control, name: 'courseList' });
-  const watchedVerifyCode = useWatch({ control, name: 'verifyCode' });
+  const currentRole = getValues('role');
+  const currentCampusList = useWatch({ control, name: 'campusList' });
 
   const {
     jobList,
@@ -53,7 +54,10 @@ export default function SignUp() {
     isLoading,
     questionListByRole,
     getQuestionNumber,
-  } = useHandleSignUp({ watchedCampusList, watchedRole });
+  } = useHandleSignUp({
+    currentCampusList,
+    currentRole,
+  });
 
   if (isLoading) return null;
 
@@ -131,7 +135,7 @@ export default function SignUp() {
                                 );
                                 return (
                                   <MultiSelectDropdown
-                                    defaultLabel="캠퍼스"
+                                    defaultLabel="캠퍼스 선택"
                                     options={campusList}
                                     initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {
@@ -168,7 +172,7 @@ export default function SignUp() {
                                     errorMsg={errors.courseList?.message}
                                     selectBoxClassName="!h-[50px] !text-base"
                                     onSelectBoxClick={async () => {
-                                      if (!watchedCampusList.length) {
+                                      if (!currentCampusList.length) {
                                         setError('courseList', {
                                           type: 'manual',
                                           message:
@@ -226,19 +230,7 @@ export default function SignUp() {
                             />
                           )}
 
-                          {'verifyCode' in question && (
-                            <div className="relative pb-10">
-                              <TextInput
-                                placeholder="인증코드를 입력해주세요"
-                                className="!h-[50px] w-full pl-4"
-                                {...register('verifyCode')}
-                                errorMsg={errors.verifyCode?.message}
-                              />
-                              <VerifyCodeButton
-                                currentCode={watchedVerifyCode}
-                              />
-                            </div>
-                          )}
+                          {'verifyCode' in question && <VerificationCode />}
 
                           {'marketingConsent' in question && (
                             <>
@@ -264,7 +256,7 @@ export default function SignUp() {
                   }),
               )}
 
-              {watchedRole === 'PRE_TRAINEE' &&
+              {currentRole === 'PRE_TRAINEE' &&
                 currentStep === questionListByRole.length && (
                   <span className="mb-14 mt-auto inline-block w-full text-center text-gray1">
                     예비 수강생은 제한된 서비스만 이용 가능합니다.
@@ -274,6 +266,7 @@ export default function SignUp() {
 
             {currentStep === questionListByRole.length && (
               <SquareButton
+                color={!isVerifiedCode ? 'gray' : 'oliveGreen'}
                 type="submit"
                 name="시작하기"
                 className="mx-auto w-[50%] px-4 py-3 font-medium"

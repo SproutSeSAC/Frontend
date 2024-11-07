@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
-import ErrorMsg from '@/components/common/input/ErrorMsg';
+import SelectBox, {
+  SingleSelectProps,
+} from '@/components/common/dropdown/select/SelectBox';
 
 export default function MealRecruitDateSelectBox({
   dateOptions,
@@ -36,39 +36,31 @@ export default function MealRecruitDateSelectBox({
 
   return (
     <OutsideClickContainer onClose={setOpen} width="100%">
-      <button
-        type="button"
-        onClick={() => setOpen(prev => !prev)}
-        className={`${errorMas && 'border-red-500'} relative flex w-full items-center gap-5 text-start ${selectedOptions ? 'text-text' : 'text-[#9ca3af]'} rounded-xl border border-solid border-gray2 px-6 py-[13px] text-lg`}
+      <SelectBox<SingleSelectProps>
+        defaultLabel="날짜를 선택해주세요"
+        open={open}
+        onClose={() => setOpen(false)}
+        onSelectBoxClick={() => setOpen(prev => !prev)}
+        errorMsg={errorMas}
+        selectedOptionLabel={selectedOptions?.id}
+        boxShape="buttonShape"
+        className={`${errorMas && 'border-red-500'} ${!selectedOptions?.id && 'text-gray2'} relative flex w-full items-center gap-5 text-start ${selectedOptions ? 'text-text' : 'text-[#9ca3af]'} rounded-xl border border-solid border-gray2 bg-white px-6 py-[9px] text-lg`}
       >
-        <span className="w-full">
-          {selectedOptions?.id || '날짜를 선택해주세요'}
-        </span>
-        {open ? <IoIosArrowUp /> : <IoIosArrowDown />}
-      </button>
-
-      <article className="relative">
-        <ul
-          className={`absolute mt-1 w-full list-none ${open ? 'max-h-64 py-[15px]' : 'max-h-0 border-none py-0'} flex flex-col gap-[14px] overflow-auto rounded-2xl bg-white shadow-card transition-all duration-500`}
-        >
-          {dateOptions.map(option => (
-            <li
-              key={option.id}
-              className="cursor-pointer px-7 py-[5px] hover:rounded-lg hover:bg-vividGreen3"
+        {dateOptions.map((option, idx) => (
+          <li
+            key={option.id}
+            className={`mx-1 cursor-pointer px-4 py-[5px] hover:rounded-lg hover:bg-vividGreen3 ${idx === 0 && 'mt-4'} ${idx + 1 === dateOptions.length ? 'mb-4' : 'mb-[9px]'}`}
+          >
+            <button
+              type="button"
+              className="w-full text-start"
+              onClick={() => handleChangeValue(option)}
             >
-              <button
-                type="button"
-                className="w-full text-start"
-                onClick={() => handleChangeValue(option)}
-              >
-                {option.name}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </article>
-
-      {errorMas && <ErrorMsg msg={errorMas || ''} className="ml-2" />}
+              {option.name}
+            </button>
+          </li>
+        ))}
+      </SelectBox>
     </OutsideClickContainer>
   );
 }
