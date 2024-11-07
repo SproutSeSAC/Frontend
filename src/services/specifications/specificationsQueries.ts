@@ -2,32 +2,19 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { Domain, Job, TechStack } from '@/types';
+import { SpecificationsDto } from '@/types';
 import { AxiosResponse } from 'axios';
 
-type JobListData = {
-  jobList: Job[];
-};
-
-type DomainListData = {
-  domainList: Domain[];
-};
-
-type TechStackListData = {
-  techStackList: TechStack[];
-};
-
 export const useGetJobList = (
-  options?: UseQueryOptions<JobListData['jobList']>,
+  options?: UseQueryOptions<SpecificationsDto.GetJobList['jobList']>,
 ) => {
   const getJobList = async () => {
-    const response: AxiosResponse<JobListData> = await axiosInstance.get(
-      '/specifications/jobList',
-    );
+    const response: AxiosResponse<SpecificationsDto.GetJobList> =
+      await axiosInstance.get('/specifications/jobList');
     return response.data.jobList;
   };
 
-  return useQuery<JobListData['jobList']>({
+  return useQuery<SpecificationsDto.GetJobList['jobList']>({
     queryKey: ['jobList'],
     queryFn: getJobList,
     initialData: [],
@@ -36,16 +23,15 @@ export const useGetJobList = (
 };
 
 export const useGetDomainList = (
-  options?: UseQueryOptions<DomainListData['domainList']>,
+  options?: UseQueryOptions<SpecificationsDto.GetDomainList['domainList']>,
 ) => {
   const getDomainList = async () => {
-    const response: AxiosResponse<DomainListData> = await axiosInstance.get(
-      '/specifications/domainList',
-    );
+    const response: AxiosResponse<SpecificationsDto.GetDomainList> =
+      await axiosInstance.get('/specifications/domainList');
     return response.data.domainList;
   };
 
-  return useQuery<DomainListData['domainList']>({
+  return useQuery<SpecificationsDto.GetDomainList['domainList']>({
     queryKey: ['domainList'],
     queryFn: getDomainList,
     initialData: [],
@@ -54,16 +40,15 @@ export const useGetDomainList = (
 };
 
 export const useGetTechStackList = (
-  options?: UseQueryOptions<TechStackListData['techStackList']>,
+  options?: UseQueryOptions<SpecificationsDto.GetTechStack['techStackList']>,
 ) => {
   const getTechStackList = async () => {
-    const response: AxiosResponse<TechStackListData> = await axiosInstance.get(
-      '/specifications/techStackList',
-    );
+    const response: AxiosResponse<SpecificationsDto.GetTechStack> =
+      await axiosInstance.get('/specifications/techStackList');
     return response.data.techStackList;
   };
 
-  return useQuery<TechStackListData['techStackList']>({
+  return useQuery<SpecificationsDto.GetTechStack['techStackList']>({
     queryKey: ['techStackList'],
     queryFn: getTechStackList,
     initialData: [],

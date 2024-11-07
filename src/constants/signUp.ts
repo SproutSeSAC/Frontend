@@ -2,7 +2,7 @@ import {
   KeyOfRole,
   Role,
   SignUpQuestionsByStep,
-  UpdateSignUpValue,
+  SignUpUserValue,
 } from '@/types';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
@@ -125,7 +125,17 @@ export const matchedRoleName: Role = {
   PRE_TRAINEE: '예비 수강생',
 };
 
-export const defaultSignUpFormValues: UpdateSignUpValue = {
+export const managerAndAdminRolesObj: Pick<
+  Role,
+  'ADMIN' | 'CAMPUS_MANAGER' | 'EDU_MANAGER' | 'JOB_COORDINATOR'
+> = {
+  ADMIN: '관리자',
+  EDU_MANAGER: '교육 매니저',
+  CAMPUS_MANAGER: '캠퍼스 매니저',
+  JOB_COORDINATOR: '잡코디',
+};
+
+export const defaultSignUpFormValues: SignUpUserValue = {
   name: '',
   nickname: '',
   role: 'TRAINEE',

@@ -1,7 +1,15 @@
 import { useEffect, useMemo } from 'react';
 
-import { getCalendarToken } from '@/services/auth/authQueries';
 import {
+  getCalendarToken,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
+import {
+  useGetCampusList,
+  useGetCourseList,
+} from '@/services/course/courseQueries';
+import {
+  useGetCalendarIdByCourse,
   useGetCalendarList,
   useGetEventsByCalendar,
 } from '@/services/schedule/calendarQueries';
@@ -9,20 +17,12 @@ import {
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_KEY } from '@/constants';
-import { Calendar, Event } from '@/types/calendar/calendarDto';
-import { getCookie, setCookie } from '@/utils';
-import { useAtomValue } from 'jotai';
+import { Event } from '@/types';
+import { createRrule, getCookie, setCookie } from '@/utils';
+import { useAtom } from 'jotai';
 
 export const useCalendarData = () => {
-  const currentCalendarIds = useAtomValue(calendarIdsAtom);
-
-  useEffect(() => {
-    if (!getCookie(CALENDAR_KEY)) {
-      getCalendarToken().then(res => {
-        setCookie(CALENDAR_KEY, res.data.access_token, 1);
-      });
-    }
-  }, []);
+  const [currCalendarIds, setCurrCalendarIds] = useAtom(calendarIdsAtom);
 
   const {
     data: calendarList,
@@ -36,26 +36,45 @@ export const useCalendarData = () => {
     return findCalendar?.backgroundColor;
   };
 
-  const calendarListByType = useMemo(() => {
-    const calendars = calendarList?.items?.filter(
-      ({ id }) => id !== CALENDAR_ADDRESS_ID,
-    );
+  // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
+  const { data: userProfile } = useGetUserProfile();
+  const { data: campusList } = useGetCampusList();
+  const userCampus = campusList?.find(
+    ({ name }) => name === userProfile?.campusName,
+  );
+  const { data: courseList } = useGetCourseList(userCampus?.id);
+  const userCourse = courseList?.find(
+    ({ title }) => title === userProfile?.courseTitle,
+  );
+  const { data: calendarIdByCourse } = useGetCalendarIdByCourse(userCourse?.id);
+  const sproutCalendarIds = useMemo(() => {
+    return calendarIdByCourse?.calendarId
+      ? [calendarIdByCourse?.calendarId]
+      : [];
+  }, [calendarIdByCourse?.calendarId]);
+  // -----------------------------------
 
-    const myCalendarList = calendars
-      ?.filter(({ accessRole }) => accessRole === 'owner')
-      .sort((a, b) => b.id.localeCompare(a.id)) as Calendar[];
-
-    const subscribeCalendarList = calendars?.filter(
-      ({ accessRole }) => accessRole !== 'owner',
-    ) as Calendar[];
-
-    return {
-      myCalendarList,
-      subscribeCalendarList,
-    };
+  const allCalendars = useMemo(() => {
+    return calendarList?.items
+      ?.filter(({ id }) => id !== CALENDAR_ADDRESS_ID)
+      ?.sort((a, b) => b.id.localeCompare(a.id));
   }, [calendarList?.items]);
 
-  const eventsByCalendar = useGetEventsByCalendar(currentCalendarIds || []);
+  const sproutCalendars = useMemo(() => {
+    return allCalendars
+      ? allCalendars?.filter(({ id }) => sproutCalendarIds.includes(id))
+      : [];
+  }, [allCalendars, sproutCalendarIds]);
+
+  const personalCalendars = useMemo(() => {
+    return allCalendars
+      ? allCalendars
+          ?.filter(({ id }) => !sproutCalendarIds.includes(id))
+          ?.filter(({ accessRole }) => accessRole === 'owner')
+      : [];
+  }, [allCalendars, sproutCalendarIds]);
+
+  const eventsByCalendar = useGetEventsByCalendar(currCalendarIds || []);
 
   const eventList = eventsByCalendar
     ?.map(calendar => {
@@ -64,24 +83,51 @@ export const useCalendarData = () => {
         return { ...item, backgroundColor };
       });
     })
-    .flat() as (Event & { backgroundColor: string })[];
+    .flat() as unknown as (Event & { backgroundColor: string })[];
 
   const fullCalendarEvents = useMemo(() => {
     return eventList[0]?.summary
-      ? eventList?.map(event => ({
-          title: event?.summary,
-          start: event?.start.dateTime || event?.start.date,
-          end: event?.end.dateTime || event?.end.date,
-          id: event?.id,
-          backgroundColor: event?.backgroundColor,
-          allDay: !event?.start?.dateTime && !event?.end?.dateTime,
-        }))
+      ? eventList?.map(event => {
+          const start = event?.start?.dateTime || event?.start?.date;
+          const end = event?.end?.dateTime || event?.end?.date;
+
+          const defaultEventValue = {
+            title: event?.summary,
+            start,
+            end,
+            id: event?.id,
+            backgroundColor: event?.backgroundColor,
+            allDay: !event?.start?.dateTime && !event?.end?.dateTime,
+          };
+
+          return event.recurrence
+            ? {
+                ...defaultEventValue,
+                rrule: { ...createRrule(event?.recurrence[0]), dtstart: start },
+              }
+            : defaultEventValue;
+        })
       : [];
   }, [eventList]);
 
+  useEffect(() => {
+    if (!getCookie(CALENDAR_KEY)) {
+      getCalendarToken().then(res => {
+        setCookie(CALENDAR_KEY, res.data.access_token, 1);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sproutCalendarIds.length !== 0) {
+      setCurrCalendarIds(sproutCalendarIds);
+    }
+  }, [setCurrCalendarIds, sproutCalendarIds]);
+
   return {
     isCalendarListLoading,
-    calendarListByType,
+    sproutCalendars,
+    personalCalendars,
     fullCalendarEvents,
   };
 };
