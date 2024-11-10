@@ -22,7 +22,7 @@ export default function DateInput({
       {/* 커스텀 아이콘 */}
       <BsCalendar
         size={20}
-        className="absolute left-4 top-[20px] z-10 size-[18px] cursor-pointer text-gray2"
+        className="absolute left-4 top-[21px] z-10 size-[18px] cursor-pointer text-gray2"
       />
       <DatePicker
         id="datepicker"

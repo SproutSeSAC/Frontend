@@ -21,12 +21,12 @@ export default function MyPage() {
   const { data: userProfile = initialUserProfile, isLoading } =
     useGetUserProfile();
 
-  const { name, email, campusName, courseTitle } = userProfile;
+  const { name, email, campusList, courseList } = userProfile;
 
   const userInfoList = [
     { label: 'E-mail', value: email },
-    { label: '캠퍼스', value: campusName },
-    { label: '담당 교육과정', value: courseTitle },
+    { label: '캠퍼스', value: campusList[0] },
+    { label: '담당 교육과정', value: courseList?.[0]?.courseTitle },
   ];
 
   if (isLoading) return null;

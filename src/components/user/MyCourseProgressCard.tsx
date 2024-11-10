@@ -13,16 +13,20 @@ import CircularGauge from '@/components/common/CircularGauge';
 export default function MyCourseProgressCard() {
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { name, courseEndDate, courseStartDate, campusName } = userProfile;
+  const { name, courseList, campusList } = userProfile;
 
   const getProgress = useCallback(
-    () => getDateProgress(courseStartDate, courseEndDate),
-    [courseEndDate, courseStartDate],
+    () =>
+      getDateProgress(
+        courseList?.[0]?.courseStartDate,
+        courseList?.[0]?.courseEndDate,
+      ),
+    [courseList],
   );
 
   const progress = getProgress();
 
-  const DDay = getDDay(courseEndDate);
+  const DDay = getDDay(courseList?.[0]?.courseEndDate);
 
   const courseGrowthLevel =
     courseGrowthLevelList.find(
@@ -65,10 +69,10 @@ export default function MyCourseProgressCard() {
             alt="새싹 로고"
             className="size-5 p-1"
           />
-          <span className="mr-2 text-sm font-bold">{campusName}</span>
+          <span className="mr-2 text-sm font-bold">{campusList[0]}</span>
           <span className="text-sm font-medium text-gray1">
-            {courseStartDate.replaceAll('-', '.')} ~{' '}
-            {courseEndDate.replaceAll('-', '.')}
+            {courseList?.[0]?.courseStartDate?.replaceAll('-', '.')} ~{' '}
+            {courseList?.[0]?.courseEndDate?.replaceAll('-', '.')}
           </span>
         </div>
       </div>

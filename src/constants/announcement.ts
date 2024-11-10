@@ -52,7 +52,7 @@ export const tooltip: Record<TooltipKeys, string> = {
 
 export const defaultAnnouncementFormValues: AnnouncementDto.PostRequest = {
   targetCourseList: [],
-  noticeType: '',
+  noticeType: 'GENERAL_ANNOUNCEMENT',
   applicationForm: '',
   applicationStartDateTime: '',
   applicationEndDateTime: '',

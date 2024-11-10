@@ -1,3 +1,5 @@
+import { AnnouncementCategoryKey } from '@/types/announcement';
+
 export namespace AnnouncementDto {
   export type GetResponse = AnnouncementGetResponse;
   export type PostRequest = AnnouncementPostRequest;
@@ -29,7 +31,7 @@ type AnnouncementPostRequest = {
     title: string;
     campusName: string;
   }[];
-  noticeType: string;
+  noticeType: AnnouncementCategoryKey;
   applicationForm: string;
   applicationStartDateTime: string;
   applicationEndDateTime: string;
