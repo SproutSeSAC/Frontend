@@ -4,7 +4,7 @@ import NavigationBar from '@/layouts/NavigationBar';
 
 export default function Layout() {
   return (
-    <div className="flex min-h-[100vh] bg-bg">
+    <div className="flex min-h-[100vh] min-w-[1200px] bg-bg">
       <NavigationBar />
       <Outlet />
     </div>
