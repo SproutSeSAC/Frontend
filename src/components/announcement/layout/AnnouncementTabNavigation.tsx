@@ -31,7 +31,7 @@ export default function AnnouncementTabNavigation() {
   return (
     <TabNavigation
       tabList={announcementTabList}
-      tabClassName="w-[126px]"
+      tabClassName=""
       selectValue={tab}
       onChangeValue={handelChangeValue}
     >
@@ -44,7 +44,7 @@ export default function AnnouncementTabNavigation() {
           });
           updateQueryParams(searchParams, setSearchParams, 'ptype', 'EDIT');
         }}
-        className={`w-[126px] cursor-pointer whitespace-pre pb-[19px] text-center ${tab === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
+        className={`cursor-pointer whitespace-pre px-4 pb-[19px] text-center ${tab === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
         공지사항 등록
       </button>

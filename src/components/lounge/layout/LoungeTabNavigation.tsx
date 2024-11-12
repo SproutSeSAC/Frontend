@@ -103,10 +103,10 @@ export default function LoungeTabNavigation() {
       selectValue={tab}
       tabList={TAB_LIST}
       onChangeValue={(type, e) => handelChangeValue(type, e)}
-      tabClassName="w-20"
+      tabClassName=""
     >
       <div
-        className={`box-border w-20 cursor-pointer justify-center pb-[19px] ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}
+        className={`box-border cursor-pointer justify-center whitespace-pre px-4 pb-[19px] ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
         <button
           type="button"
