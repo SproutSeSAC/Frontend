@@ -35,8 +35,8 @@ export default function Accordion({
           className="h-full px-1"
         >
           {tooltip ? (
-            <p className="group text-[15px] text-gray2">
-              <FiInfo className="mb-1 inline size-3.5" />
+            <p className="group text-[15px]">
+              <FiInfo className="mb-1 inline size-4" />
               <span className="absolute z-40 ml-2 mt-2 hidden rounded-xl rounded-tl-none border bg-white px-4 py-2 group-hover:inline">
                 {tooltip}
               </span>

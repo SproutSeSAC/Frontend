@@ -28,7 +28,7 @@ export default function Schedule() {
         title={`${userProfile?.name} 스프님 새싹 일정`}
         highlight="새싹"
       />
-      <div className="flex h-[85vh] min-h-[640px] gap-4">
+      <div className="flex h-[85vh] min-h-[700px] gap-4">
         <div className="flex h-full max-w-[270px] flex-col gap-4">
           <Calendar type="small" events={fullCalendarEvents} />
 

@@ -74,7 +74,7 @@ export default function CalendarCheckBoxList({
           initialOpen={category === 'Sprout 캘린더'}
           tooltip={
             category === 'Sprout 캘린더'
-              ? '교육과정을 등록하면 교육과정과 관련된 일정을 볼 수 있습니다.'
+              ? '훈련생이 되면 교육과정과 관련된 일정을 볼 수 있습니다.'
               : undefined
           }
         >
