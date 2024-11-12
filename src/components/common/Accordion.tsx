@@ -1,6 +1,7 @@
 import { ReactNode, useState } from 'react';
 
 import { FaChevronDown } from 'react-icons/fa6';
+import { FiInfo } from 'react-icons/fi';
 
 interface AccordionProps {
   title: string;
@@ -8,6 +9,7 @@ interface AccordionProps {
   titleClassName?: string;
   className?: string;
   initialOpen?: boolean;
+  tooltip?: string;
 }
 
 export default function Accordion({
@@ -16,6 +18,7 @@ export default function Accordion({
   children,
   titleClassName = '',
   className = '',
+  tooltip,
 }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(initialOpen);
 
@@ -29,13 +32,22 @@ export default function Accordion({
           type="button"
           aria-label={isOpen ? '아코디언 접기' : '아코디언 펼치기'}
           onClick={toggleAccordion}
-          className="h-full py-1 pl-2 pr-0.5"
+          className="h-full px-1"
         >
-          <FaChevronDown
-            className={`stroke-[0.5px] text-lg text-black transition-transform duration-300 ${
-              isOpen ? 'rotate-180' : ''
-            }`}
-          />
+          {tooltip ? (
+            <p className="group text-[15px] text-gray2">
+              <FiInfo className="mb-1 inline size-3.5" />
+              <span className="absolute z-40 ml-2 mt-2 hidden rounded-xl rounded-tl-none border bg-white px-4 py-2 group-hover:inline">
+                {tooltip}
+              </span>
+            </p>
+          ) : (
+            <FaChevronDown
+              className={`text-lg text-black transition-transform duration-300 ${
+                isOpen ? 'rotate-180' : ''
+              }`}
+            />
+          )}
         </button>
       </div>
 

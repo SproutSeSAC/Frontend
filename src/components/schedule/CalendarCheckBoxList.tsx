@@ -72,9 +72,15 @@ export default function CalendarCheckBoxList({
           className="mb-6"
           titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
           initialOpen={category === 'Sprout 캘린더'}
+          tooltip={
+            category === 'Sprout 캘린더'
+              ? '교육과정을 등록하면 교육과정과 관련된 일정을 볼 수 있습니다.'
+              : undefined
+          }
         >
           <ul className="flex flex-col gap-2">
             {category === 'Sprout 캘린더' &&
+              userRole !== 'PRE_TRAINEE' &&
               userProfile &&
               userCourse &&
               sproutCalendars.length === 0 &&
