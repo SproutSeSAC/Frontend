@@ -29,9 +29,6 @@
   .fc-daygrid-day-number {
     @apply flex p-0;
   }
-  .fc-daygrid-day.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
-    /* @apply items-center justify-center rounded-full text-white; */
-  }
 }
 
 .big-calendar {
@@ -143,23 +140,27 @@
     /* 이벤트 박스 */
     .fc-daygrid-day-events {
       @apply m-0 flex items-center justify-center p-0;
+
       .fc-daygrid-event-harness {
-        @apply m-0;
-      }
-      .fc-event-main {
-        @apply hidden;
-      }
-      .fc-h-event {
-        @apply border-0;
-        .fc-event-title-container {
-          @apply flex items-center;
-          .fc-event-title {
-            @apply hidden;
+        @apply absolute -bottom-1 m-0 flex size-3 items-center justify-center p-0;
+
+        /* 이벤트 점 표시 */
+        .fc-h-event {
+          @apply size-[5px] rounded-full border-0 p-0;
+          .fc-event-main {
+            @apply size-[5px];
+          }
+          .fc-event-title-container {
+            @apply flex items-center;
+            .fc-event-title {
+              @apply hidden;
+            }
           }
         }
       }
+
       .fc-daygrid-day-bottom {
-        @apply hidden border;
+        @apply hidden;
       }
     }
   }
