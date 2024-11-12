@@ -2,7 +2,7 @@ import { ReactNode, useCallback } from 'react';
 
 import '@/calendar.css';
 import { FullCalendarEvent } from '@/types';
-import { DayCellContentArg } from '@fullcalendar/core';
+import { DayCellContentArg, EventSourceInput } from '@fullcalendar/core';
 import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
@@ -64,7 +64,7 @@ export default function Calendar({ type, events, children }: CalendarProps) {
           initialView="dayGridMonth"
           plugins={[dayGridPlugin, rrulePlugin, googleCalendarPlugin]}
           locales={[koLocale]}
-          events={events}
+          events={events as EventSourceInput}
           height="100%"
           locale="ko"
           headerToolbar={{
@@ -83,7 +83,7 @@ export default function Calendar({ type, events, children }: CalendarProps) {
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
             timeZone="Asia/Seoul"
-            events={events}
+            events={events as EventSourceInput}
             locales={[koLocale]}
             locale="en"
             titleFormat={({ date: { year, month } }) =>

@@ -75,26 +75,27 @@
     .fc-daygrid-day-number {
       @apply flex p-0;
     }
-    /* 이벤트 박스 */
-    .fc-daygrid-dot-event {
-      @apply p-0;
+
+    .fc-daygrid-day-events {
+      @apply flex flex-col gap-0.5;
+
       .fc-event-time {
         @apply text-[11px];
       }
       .fc-event-title {
-        @apply text-[11px];
+        @apply text-[11px] font-semibold;
       }
-    }
 
-    .fc-daygrid-day-events {
-      @apply flex flex-col gap-0.5;
+      /* 시간이 정해진 이벤트 박스 */
+      .fc-daygrid-dot-event {
+        @apply p-0;
+      }
+
+      /* 종일 이벤트 */
       .fc-h-event {
-        @apply mx-0.5 rounded-sm border-0 px-1 py-0;
+        @apply mx-0.5 flex items-center rounded-sm border-0 px-1 py-0;
         .fc-event-title-container {
           @apply flex items-center;
-          .fc-event-title {
-            @apply text-[11px] leading-[14px];
-          }
         }
       }
     }

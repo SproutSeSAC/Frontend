@@ -17,7 +17,7 @@ import {
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_KEY } from '@/constants';
-import { Event } from '@/types';
+import { Event, FullCalendarEvent } from '@/types';
 import { createRrule, getCookie, setCookie } from '@/utils';
 import { useAtom } from 'jotai';
 
@@ -28,13 +28,6 @@ export const useCalendarData = () => {
     data: calendarList,
     isLoading: isCalendarListLoading, //
   } = useGetCalendarList();
-
-  const getCalendarColor = (calendarSummary: string) => {
-    const findCalendar = calendarList?.items.find(
-      ({ summary }) => summary === calendarSummary,
-    );
-    return findCalendar?.backgroundColor;
-  };
 
   // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
   const { data: userProfile } = useGetUserProfile();
@@ -76,23 +69,45 @@ export const useCalendarData = () => {
 
   const eventsByCalendar = useGetEventsByCalendar(currCalendarIds || []);
 
-  const eventList = eventsByCalendar
-    ?.map(calendar => {
-      return calendar?.data?.items.map(item => {
-        const backgroundColor = getCalendarColor(calendar?.data?.summary);
-        return { ...item, backgroundColor };
-      });
-    })
-    .flat() as unknown as (Event & { backgroundColor: string })[];
+  const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
+    const getCalendarColor = (calendarSummary: string) => {
+      const findCalendar = calendarList?.items?.find(
+        ({ summary }) => summary === calendarSummary,
+      );
+      return findCalendar?.backgroundColor;
+    };
 
-  const fullCalendarEvents = useMemo(() => {
-    return eventList[0]?.summary
+    const eventList =
+      eventsByCalendar?.length !== 0
+        ? (eventsByCalendar
+            ?.map(calendar => {
+              return calendar?.data?.items.map(item => {
+                const backgroundColor = getCalendarColor(
+                  calendar?.data?.summary,
+                );
+                return { ...item, backgroundColor };
+              });
+            })
+            ?.flat()
+            ?.filter(item => item?.status === 'confirmed') as (Event & {
+            backgroundColor: string;
+          })[])
+        : [];
+
+    const recurringEvents = eventList
+      .filter(event => event?.recurringEventId)
+      .map(event => ({
+        recurringEventId: event.recurringEventId,
+        start: event?.start?.dateTime || event?.start?.date,
+      }));
+
+    return eventList && eventList[0]?.summary
       ? eventList?.map(event => {
           const start = event?.start?.dateTime || event?.start?.date;
           const end = event?.end?.dateTime || event?.end?.date;
 
-          const defaultEventValue = {
-            title: event?.summary,
+          const defaultEvent = {
+            title: event?.summary ?? '제목없음',
             start,
             end,
             id: event?.id,
@@ -100,15 +115,23 @@ export const useCalendarData = () => {
             allDay: !event?.start?.dateTime && !event?.end?.dateTime,
           };
 
-          return event.recurrence
+          const exdate = recurringEvents
+            .filter(({ recurringEventId }) => recurringEventId === event.id)
+            .map(item => item.start);
+
+          return event?.recurrence
             ? {
-                ...defaultEventValue,
-                rrule: { ...createRrule(event?.recurrence[0]), dtstart: start },
+                ...defaultEvent,
+                rrule: {
+                  ...createRrule(event.recurrence[0]),
+                  dtstart: start,
+                },
+                exdate,
               }
-            : defaultEventValue;
+            : defaultEvent;
         })
       : [];
-  }, [eventList]);
+  }, [calendarList?.items, eventsByCalendar]);
 
   useEffect(() => {
     if (!getCookie(CALENDAR_KEY)) {
