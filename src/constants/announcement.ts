@@ -1,8 +1,11 @@
+import { dateFormat } from '@/utils/dateFormat';
+
 import {
   AnnouncementCategoryKey,
   AnnouncementCategoryValue,
   AnnouncementDto,
   AnnouncementTab,
+  MeetingType,
   MeetingTypeKey,
   MeetingTypeValue,
   TooltipKeys,
@@ -50,21 +53,33 @@ export const tooltip: Record<TooltipKeys, string> = {
     '온라인인 경우 Zoom 링크를, 오프라인인 경우 장소 위치를 작성해 주세요',
 };
 
+const date = new Date();
+const today = dateFormat(date, 'YYYY-MM-DD') as string;
+date.setHours(18, 0, 0, 0);
+const todayDateTime = date.toString();
+
+const specialLectureEventFormValues = {
+  applicationForm: '',
+  applicationStartDateTime: todayDateTime,
+  applicationEndDateTime: todayDateTime,
+
+  eventDate: today,
+  eventStartTime: todayDateTime,
+  eventEndTime: todayDateTime,
+
+  meetingType: {
+    type: 'ONLINE' as keyof MeetingType,
+    detail: '',
+  },
+  participantCapacity: 0,
+  satisfactionSurvey: '',
+};
+
 export const defaultAnnouncementFormValues: AnnouncementDto.PostRequest = {
   targetCourseList: [],
   noticeType: 'GENERAL_ANNOUNCEMENT',
-  applicationForm: '',
-  applicationStartDateTime: '',
-  applicationEndDateTime: '',
-  eventDate: '',
-  eventStartTime: '',
-  eventEndTime: '',
-  meetingType: {
-    type: 'ONLINE',
-    detail: '',
-  },
-  satisfactionSurvey: '',
   title: '',
   content: '',
   writerId: 0,
+  ...specialLectureEventFormValues,
 };

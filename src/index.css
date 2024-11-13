@@ -63,6 +63,16 @@
     }
     .react-datepicker-wrapper {
       width: 100%;
+      z-index: 0;
+    }
+    .react-datepicker-popper {
+      z-index: 1000;
+    }
+    .react-datepicker__day--selected {
+      background-color: #6fa235;
+    }
+    .react-datepicker__header {
+      background-color: #eaf8e6;
     }
   }
 }

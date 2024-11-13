@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
 
-// 여기서 T를 어떻게 하지??
 export const useFilterData = <T>({ initialState }: { initialState: T }) => {
   const [currFilter, setCurrFilter] = useState<T>(initialState);
 

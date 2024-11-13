@@ -5,7 +5,7 @@ import { useFilterData } from '@/hooks';
 import { AnnouncementFilter, KeyOfAnnouncementTabKind } from '@/types';
 
 import AnnouncementPostCard from '@/components/announcement/AnnouncementPostCard';
-import AnnouncementEditor from '@/components/announcement/editor/AnnouncementEditor';
+import AnnouncementForm from '@/components/announcement/form/AnnouncementForm';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 
@@ -27,7 +27,7 @@ export default function Announcement() {
     handleChangeFilter,
   } = useFilterData<AnnouncementFilter>({ initialState });
 
-  if (ptype === 'EDIT') return <AnnouncementEditor />;
+  if (ptype === 'EDIT') return <AnnouncementForm />;
 
   return (
     <div>
@@ -43,7 +43,7 @@ export default function Announcement() {
         <SquareButton
           name="검색하기"
           onClick={handleSearchSubmit}
-          className="w-20 whitespace-nowrap px-3.5 py-3 text-white"
+          className="h-full whitespace-nowrap font-medium"
         />
       </div>
 

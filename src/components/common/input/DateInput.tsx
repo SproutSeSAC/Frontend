@@ -1,5 +1,6 @@
 import { dateFormat } from '@/utils/dateFormat';
 
+import { ko } from 'date-fns/locale';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BsCalendar } from 'react-icons/bs';
@@ -18,8 +19,7 @@ export default function DateInput({
   errorMsg,
 }: DateInputProps) {
   return (
-    <div className="relative w-full">
-      {/* 커스텀 아이콘 */}
+    <label className="relative w-full">
       <BsCalendar
         size={20}
         className="absolute left-4 top-[21px] z-10 size-[18px] cursor-pointer text-gray2"
@@ -30,13 +30,17 @@ export default function DateInput({
         selected={value ? new Date(value) : undefined}
         onChange={date => onChange(date || new Date())}
         dateFormat="YYYY년 MM월 dd일"
+        locale={ko}
         placeholderText={`${dateFormat(new Date(), 'YYYY년 MM월 DD일')}`}
         className={`w-full flex-1 rounded-2xl border bg-white py-4 pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'}`}
       />
 
       {errorMsg && (
-        <ErrorMsg msg={errorMsg} className="absolute bottom-[-26px] ml-2" />
+        <ErrorMsg
+          msg={errorMsg}
+          className="absolute bottom-[-26px] left-0 ml-2"
+        />
       )}
-    </div>
+    </label>
   );
 }
