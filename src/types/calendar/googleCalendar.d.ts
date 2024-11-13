@@ -45,6 +45,7 @@ export type Event = {
   };
   eventType: 'default';
   recurrence?: string[];
+  recurringEventId?: string;
 };
 
 type AccessRole = 'freeBusyReader' | 'reader' | 'writer' | 'owner';

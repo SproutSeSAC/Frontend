@@ -5,7 +5,6 @@ import { getColorByRole } from '@/utils';
 import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
 import Calendar from '@/components/schedule/Calendar';
-import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
 
 export default function AnnouncementSideView() {
   const { fullCalendarEvents } = useCalendarData();
@@ -13,17 +12,7 @@ export default function AnnouncementSideView() {
   return (
     <>
       <Title title="주요일정" className="mb-2" />
-      <Calendar type="small" events={fullCalendarEvents}>
-        <ul className="mb-1 flex flex-col gap-2">
-          {fullCalendarEvents.map(event => (
-            <SmallCalendarBottomEvent
-              key={event.title}
-              date={new Date(event.start).toLocaleDateString()}
-              title={event.title}
-            />
-          ))}
-        </ul>
-      </Calendar>
+      <Calendar type="small" events={fullCalendarEvents} />
 
       <div className="mb-2 mt-8 flex items-center justify-between">
         <Title title="최근 본 공지사항" className="!pl-0 text-sm" />

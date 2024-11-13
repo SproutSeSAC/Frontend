@@ -1,60 +1,29 @@
-import { ReactNode, useCallback } from 'react';
+import { useMemo } from 'react';
 
 import '@/calendar.css';
 import { FullCalendarEvent } from '@/types';
-import { DayCellContentArg } from '@fullcalendar/core';
+import { EventSourceInput } from '@fullcalendar/core';
 import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import FullCalendar from '@fullcalendar/react';
 import rrulePlugin from '@fullcalendar/rrule';
+
+import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
 
 interface CalendarProps {
   type: 'big' | 'small';
   events?: FullCalendarEvent[];
-  children?: ReactNode;
 }
 
-export default function Calendar({ type, events, children }: CalendarProps) {
-  const renderDayCellContent = useCallback(
-    (info: DayCellContentArg, cellEvents?: FullCalendarEvent[]) => {
-      const date = info.date.getDate();
-      const dateHours = info.date.setHours(0, 0, 0, 0);
-
-      const eventDots = cellEvents?.filter(event => {
-        const start = new Date(event.start).setHours(0, 0, 0, 0);
-        const end = new Date(event.end).setHours(0, 0, 0, 0);
-
-        const isAllDayEvent = event.allDay || start !== end;
-
-        return (
-          dateHours >= start &&
-          (isAllDayEvent ? dateHours < end : dateHours <= end)
-        );
-      });
-
-      return (
-        <div className="relative flex h-8 w-full flex-col items-center justify-center px-2">
-          <span>{date}</span>
-
-          {eventDots?.length !== 0 && (
-            <ul className="absolute -bottom-0 flex w-full items-center justify-center gap-0.5">
-              {eventDots
-                ?.slice(0, 3)
-                ?.map(({ id, backgroundColor }) => (
-                  <li
-                    key={id}
-                    style={{ backgroundColor }}
-                    className="size-1 rounded-full"
-                  />
-                ))}
-            </ul>
-          )}
-        </div>
-      );
-    },
-    [],
-  );
+export default function Calendar({ type, events }: CalendarProps) {
+  const futureEvents = useMemo(() => {
+    const today = new Date();
+    today.setDate(today.getDate() - 1);
+    return events?.filter(event => {
+      const eventDate = new Date(event.start);
+      return eventDate >= today;
+    });
+  }, [events]);
 
   return (
     <div className={`${type}-calendar w-full rounded-xl bg-white shadow-card`}>
@@ -62,11 +31,10 @@ export default function Calendar({ type, events, children }: CalendarProps) {
         <FullCalendar
           weekends
           initialView="dayGridMonth"
-          plugins={[dayGridPlugin, rrulePlugin, googleCalendarPlugin]}
+          plugins={[dayGridPlugin, rrulePlugin]}
+          events={events as EventSourceInput}
           locales={[koLocale]}
-          events={events}
           height="100%"
-          locale="ko"
           headerToolbar={{
             left: 'title',
             right: 'prev today next',
@@ -79,13 +47,11 @@ export default function Calendar({ type, events, children }: CalendarProps) {
         <>
           <FullCalendar
             weekends
-            height="auto"
-            plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
-            timeZone="Asia/Seoul"
-            events={events}
+            plugins={[dayGridPlugin, rrulePlugin]}
+            events={events as EventSourceInput}
             locales={[koLocale]}
-            locale="en"
+            height="auto"
             titleFormat={({ date: { year, month } }) =>
               `${month + 1}월 ${year}년`
             }
@@ -93,11 +59,22 @@ export default function Calendar({ type, events, children }: CalendarProps) {
               left: 'title',
               right: 'prev next',
             }}
-            dayHeaderContent={date => date.text.slice(0, 2)}
-            dayCellContent={info => renderDayCellContent(info, events)}
+            dayCellContent={({ dayNumberText }) =>
+              `${dayNumberText.slice(0, -1)}`
+            }
             eventDisplay="block"
           />
-          {children}
+          {futureEvents && futureEvents.length !== 0 && (
+            <ul className="mb-2 mt-3 flex flex-col gap-2">
+              {futureEvents.slice(0, 4).map(event => (
+                <SmallCalendarBottomEvent
+                  key={event.title}
+                  date={new Date(event.start).toLocaleDateString()}
+                  title={event.title}
+                />
+              ))}
+            </ul>
+          )}
         </>
       )}
     </div>

@@ -1,28 +1,19 @@
-type Rrule = {
-  freq: string;
-  interval: number;
-  byweekday: string[] | string;
-  bymonthday: number[];
-  until: string;
-  bymonth: number[];
-  bysetpos: number[] | number;
-  byhour: number[];
-  byminute: number[];
-  bysecond: number[];
-  byearday: number[];
-  wkst: string;
-};
+import { RruleOptions } from '@/types';
 
 export const createRrule = (googleRrule: string) => {
   const splittedRuleArr = googleRrule.split(':')[1].split(';');
-  const rrule: Partial<Rrule> = {};
+  const rrule: RruleOptions = {};
 
   splittedRuleArr.forEach(item => {
     const [key, value] = item.split('=');
 
     switch (key) {
       case 'FREQ':
-        rrule.freq = value.toLowerCase();
+        rrule.freq = value.toLowerCase() as
+          | 'daily'
+          | 'weekly'
+          | 'monthly'
+          | 'yearly';
         break;
       case 'INTERVAL':
         rrule.interval = parseInt(value, 10);
@@ -41,7 +32,10 @@ export const createRrule = (googleRrule: string) => {
         rrule.bymonthday = value.split(',').map(Number);
         break;
       case 'UNTIL':
-        rrule.until = `${value}`;
+        rrule.until = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(-2)}`;
+        break;
+      case 'COUNT':
+        rrule.count = value;
         break;
       case 'BYMONTH':
         rrule.bymonth = value.split(',').map(Number);
@@ -60,9 +54,6 @@ export const createRrule = (googleRrule: string) => {
         break;
       case 'BYYEARDAY':
         rrule.byearday = value.split(',').map(Number);
-        break;
-      case 'WKST':
-        rrule.wkst = value.toLowerCase();
         break;
       default:
         break;
