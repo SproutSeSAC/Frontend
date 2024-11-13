@@ -14,7 +14,6 @@ import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { RoleValues } from '@/types';
 import { getColorByRole } from '@/utils';
-import { FiChevronRight } from 'react-icons/fi';
 
 import LoadingPage from '@/pages/LoadingPage';
 
@@ -23,7 +22,6 @@ import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import Calendar from '@/components/schedule/Calendar';
-import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
 import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
@@ -93,27 +91,7 @@ export default function Home() {
 
       <SideView>
         <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
-        <Calendar type="small" events={fullCalendarEvents}>
-          <ul className="mb-1 flex flex-col gap-2">
-            {fullCalendarEvents.map(event => (
-              <SmallCalendarBottomEvent
-                key={event.title}
-                date={new Date(event.start).toLocaleDateString()}
-                title={event.title}
-              />
-            ))}
-          </ul>
-          <Link
-            to="/schedule"
-            type="button"
-            className="my-2 flex w-full items-center justify-end"
-          >
-            <span className="text-sm text-gray1">
-              새싹 캘린더 구독하러 가기
-            </span>
-            <FiChevronRight className="text-sm text-gray1" />
-          </Link>
-        </Calendar>
+        <Calendar type="small" events={fullCalendarEvents} />
 
         {/* 공지사항 */}
         <div className="mb-2 mt-6 flex items-center justify-between">

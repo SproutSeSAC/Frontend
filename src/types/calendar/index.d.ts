@@ -17,4 +17,22 @@ export type FullCalendarEvent = {
   start: string;
   end: string;
   id: string;
+  rrule?: RruleOptions;
+  exdate?: string[];
+};
+
+export type RruleOptions = {
+  freq?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  interval?: number;
+  count?: string;
+  byweekday?: string[] | string;
+  bymonthday?: number[];
+  until?: string;
+  bysetpos?: number[] | number;
+  byearday?: number[];
+  bymonth?: number[];
+  byhour?: number[];
+  byminute?: number[];
+  bysecond?: number[];
+  wkst?: 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA';
 };
