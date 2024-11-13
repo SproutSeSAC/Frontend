@@ -2,10 +2,10 @@ import { forwardRef, useState } from 'react';
 
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 
-import TextInput, { TextInputProps } from '@/components/common/input/TextInput';
+import TextInput, { InputProps } from '@/components/common/input/TextInput';
 
 interface SearchInputProps
-  extends Pick<TextInputProps, 'name' | 'placeholder' | 'onChange' | 'value'> {
+  extends Pick<InputProps, 'name' | 'placeholder' | 'onChange' | 'value'> {
   width: string;
   height: string;
   onEnter?: () => void;

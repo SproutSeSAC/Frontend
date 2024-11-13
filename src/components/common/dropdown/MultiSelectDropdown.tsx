@@ -130,7 +130,7 @@ export default function MultiSelectDropdown({
   };
 
   return (
-    <OutsideClickContainer onClose={setOpen} width="100%">
+    <OutsideClickContainer onClose={setOpen}>
       <SelectBox<MultiSelectProps>
         defaultLabel={defaultLabel}
         open={open}

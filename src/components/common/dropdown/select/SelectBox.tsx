@@ -97,12 +97,12 @@ export default function SelectBox<
   const selectBoxStyle = styleByBoxShape[boxShape];
 
   return (
-    <OutsideClickContainer onClose={onClose} width="100%">
+    <OutsideClickContainer onClose={onClose}>
       <div className="relative">
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:text-gray1 ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:min-w-[18px] [&>svg]:text-gray1 ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
         >
           {isSingleSelect(rest) && (
             <>
@@ -144,7 +144,7 @@ export default function SelectBox<
         </ul>
       </article>
 
-      {errorMsg && <ErrorMsg msg={errorMsg} className="ml-2" />}
+      {errorMsg && <ErrorMsg msg={errorMsg} className="absolute ml-2" />}
     </OutsideClickContainer>
   );
 }

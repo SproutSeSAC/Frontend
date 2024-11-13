@@ -78,43 +78,39 @@ export default function Lounge() {
         <SquareButton
           name="검색하기"
           onClick={handleSearchSubmit}
-          className="w-20 whitespace-nowrap px-3.5 py-3 text-white"
+          className="h-full whitespace-nowrap font-medium"
         />
       </div>
 
-      <div className="relative mb-9 mt-6 flex justify-between">
-        <div className="flex gap-4">
-          {!isTechStackListLoading && (
-            <TechStackDropdown
-              defaultLabel="기술스택"
-              defaultTabValue="백엔드"
-              options={techStackList}
-              onChangeValue={value =>
-                handleChangeFilterValue(value, 'techStack')
-              }
-              boxShape="buttonShape"
-            />
-          )}
-
-          <SingleSelectDropdown
-            defaultLabel="포지션"
-            options={positionsList || []}
-            onChangeValue={value => handleChangeFilterValue(value, 'position')}
+      <div className="relative mb-9 mt-6 flex gap-4 [&>div:last-child]:ml-auto">
+        {!isTechStackListLoading && (
+          <TechStackDropdown
+            defaultLabel="기술스택"
+            defaultTabValue="백엔드"
+            options={techStackList}
+            onChangeValue={value => handleChangeFilterValue(value, 'techStack')}
             boxShape="buttonShape"
-            selectedOption={selectedPositionOption}
           />
+        )}
 
-          <SingleSelectDropdown
-            defaultLabel="진행방식"
-            options={progressList || []}
-            onChangeValue={value => {
-              const newValue = value.map(item => item.key);
-              setFilterData(prev => ({ ...prev, meetingType: newValue[0] }));
-            }}
-            boxShape="buttonShape"
-            selectedOption={selectedProgressOption}
-          />
-        </div>
+        <SingleSelectDropdown
+          defaultLabel="포지션"
+          options={positionsList || []}
+          onChangeValue={value => handleChangeFilterValue(value, 'position')}
+          boxShape="buttonShape"
+          selectedOption={selectedPositionOption}
+        />
+
+        <SingleSelectDropdown
+          defaultLabel="진행방식"
+          options={progressList || []}
+          onChangeValue={value => {
+            const newValue = value.map(item => item.key);
+            setFilterData(prev => ({ ...prev, meetingType: newValue[0] }));
+          }}
+          boxShape="buttonShape"
+          selectedOption={selectedProgressOption}
+        />
 
         <SingleSelectDropdown
           defaultLabel="정렬"

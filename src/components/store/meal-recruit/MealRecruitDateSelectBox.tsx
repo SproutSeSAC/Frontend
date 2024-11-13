@@ -35,7 +35,7 @@ export default function MealRecruitDateSelectBox({
   };
 
   return (
-    <OutsideClickContainer onClose={setOpen} width="100%">
+    <OutsideClickContainer onClose={setOpen}>
       <SelectBox<SingleSelectProps>
         defaultLabel="날짜를 선택해주세요"
         open={open}

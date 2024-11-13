@@ -6,7 +6,7 @@ export interface FormStateProps {
   errorMsg?: string;
 }
 
-export interface TextInputProps extends FormStateProps {
+export interface InputProps extends FormStateProps {
   name: string;
   placeholder: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -17,7 +17,7 @@ export interface TextInputProps extends FormStateProps {
   disabled?: boolean;
 }
 
-const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
+const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     name,
     value,
@@ -28,11 +28,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
     className,
     errorMsg,
     disabled,
-  }: TextInputProps,
+  }: InputProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   return (
-    <>
+    <div className="relative w-full">
       <input
         type="text"
         ref={ref}
@@ -45,11 +45,13 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function Input(
         onBlur={() => toggleFocus && toggleFocus(false)}
         onKeyDown={onEnter}
         disabled={disabled}
-        className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${className}`}
+        className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border border-red-600' : ''} ${className}`}
       />
 
-      {errorMsg && <ErrorMsg msg={errorMsg} className="ml-4" />}
-    </>
+      {errorMsg && (
+        <ErrorMsg msg={errorMsg} className="absolute -bottom-[26px] left-2" />
+      )}
+    </div>
   );
 });
 

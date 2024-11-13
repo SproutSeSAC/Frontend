@@ -3,12 +3,10 @@ import { ReactNode, useEffect, useRef } from 'react';
 interface OutsideClickContainerProps {
   children: ReactNode;
   onClose: (value: boolean) => void;
-  width?: string;
 }
 
 function OutsideClickContainer({
   onClose,
-  width,
   children,
 }: OutsideClickContainerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -29,11 +27,7 @@ function OutsideClickContainer({
     };
   }, [onClose]);
 
-  return (
-    <div ref={containerRef} className={width ? `w-[${width}]` : 'w-fit'}>
-      {children}
-    </div>
-  );
+  return <div ref={containerRef}>{children}</div>;
 }
 
 export default OutsideClickContainer;
