@@ -11,8 +11,9 @@ import {
   GetLoungeProject,
   GetLoungeProjectComment,
   GetLoungeProjectDetail,
-  GetLoungeProjects,
 } from '@/types/lounge/loungeDto';
+
+import { FilterDataType } from '@/pages/Lounge';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
   return Object.fromEntries(
@@ -25,23 +26,25 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
   );
 };
 
-export const useGetLoungeProjects = (params: GetLoungeProjects) => {
+export const useGetLoungeProjects = (params: FilterDataType) => {
   const [searchParams] = useSearchParams();
   const newSearchParams =
     extractValidParams(searchParams).pType === 'onlyScraped'
       ? { onlyScraped: 'true' }
       : extractValidParams(searchParams);
 
+  const { modify, ...rest } = params;
+
   const newParams = {
-    ...params,
+    ...rest,
     ...newSearchParams,
     position:
-      params.position && params.position.length > 0
-        ? params.position.join(',')
+      rest.position && rest.position.length > 0
+        ? rest.position.join(',')
         : undefined,
     techStack:
-      params.techStack && params.techStack?.length > 0
-        ? params.techStack.join(',')
+      rest.techStack && rest.techStack?.length > 0
+        ? rest.techStack.join(',')
         : undefined,
   };
 

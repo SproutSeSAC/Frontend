@@ -67,8 +67,8 @@ export default function MyCourseProgressCard() {
           />
           <span className="mr-2 text-sm font-bold">{campusName}</span>
           <span className="text-sm font-medium text-gray1">
-            {courseStartDate.replaceAll('-', '.')} ~{' '}
-            {courseEndDate.replaceAll('-', '.')}
+            {courseStartDate?.replaceAll('-', '.')} ~{' '}
+            {courseEndDate?.replaceAll('-', '.')}
           </span>
         </div>
       </div>

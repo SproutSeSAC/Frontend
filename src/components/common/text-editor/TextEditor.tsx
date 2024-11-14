@@ -2,8 +2,13 @@ import { useCallback, useMemo, useRef } from 'react';
 
 import EditorModule from './EditorModule';
 
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
+
+const Size = Quill.import('formats/size');
+
+Size.whitelist = ['small', 'medium', 'large', 'huge'];
+Quill.register(Size, true);
 
 interface TextEditorProps {
   value: string;

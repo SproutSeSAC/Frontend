@@ -35,7 +35,6 @@ export default function Header({ title, highlight, children }: Props) {
       </section>
 
       <section className="flex items-center gap-7">
-        {/* 인풋 */}
         <section>{children}</section>
 
         <aside className="flex items-center">

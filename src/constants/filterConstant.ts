@@ -2,21 +2,25 @@
 import { GetFilterCountResponse } from '@/types/store/storeDto';
 
 // 진행방식
+export const PROGRESS_DEFAULT = 'ALL';
 export const PROGRESS_ONLINE = 'ONLINE';
 export const PROGRESS_OFFLINE = 'OFFLINE';
 export const PROGRESS_HYBRID = 'HYBRID';
 
 export type Progress =
+  | typeof PROGRESS_DEFAULT
   | typeof PROGRESS_ONLINE
   | typeof PROGRESS_OFFLINE
   | typeof PROGRESS_HYBRID;
 export const progressList: Array<{ id: number; name: string; key: Progress }> =
   [
+    { id: 1, name: '', key: PROGRESS_DEFAULT },
     { id: 1, name: '전체', key: PROGRESS_HYBRID },
     { id: 2, name: '온라인', key: PROGRESS_ONLINE },
     { id: 3, name: '오프라인', key: PROGRESS_OFFLINE },
   ];
 export const progressDisplay: { [key in Progress]: string } = {
+  ALL: '',
   HYBRID: '전체',
   ONLINE: '온라인',
   OFFLINE: '오프라인',
