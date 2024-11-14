@@ -41,10 +41,35 @@
     .ql-container.ql-snow {
       @apply rounded-b-lg border border-solid border-gray4 bg-white;
     }
-
     .ql-editor.ql-blank::before {
       @apply text-base not-italic text-gray2;
     }
+    .ql-container,
+    .ql-editor p[data-value="medium"]::before {
+      @apply text-base;
+    }
+
+    #customDatePicker {
+      .react-datepicker-wrapper,
+      .react-datepicker__triangle {
+        @apply hidden
+      }
+      .react-datepicker-popper {
+        @apply transform-none top-auto mt-1 !important
+      }
+      .react-datepicker {
+        @apply shadow-modal border-none rounded
+      }
+      .react-datepicker__day-name{
+        @apply text-white
+      }
+      .react-datepicker__header {
+        @apply bg-oliveGreen1 text-white border-none relative text-center
+      }
+      .react-datepicker__day--selected {
+        @apply bg-oliveGreen1 text-white rounded-lg
+      }
+     }
 
     .announcement-text-divider::after {
       content: '|';

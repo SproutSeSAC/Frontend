@@ -85,14 +85,14 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
               {children(item)}
             </SwiperSlide>
           ))}
-          {observeRef && (
-            <>
-              <div ref={observeRef} />
-              {isLoading && <LoopLoading />}
-            </>
-          )}
+          {observeRef && <div ref={observeRef} />}
         </Swiper>
       </div>
+      {isLoading && (
+        <div className="flex w-full justify-center">
+          <LoopLoading size={60} />
+        </div>
+      )}
       {!hideNextButton && slideList.length > 0 && (
         <div className="mt-10 flex w-full justify-center">
           <SlideNextButton swiper={swiperInstance} />

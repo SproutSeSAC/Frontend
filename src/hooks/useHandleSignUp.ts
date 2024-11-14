@@ -54,9 +54,9 @@ export const useHandleSignUp = ({
   //   onSuccess: () => navigate('/'),
   // });
 
-  const onSubmit: SubmitHandler<UpdateSignUpValue> = formData => {
+  const onSubmit: SubmitHandler<UserProfileDto.Post> = formData => {
     if (!isVerifiedCode) return;
-    
+
     const { verifyCode, ...rest } = formData;
     const marketingConsent = formData.marketingConsent === '동의';
     const data = { ...rest, marketingConsent };

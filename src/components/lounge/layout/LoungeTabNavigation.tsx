@@ -106,7 +106,7 @@ export default function LoungeTabNavigation() {
       tabClassName="w-20"
     >
       <div
-        className={`box-border w-20 cursor-pointer justify-center pb-[19px] ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}
+        className={`box-border w-20 cursor-pointer justify-center pb-[19px] text-center ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
         <button
           type="button"

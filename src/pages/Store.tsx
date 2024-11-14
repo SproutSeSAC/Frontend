@@ -11,6 +11,7 @@ import MainView from '@/layouts/MainView';
 import { BsMap } from 'react-icons/bs';
 import { FaChevronLeft } from 'react-icons/fa';
 
+import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
 import Title from '@/components/common/Title';
 import SearchInput from '@/components/common/input/SearchInput';
@@ -60,7 +61,7 @@ export default function Store() {
             name="search"
             placeholder="검색어를 입력해 주세요"
             width="w-[422px]"
-            height="h-[40px]"
+            height="h-[45px]"
             onChange={() => {}}
           />
         </Header>
@@ -68,7 +69,7 @@ export default function Store() {
         <section className="flex gap-8">
           <StoreFilterForm />
 
-          <div className="flex-auto">
+          <div className="relative flex-auto">
             <div className="mb-6 flex justify-between">
               <Title title="맛집 리스트" />
               <button
@@ -82,7 +83,8 @@ export default function Store() {
             </div>
 
             <div className="grid gap-9 text-base xl:grid-cols-2 2xl:grid-cols-3">
-              {storeList && storeList.length > 0 ? (
+              {storeList &&
+                storeList.length > 0 &&
                 storeList.map(storeData => {
                   return (
                     <div
@@ -104,12 +106,20 @@ export default function Store() {
                       />
                     </div>
                   );
-                })
-              ) : (
-                <div>맛집 데이터가 없습니다.</div>
-              )}
+                })}
               <div ref={observeRef} />
-              {isLoading && <LoopLoading />}
+
+              {storeList.length === 0 && !isLoading && (
+                <EmptyContent
+                  message="맛집 데이터가 없습니다."
+                  className="absolute left-1/2 top-1/2 mt-4 -translate-x-1/2 -translate-y-1/2 transform"
+                />
+              )}
+              {isLoading && (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+                  <LoopLoading />
+                </div>
+              )}
             </div>
           </div>
         </section>
