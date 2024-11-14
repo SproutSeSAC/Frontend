@@ -36,7 +36,9 @@ export default function AnnouncementForm() {
     resolver: zodResolver(AnnouncementFormSchema),
   });
 
-  const { handleSubmit, control } = methods;
+  const { handleSubmit, control, getValues } = methods;
+
+  console.log(getValues());
 
   // NOTE: 삭제 예정
   const { data: userProfile = initialUserProfile } = useGetUserProfile();

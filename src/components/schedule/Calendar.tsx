@@ -65,7 +65,7 @@ export default function Calendar({ type, events }: CalendarProps) {
             eventDisplay="block"
           />
           {futureEvents && futureEvents.length !== 0 && (
-            <ul className="mb-2 mt-3 flex flex-col gap-2">
+            <ul className="mb-2 mt-1 flex flex-col gap-2">
               {futureEvents.slice(0, 4).map(event => (
                 <SmallCalendarBottomEvent
                   key={event.title}
