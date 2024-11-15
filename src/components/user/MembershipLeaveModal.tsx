@@ -33,20 +33,13 @@ export default function MembershipLeaveModal() {
 
     await hideDialog();
     alert({
-      showDim: true,
-      className: 'z-30',
       text: '탈퇴 이메일이 발송되었습니다!',
       children: (
         <div className="mt-4 flex w-60 flex-col items-center">
           <p className="text-center text-sm text-gray1">
             {userProfile?.email}로 발송된 탈퇴 확인 메일을 확인해주세요
           </p>
-          <SquareButton
-            name="나가기"
-            onClick={hideDialog}
-            type="button"
-            className="mt-5"
-          />
+          <SquareButton name="나가기" onClick={hideDialog} type="button" />
         </div>
       ),
     });

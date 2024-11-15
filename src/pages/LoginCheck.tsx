@@ -43,16 +43,9 @@ export default function LoginCheck() {
       handleLoginPost();
     } else {
       alert({
-        showDim: true,
-        className: 'z-30',
         text: '로그인에 실패했습니다. 다시 시도해주세요.',
         children: (
-          <SquareButton
-            name="확인"
-            onClick={hideDialog}
-            type="button"
-            className="mt-5"
-          />
+          <SquareButton name="확인" onClick={hideDialog} type="button" />
         ),
       });
     }

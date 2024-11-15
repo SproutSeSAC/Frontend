@@ -85,25 +85,17 @@ export default function CreateCalendarButton({
 
     if (sproutCalendarId) {
       alert({
-        showDim: true,
         className: 'max-w-[360px]',
         text: `${courseTitle} 캘린더가 이미 생성되어 있습니다.`,
         subText: aclList
           ? '캘린더가 이미 생성되었으며 캘린더 권한이 부여된 상태입니다. Gmail을 확인해주세요.'
           : '잠시만 기다려주시면 관리자가 확인 후 캘린더 권한을 부여해드리겠습니다. 알림을 확인해주세요.',
         children: (
-          <SquareButton
-            name="확인"
-            onClick={hideDialog}
-            type="button"
-            className="mt-5"
-          />
+          <SquareButton name="확인" onClick={hideDialog} type="button" />
         ),
       });
     } else {
       alert({
-        showDim: true,
-        className: 'z-30',
         text: `${courseTitle} 캘린더`,
         subText: '위 캘린더를 생성하시겠어요?',
         children: (

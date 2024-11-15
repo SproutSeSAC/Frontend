@@ -95,13 +95,13 @@ export default function DialogContextProvider({
   }, []);
 
   const alert = useCallback(
-    async (args: AlertType): Promise<void> => {
+    async ({ key, showDim = true, ...rest }: AlertType): Promise<void> => {
       await showDialog({
-        key: args.key || 'alert',
+        key: key || 'alert',
         element: (
           <>
-            <Alert {...args} />
-            {args.showDim && (
+            <Alert {...rest} />
+            {showDim && (
               <div
                 className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
                 onClick={async () => hideDialog()}

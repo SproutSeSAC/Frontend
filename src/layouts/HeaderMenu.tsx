@@ -18,8 +18,6 @@ export default function HeaderMenu() {
 
   const onLogOutClick = () => {
     alert({
-      showDim: true,
-      className: 'z-30',
       text: '정말 로그아웃하시겠어요?',
       children: (
         <>
@@ -33,14 +31,12 @@ export default function HeaderMenu() {
               hideDialog();
             }}
             type="button"
-            className="mt-6"
           />
           <SquareButton
             color="gray"
             name="취소"
             onClick={hideDialog}
             type="button"
-            className="mt-6"
           />
         </>
       ),

@@ -17,7 +17,6 @@ export default function ControllerParticipantCapacity() {
       control={control}
       name="participantCapacity"
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        console.log(value);
         return (
           <div
             className={`relative flex items-center rounded-2xl border border-gray4 bg-white ${error?.message ? 'border border-red-600' : ''}`}

@@ -182,8 +182,6 @@ export default function LoungeEditor() {
 
   const handleLeave = useCallback(() => {
     alert({
-      showDim: true,
-      className: 'z-30',
       text: '정말 나가시겠어요?',
       subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
       children: (
@@ -193,7 +191,6 @@ export default function LoungeEditor() {
             name="계속 작성하기"
             onClick={hideDialog}
             type="button"
-            className="mt-6"
           />
           <SquareButton
             name="나가기"
@@ -202,7 +199,6 @@ export default function LoungeEditor() {
               hideDialog();
             }}
             type="button"
-            className="mt-6"
           />
         </>
       ),
