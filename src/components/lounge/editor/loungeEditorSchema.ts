@@ -25,12 +25,7 @@ export const loungeEditorSchema = z.object({
     .array(z.number().min(1, '모집직무를 선택해 주세요.'))
     .min(1, '모집직무를 선택해 주세요.'),
 
-  meetingType: z
-    .string()
-    .min(1, { message: '모집유형을 선택해 주세요.' })
-    .refine(val => val !== 'HYBRID', {
-      message: '모집유형을 선택해 주세요.',
-    }),
+  meetingType: z.string(),
 
   requiredStacks: z
     .array(z.number().min(1, '필요스택을 선택해 주세요.'))

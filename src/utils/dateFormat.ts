@@ -26,10 +26,10 @@ export const dateFormat = (
       return `${year}.${month}.${day}`;
     case 'MM/DD/YYYY':
       return `${month}/${day}/${year}`;
-    case 'YYYY년 MM월 DD일':
-      return `${year}년 ${month}월 ${day}일`;
     case 'YYYY-MM-DD':
       return `${year}-${month}-${day}`;
+    case 'YYYY년 MM월 DD일':
+      return `${year}년 ${month}월 ${day}일`;
     default:
       console.warn('Unsupported format', { format });
       return null;

@@ -10,6 +10,8 @@ import {
 import { progressList, sortList } from '@/constants';
 import { GetLoungeProjects } from '@/types/lounge/loungeDto';
 
+import EmptyContent from '@/components/common/EmptyContent';
+import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
 import SquareButton from '@/components/common/button/SquareButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
@@ -17,15 +19,23 @@ import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 
+export interface FilterDataType extends GetLoungeProjects {
+  modify?: boolean;
+}
+
+const defaultFilterData = {
+  page: 1,
+  size: 21,
+  modify: false,
+};
+
 export default function Lounge() {
-  const [filterData, setFilterData] = useState<GetLoungeProjects>({
-    page: 1,
-    size: 20,
-  });
+  const [filterData, setFilterData] =
+    useState<FilterDataType>(defaultFilterData);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
-  // 로딩 추가
-  const { data } = useGetLoungeProjects(filterData);
+
+  const { data, isLoading } = useGetLoungeProjects(filterData);
   const { data: positionsList } = useGetLoungePositionsFilterList();
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
@@ -33,7 +43,7 @@ export default function Lounge() {
   const handleChangeFilterValue = useCallback(
     (value: { id: number; name: string }[], name: string) => {
       const ids = value.map(item => item.id);
-      setFilterData(prev => ({ ...prev, [name]: ids }));
+      setFilterData(prev => ({ ...prev, [name]: ids, modify: true }));
     },
     [],
   );
@@ -45,7 +55,15 @@ export default function Lounge() {
   }, []);
 
   const handleSearchSubmit = useCallback(() => {
-    setFilterData(prev => ({ ...prev, keyword: searchRef.current?.value }));
+    setFilterData(prev => ({
+      ...prev,
+      keyword: searchRef.current?.value,
+      modify: true,
+    }));
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setFilterData(defaultFilterData);
   }, []);
 
   const selectedPositionOption = useMemo(() => {
@@ -65,7 +83,7 @@ export default function Lounge() {
 
   return (
     <>
-      <div className="mt-6 flex items-center gap-10">
+      <div className="mt-6 flex items-center gap-8">
         <SearchInput
           name="search"
           ref={searchRef}
@@ -75,49 +93,70 @@ export default function Lounge() {
           onEnter={handleSearchSubmit}
           onChange={handleChange}
         />
-        <SquareButton
-          name="검색하기"
-          onClick={handleSearchSubmit}
-          className="h-full whitespace-nowrap font-medium"
-        />
+        <div className="flex gap-2">
+          <SquareButton
+            name="검색하기"
+            onClick={handleSearchSubmit}
+            className="w-[88px] whitespace-nowrap px-3.5 py-3 text-white"
+          />
+          <button
+            onClick={handleReset}
+            className="w-20 whitespace-nowrap rounded-lg bg-gray2 px-3.5 py-3 text-white"
+          >
+            초기화
+          </button>
+        </div>
       </div>
 
-      <div className="relative mb-9 mt-6 flex gap-4 [&>div:last-child]:ml-auto">
-        {!isTechStackListLoading && (
-          <TechStackDropdown
-            defaultLabel="기술스택"
-            defaultTabValue="백엔드"
-            options={techStackList}
-            onChangeValue={value => handleChangeFilterValue(value, 'techStack')}
+      <div className="relative mb-9 mt-6 flex justify-between">
+        <div className="flex gap-4">
+          {!isTechStackListLoading && (
+            <TechStackDropdown
+              defaultLabel="기술스택"
+              defaultTabValue="백엔드"
+              options={techStackList}
+              isReset={!filterData.modify}
+              onChangeValue={value =>
+                handleChangeFilterValue(value, 'techStack')
+              }
+              boxShape="buttonShape"
+            />
+          )}
+
+          <SingleSelectDropdown
+            defaultLabel="포지션"
+            options={positionsList || []}
+            onChangeValue={value => handleChangeFilterValue(value, 'position')}
             boxShape="buttonShape"
+            selectedOption={selectedPositionOption}
           />
-        )}
 
-        <SingleSelectDropdown
-          defaultLabel="포지션"
-          options={positionsList || []}
-          onChangeValue={value => handleChangeFilterValue(value, 'position')}
-          boxShape="buttonShape"
-          selectedOption={selectedPositionOption}
-        />
-
-        <SingleSelectDropdown
-          defaultLabel="진행방식"
-          options={progressList || []}
-          onChangeValue={value => {
-            const newValue = value.map(item => item.key);
-            setFilterData(prev => ({ ...prev, meetingType: newValue[0] }));
-          }}
-          boxShape="buttonShape"
-          selectedOption={selectedProgressOption}
-        />
+          <SingleSelectDropdown
+            defaultLabel="진행방식"
+            options={progressList || []}
+            onChangeValue={value => {
+              const newValue = value.map(item => item.key);
+              setFilterData(prev => ({
+                ...prev,
+                meetingType: newValue[0],
+                modify: true,
+              }));
+            }}
+            boxShape="buttonShape"
+            selectedOption={selectedProgressOption}
+          />
+        </div>
 
         <SingleSelectDropdown
           defaultLabel="정렬"
           options={sortList}
           onChangeValue={value => {
             const newValue = value.map(item => item.key);
-            setFilterData(prev => ({ ...prev, sort: newValue[0] }));
+            setFilterData(prev => ({
+              ...prev,
+              sort: newValue[0],
+              modify: true,
+            }));
           }}
           boxShape="buttonShape"
           selectedOption={selectedSortOption}
@@ -131,13 +170,25 @@ export default function Lounge() {
           </li>
         ))}
       </ul>
+      {data?.projects.length === 0 && (
+        <EmptyContent message="모집중인 프로젝트가 없습니다." />
+      )}
+      {isLoading && (
+        <div className="flex w-full justify-center py-10">
+          <LoopLoading />
+        </div>
+      )}
 
       {(data?.projects || []).length > 0 && (
         <Pagination
           totalPages={data?.totalPages || 0}
-          currentPage={(data?.currentPage || 0) - 1 || 1}
+          currentPage={data?.currentPage || 0 || 1}
           onPageChange={(pageNumber: number) => {
-            setFilterData(prev => ({ ...prev, page: pageNumber }));
+            setFilterData(prev => ({
+              ...prev,
+              page: pageNumber,
+              modify: true,
+            }));
           }}
         />
       )}

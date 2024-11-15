@@ -15,6 +15,8 @@ import {
   useGetLoungeProjectsDetail,
 } from '@/services/lounge/loungeQueries';
 
+import { dateFormat } from '@/utils/dateFormat';
+
 import Title from '../components/common/Title';
 import SquareButton from '../components/common/button/SquareButton';
 import LoungeTextEditor from '../components/lounge/editor/LoungeTextEditor';
@@ -34,6 +36,7 @@ import {
 import { BsLink45Deg } from 'react-icons/bs';
 
 import CircleNumber from '@/components/common/CircleNumber';
+import CustomDatePicker from '@/components/common/DatePicker';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
@@ -66,7 +69,7 @@ export interface FormValues {
 const changeDataToFieldValues = (data?: GetLoungeProjectDetail) => {
   return {
     recruitmentCount: data?.recruitmentCount || 0,
-    meetingType: data?.meetingType || 'HYBRID',
+    meetingType: data?.meetingType || 'ALL',
     contactMethod: data?.contactMethod || '',
     contactDetail: data?.contactDetail || '',
     recruitmentType: data?.ptype || '',
@@ -241,7 +244,7 @@ export default function LoungeEditor() {
           </LabeledSection>
 
           <LabeledSection label="모집 기간">
-            <div className="flex w-full items-center gap-2">
+            <div className="flex w-full items-center">
               <Controller
                 control={control}
                 name="startDate"
@@ -249,26 +252,22 @@ export default function LoungeEditor() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
+                  const handleStartDate = (date: Date | null) => {
+                    onChange(dateFormat(date, 'YYYY-MM-DD') || '');
+                  };
                   return (
-                    <div className="relative flex w-[50%] flex-col">
-                      <input
-                        type="date"
-                        id="datepicker"
-                        value={value}
-                        onChange={onChange}
+                    <div className="flex w-full min-w-[46%] flex-col">
+                      <CustomDatePicker
                         className={`${error ? inputStyle.error : inputStyle.default} w-full`}
+                        currentDate={value ? new Date(value) : undefined}
+                        onChange={handleStartDate}
+                        errorMsg={error?.message || ''}
                       />
-                      {error && (
-                        <ErrorMsg
-                          msg={error?.message || ''}
-                          className="absolute bottom-[-26px] ml-2"
-                        />
-                      )}
                     </div>
                   );
                 }}
               />
-              <span>~</span>
+              <span className="mx-2 text-center">~</span>
               <Controller
                 control={control}
                 name="endDate"
@@ -276,21 +275,17 @@ export default function LoungeEditor() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
+                  const handleEndDate = (date: Date | null) => {
+                    onChange(dateFormat(date, 'YYYY-MM-DD') || '');
+                  };
                   return (
-                    <div className="relative flex w-[50%] flex-col">
-                      <input
-                        type="date"
-                        id="datepicker"
-                        value={value}
-                        onChange={onChange}
+                    <div className="flex w-full min-w-[46%] flex-col">
+                      <CustomDatePicker
                         className={`${error ? inputStyle.error : inputStyle.default} w-full`}
+                        currentDate={value ? new Date(value) : undefined}
+                        onChange={handleEndDate}
+                        errorMsg={error?.message || ''}
                       />
-                      {error && (
-                        <ErrorMsg
-                          msg={error?.message || ''}
-                          className="absolute bottom-[-26px] ml-2"
-                        />
-                      )}
                     </div>
                   );
                 }}

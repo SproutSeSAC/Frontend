@@ -2,6 +2,7 @@ import { ForwardedRef, forwardRef } from 'react';
 
 import { Store } from '@/types/store/storeDto';
 
+import EmptyContent from '@/components/common/EmptyContent';
 import VerticalSlider from '@/components/common/slider/VerticalSlider';
 import StoreListSliderCard from '@/components/store/detail/StoreListSliderCard';
 
@@ -33,7 +34,7 @@ export default forwardRef(function StoreListSlider(
       )}
 
       {(!storeList || storeList.length === 0) && sideViewOpen && (
-        <div>맛집 데이터가 없습니다.</div>
+        <EmptyContent message="맛집 데이터가 없습니다." />
       )}
     </div>
   );
