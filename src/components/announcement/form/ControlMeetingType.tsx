@@ -17,7 +17,7 @@ export default function ControlMeetingType() {
         );
 
         return (
-          <div className="relative flex items-center rounded-2xl border border-gray4 bg-white">
+          <div className="relative flex items-center rounded-2xl border border-gray4 bg-white [&>div:first-child]:w-44">
             <SingleSelectDropdown
               defaultLabel="온오프라인"
               options={meetingTypeOptions}
@@ -26,7 +26,7 @@ export default function ControlMeetingType() {
                 const type = data[0].key;
                 onChange({ ...value, type });
               }}
-              selectBoxClassName="w-32 gap-0 h-[40px] my-2 border-0 border-r rounded-r-none pr-3"
+              selectBoxClassName="gap-0 h-[40px] my-2 border-0 border-r rounded-r-none pr-3"
             />
             <TextInput
               name="온오프라인"
