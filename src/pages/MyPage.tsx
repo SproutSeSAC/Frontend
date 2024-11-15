@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -59,12 +57,6 @@ export default function MyPage() {
       <section className="mb-16 w-full flex-1">
         <div className="mb-[10px] flex items-center justify-between">
           <Title title={`${name}님이 찜한 글 모음`} />
-          <Link
-            to="/lounge"
-            className="text-sm font-semibold tracking-tight text-gray1"
-          >
-            전체보기
-          </Link>
         </div>
 
         <ScrollContainer>
