@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -12,6 +16,7 @@ import {
   defaultAnnouncementFormValues,
   tooltip,
 } from '@/constants/announcement';
+import { useDialogContext, usePageBlocker } from '@/hooks';
 import { AnnouncementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -36,9 +41,11 @@ export default function AnnouncementForm() {
     resolver: zodResolver(AnnouncementFormSchema),
   });
 
-  const { handleSubmit, control, getValues } = methods;
-
-  console.log(getValues());
+  const {
+    handleSubmit,
+    control,
+    formState: { isDirty },
+  } = methods;
 
   // NOTE: 삭제 예정
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
@@ -55,6 +62,48 @@ export default function AnnouncementForm() {
     noticeType === 'SPECIAL_LECTURE' || noticeType === 'EVENT';
 
   const noticeTypeName = noticeType === 'SPECIAL_LECTURE' ? '특강' : '행사';
+
+  const { hideDialog, alert } = useDialogContext();
+
+  const navigate = useNavigate();
+
+  const { blocker } = usePageBlocker({
+    isBlockRefresh: true,
+    isForm: true,
+    isFormDirty: isDirty,
+  });
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      alert({
+        text: '정말 나가시겠어요?',
+        subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
+        children: (
+          <>
+            <SquareButton
+              color="gray"
+              name="계속 작성하기"
+              onClick={() => {
+                hideDialog();
+                if (blocker.state === 'blocked') {
+                  blocker.reset();
+                }
+              }}
+            />
+            <SquareButton
+              name="나가기"
+              onClick={() => {
+                hideDialog();
+                if (blocker.state === 'blocked') {
+                  blocker.proceed();
+                }
+              }}
+            />
+          </>
+        ),
+      });
+    }
+  }, [alert, blocker, blocker.state, hideDialog]);
 
   return (
     <FormProvider {...methods}>
@@ -179,15 +228,13 @@ export default function AnnouncementForm() {
                       fieldState: { error },
                     }) => {
                       return (
-                        <div className="relative">
-                          <TextInput
-                            name="만족도 조사"
-                            placeholder="만족도 조사 링크를 적어주세요."
-                            onChange={onChange}
-                            className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
-                            errorMsg={error?.message}
-                          />
-                        </div>
+                        <TextInput
+                          name="만족도 조사"
+                          placeholder="만족도 조사 링크를 적어주세요."
+                          onChange={onChange}
+                          className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
+                          errorMsg={error?.message}
+                        />
                       );
                     }}
                   />
@@ -211,7 +258,12 @@ export default function AnnouncementForm() {
           <ControllerContentEditor type="announcement" />
 
           <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
-            <SquareButton name="취소" color="gray" type="button" />
+            <SquareButton
+              name="취소"
+              color="gray"
+              type="button"
+              onClick={() => navigate('/announcement')}
+            />
             <SquareButton name="등록하기" type="submit" />
           </div>
         </section>
