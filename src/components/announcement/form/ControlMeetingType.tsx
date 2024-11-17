@@ -17,7 +17,9 @@ export default function ControlMeetingType() {
         );
 
         return (
-          <div className="relative flex items-center rounded-2xl border border-gray4 bg-white [&>div:first-child]:w-44">
+          <div
+            className={`relative flex items-center rounded-2xl border ${error?.message ? 'border-red-600' : 'border-gray4'} bg-white [&>div:first-child]:w-44`}
+          >
             <SingleSelectDropdown
               defaultLabel="온오프라인"
               options={meetingTypeOptions}
@@ -37,7 +39,7 @@ export default function ControlMeetingType() {
               }
               value={value?.detail}
               onChange={e => onChange({ ...value, detail: e.target.value })}
-              className="!mr-0 h-full !w-full border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
+              className="!mr-0 h-full !w-full !rounded-2xl border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
               errorMsg={error?.message}
             />
           </div>

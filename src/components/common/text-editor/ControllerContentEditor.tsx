@@ -42,7 +42,7 @@ export default function ControllerContentEditor({
                 name="제목"
                 placeholder={`${name} 제목을 입력해주세요.`}
                 onChange={onChange}
-                className="!mr-0 h-full !rounded-2xl border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
+                className="!mr-0 h-full !rounded-2xl py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
                 errorMsg={error?.message}
               />
             );
@@ -50,20 +50,22 @@ export default function ControllerContentEditor({
         />
       </LabeledSection>
 
-      <Controller
-        control={control}
-        name={content}
-        render={({ field: { onChange, value } }) => {
-          return (
-            <TextEditor
-              value={value}
-              onChange={onChange}
-              className="h-[523px] w-full"
-              placeholder={`${name} 상세 정보를 작성해 주세요`}
-            />
-          );
-        }}
-      />
+      <LabeledSection label="상세 내용" className="mb-8 mt-2">
+        <Controller
+          control={control}
+          name={content}
+          render={({ field: { onChange, value } }) => {
+            return (
+              <TextEditor
+                value={value}
+                onChange={onChange}
+                className="h-[523px] w-full"
+                placeholder={`${name} 상세 정보를 작성해 주세요`}
+              />
+            );
+          }}
+        />
+      </LabeledSection>
     </div>
   );
 }

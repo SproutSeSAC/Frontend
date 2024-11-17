@@ -19,7 +19,7 @@ export default function ControllerParticipantCapacity() {
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (
           <div
-            className={`relative flex items-center rounded-2xl border border-gray4 bg-white ${error?.message ? 'border border-red-600' : ''}`}
+            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-gray4'}`}
           >
             <button
               type="button"

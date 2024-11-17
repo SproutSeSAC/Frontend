@@ -45,7 +45,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
         onBlur={() => toggleFocus && toggleFocus(false)}
         onKeyDown={onEnter}
         disabled={disabled}
-        className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border border-red-600' : ''} ${className}`}
+        className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border-red-600' : 'border-gray4'} ${className}`}
       />
 
       {errorMsg && (
