@@ -45,31 +45,33 @@
       @apply text-base not-italic text-gray2;
     }
     .ql-container,
-    .ql-editor p[data-value="medium"]::before {
+    .ql-editor p[data-value='medium']::before {
       @apply text-base;
     }
 
     #customDatePicker {
-      .react-datepicker-wrapper,
       .react-datepicker__triangle {
-        @apply hidden
+        @apply hidden;
       }
       .react-datepicker-popper {
-        @apply transform-none top-auto mt-1 !important
+        @apply top-auto mt-1 transform-none !important;
       }
       .react-datepicker {
-        @apply shadow-modal border-none rounded
+        @apply rounded border-none shadow-modal;
       }
-      .react-datepicker__day-name{
-        @apply text-white
+      .react-datepicker__day-name {
+        @apply text-white;
       }
       .react-datepicker__header {
-        @apply bg-oliveGreen1 text-white border-none relative text-center
+        @apply relative border-none bg-oliveGreen1 text-center text-white;
       }
       .react-datepicker__day--selected {
-        @apply bg-oliveGreen1 text-white rounded-lg
+        @apply rounded-lg bg-oliveGreen1 font-bold text-white;
       }
-     }
+      .react-datepicker__day--keyboard-selected {
+        @apply rounded-lg bg-oliveGreen1 text-white;
+      }
+    }
 
     .announcement-text-divider::after {
       content: '|';

@@ -36,7 +36,7 @@ import {
 import { BsLink45Deg } from 'react-icons/bs';
 
 import CircleNumber from '@/components/common/CircleNumber';
-import CustomDatePicker from '@/components/common/DatePicker';
+import CustomDatePicker from '@/components/common/CustomDatePicker';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
