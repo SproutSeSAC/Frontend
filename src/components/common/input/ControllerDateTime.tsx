@@ -1,8 +1,8 @@
 import { hours, minutes } from '@/constants/optionList';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import CustomDatePicker from '@/components/common/CustomDatePicker';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
-import DateInput from '@/components/common/input/DateInput';
 
 interface ControllerDateTimeProps {
   name: 'applicationStartDateTime' | 'applicationEndDateTime';
@@ -25,12 +25,13 @@ export default function ControllerDateTime({ name }: ControllerDateTimeProps) {
         const selectedMinuteOption = minutes.find(({ id }) => id === minute);
 
         return (
-          <div className="relative flex w-full items-center gap-1.5 [&>label]:static">
-            <DateInput
-              value={value}
+          <div className="relative flex h-full w-full items-center gap-1.5">
+            <CustomDatePicker
+              currentDate={value ? new Date(value) : undefined}
               onChange={onChange}
-              errorMsg={error?.message}
+              errorMsg={error?.message || ''}
             />
+
             <SingleSelectDropdown
               defaultLabel="시"
               options={hours}

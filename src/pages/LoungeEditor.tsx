@@ -36,7 +36,7 @@ import {
 import { BsLink45Deg } from 'react-icons/bs';
 
 import CircleNumber from '@/components/common/CircleNumber';
-import CustomDatePicker from '@/components/common/DatePicker';
+import CustomDatePicker from '@/components/common/CustomDatePicker';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
@@ -258,7 +258,6 @@ export default function LoungeEditor() {
                   return (
                     <div className="flex w-full min-w-[46%] flex-col">
                       <CustomDatePicker
-                        className={`${error ? inputStyle.error : inputStyle.default} w-full`}
                         currentDate={value ? new Date(value) : undefined}
                         onChange={handleStartDate}
                         errorMsg={error?.message || ''}
@@ -281,7 +280,6 @@ export default function LoungeEditor() {
                   return (
                     <div className="flex w-full min-w-[46%] flex-col">
                       <CustomDatePicker
-                        className={`${error ? inputStyle.error : inputStyle.default} w-full`}
                         currentDate={value ? new Date(value) : undefined}
                         onChange={handleEndDate}
                         errorMsg={error?.message || ''}

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
+import CustomDatePicker from '@/components/common/CustomDatePicker';
 import XButton from '@/components/common/button/XButton';
 import ControllerTime from '@/components/common/input/ControllerTime';
-import DateInput from '@/components/common/input/DateInput';
 import LabeledSection from '@/components/common/input/LabeledSection';
 
 interface ControllerSessionsProps {
@@ -46,8 +46,8 @@ export default function ControllerSessions({
                 fieldState: { error },
               }) => {
                 return (
-                  <DateInput
-                    value={value}
+                  <CustomDatePicker
+                    currentDate={value ? new Date(value) : undefined}
                     onChange={onChange}
                     errorMsg={error?.message}
                   />
