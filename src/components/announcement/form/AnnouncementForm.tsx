@@ -69,8 +69,9 @@ export default function AnnouncementForm() {
 
   const { blocker } = usePageBlocker({
     isBlockRefresh: true,
-    isForm: true,
-    isFormDirty: isDirty,
+    form: {
+      isDirty,
+    },
   });
 
   useEffect(() => {

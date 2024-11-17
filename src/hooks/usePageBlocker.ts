@@ -4,22 +4,22 @@ import { BlockerFunction, useBlocker } from 'react-router-dom';
 
 interface UsePageBlockerProps {
   isBlockRefresh?: boolean;
-  isForm: boolean;
-  isFormDirty?: boolean;
+  form?: {
+    isDirty: boolean;
+  };
 }
 
 export const usePageBlocker = ({
   isBlockRefresh,
-  isForm = false,
-  isFormDirty = false,
+  form,
 }: UsePageBlockerProps) => {
   const when: BlockerFunction = ({ currentLocation, nextLocation }) => {
     const isDiffLocation =
       `${currentLocation.pathname}${currentLocation.search}` !==
       `${nextLocation.pathname}${nextLocation.search}`;
 
-    if (isForm) {
-      return isDiffLocation && isFormDirty;
+    if (form) {
+      return isDiffLocation && form.isDirty;
     }
     return isDiffLocation;
   };
@@ -29,7 +29,7 @@ export const usePageBlocker = ({
   useEffect(() => {
     if (!isBlockRefresh) return undefined;
 
-    if (isForm && !isFormDirty) return undefined;
+    if (form && !form.isDirty) return undefined;
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -39,7 +39,7 @@ export const usePageBlocker = ({
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isBlockRefresh, isForm, isFormDirty]);
+  }, [isBlockRefresh, form]);
 
   return {
     blocker,
