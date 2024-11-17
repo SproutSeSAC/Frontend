@@ -68,6 +68,11 @@ axiosInstance.interceptors.response.use(
         console.error('refreshError', refreshError);
       }
     }
+
+    if (error.response && error.response.status === 404) {
+      window.location.href = '/login';
+    }
+
     return Promise.reject(error);
   },
 );
