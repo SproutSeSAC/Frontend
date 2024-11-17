@@ -1,7 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
-
-import { dateFormat } from '@/utils/dateFormat';
-
 import ErrorMsg from './input/ErrorMsg';
 
 import DatePicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker';
@@ -39,54 +35,16 @@ export default function CustomDatePicker({
     '11',
     '12',
   ];
-  const [open, setOpen] = useState(false);
-  const datePickerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        datePickerRef.current &&
-        !datePickerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [open]);
 
   return (
-    <div id="customDatePicker" ref={datePickerRef} className="relative w-full">
-      <div className="relative flex flex-col">
-        <input
-          className={
-            className
-              ? `w-full bg-white outline-none placeholder:text-gray2 ${className}`
-              : 'w-full bg-white p-4 placeholder:text-gray2'
-          }
-          onClick={() => setOpen(prev => !prev)}
-          readOnly
-          value={dateFormat(currentDate) || ''}
-          placeholder={placeholder}
-        />
-
-        {errorMsg && (
-          <ErrorMsg
-            msg={errorMsg || ''}
-            className="absolute bottom-[-26px] ml-2"
-          />
-        )}
-      </div>
-
+    <div className="relative flex w-full flex-col" id="customDatePicker">
       <DatePicker
+        placeholderText={placeholder}
+        className={
+          className
+            ? `w-full bg-white outline-none placeholder:text-gray2 ${className}`
+            : 'w-full bg-white p-4 placeholder:text-gray2'
+        }
         renderCustomHeader={({
           date,
           changeYear,
@@ -148,8 +106,13 @@ export default function CustomDatePicker({
         selected={currentDate}
         onChange={onChange}
         selectsStart
-        open={open}
       />
+      {errorMsg && (
+        <ErrorMsg
+          msg={errorMsg || ''}
+          className="absolute bottom-[-26px] ml-2"
+        />
+      )}
     </div>
   );
 }
