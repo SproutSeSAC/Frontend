@@ -97,8 +97,6 @@ interface CustomDatePickerProps {
   className?: string;
   errorMsg?: string;
   placeholder?: string;
-  selectsStart?: boolean;
-  selectsEnd?: boolean;
 }
 
 export default function CustomDatePicker({
@@ -107,35 +105,30 @@ export default function CustomDatePicker({
   className,
   errorMsg,
   placeholder,
-  selectsStart,
-  selectsEnd,
 }: CustomDatePickerProps) {
   return (
     <>
-      <DatePicker
-        showIcon
-        icon={
-          <BsCalendar
-            size={20}
-            className="inset-x-2 inset-y-3 size-[18px] cursor-pointer text-gray2"
-          />
-        }
-        id="datepicker"
-        className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'} ${className}`}
-        renderCustomHeader={CustomDatePickerHeader}
-        closeOnScroll
-        popperPlacement="top-start"
-        dateFormat="YYYY년 MM월 dd일"
-        locale={ko}
-        placeholderText={
-          `${dateFormat(new Date(), 'YYYY년 MM월 DD일')}` || placeholder
-        }
-        selected={currentDate}
-        onChange={onChange}
-        selectsStart={selectsStart}
-        selectsEnd={selectsEnd}
-        minDate={new Date()}
-      />
+      <label htmlFor="date-picker" className="relative flex h-full w-full">
+        <BsCalendar
+          size={20}
+          className="absolute left-4 top-5 z-10 size-[18px] cursor-pointer text-gray2"
+        />
+        <DatePicker
+          id="date-picker"
+          className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'} ${className}`}
+          renderCustomHeader={CustomDatePickerHeader}
+          closeOnScroll
+          popperPlacement="top-start"
+          dateFormat="YYYY년 MM월 dd일"
+          locale={ko}
+          placeholderText={
+            placeholder || `${dateFormat(new Date(), 'YYYY년 MM월 DD일')}`
+          }
+          selected={currentDate}
+          onChange={onChange}
+          minDate={new Date()}
+        />
+      </label>
 
       {errorMsg && (
         <ErrorMsg

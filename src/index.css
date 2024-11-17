@@ -54,7 +54,7 @@
       @apply relative z-0 h-full w-full;
     }
     .react-datepicker__input-container {
-      @apply h-full;
+      @apply h-full w-full;
     }
     .react-datepicker__triangle {
       @apply hidden;
