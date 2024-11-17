@@ -90,8 +90,6 @@ export default function LoungeDetail() {
 
   const handleDeleteProject = async () => {
     alert({
-      showDim: true,
-      className: 'z-30',
       text: '정말 프로젝트를 삭제하시겠어요?',
       subText:
         '삭제하면 모든 정보가 사라지며, 복구할 수 없어요.\n 그래도 계속하시겠어요?',
@@ -102,7 +100,6 @@ export default function LoungeDetail() {
             name="닫기"
             onClick={() => hideDialog()}
             type="button"
-            className="mt-6"
           />
           <SquareButton
             name="삭제"
@@ -123,7 +120,6 @@ export default function LoungeDetail() {
               hideDialog();
             }}
             type="button"
-            className="mt-6"
           />
         </>
       ),

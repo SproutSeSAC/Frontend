@@ -20,10 +20,14 @@ export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
 
 export const initialUserProfile: UserProfileDto.Get = {
   email: '',
-  campusName: '',
-  courseTitle: '',
-  courseStartDate: '',
-  courseEndDate: '',
+  campusList: [],
+  courseList: [
+    {
+      courseTitle: '',
+      courseStartDate: '',
+      courseEndDate: '',
+    },
+  ],
   name: '',
   domainList: [],
   jobList: [],

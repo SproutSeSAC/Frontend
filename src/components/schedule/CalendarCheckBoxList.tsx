@@ -41,11 +41,11 @@ export default function CalendarCheckBoxList({
 
   // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
   const userCampus = campusList?.find(
-    ({ name }) => name === userProfile?.campusName,
+    ({ name }) => name === userProfile?.campusList[0],
   );
   const { data: courseList } = useGetCourseList(userCampus?.id);
   const userCourse = courseList?.find(
-    course => course.title === userProfile?.courseTitle,
+    course => course.title === userProfile?.courseList[0]?.courseTitle,
   );
   // -----------------------------------
 
@@ -86,12 +86,12 @@ export default function CalendarCheckBoxList({
               sproutCalendars.length === 0 &&
               (userRole === 'TRAINEE' ? (
                 <SubscribeCalendarButton
-                  courseTitle={userProfile.courseTitle}
+                  courseTitle={userProfile?.courseList[0]?.courseTitle}
                   courseId={userCourse.id}
                 />
               ) : (
                 <CreateCalendarButton
-                  courseTitle={userProfile.courseTitle}
+                  courseTitle={userProfile?.courseList[0]?.courseTitle}
                   courseId={userCourse.id}
                   userRole={userRole}
                 />

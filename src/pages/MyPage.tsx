@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -21,12 +19,12 @@ export default function MyPage() {
   const { data: userProfile = initialUserProfile, isLoading } =
     useGetUserProfile();
 
-  const { name, email, campusName, courseTitle } = userProfile;
+  const { name, email, campusList, courseList } = userProfile;
 
   const userInfoList = [
     { label: 'E-mail', value: email },
-    { label: '캠퍼스', value: campusName },
-    { label: '담당 교육과정', value: courseTitle },
+    { label: '캠퍼스', value: campusList[0] },
+    { label: '담당 교육과정', value: courseList?.[0]?.courseTitle },
   ];
 
   if (isLoading) return null;
@@ -59,12 +57,6 @@ export default function MyPage() {
       <section className="mb-16 w-full flex-1">
         <div className="mb-[10px] flex items-center justify-between">
           <Title title={`${name}님이 찜한 글 모음`} />
-          <Link
-            to="/lounge"
-            className="text-sm font-semibold tracking-tight text-gray1"
-          >
-            전체보기
-          </Link>
         </div>
 
         <ScrollContainer>

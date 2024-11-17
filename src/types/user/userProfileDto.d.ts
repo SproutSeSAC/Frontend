@@ -21,10 +21,12 @@ type SignUpUserValue = {
 
 type UserProfile = {
   email: string;
-  campusName: string;
-  courseTitle: string;
-  courseStartDate: string;
-  courseEndDate: string;
+  campusList: string[];
+  courseList: {
+    courseTitle: string;
+    courseStartDate: string;
+    courseEndDate: string;
+  }[];
   name: string;
   domainList: Domain[];
   jobList: Job[];

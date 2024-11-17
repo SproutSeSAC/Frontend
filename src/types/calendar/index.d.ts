@@ -1,4 +1,4 @@
-export * from '@/types/calendar/googleCalendarAPIDto';
+export * from '@/types/calendar/googleCalendarApiDto';
 export * from '@/types/calendar/googleCalendar';
 export * from '@/types/calendar/sproutCalendarDto';
 export * from '@/types/calendar/managerEmailListByCourseDto';

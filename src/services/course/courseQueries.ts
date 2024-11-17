@@ -27,6 +27,7 @@ export const useGetCourseList = (
     const res: AxiosResponse<CourseListData> = await axiosInstance.get(
       `/course/list/${campusId}`,
     );
+    console.log(res);
     return res.data.courseList;
   };
 

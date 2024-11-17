@@ -33,8 +33,6 @@ export default function SubscribeCalenderButton({
   const onTraineeCalendarClick = () => {
     if (!sproutCalendarId) {
       alert({
-        showDim: true,
-        className: 'z-30',
         text: `${courseTitle} 캘린더가 곧 생성될 예정입니다.`,
         subText: `조금만 기다려주세요!`,
         children: (
@@ -43,14 +41,11 @@ export default function SubscribeCalenderButton({
             onClick={hideDialog}
             type="button"
             color="oliveGreen"
-            className="mt-5"
           />
         ),
       });
     } else {
       alert({
-        showDim: true,
-        className: 'z-30',
         text: `${courseTitle} 캘린더`,
         subText: `위 캘린더를 구독하시겠어요? `,
         children: (

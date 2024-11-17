@@ -133,16 +133,14 @@
       @apply h-fit font-medium text-gray1;
     }
     .fc-daygrid-body-unbalanced {
-      .fc-daygrid-day-events {
-        @apply min-h-0;
-      }
+      @apply pb-2;
     }
     /* 이벤트 박스 */
     .fc-daygrid-day-events {
-      @apply m-0 flex items-center justify-center p-0;
+      @apply absolute inset-x-0 -bottom-0.5 m-0 flex min-h-0 items-center justify-center p-0;
 
       .fc-daygrid-event-harness {
-        @apply absolute -bottom-1 m-0 flex size-3 items-center justify-center p-0;
+        @apply m-0 p-0;
 
         /* 이벤트 점 표시 */
         .fc-h-event {

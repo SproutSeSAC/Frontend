@@ -49,48 +49,56 @@
       @apply text-base;
     }
 
-    #customDatePicker {
-      .react-datepicker__triangle {
-        @apply hidden;
-      }
-      .react-datepicker-popper {
-        @apply top-auto mt-1 transform-none !important;
-      }
-      .react-datepicker {
-        @apply rounded border-none shadow-modal;
-      }
-      .react-datepicker__day-name {
-        @apply text-white;
-      }
-      .react-datepicker__header {
-        @apply relative border-none bg-oliveGreen1 text-center text-white;
-      }
-      .react-datepicker__day--selected {
-        @apply rounded-lg bg-oliveGreen1 font-bold text-white;
-      }
-      .react-datepicker__day--keyboard-selected {
-        @apply rounded-lg bg-oliveGreen1 text-white;
-      }
-    }
-
-    .announcement-text-divider::after {
-      content: '|';
-      margin: 14px;
-      color: #b5b5b5;
-    }
-    .lounge-text-divider::after {
-      content: '|';
-      margin: 8px;
-      color: #b5b5b5;
-    }
-    .meal-recruit-text-divider::after {
-      content: '|';
-      margin: 8px;
-      color: #6d6d6d;
-    }
+    /* DatePicker CSS */
     .react-datepicker-wrapper {
-      width: 100%;
+      @apply relative z-0 h-full w-full;
     }
+    .react-datepicker__input-container {
+      @apply h-full w-full;
+    }
+    .react-datepicker__triangle {
+      @apply hidden;
+    }
+    .react-datepicker-popper {
+      @apply z-20 m-0;
+    }
+    .react-datepicker {
+      @apply rounded-xl border-none shadow-modal;
+    }
+    .react-datepicker__day-name {
+      @apply text-white;
+    }
+    .react-datepicker__header {
+      @apply rounded-t-xl border-none bg-oliveGreen1 py-2.5 text-white;
+    }
+    .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
+      @apply rounded-tr-xl;
+    }
+    .react-datepicker__day--selected {
+      @apply rounded-lg !bg-oliveGreen1 text-white;
+    }
+    .react-datepicker__day--keyboard-selected,
+    .react-datepicker__month-text--keyboard-selected,
+    .react-datepicker__quarter-text--keyboard-selected,
+    .react-datepicker__year-text--keyboard-selected {
+      @apply bg-oliveGreen1 text-white;
+    }
+  }
+
+  .announcement-text-divider::after {
+    content: '|';
+    margin: 14px;
+    color: #b5b5b5;
+  }
+  .lounge-text-divider::after {
+    content: '|';
+    margin: 8px;
+    color: #b5b5b5;
+  }
+  .meal-recruit-text-divider::after {
+    content: '|';
+    margin: 8px;
+    color: #6d6d6d;
   }
 }
 

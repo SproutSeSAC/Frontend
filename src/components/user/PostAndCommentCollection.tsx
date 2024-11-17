@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { BiChevronDown, BiExpandVertical } from 'react-icons/bi';
 
 import Pagination from '@/components/common/Pagination';
-import EyeButton from '@/components/common/button/EyeButton';
 import TrashButton from '@/components/common/button/TrashButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
@@ -41,13 +40,8 @@ export default function PostAndCommentCollection() {
     },
     { name: '글제목' },
     {
-      name: '숨김',
-      className: 'text-center',
-      onClick: () => console.log('숨김'),
-    },
-    {
       name: '삭제',
-      className: 'text-end pr-6',
+      className: 'text-end pr-7',
       onClick: () => console.log('삭제'),
     },
   ];
@@ -87,7 +81,7 @@ export default function PostAndCommentCollection() {
 
   return (
     <div className="rounded-lg bg-white py-5">
-      <div className="flex items-center justify-between gap-3 px-4">
+      <div className="flex items-center justify-between gap-3 pl-4 pr-5">
         <div className="flex flex-1 gap-2">
           {collectionList.map(collection => (
             <button
@@ -101,19 +95,17 @@ export default function PostAndCommentCollection() {
             </button>
           ))}
         </div>
-        <EyeButton />
         <TrashButton />
       </div>
 
       <table className="mx-1 my-4 border-separate border-spacing-y-3">
         <colgroup>
-          <col width="1%" />
-          <col width="8%" />
+          <col width="3%" />
+          <col width="6%" />
           <col width="10%" />
-          <col width="14%" />
-          <col width="44%" />
-          <col width="8%" />
-          <col width="8%" />
+          <col width="10%" />
+          <col width="35%" />
+          <col width="10%" />
         </colgroup>
 
         <thead>
@@ -155,11 +147,7 @@ export default function PostAndCommentCollection() {
                 {cell.title}
               </TableDataCell>
 
-              <TableDataCell className="text-center">
-                <EyeButton />
-              </TableDataCell>
-
-              <TableDataCell className="pr-5 text-end">
+              <TableDataCell className="pr-5 text-end [&>button]:px-2">
                 <TrashButton />
               </TableDataCell>
             </tr>

@@ -9,13 +9,13 @@ import AnnouncementSideView from '@/components/announcement/layout/AnnouncementS
 import AnnouncementTabNavigation from '@/components/announcement/layout/AnnouncementTabNavigation';
 
 export default function AnnouncementLayout() {
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   return (
     <>
       <MainView>
         <Header title="공지사항" />
-        {!location.pathname.includes('/announcement/post') && (
+        {!pathname.includes('announcement/post') && (
           <AnnouncementTabNavigation />
         )}
         <Outlet />

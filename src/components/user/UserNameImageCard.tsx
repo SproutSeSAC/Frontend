@@ -5,7 +5,6 @@ import {
 
 import { useDialogContext } from '@/hooks';
 
-import CameraButton from '@/components/common/button/CameraButton';
 import EditButton from '@/components/common/button/EditButton';
 import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
@@ -26,9 +25,10 @@ export default function UserNameImageCard() {
 
   return (
     <div className="relative flex w-[45%] max-w-[305px] items-center gap-8 rounded-xl bg-oliveGreen1 px-6 py-10">
-      <UserImage profileImageUrl={profileImageUrl} className="size-[100px] p-5">
-        <CameraButton onClick={() => {}} />
-      </UserImage>
+      <UserImage
+        profileImageUrl={profileImageUrl}
+        className="size-[100px] p-5"
+      />
 
       <div className="flex flex-col gap-2">
         <span className="text-2xl font-medium text-white">{name}</span>

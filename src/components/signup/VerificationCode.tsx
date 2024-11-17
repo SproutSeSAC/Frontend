@@ -30,8 +30,6 @@ export default function VerificationCode() {
       const response = await getVerifyCodeResult(watchedVerifyCode);
       if (response.status === 200) {
         alert({
-          showDim: true,
-          className: 'z-30',
           text: '인증되었습니다!',
           children: (
             <SquareButton
@@ -41,24 +39,16 @@ export default function VerificationCode() {
                 hideDialog();
               }}
               type="button"
-              className="mt-5"
             />
           ),
         });
       }
     } catch (error) {
       alert({
-        showDim: true,
-        className: 'z-30',
         text: '인증에 실패했습니다.',
         subText: '관리자에게 문의해주세요',
         children: (
-          <SquareButton
-            name="나가기"
-            onClick={hideDialog}
-            type="button"
-            className="mt-5"
-          />
+          <SquareButton name="나가기" onClick={hideDialog} type="button" />
         ),
       });
     }

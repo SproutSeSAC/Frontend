@@ -46,8 +46,6 @@ export default function LoungeTabNavigation() {
   const handleLeave = useCallback(
     (type: string) => {
       alert({
-        showDim: true,
-        className: 'z-30',
         text: '정말 나가시겠어요?',
         subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
         children: (
@@ -57,7 +55,6 @@ export default function LoungeTabNavigation() {
               name="계속 작성하기"
               onClick={() => hideDialog()}
               type="button"
-              className="mt-6"
             />
             <SquareButton
               name="나가기"
@@ -65,12 +62,10 @@ export default function LoungeTabNavigation() {
                 if (modifyProjectId) {
                   searchParams.delete('modifyProject');
                 }
-
                 hideDialog();
                 tabChange(type);
               }}
               type="button"
-              className="mt-6"
             />
           </>
         ),
@@ -103,10 +98,10 @@ export default function LoungeTabNavigation() {
       selectValue={tab}
       tabList={TAB_LIST}
       onChangeValue={(type, e) => handelChangeValue(type, e)}
-      tabClassName="w-20"
+      tabClassName=""
     >
       <div
-        className={`box-border w-20 cursor-pointer justify-center pb-[19px] text-center ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}
+        className={`box-border cursor-pointer justify-center whitespace-pre px-4 pb-[19px] ${location.pathname === '/lounge/editor' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
         <button
           type="button"
