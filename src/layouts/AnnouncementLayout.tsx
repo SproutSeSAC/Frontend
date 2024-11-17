@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import Header from './Header';
 
@@ -6,12 +6,18 @@ import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
 import AnnouncementSideView from '@/components/announcement/layout/AnnouncementSideView';
+import AnnouncementTabNavigation from '@/components/announcement/layout/AnnouncementTabNavigation';
 
 export default function AnnouncementLayout() {
+  const { pathname } = useLocation();
+
   return (
     <>
       <MainView>
         <Header title="공지사항" />
+        {!pathname.includes('announcement/post') && (
+          <AnnouncementTabNavigation />
+        )}
         <Outlet />
       </MainView>
       <SideView>

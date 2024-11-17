@@ -6,7 +6,6 @@ import { AnnouncementFilter, KeyOfAnnouncementTabKind } from '@/types';
 
 import AnnouncementPostCard from '@/components/announcement/AnnouncementPostCard';
 import AnnouncementForm from '@/components/announcement/form/AnnouncementForm';
-import AnnouncementTabNavigation from '@/components/announcement/layout/AnnouncementTabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 
@@ -28,17 +27,10 @@ export default function Announcement() {
     handleChangeFilter,
   } = useFilterData<AnnouncementFilter>({ initialState });
 
-  if (ptype === 'EDIT')
-    return (
-      <>
-        <AnnouncementTabNavigation />
-        <AnnouncementForm />
-      </>
-    );
+  if (ptype === 'EDIT') return <AnnouncementForm />;
 
   return (
     <>
-      <AnnouncementTabNavigation />
       <div className="mt-6 flex items-center gap-10">
         <SearchInput
           name="search"
