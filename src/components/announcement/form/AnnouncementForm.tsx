@@ -19,7 +19,13 @@ import {
 import { useDialogContext, usePageBlocker } from '@/hooks';
 import { AnnouncementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  SubmitErrorHandler,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 
 import { AnnouncementFormSchema } from '@/components/announcement/form/AnnouncementFormSchema';
 import ControlMeetingType from '@/components/announcement/form/ControlMeetingType';
@@ -63,7 +69,7 @@ export default function AnnouncementForm() {
 
   const noticeTypeName = noticeType === 'SPECIAL_LECTURE' ? '특강' : '행사';
 
-  const { hideDialog, alert } = useDialogContext();
+  const { hideDialog, alert, showToast } = useDialogContext();
 
   const navigate = useNavigate();
 
@@ -106,9 +112,20 @@ export default function AnnouncementForm() {
     }
   }, [alert, blocker, blocker.state, hideDialog]);
 
+  const onError: SubmitErrorHandler<AnnouncementDto.PostRequest> = errors => {
+    const firstErrorKey = Object?.keys(
+      errors,
+    )?.[0] as keyof AnnouncementDto.PostRequest;
+    const firstErrorMsg = errors[firstErrorKey]?.message;
+
+    if (firstErrorMsg) {
+      showToast(firstErrorMsg);
+    }
+  };
+
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(() => {})} className="mt-[26px]">
+      <form onSubmit={handleSubmit(() => {}, onError)} className="mt-[26px]">
         <section>
           <header className="mb-6 flex items-center gap-1.5">
             <CircleNumber number={1} />
