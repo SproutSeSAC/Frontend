@@ -33,11 +33,11 @@ export const useCalendarData = () => {
   const { data: userProfile } = useGetUserProfile();
   const { data: campusList } = useGetCampusList();
   const userCampus = campusList?.find(
-    ({ name }) => name === userProfile?.campusName,
+    ({ name }) => name === userProfile?.campusList?.[0],
   );
   const { data: courseList } = useGetCourseList(userCampus?.id);
   const userCourse = courseList?.find(
-    ({ title }) => title === userProfile?.courseTitle,
+    ({ title }) => title === userProfile?.courseList?.[0].courseTitle,
   );
   const { data: calendarIdByCourse } = useGetCalendarIdByCourse(userCourse?.id);
   const sproutCalendarIds = useMemo(() => {
@@ -81,10 +81,9 @@ export const useCalendarData = () => {
       eventsByCalendar?.length !== 0
         ? (eventsByCalendar
             ?.map(calendar => {
+              const summary = calendar?.data?.summary ?? '';
               return calendar?.data?.items.map(item => {
-                const backgroundColor = getCalendarColor(
-                  calendar?.data?.summary,
-                );
+                const backgroundColor = getCalendarColor(summary);
                 return { ...item, backgroundColor };
               });
             })
@@ -138,7 +137,7 @@ export const useCalendarData = () => {
   useEffect(() => {
     if (!getCookie(CALENDAR_KEY)) {
       getCalendarToken().then(res => {
-        setCookie(CALENDAR_KEY, res.data.access_token, 1);
+        setCookie(CALENDAR_KEY, res?.data?.access_token, 1);
       });
     }
   }, []);
