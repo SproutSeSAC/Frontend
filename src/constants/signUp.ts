@@ -2,7 +2,7 @@ import {
   KeyOfRole,
   Role,
   SignUpQuestionsByStep,
-  SignUpUserValue,
+  SignUpUserFormValue,
 } from '@/types';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
@@ -65,6 +65,13 @@ const adminCampusStep: SignUpQuestionsByStep[] = [
   },
 ];
 
+const eduManagerCampusStep: SignUpQuestionsByStep[] = [
+  {
+    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '' },
+    campusList: [],
+  },
+];
+
 const adminCourseStep: SignUpQuestionsByStep[] = [
   {
     title: { text: '담당 교육 과정은 무엇인가요?' },
@@ -88,32 +95,28 @@ const marketingConsent: SignUpQuestionsByStep[] = [
   },
 ];
 
-export const getQuestionListByRole = (
+export const getFormStepsByRole = (
   role: KeyOfRole,
 ): SignUpQuestionsByStep[][] => {
-  if (role === 'TRAINEE') {
-    return [
-      commonFirstStep,
-      sesacStudentStep,
-      commonStudentStep,
-      [...indentification, ...marketingConsent],
-    ];
-  }
-  if (role === 'PRE_TRAINEE') {
-    return [commonFirstStep, commonStudentStep, marketingConsent];
-  }
-  if (role === 'CAMPUS_MANAGER') {
-    return [
-      commonFirstStep,
-      adminCampusStep,
-      [...indentification, ...marketingConsent],
-    ];
-  }
-  return [
-    commonFirstStep,
-    [...adminCampusStep, ...adminCourseStep],
-    [...indentification, ...marketingConsent],
-  ];
+  const restStep = () => {
+    const lastStep = [...indentification, ...marketingConsent];
+
+    if (role === 'TRAINEE') {
+      return [sesacStudentStep, commonStudentStep, lastStep];
+    }
+    if (role === 'PRE_TRAINEE') {
+      return [commonStudentStep, marketingConsent];
+    }
+    if (role === 'CAMPUS_MANAGER') {
+      return [adminCampusStep, lastStep];
+    }
+    if (role === 'EDU_MANAGER') {
+      return [[...eduManagerCampusStep, ...adminCourseStep], lastStep];
+    }
+    return [[...adminCampusStep, ...adminCourseStep], lastStep];
+  };
+
+  return [commonFirstStep, ...restStep()];
 };
 
 export const matchedRoleName: Role = {
@@ -135,15 +138,15 @@ export const managerAndAdminRolesObj: Pick<
   JOB_COORDINATOR: '잡코디',
 };
 
-export const defaultSignUpFormValues: SignUpUserValue = {
+export const defaultSignUpFormValues: SignUpUserFormValue = {
   name: '',
   nickname: '',
   role: 'TRAINEE',
-  campusList: [],
-  courseList: [],
-  domainList: [],
-  jobList: [],
-  techStackList: [],
-  marketingConsent: '동의',
+  campusIdList: [],
+  courseIdList: [],
+  domainIdList: [1],
+  jobIdList: [1],
+  techStackIdList: [1],
+  marketingConsent: true,
   verifyCode: '',
 };

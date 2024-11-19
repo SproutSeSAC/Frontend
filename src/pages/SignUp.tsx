@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { currentStepAtom } from '@/atoms/formStepAtom';
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
@@ -13,7 +15,6 @@ import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
-import Radio from '@/components/common/input/Radio';
 import TextInput from '@/components/common/input/TextInput';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
@@ -39,10 +40,11 @@ export default function SignUp() {
     setError,
     clearErrors,
     getValues,
+    setValue,
   } = methods;
 
-  const currentRole = getValues('role');
-  const currentCampusList = useWatch({ control, name: 'campusList' });
+  const currRole = getValues('role');
+  const currCampusIdList = useWatch({ control, name: 'campusIdList' });
 
   const {
     jobList,
@@ -54,17 +56,31 @@ export default function SignUp() {
     isLoading,
     questionListByRole,
     getQuestionNumber,
-  } = useHandleSignUp({
-    currentCampusList,
-    currentRole,
-  });
-
-  if (isLoading) return null;
+  } = useHandleSignUp({ currCampusIdList, currRole });
 
   const resolvedUnMatchCurrentStep =
     questionListByRole.length === 3 && currentStep >= 2
       ? currentStep + 1
       : currentStep;
+
+  const triggerCourseIdListError = async () => {
+    if (!currCampusIdList.length) {
+      setError('courseIdList', {
+        type: 'manual',
+        message: '먼저 캠퍼스를 선택해주세요.',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (currRole === 'CAMPUS_MANAGER') {
+      const courseIdList = courseList.map(({ id }) => id);
+      setValue('courseIdList', courseIdList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currCampusIdList]);
+
+  if (isLoading) return null;
 
   return (
     <AuthPageLayout>
@@ -95,13 +111,27 @@ export default function SignUp() {
                         >
                           {'roles' in question && (
                             <fieldset className="flex flex-wrap gap-x-12 gap-y-3">
+                              {/* 여기서 role을 바꿨으면 캠퍼스와 교육과정 초기화 */}
                               {question.roles.map((role: KeyOfRole) => (
-                                <Radio
+                                <label
                                   key={role}
-                                  value={role}
-                                  label={matchedRoleName[role]}
-                                  name="role"
-                                />
+                                  className="flex items-center gap-2"
+                                >
+                                  <input
+                                    type="radio"
+                                    id={role}
+                                    value={role}
+                                    className="h-4 w-4 appearance-none rounded-full border border-text bg-white checked:border-gray2 checked:bg-vividGreen1"
+                                    {...register('role', {
+                                      onChange: () => {
+                                        setValue('campusIdList', []);
+                                        setValue('courseIdList', []);
+                                      },
+                                    })}
+                                  />
+
+                                  <span>{matchedRoleName[role]}</span>
+                                </label>
                               ))}
                             </fieldset>
                           )}
@@ -127,24 +157,39 @@ export default function SignUp() {
                           {'campusList' in question && campusList && (
                             <Controller
                               control={control}
-                              name="campusList"
+                              name="campusIdList"
                               render={({ field: { onChange, value } }) => {
                                 const selectedOptions = campusList?.filter(
-                                  campus =>
-                                    value.some(item => item.id === campus.id),
+                                  campus => value?.some(id => id === campus.id),
                                 );
-                                return (
+
+                                return currRole === 'TRAINEE' ||
+                                  currRole === 'EDU_MANAGER' ? (
+                                  <SingleSelectDropdown
+                                    defaultLabel="캠퍼스 선택"
+                                    options={campusList}
+                                    selectedOption={selectedOptions?.[0]}
+                                    onChangeValue={data => {
+                                      if (errors.courseIdList?.message) {
+                                        clearErrors('courseIdList');
+                                      }
+                                      onChange([data[0]?.id]);
+                                    }}
+                                    errorMsg={errors.campusIdList?.message}
+                                    selectBoxClassName="!h-[50px] !text-base"
+                                  />
+                                ) : (
                                   <MultiSelectDropdown
                                     defaultLabel="캠퍼스 선택"
                                     options={campusList}
                                     initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {
-                                      if (errors.courseList?.message) {
-                                        clearErrors('courseList');
+                                      if (errors.courseIdList?.message) {
+                                        clearErrors('courseIdList');
                                       }
-                                      onChange(data);
+                                      onChange(data.map(({ id }) => id));
                                     }}
-                                    errorMsg={errors.campusList?.message}
+                                    errorMsg={errors.campusIdList?.message}
                                     selectBoxClassName="!h-[50px] !text-base"
                                   />
                                 );
@@ -155,31 +200,46 @@ export default function SignUp() {
                           {'courseList' in question && (
                             <Controller
                               control={control}
-                              name="courseList"
+                              name="courseIdList"
                               render={({ field: { onChange, value } }) => {
-                                const options = courseList?.length
-                                  ? courseList?.map(({ id, title }) => {
-                                      return { id, name: title };
-                                    })
-                                  : [];
+                                const options = courseList?.map(
+                                  ({ id, title }) => {
+                                    return { id, name: title };
+                                  },
+                                );
 
-                                return (
-                                  <SingleSelectDropdown
-                                    defaultLabel="교육과정"
+                                const selectedOptions = courseList
+                                  ?.filter(course =>
+                                    value?.some(id => id === course.id),
+                                  )
+                                  ?.map(({ id, title }) => ({
+                                    id,
+                                    name: title,
+                                  }));
+
+                                return currRole === 'JOB_COORDINATOR' ? (
+                                  <MultiSelectDropdown
+                                    defaultLabel="교육과정 선택"
                                     options={options}
-                                    selectedOption={value?.[0]}
-                                    onChangeValue={onChange}
-                                    errorMsg={errors.courseList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base"
-                                    onSelectBoxClick={async () => {
-                                      if (!currentCampusList.length) {
-                                        setError('courseList', {
-                                          type: 'manual',
-                                          message:
-                                            '먼저 캠퍼스를 선택해주세요.',
-                                        });
-                                      }
+                                    initialSelectedOptions={selectedOptions}
+                                    onChangeValue={data => {
+                                      onChange(data.map(({ id }) => id));
                                     }}
+                                    errorMsg={errors.courseIdList?.message}
+                                    selectBoxClassName="!h-[50px] !text-base"
+                                    onSelectBoxClick={triggerCourseIdListError}
+                                  />
+                                ) : (
+                                  <SingleSelectDropdown
+                                    defaultLabel="교육과정 선택"
+                                    options={options}
+                                    selectedOption={selectedOptions?.[0]}
+                                    onChangeValue={data => {
+                                      onChange(data.map(({ id }) => id));
+                                    }}
+                                    errorMsg={errors.courseIdList?.message}
+                                    selectBoxClassName="!h-[50px] !text-base"
+                                    onSelectBoxClick={triggerCourseIdListError}
                                   />
                                 );
                               }}
@@ -190,21 +250,32 @@ export default function SignUp() {
                             <div className="relative">
                               <Controller
                                 control={control}
-                                name="techStackList"
-                                render={({ field: { onChange } }) => {
+                                name="techStackIdList"
+                                render={({
+                                  field: { value },
+                                  fieldState: { error: err },
+                                }) => {
+                                  const selectedOptions =
+                                    techStackList?.filter(techStack =>
+                                      value?.some(id => id === techStack.id),
+                                    ) || [];
+
                                   return (
                                     <TechStackDropdown
                                       defaultLabel="기술스택"
                                       defaultTabValue="백엔드"
                                       options={techStackList}
+                                      initialSelectedOptions={selectedOptions}
                                       onChangeValue={data => {
-                                        const newData = data.map(
-                                          ({ id }) => id,
-                                        );
-                                        onChange(newData);
+                                        const val = data.map(({ id }) => id);
+                                        setValue('techStackIdList', val, {
+                                          shouldValidate: true,
+                                          shouldDirty: true,
+                                        });
                                       }}
                                       isMarkTechStackList
                                       selectBoxClassName="!h-[50px] !text-base"
+                                      errorMsg={err?.message}
                                     />
                                   );
                                 }}
@@ -216,8 +287,8 @@ export default function SignUp() {
                             <MultiSelectList
                               list={jobList}
                               selectLimit={5}
-                              name="jobList"
-                              errorMsg={errors.jobList?.message}
+                              name="jobIdList"
+                              errorMsg={errors.jobIdList?.message}
                             />
                           )}
 
@@ -225,8 +296,8 @@ export default function SignUp() {
                             <MultiSelectList
                               list={domainList}
                               selectLimit={3}
-                              name="domainList"
-                              errorMsg={errors.domainList?.message}
+                              name="domainIdList"
+                              errorMsg={errors.domainIdList?.message}
                             />
                           )}
 
@@ -238,16 +309,36 @@ export default function SignUp() {
                                 {question.additionalInfo}
                               </p>
 
-                              <fieldset className="flex flex-wrap gap-x-8 gap-y-3">
-                                {question.marketingConsent.map(label => (
-                                  <Radio
-                                    key={label}
-                                    label={label}
-                                    value={label}
-                                    name="marketingConsent"
-                                  />
-                                ))}
-                              </fieldset>
+                              <Controller
+                                control={control}
+                                name="marketingConsent"
+                                render={({ field: { onChange, value } }) => {
+                                  return (
+                                    <fieldset className="flex flex-wrap gap-x-8 gap-y-3">
+                                      {question.marketingConsent.map(label => (
+                                        <label
+                                          key={label}
+                                          className="flex items-center gap-2"
+                                        >
+                                          <input
+                                            type="radio"
+                                            id={label}
+                                            value={label}
+                                            checked={
+                                              value === (label === '동의')
+                                            }
+                                            onChange={() =>
+                                              onChange(label === '동의')
+                                            }
+                                            className="h-4 w-4 appearance-none rounded-full border border-text bg-white checked:border-gray2 checked:bg-vividGreen1"
+                                          />
+                                          <span>{label}</span>
+                                        </label>
+                                      ))}
+                                    </fieldset>
+                                  );
+                                }}
+                              />
                             </>
                           )}
                         </FormQuestionItem>
@@ -256,7 +347,7 @@ export default function SignUp() {
                   }),
               )}
 
-              {currentRole === 'PRE_TRAINEE' &&
+              {currRole === 'PRE_TRAINEE' &&
                 currentStep === questionListByRole.length && (
                   <span className="mb-14 mt-auto inline-block w-full text-center text-gray1">
                     예비 수강생은 제한된 서비스만 이용 가능합니다.
@@ -266,7 +357,11 @@ export default function SignUp() {
 
             {currentStep === questionListByRole.length && (
               <SquareButton
-                color={!isVerifiedCode ? 'gray' : 'oliveGreen'}
+                color={
+                  !isVerifiedCode && currRole !== 'PRE_TRAINEE'
+                    ? 'gray'
+                    : 'oliveGreen'
+                }
                 type="submit"
                 name="시작하기"
                 className="mx-auto w-[50%] px-4 py-3 font-medium"

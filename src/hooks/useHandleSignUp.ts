@@ -1,10 +1,12 @@
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 import { useTechStackList } from '@/hooks/useTechStackList';
 
-// import { usePostSignUpValue } from '@/services/auth/authMutations';
+import { usePostSignUpValue } from '@/services/auth/authMutations';
 import {
+  CourseListData,
   useGetCampusList,
-  useGetCourseList,
+  useGetCourseListByCampus,
 } from '@/services/course/courseQueries';
 import {
   useGetDomainList,
@@ -13,19 +15,19 @@ import {
 
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
-import { getQuestionListByRole } from '@/constants';
-import { KeyOfRole, UserProfileDto } from '@/types';
+import { getFormStepsByRole } from '@/constants';
+import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
 import { useAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
 interface UseHandleSignUpProps {
-  currentCampusList: { id: number; name: string }[];
-  currentRole: KeyOfRole;
+  currCampusIdList: number[];
+  currRole: KeyOfRole;
 }
 
 export const useHandleSignUp = ({
-  currentCampusList,
-  currentRole,
+  currCampusIdList,
+  currRole,
 }: UseHandleSignUpProps) => {
   const [isVerifiedCode] = useAtom(verifiedCodeAtom);
 
@@ -46,26 +48,52 @@ export const useHandleSignUp = ({
     isLoading: isCampusListLoading, //
   } = useGetCampusList();
 
-  const { data: courseList } = useGetCourseList(currentCampusList[0]?.id);
+  const courseListByCampusData = useGetCourseListByCampus(currCampusIdList);
 
-  // const navigate = useNavigate();
+  const courseList = courseListByCampusData
+    .map(courseByCampus => {
+      return courseByCampus.isLoading ? [] : courseByCampus.data;
+    })
+    .flat() as CourseListData['courseList'];
 
-  // const { mutate } = usePostSignUpValue({
-  //   onSuccess: () => navigate('/'),
-  // });
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<UserProfileDto.Post> = formData => {
-    if (!isVerifiedCode) return;
+  const { mutate } = usePostSignUpValue({
+    onSuccess: () => navigate('/'),
+  });
 
-    const { verifyCode, ...rest } = formData;
-    const marketingConsent = formData.marketingConsent === '동의';
-    const data = { ...rest, marketingConsent };
+  const onSubmit: SubmitHandler<SignUpUserFormValue> = formData => {
+    if (!isVerifiedCode && formData.role !== 'PRE_TRAINEE') return;
 
-    console.log(data);
-    // mutate(rest);
+    const { verifyCode, campusIdList, ...rest } = formData;
+
+    if (
+      rest.role === 'EDU_MANAGER' ||
+      rest.role === 'CAMPUS_MANAGER' ||
+      rest.role === 'JOB_COORDINATOR'
+    ) {
+      const initializeValue = {
+        jobIdList: [],
+        techStackIdList: [],
+        domainIdList: [],
+      };
+      const { jobIdList, techStackIdList, domainIdList, ...restOfRest } = rest;
+      const data: UserProfileDto.Post = { ...restOfRest, ...initializeValue };
+      mutate(data);
+      return;
+    }
+
+    if (rest.role === 'PRE_TRAINEE') {
+      const { courseIdList, ...restOfRest } = rest;
+      const data: UserProfileDto.Post = { ...restOfRest, courseIdList: [] };
+      mutate(data);
+      return;
+    }
+
+    mutate(rest);
   };
 
-  const questionListByRole = getQuestionListByRole(currentRole);
+  const questionListByRole = getFormStepsByRole(currRole);
 
   const getQuestionNumber = (index: number, idx: number) => {
     const previousQuestionsCount = questionListByRole
