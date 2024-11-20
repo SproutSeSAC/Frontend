@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
+import { useSearchParams } from 'react-router-dom';
+
 import { useTechStackList } from '@/hooks/useTechStackList';
 
 import {
@@ -18,6 +20,7 @@ import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropd
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
+import LoungeForm from '@/components/lounge/form/LoungeForm';
 
 export interface FilterDataType extends GetLoungeProjects {
   modify?: boolean;
@@ -34,6 +37,8 @@ export default function Lounge() {
     useState<FilterDataType>(defaultFilterData);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
+  const [searchParams] = useSearchParams();
+  const ptype = searchParams.get('ptype');
 
   const { data, isLoading } = useGetLoungeProjects(filterData);
   const { data: positionsList } = useGetLoungePositionsFilterList();
@@ -80,6 +85,8 @@ export default function Lounge() {
     const { sort } = filterData;
     return sortList?.filter(({ key }) => sort?.includes(key))?.[0];
   }, [filterData]);
+
+  if (ptype === 'EDIT') return <LoungeForm />;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -17,13 +17,14 @@ import {
 
 import { dateFormat } from '@/utils/dateFormat';
 
-import Title from '../components/common/Title';
-import SquareButton from '../components/common/button/SquareButton';
-import LoungeTextEditor from '../components/lounge/editor/LoungeTextEditor';
-import { loungeEditorSchema } from '../components/lounge/editor/loungeEditorSchema';
+import Title from '../../common/Title';
+import SquareButton from '../../common/button/SquareButton';
+import LoungeTextEditor from './LoungeTextEditor';
+import { loungeFormSchema } from './loungeFormSchema';
 
 import { Progress, PtypeList, progressList } from '@/constants';
-import { useDialogContext } from '@/hooks';
+import { recruitmentCountList } from '@/constants/optionList';
+import { useDialogContext, usePageBlocker } from '@/hooks';
 import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -42,7 +43,7 @@ import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropd
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
-import ContactMethodContainer from '@/components/lounge/editor/ContactMethodContainer';
+import ContactMethodContainer from '@/components/lounge/form/ContactMethodContainer';
 
 const defaultInputStyle =
   'rounded-2xl border border-solid px-[15px] py-4 bg-white';
@@ -83,7 +84,7 @@ const changeDataToFieldValues = (data?: GetLoungeProjectDetail) => {
   };
 };
 
-export default function LoungeEditor() {
+export default function LoungeForm() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const modifyProjectId = searchParams.get('modifyProject');
@@ -103,22 +104,57 @@ export default function LoungeEditor() {
   const methods = useForm<FormValues>({
     defaultValues: changeDataToFieldValues(),
     values: changeDataToFieldValues(projectsDetail),
-    resolver: zodResolver(loungeEditorSchema),
+    resolver: zodResolver(loungeFormSchema),
   });
 
-  const { handleSubmit, control } = methods;
+  const {
+    handleSubmit,
+    control,
+    formState: { isDirty },
+  } = methods;
+
+  const { blocker } = usePageBlocker({
+    isBlockRefresh: true,
+    form: {
+      isDirty,
+    },
+  });
+
+  const handleLeave = useCallback(() => {
+    alert({
+      text: '정말 나가시겠어요?',
+      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
+      children: (
+        <>
+          <SquareButton
+            color="gray"
+            name="계속 작성하기"
+            onClick={() => {
+              hideDialog();
+              if (blocker.state === 'blocked') {
+                blocker.reset();
+              }
+            }}
+          />
+          <SquareButton
+            name="나가기"
+            onClick={() => {
+              hideDialog();
+              if (blocker.state === 'blocked') {
+                blocker.proceed();
+              }
+            }}
+          />
+        </>
+      ),
+    });
+  }, [alert, blocker, hideDialog]);
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
+    if (blocker.state === 'blocked') {
+      handleLeave();
+    }
+  }, [blocker.state, handleLeave]);
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
     const params = {
@@ -167,46 +203,6 @@ export default function LoungeEditor() {
     },
     [methods, showToast],
   );
-
-  const recruitmentCountList = useMemo(() => {
-    return Array.from({ length: 10 }, (_, index) => {
-      if (index === 9) {
-        return {
-          id: index + 1,
-          name: `${index + 1}명 이상`,
-        };
-      }
-      return {
-        id: index + 1,
-        name: `${index + 1}명`,
-      };
-    });
-  }, []);
-
-  const handleLeave = useCallback(() => {
-    alert({
-      text: '정말 나가시겠어요?',
-      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
-      children: (
-        <>
-          <SquareButton
-            color="gray"
-            name="계속 작성하기"
-            onClick={hideDialog}
-            type="button"
-          />
-          <SquareButton
-            name="나가기"
-            onClick={() => {
-              navigate(`/lounge`);
-              hideDialog();
-            }}
-            type="button"
-          />
-        </>
-      ),
-    });
-  }, [alert, hideDialog, navigate]);
 
   return (
     <FormProvider {...methods}>
