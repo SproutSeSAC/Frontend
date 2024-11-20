@@ -120,10 +120,10 @@ export default function MultiSelectDropdown({
   }, [onChangeValue]);
 
   useEffect(() => {
-    if (initialSelectedOptions) {
+    if (!hasFullCheck && initialSelectedOptions) {
       setSelectedOptions(initialSelectedOptions);
     }
-  }, [initialSelectedOptions]);
+  }, [hasFullCheck, initialSelectedOptions]);
 
   const onClose = () => setOpen(false);
 

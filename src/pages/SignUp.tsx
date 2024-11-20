@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { currentStepAtom } from '@/atoms/formStepAtom';
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
@@ -8,7 +6,6 @@ import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { KeyOfRole } from '@/types';
 import {
-  isCampusManager,
   isEduManager,
   isJobCoordinator,
   isPreTrainee,
@@ -78,14 +75,6 @@ export default function SignUp() {
       });
     }
   };
-
-  useEffect(() => {
-    if (isCampusManager(currRole)) {
-      const courseIdList = courseList.map(({ id }) => id);
-      setValue('courseIdList', courseIdList);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currCampusIdList]);
 
   if (isLoading) return null;
 
@@ -235,6 +224,7 @@ export default function SignUp() {
                                     errorMsg={errors.courseIdList?.message}
                                     selectBoxClassName="!h-[50px] !text-base"
                                     onSelectBoxClick={triggerCourseIdListError}
+                                    hasFullCheck={!!options.length}
                                   />
                                 ) : (
                                   <SingleSelectDropdown

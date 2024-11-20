@@ -40,6 +40,7 @@ export default function Home() {
   const {
     data: userProfile = initialUserProfile,
     isLoading: isGetUserProfileLoading, //
+    isFetched,
   } = useGetUserProfile();
 
   const { name } = userProfile;
@@ -66,7 +67,8 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInitialLogin]);
 
-  if (isGetUserProfileLoading || isGetLoungeListLoading) return <LoadingPage />;
+  if ((!isFetched && isGetUserProfileLoading) || isGetLoungeListLoading)
+    return <LoadingPage />;
 
   return (
     <>
@@ -103,7 +105,6 @@ export default function Home() {
           </ScrollContainer>
         </section>
       </MainView>
-
       <SideView>
         <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
         <Calendar type="small" events={fullCalendarEvents} />

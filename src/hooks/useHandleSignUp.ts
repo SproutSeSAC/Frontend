@@ -18,7 +18,7 @@ import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
-import { isManager, isPreTrainee } from '@/utils';
+import { isCampusManager, isManager, isPreTrainee } from '@/utils';
 import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
@@ -62,7 +62,10 @@ export const useHandleSignUp = ({
   const navigate = useNavigate();
 
   const { mutate } = usePostSignUpValue({
-    onSuccess: () => navigate('/'),
+    onSuccess: () => {
+      navigate('/');
+      setIsInitialLogin(true);
+    },
   });
 
   const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
@@ -78,7 +81,14 @@ export const useHandleSignUp = ({
       };
       const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
       const data: UserProfileDto.Post = { ...rest, ...initializeValue };
-      mutate(data);
+
+      if (isCampusManager(formData.role)) {
+        const courseIdList = courseList.map(({ id }) => id);
+        const campusManangerData = { ...data, courseIdList };
+        mutate(campusManangerData);
+      } else {
+        mutate(data);
+      }
     } else if (isPreTrainee(formData.role)) {
       const { courseIdList, ...rest } = formData;
       const data: UserProfileDto.Post = { ...rest, courseIdList: [] };
@@ -86,7 +96,6 @@ export const useHandleSignUp = ({
     } else {
       mutate(formData);
     }
-    setIsInitialLogin(true);
   };
 
   const questionListByRole = getFormStepsByRole(currRole);

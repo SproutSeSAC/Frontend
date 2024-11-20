@@ -117,7 +117,6 @@ axiosCalendarInstance.interceptors.response.use(
 
       try {
         const response = await getCalendarToken();
-        console.log('getCalendarToken:', response);
 
         const newCalendarAccessToken = response.data.access_token;
 

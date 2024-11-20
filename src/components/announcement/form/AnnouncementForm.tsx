@@ -131,6 +131,7 @@ export default function AnnouncementForm() {
                     name: courseTitle,
                   }),
                 );
+
                 return (
                   <MultiSelectDropdown
                     defaultLabel="교육과정을 선택해주세요."

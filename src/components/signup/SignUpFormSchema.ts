@@ -100,7 +100,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE) {
+      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_MANAGER) {
         return data.courseIdList.length > 0;
       }
       return true;
