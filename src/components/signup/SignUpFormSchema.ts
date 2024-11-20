@@ -42,9 +42,7 @@ export const SignUpFormSchema = z
 
     courseIdList: z.array(z.number()),
 
-    techStackIdList: z
-      .array(z.number())
-      .min(1, '최소 하나의 기술 스택을 선택해야 합니다.'),
+    techStackIdList: z.array(z.number()),
 
     jobIdList: z
       .array(z.number())
@@ -60,6 +58,22 @@ export const SignUpFormSchema = z
       message: '마케팅 동의를 선택해야 합니다.',
     }),
   })
+  .refine(
+    data => {
+      if (
+        data.role !== Role.CAMPUS_MANAGER &&
+        data.role !== Role.EDU_MANAGER &&
+        data.role !== Role.JOB_COORDINATOR
+      ) {
+        return data.techStackIdList.length > 0;
+      }
+      return true;
+    },
+    {
+      message: '최소 하나의 기술스택을 선택해야 합니다.',
+      path: ['techStackIdList'],
+    },
+  )
   .refine(
     data => {
       if (data.role !== Role.PRE_TRAINEE) {

@@ -128,7 +128,7 @@ export const defaultSignUpFormValues: SignUpUserFormValue = {
   courseIdList: [],
   domainIdList: [1, 2],
   jobIdList: [1, 2],
-  techStackIdList: [1],
+  techStackIdList: [],
   marketingConsent: true,
   verifyCode: '',
 };
