@@ -144,9 +144,9 @@ export const defaultSignUpFormValues: SignUpUserFormValue = {
   role: 'TRAINEE',
   campusIdList: [],
   courseIdList: [],
-  domainIdList: [1],
-  jobIdList: [1],
-  techStackIdList: [1],
+  domainIdList: [1, 2],
+  jobIdList: [1, 2],
+  techStackIdList: [],
   marketingConsent: true,
   verifyCode: '',
 };
