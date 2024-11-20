@@ -8,12 +8,15 @@ import {
 } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
-import { useCalendarData, useCheckLogin } from '@/hooks';
+import { initialLogin } from '@/atoms/initialLoginAtom';
+
+import { useCalendarData, useCheckLogin, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { RoleValues } from '@/types';
 import { getColorByRole } from '@/utils';
+import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
@@ -27,6 +30,8 @@ import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
 
 export default function Home() {
+  const [isInitialLogin, setIsInitialLogin] = useAtom(initialLogin);
+
   const {
     data: loungeList,
     isLoading: isGetLoungeListLoading, //
@@ -50,6 +55,16 @@ export default function Home() {
       navigate('/login');
     }
   }, [isLogin, navigate]);
+
+  const { showToast } = useDialogContext();
+
+  useEffect(() => {
+    if (isInitialLogin) {
+      showToast('새싹 회원이 되신 것을 환영합니다!');
+      setIsInitialLogin(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialLogin]);
 
   if (isGetUserProfileLoading || isGetLoungeListLoading) return <LoadingPage />;
 

@@ -15,3 +15,8 @@ export type ManagerAdminRole = Pick<
   Role,
   'EDU_MANAGER' | 'CAMPUS_MANAGER' | 'JOB_COORDINATOR' | 'ADMIN'
 >;
+
+export type ManagerRole = Pick<
+  Role,
+  'EDU_MANAGER' | 'CAMPUS_MANAGER' | 'JOB_COORDINATOR'
+>;

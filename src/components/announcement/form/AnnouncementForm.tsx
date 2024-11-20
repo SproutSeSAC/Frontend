@@ -6,10 +6,6 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
-import {
-  useGetCampusList,
-  useGetCourseList,
-} from '@/services/course/courseQueries';
 
 import {
   announcementCategoryOptions,
@@ -53,14 +49,7 @@ export default function AnnouncementForm() {
     formState: { isDirty },
   } = methods;
 
-  // NOTE: 삭제 예정
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
-  const { data: allCampusList } = useGetCampusList();
-  const userCampus = allCampusList?.find(
-    ({ name }) => name === userProfile?.campusList[0],
-  );
-  const { data: courseList } = useGetCourseList(userCampus?.id);
-  // ------
 
   const noticeType = useWatch({ control, name: 'noticeType' });
 
@@ -132,30 +121,30 @@ export default function AnnouncementForm() {
             <Title as="h1" title="공지사항 대상 과정" />
           </header>
           <div className="relative mb-16 mt-6 grid grid-cols-2 gap-8 text-lg">
-            {courseList && (
-              <Controller
-                control={control}
-                name="targetCourseList"
-                render={({ field: { onChange }, fieldState: { error } }) => {
-                  const courseListOption = courseList.map(({ id, title }) => ({
-                    id,
-                    name: title,
-                  }));
-                  return (
-                    <MultiSelectDropdown
-                      defaultLabel="교육과정을 선택해주세요."
-                      options={courseListOption}
-                      onChangeValue={data => {
-                        const ids = data.map(({ id }) => id);
-                        onChange(ids);
-                      }}
-                      errorMsg={error?.message}
-                      hasFullCheck
-                    />
-                  );
-                }}
-              />
-            )}
+            <Controller
+              control={control}
+              name="targetCourseList"
+              render={({ field: { onChange }, fieldState: { error } }) => {
+                const courseListOption = userProfile?.courseList.map(
+                  ({ courseId, courseTitle }) => ({
+                    id: courseId,
+                    name: courseTitle,
+                  }),
+                );
+                return (
+                  <MultiSelectDropdown
+                    defaultLabel="교육과정을 선택해주세요."
+                    options={courseListOption}
+                    onChangeValue={data => {
+                      const ids = data.map(({ id }) => id);
+                      onChange(ids);
+                    }}
+                    errorMsg={error?.message}
+                    hasFullCheck
+                  />
+                );
+              }}
+            />
           </div>
         </section>
 
@@ -270,7 +259,7 @@ export default function AnnouncementForm() {
         <section>
           <header className="mt-12 flex items-center gap-1.5">
             <CircleNumber number={isNeedMoreInfoNoticeType ? 3 : 2} />
-            <Title as="h1" title="공지사항 상세 정보" />
+            <Title as="h1" title="공지사항 상세 내용" />
           </header>
 
           <ControllerContentEditor type="announcement" />

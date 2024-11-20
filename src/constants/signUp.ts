@@ -1,9 +1,10 @@
+import { KeyOfRole, SignUpQuestionsByStep, SignUpUserFormValue } from '@/types';
 import {
-  KeyOfRole,
-  Role,
-  SignUpQuestionsByStep,
-  SignUpUserFormValue,
-} from '@/types';
+  isCampusManager,
+  isEduManager,
+  isPreTrainee,
+  isTrainee,
+} from '@/utils';
 
 const commonFirstStep: SignUpQuestionsByStep[] = [
   {
@@ -101,41 +102,22 @@ export const getFormStepsByRole = (
   const restStep = () => {
     const lastStep = [...indentification, ...marketingConsent];
 
-    if (role === 'TRAINEE') {
+    if (isTrainee(role)) {
       return [sesacStudentStep, commonStudentStep, lastStep];
     }
-    if (role === 'PRE_TRAINEE') {
+    if (isPreTrainee(role)) {
       return [commonStudentStep, marketingConsent];
     }
-    if (role === 'CAMPUS_MANAGER') {
+    if (isCampusManager(role)) {
       return [adminCampusStep, lastStep];
     }
-    if (role === 'EDU_MANAGER') {
+    if (isEduManager(role)) {
       return [[...eduManagerCampusStep, ...adminCourseStep], lastStep];
     }
     return [[...adminCampusStep, ...adminCourseStep], lastStep];
   };
 
   return [commonFirstStep, ...restStep()];
-};
-
-export const matchedRoleName: Role = {
-  ADMIN: '관리자',
-  TRAINEE: '새싹 교육생',
-  EDU_MANAGER: '교육 매니저',
-  CAMPUS_MANAGER: '캠퍼스 매니저',
-  JOB_COORDINATOR: '잡코디',
-  PRE_TRAINEE: '예비 수강생',
-};
-
-export const managerAndAdminRolesObj: Pick<
-  Role,
-  'ADMIN' | 'CAMPUS_MANAGER' | 'EDU_MANAGER' | 'JOB_COORDINATOR'
-> = {
-  ADMIN: '관리자',
-  EDU_MANAGER: '교육 매니저',
-  CAMPUS_MANAGER: '캠퍼스 매니저',
-  JOB_COORDINATOR: '잡코디',
 };
 
 export const defaultSignUpFormValues: SignUpUserFormValue = {
@@ -146,7 +128,7 @@ export const defaultSignUpFormValues: SignUpUserFormValue = {
   courseIdList: [],
   domainIdList: [1, 2],
   jobIdList: [1, 2],
-  techStackIdList: [],
+  techStackIdList: [1],
   marketingConsent: true,
   verifyCode: '',
 };

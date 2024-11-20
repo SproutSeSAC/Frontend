@@ -23,8 +23,14 @@ export default function MyPage() {
 
   const userInfoList = [
     { label: 'E-mail', value: email },
-    { label: '캠퍼스', value: campusList[0] },
-    { label: '담당 교육과정', value: courseList?.[0]?.courseTitle },
+    {
+      label: '소속 캠퍼스',
+      value: campusList.map(({ campusName }) => campusName).join(', '),
+    },
+    {
+      label: '소속 교육과정',
+      value: courseList.map(({ courseTitle }) => courseTitle).join(', '),
+    },
   ];
 
   if (isLoading) return null;
@@ -36,13 +42,15 @@ export default function MyPage() {
       <section className="mb-16 flex gap-4">
         <UserNameImageCard />
 
-        <ul className="flex w-[55%] max-w-[405px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
+        <ul className="flex min-w-[25%] max-w-[450px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
           {userInfoList.map(({ value, label }) => (
             <li
               key={label}
               className="flex items-center justify-between py-2.5"
             >
-              <span className="font-medium text-vividGreen3">{label}: </span>
+              <span className="mr-5 font-medium text-vividGreen3">
+                {label}:
+              </span>
               <span className="font-medium text-white">{value}</span>
             </li>
           ))}

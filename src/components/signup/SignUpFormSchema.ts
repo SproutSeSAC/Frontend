@@ -62,15 +62,14 @@ export const SignUpFormSchema = z
   })
   .refine(
     data => {
-      // role이 PRE_TRAINER가 아닐 때만 campusIdList가 최소 1개여야 함
       if (data.role !== Role.PRE_TRAINEE) {
         return data.campusIdList.length > 0;
       }
-      return true; // PRE_TRAINER일 때는 유효성 검사 패스
+      return true;
     },
     {
       message: '캠퍼스를 선택해주세요.',
-      path: ['campusIdList'], // 에러 메시지를 보여줄 필드
+      path: ['campusIdList'],
     },
   )
   .refine(
@@ -78,11 +77,11 @@ export const SignUpFormSchema = z
       if (data.role !== Role.PRE_TRAINEE) {
         return data.verifyCode.length > 0;
       }
-      return true; // PRE_TRAINER일 때는 유효성 검사 패스
+      return true;
     },
     {
       message: '인증코드를 입력해주세요.',
-      path: ['verifyCode'], // 에러 메시지를 보여줄 필드
+      path: ['verifyCode'],
     },
   )
   .refine(
@@ -90,10 +89,10 @@ export const SignUpFormSchema = z
       if (data.role !== Role.PRE_TRAINEE) {
         return data.courseIdList.length > 0;
       }
-      return true; // PRE_TRAINER일 때는 유효성 검사 패스
+      return true;
     },
     {
       message: '교육과정을 선택해주세요.',
-      path: ['courseIdList'], // 에러 메시지를 보여줄 필드
+      path: ['courseIdList'],
     },
   );

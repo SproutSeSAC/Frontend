@@ -3,10 +3,17 @@ import { useEffect } from 'react';
 import { currentStepAtom } from '@/atoms/formStepAtom';
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
-import { defaultSignUpFormValues, matchedRoleName } from '@/constants';
+import { RolesObj, defaultSignUpFormValues } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { KeyOfRole } from '@/types';
+import {
+  isCampusManager,
+  isEduManager,
+  isJobCoordinator,
+  isPreTrainee,
+  isTrainee,
+} from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -73,7 +80,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    if (currRole === 'CAMPUS_MANAGER') {
+    if (isCampusManager(currRole)) {
       const courseIdList = courseList.map(({ id }) => id);
       setValue('courseIdList', courseIdList);
     }
@@ -130,7 +137,7 @@ export default function SignUp() {
                                     })}
                                   />
 
-                                  <span>{matchedRoleName[role]}</span>
+                                  <span>{RolesObj[role]}</span>
                                 </label>
                               ))}
                             </fieldset>
@@ -163,8 +170,8 @@ export default function SignUp() {
                                   campus => value?.some(id => id === campus.id),
                                 );
 
-                                return currRole === 'TRAINEE' ||
-                                  currRole === 'EDU_MANAGER' ? (
+                                return isTrainee(currRole) ||
+                                  isEduManager(currRole) ? (
                                   <SingleSelectDropdown
                                     defaultLabel="캠퍼스 선택"
                                     options={campusList}
@@ -217,7 +224,7 @@ export default function SignUp() {
                                     name: title,
                                   }));
 
-                                return currRole === 'JOB_COORDINATOR' ? (
+                                return isJobCoordinator(currRole) ? (
                                   <MultiSelectDropdown
                                     defaultLabel="교육과정 선택"
                                     options={options}
@@ -347,7 +354,7 @@ export default function SignUp() {
                   }),
               )}
 
-              {currRole === 'PRE_TRAINEE' &&
+              {isPreTrainee(currRole) &&
                 currentStep === questionListByRole.length && (
                   <span className="mb-14 mt-auto inline-block w-full text-center text-gray1">
                     예비 수강생은 제한된 서비스만 이용 가능합니다.

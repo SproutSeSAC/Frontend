@@ -5,7 +5,7 @@ import { useBlocker, useNavigate } from 'react-router-dom';
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
 import { useAtom } from 'jotai';
-import { BsX } from 'react-icons/bs';
+// import { BsX } from 'react-icons/bs';
 import { FaChevronRight } from 'react-icons/fa';
 
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
@@ -68,9 +68,9 @@ export default function NotificationSideView() {
                 )}
                 <div className="text-sm text-gray1">공지사항</div>
               </div>
-              <button onClick={() => {}}>
+              {/* <button onClick={() => {}}>
                 <BsX className="size-5 text-gray5" />
-              </button>
+              </button> */}
             </div>
             <div className="mb-6 line-clamp-2 w-full overflow-hidden text-ellipsis">
               안녕하세요, 새싹(SeSAC) 운영진입니다! 새싹(SeSAC) 강북&성북캠퍼스

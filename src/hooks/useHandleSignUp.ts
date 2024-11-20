@@ -13,11 +13,13 @@ import {
   useGetJobList,
 } from '@/services/specifications/specificationsQueries';
 
+import { initialLogin } from '@/atoms/initialLoginAtom';
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
-import { useAtom } from 'jotai';
+import { isManager, isPreTrainee } from '@/utils';
+import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
 interface UseHandleSignUpProps {
@@ -30,6 +32,7 @@ export const useHandleSignUp = ({
   currRole,
 }: UseHandleSignUpProps) => {
   const [isVerifiedCode] = useAtom(verifiedCodeAtom);
+  const setIsInitialLogin = useSetAtom(initialLogin);
 
   const {
     data: jobList,
@@ -62,35 +65,28 @@ export const useHandleSignUp = ({
     onSuccess: () => navigate('/'),
   });
 
-  const onSubmit: SubmitHandler<SignUpUserFormValue> = formData => {
-    if (!isVerifiedCode && formData.role !== 'PRE_TRAINEE') return;
+  const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
+    if (!isVerifiedCode && submittedValue.role !== 'PRE_TRAINEE') return;
 
-    const { verifyCode, campusIdList, ...rest } = formData;
+    const { verifyCode, campusIdList, ...formData } = submittedValue;
 
-    if (
-      rest.role === 'EDU_MANAGER' ||
-      rest.role === 'CAMPUS_MANAGER' ||
-      rest.role === 'JOB_COORDINATOR'
-    ) {
+    if (isManager(formData.role)) {
       const initializeValue = {
         jobIdList: [],
         techStackIdList: [],
         domainIdList: [],
       };
-      const { jobIdList, techStackIdList, domainIdList, ...restOfRest } = rest;
-      const data: UserProfileDto.Post = { ...restOfRest, ...initializeValue };
+      const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
+      const data: UserProfileDto.Post = { ...rest, ...initializeValue };
       mutate(data);
-      return;
-    }
-
-    if (rest.role === 'PRE_TRAINEE') {
-      const { courseIdList, ...restOfRest } = rest;
-      const data: UserProfileDto.Post = { ...restOfRest, courseIdList: [] };
+    } else if (isPreTrainee(formData.role)) {
+      const { courseIdList, ...rest } = formData;
+      const data: UserProfileDto.Post = { ...rest, courseIdList: [] };
       mutate(data);
-      return;
+    } else {
+      mutate(formData);
     }
-
-    mutate(rest);
+    setIsInitialLogin(true);
   };
 
   const questionListByRole = getFormStepsByRole(currRole);
