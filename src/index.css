@@ -41,6 +41,9 @@
     .ql-container.ql-snow {
       @apply rounded-b-lg border border-solid border-gray4 bg-white;
     }
+    .ql-editor {
+      @apply h-[523px];
+    }
     .ql-editor.ql-blank::before {
       @apply text-base not-italic text-gray2;
     }

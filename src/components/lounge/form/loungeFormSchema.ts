@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const loungeEditorSchema = z.object({
+export const loungeFormSchema = z.object({
   recruitmentType: z.union([
     z.string().min(1, '모집구분을 선택해 주세요.'),
     z.undefined().refine(() => false, '모집구분을 선택해 주세요.'),

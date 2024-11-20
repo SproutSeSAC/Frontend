@@ -57,13 +57,14 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
   return createPortal(
     <>
       <div className="absolute left-[36%] top-0 z-20 m-[15px] h-[calc(100%-30px)] w-[420px] -translate-x-[36%] transform overflow-y-auto rounded bg-white px-5 pt-[15px] shadow-modal scrollbar-hide">
-        <StoreModalHeader onClose={onClose} />
+        <StoreModalHeader onClose={onClose} storeId={storeId} />
 
         <StoreCard
           showFavoriteButton={false}
           width="w-full"
           height="h-[269px]"
           storeData={{
+            id: storeData?.id || 0,
             workingDay: storeData?.workingDay || '',
             storeImage: storeData?.storeImageList,
             name: storeData?.name || '',
@@ -80,7 +81,9 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
         {tab === 'menu' && (
           <StoreModalMenuList menuList={storeData?.storeMenuList || []} />
         )}
-        {tab === 'directionsInfo' && <NaverMapDirections />}
+        {tab === 'directionsInfo' && (
+          <NaverMapDirections campusName={storeData?.campusName} />
+        )}
         {tab === 'review' && (
           <div className="pb-14">
             <div className="flex items-center gap-2">

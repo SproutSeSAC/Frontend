@@ -45,7 +45,7 @@ export interface GetFilterCountResponse {
   cafeCount?: number;
 }
 export interface GetStoreDetailResponse
-  extends Omit<Store, 'id' | 'storeImage' | 'overFivePerson' | 'underPrice'> {
+  extends Omit<Store, 'storeImage' | 'overFivePerson' | 'underPrice'> {
   storeMenuList: StoreMenu[];
   mapSchemaUrl?: string;
   storeImageList: string[];
