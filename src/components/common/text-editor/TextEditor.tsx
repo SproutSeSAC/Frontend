@@ -1,49 +1,42 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import EditorModule from './EditorModule';
 
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.bubble.css';
-
-const Size = Quill.import('formats/size');
-
-Size.whitelist = ['small', 'medium', 'large', 'huge'];
-Quill.register(Size, true);
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
 
 interface TextEditorProps {
-  value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  className?: string;
   formats?: string[];
 }
 
 export default function TextEditor({
-  value,
   onChange,
   placeholder,
-  className,
   formats,
 }: TextEditorProps) {
-  const quillRef = useRef<ReactQuill>(null);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  const quillRef = useRef<Quill | null>(null);
 
-  const defaultFormats: string[] = [
-    'size',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'color',
-    'background',
-    'align',
-    'script',
-    'code-block',
-  ];
+  const defaultFormats: string[] = useMemo(() => {
+    return [
+      'size',
+      'bold',
+      'italic',
+      'underline',
+      'strike',
+      'blockquote',
+      'list',
+      'indent',
+      'link',
+      'color',
+      'background',
+      'align',
+      'script',
+      'code-block',
+    ];
+  }, []);
 
   const modules = useMemo(
     () => ({
@@ -54,30 +47,40 @@ export default function TextEditor({
     [],
   );
 
-  const handleChange = useCallback(
-    (newValue: string) => {
-      const updatedValue = newValue;
+  const handleChange = useCallback(() => {
+    if (quillRef.current) {
+      const updatedValue = quillRef.current.root.innerHTML;
       onChange(updatedValue);
-    },
-    [onChange],
-  );
+    }
+  }, [onChange]);
 
   const handleEmojiSelect = useCallback(
     (emoji: { native: string }) => {
       if (quillRef.current) {
-        const editor = quillRef.current.getEditor();
+        const editor = quillRef.current;
         const range = editor.getSelection();
-
         if (range) {
-          editor.insertText(range.index, emoji.native, 'user');
+          editor.insertText(range.index, emoji.native);
           editor.setSelection(range.index + emoji.native.length, 0);
-
-          handleChange(editor.root.innerHTML);
+          handleChange();
         }
       }
     },
     [handleChange],
   );
+
+  useEffect(() => {
+    if (editorRef.current && !quillRef.current) {
+      quillRef.current = new Quill(editorRef.current, {
+        theme: 'snow',
+        modules,
+        formats: [...defaultFormats, ...(formats || [])],
+        placeholder: placeholder || '',
+      });
+
+      quillRef.current.on('text-change', handleChange);
+    }
+  }, [defaultFormats, formats, handleChange, modules, placeholder]);
 
   return (
     <div>
@@ -85,15 +88,7 @@ export default function TextEditor({
         <EditorModule onEmojiSelect={handleEmojiSelect} />
       </div>
 
-      <ReactQuill
-        ref={quillRef}
-        value={value}
-        onChange={onChange}
-        className={className}
-        modules={modules}
-        formats={[...defaultFormats, ...(formats || [])]}
-        placeholder={placeholder}
-      />
+      <div ref={editorRef} />
     </div>
   );
 }

@@ -81,7 +81,9 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
         {tab === 'menu' && (
           <StoreModalMenuList menuList={storeData?.storeMenuList || []} />
         )}
-        {tab === 'directionsInfo' && <NaverMapDirections />}
+        {tab === 'directionsInfo' && (
+          <NaverMapDirections campusName={storeData?.campusName} />
+        )}
         {tab === 'review' && (
           <div className="pb-14">
             <div className="flex items-center gap-2">
