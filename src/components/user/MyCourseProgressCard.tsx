@@ -11,18 +11,20 @@ import { getDDay, getDateProgress } from '@/utils';
 import CircularGauge from '@/components/common/CircularGauge';
 
 export default function MyCourseProgressCard() {
-  const { data: userProfile = initialUserProfile } = useGetUserProfile();
+  const { data: userProfile = initialUserProfile, isLoading } =
+    useGetUserProfile();
 
   const { name, courseList, campusList } = userProfile;
 
-  const getProgress = useCallback(
-    () =>
+  const getProgress = useCallback(() => {
+    return (
+      courseList?.[0] &&
       getDateProgress(
         courseList?.[0]?.courseStartDate,
         courseList?.[0]?.courseEndDate,
-      ),
-    [courseList],
-  );
+      )
+    );
+  }, [courseList]);
 
   const progress = getProgress();
 
@@ -32,6 +34,8 @@ export default function MyCourseProgressCard() {
     courseGrowthLevelList.find(
       ({ maxProgress }) => maxProgress >= getProgress(),
     ) || courseGrowthLevelList[0];
+
+  if (isLoading) return null;
 
   return (
     <div className="flex h-[396px] min-w-[380px] flex-col items-center justify-between gap-4 rounded-3xl bg-white p-10 shadow-card">
@@ -69,7 +73,9 @@ export default function MyCourseProgressCard() {
             alt="새싹 로고"
             className="size-5 p-1"
           />
-          <span className="mr-2 text-sm font-bold">{campusList[0]}</span>
+          <span className="mr-2 text-sm font-bold">
+            {campusList[0]?.campusName}
+          </span>
           <span className="text-sm font-medium text-gray1">
             {courseList?.[0]?.courseStartDate?.replaceAll('-', '.')} ~{' '}
             {courseList?.[0]?.courseEndDate?.replaceAll('-', '.')}

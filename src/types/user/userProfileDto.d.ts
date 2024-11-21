@@ -1,28 +1,30 @@
-import { MarketingConsent } from '@/types/user/signUpQuestions';
+import { Domain, Job, TechStack } from '@/types/specifications';
 
 export namespace UserProfileDto {
-  export type Post = SignUpUserValue;
+  export type Post = SignUpUserProfile;
   export type Get = UserProfile;
   export type Update = UpdateableUserProfile;
 }
 
-type SignUpUserValue = {
+type SignUpUserProfile = {
   role: KeyOfRole;
   name: string;
   nickname: string;
-  jobList: Job[];
-  domainList: Domain[];
-  techStackList: TechStack[];
-  courseList?: { id: number; name: string }[];
-  campusList: { id: number; name: string }[];
-  marketingConsent: MarketingConsent;
-  verifyCode: string;
+  courseIdList: number[];
+  techStackIdList: number[];
+  jobIdList: number[];
+  domainIdList: number[];
+  marketingConsent: boolean;
 };
 
 type UserProfile = {
   email: string;
-  campusList: string[];
+  campusList: {
+    id: number;
+    campusName: string;
+  }[];
   courseList: {
+    courseId: number;
     courseTitle: string;
     courseStartDate: string;
     courseEndDate: string;

@@ -1,4 +1,4 @@
-import { KeyOfRole } from '@/types';
+import { Domain, Job, KeyOfRole, TechStack, UserProfileDto } from '@/types';
 
 export type SignUpFormTitle = {
   title: {
@@ -12,12 +12,9 @@ export type SignUpStep = {
   step?: number;
 };
 
-export type VerifyCode = {
-  verifyCode: string;
-};
-
 export type MarketingConsent = '동의' | '동의하지 않음';
 
+// SignUp Form의 형식
 export type SignUpQuestions = {
   roles: KeyOfRole[];
   name: string;
@@ -26,8 +23,13 @@ export type SignUpQuestions = {
   domainList: Domain[];
   techStackList: TechStack[];
   courseList?: { id: number; name: string }[];
-  campusList: { id: number; name: string }[];
   marketingConsent: MarketingConsent[];
+  campusList: { id: number; name: string }[];
+  verifyCode: string;
+};
+
+export type SignUpUserFormValue = UserProfileDto.Post & {
+  campusIdList: number[];
   verifyCode: string;
 };
 

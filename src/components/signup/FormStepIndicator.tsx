@@ -5,8 +5,7 @@ import { currentStepAtom } from '@/atoms/formStepAtom';
 import {
   SignUpFormTitle,
   SignUpQuestionsByStep,
-  UserProfileDto,
-  VerifyCode,
+  SignUpUserFormValue,
 } from '@/types';
 import { useAtom } from 'jotai';
 import { useFormContext } from 'react-hook-form';
@@ -28,30 +27,42 @@ export default function FormStepIndicator({
   children,
 }: FormStepIndicatorProps) {
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
+
   const { trigger } = useFormContext();
 
   const formItemsByStepArr = questionListByRole.map(item => {
-    return item
+    const keyName: Record<string, string> = {
+      roles: 'role',
+      campusList: 'campusIdList',
+      courseList: 'courseIdList',
+      domainList: 'domainIdList',
+      techStackList: 'techStackIdList',
+      jobList: 'jobIdList',
+    };
+
+    const keys = item
       .map(i => {
-        const { additionalInfo, title, ...rest } =
-          i as unknown as SignUpFormTitle;
+        const { additionalInfo, title, ...rest } = i as SignUpFormTitle;
         return Object.keys(rest);
       })
       .flat()
-      .map(key => (key === 'roles' ? 'role' : key));
-  }) as unknown as (keyof UserProfileDto.Post & VerifyCode)[][];
+      .map(key => keyName[key] || key);
+
+    return keys;
+  }) as (keyof SignUpUserFormValue)[][];
 
   const goNextStep = async () => {
     const currentFormItems = formItemsByStepArr[currentStep - 1];
 
-    const checkValid = await Promise.all(
+    const checkValidKey = await Promise.all(
       currentFormItems.map(async key => {
         const isValids = await trigger(key);
+
         return isValids;
       }),
     );
 
-    if (!checkValid.includes(false)) {
+    if (!checkValidKey.includes(false)) {
       const nextStep = currentStep === formStep ? currentStep : currentStep + 1;
       setCurrentStep(nextStep);
     }

@@ -1,12 +1,12 @@
-import { useGetUserProfile } from '@/services/auth/authQueries';
 import {
-  useGetCampusList,
-  useGetCourseList,
-} from '@/services/course/courseQueries';
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { Calendar, CalendarListByCategory, KeyOfRole } from '@/types';
+import { isManagerAndAdmin, isPreTrainee, isTrainee } from '@/utils';
 import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';
@@ -27,27 +27,10 @@ export default function CalendarCheckBoxList({
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
-  const { data: userProfile } = useGetUserProfile();
-
-  const { data: campusList } = useGetCampusList();
-
-  const calendarListByLabel: CalendarListByCategory[] = [
-    {
-      category: 'Sprout 캘린더',
-      calendarList: sproutCalendars,
-    },
-    { category: '나의 캘린더', calendarList: personalCalendars },
-  ];
-
-  // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
-  const userCampus = campusList?.find(
-    ({ name }) => name === userProfile?.campusList[0],
-  );
-  const { data: courseList } = useGetCourseList(userCampus?.id);
-  const userCourse = courseList?.find(
-    course => course.title === userProfile?.courseList[0]?.courseTitle,
-  );
-  // -----------------------------------
+  const {
+    data: userProfile = initialUserProfile,
+    isLoading: isUserProfileLoading,
+  } = useGetUserProfile();
 
   const onCheckBoxChange = (id: string) => {
     if (currentCalendarIds?.includes(id)) {
@@ -63,9 +46,19 @@ export default function CalendarCheckBoxList({
     }
   };
 
+  const calendarListByCategory: CalendarListByCategory[] = [
+    {
+      category: 'Sprout 캘린더',
+      calendarList: sproutCalendars,
+    },
+    { category: '나의 캘린더', calendarList: personalCalendars },
+  ];
+
+  if (isUserProfileLoading) return null;
+
   return (
     <ul className="h-full overflow-auto rounded-xl bg-white px-5 pt-5 shadow-card scrollbar-hide">
-      {calendarListByLabel.map(({ category, calendarList }) => (
+      {calendarListByCategory.map(({ category, calendarList }) => (
         <Accordion
           key={category}
           title={category}
@@ -73,30 +66,33 @@ export default function CalendarCheckBoxList({
           titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
           initialOpen={category === 'Sprout 캘린더'}
           tooltip={
+            (isTrainee(userRole) || isPreTrainee(userRole)) &&
             category === 'Sprout 캘린더'
               ? '훈련생이 되면 교육과정과 관련된 일정을 볼 수 있습니다.'
               : undefined
           }
         >
           <ul className="flex flex-col gap-2">
-            {category === 'Sprout 캘린더' &&
-              userRole !== 'PRE_TRAINEE' &&
-              userProfile &&
-              userCourse &&
-              sproutCalendars.length === 0 &&
-              (userRole === 'TRAINEE' ? (
-                <SubscribeCalendarButton
-                  courseTitle={userProfile?.courseList[0]?.courseTitle}
-                  courseId={userCourse.id}
-                />
-              ) : (
-                <CreateCalendarButton
-                  courseTitle={userProfile?.courseList[0]?.courseTitle}
-                  courseId={userCourse.id}
-                  userRole={userRole}
-                />
-              ))}
+            {category === 'Sprout 캘린더' && sproutCalendars.length === 0 && (
+              <>
+                {isTrainee(userRole) && (
+                  <SubscribeCalendarButton
+                    courseTitle={userProfile?.courseList[0]?.courseTitle}
+                    courseId={userProfile?.courseList[0].courseId}
+                  />
+                )}
 
+                {isManagerAndAdmin(userRole) &&
+                  userProfile?.courseList.map(({ courseId, courseTitle }) => (
+                    <CreateCalendarButton
+                      key={courseId}
+                      courseTitle={courseTitle}
+                      courseId={courseId}
+                      userRole={userRole}
+                    />
+                  ))}
+              </>
+            )}
             {calendarList?.map(({ id, summary, backgroundColor, primary }) => (
               <Checkbox
                 key={id}

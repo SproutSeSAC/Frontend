@@ -23,6 +23,7 @@ export const initialUserProfile: UserProfileDto.Get = {
   campusList: [],
   courseList: [
     {
+      courseId: 0,
       courseTitle: '',
       courseStartDate: '',
       courseEndDate: '',

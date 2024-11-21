@@ -19,6 +19,7 @@ interface MultiSelectDropdownProps {
   selectBoxClassName?: string;
   optionClassName?: string;
   hasFullCheck?: boolean;
+  onSelectBoxClick?: () => void;
 }
 
 /**
@@ -31,6 +32,7 @@ interface MultiSelectDropdownProps {
  * @param selectBoxClassName - 셀렉트 박스 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  * @param optionClassName - 옵션 리스트 박스가 아닌 하나의 옵션 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  * @param hasFullCheck - 전체 선택 버튼
+ * @param onSelectBoxClick - 셀렉트 박스를 클릭했을 때 발생해야하는 이벤트
  */
 
 const fullCheckOption = {
@@ -47,7 +49,8 @@ export default function MultiSelectDropdown({
   initialSelectedOptions,
   selectBoxClassName = '',
   optionClassName = '',
-  hasFullCheck,
+  hasFullCheck = false,
+  onSelectBoxClick,
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
 
@@ -75,7 +78,6 @@ export default function MultiSelectDropdown({
 
       if (option.name === '전체') {
         const updatedOptions = checkIsSelected(option) ? [] : [...multiOptions];
-
         setSelectedOptions(updatedOptions);
         return onChangeValue(updatedOptions);
       }
@@ -83,9 +85,10 @@ export default function MultiSelectDropdown({
       const addedOption = [...selectedOptions, option];
       const isFullChecked = addedOption.length === options.length;
 
-      const addOption = isFullChecked
-        ? [fullCheckOption, ...addedOption]
-        : addedOption;
+      const addOption =
+        isFullChecked && hasFullCheck
+          ? [fullCheckOption, ...addedOption]
+          : addedOption;
 
       const filteredOption = selectedOptions.filter(
         ({ id }) => id !== option.id,
@@ -102,11 +105,12 @@ export default function MultiSelectDropdown({
       return onChangeValue(updatedOptions);
     },
     [
-      checkIsSelected,
-      multiOptions,
-      onChangeValue,
       selectedOptions,
       options.length,
+      hasFullCheck,
+      checkIsSelected,
+      onChangeValue,
+      multiOptions,
     ],
   );
 
@@ -116,14 +120,17 @@ export default function MultiSelectDropdown({
   }, [onChangeValue]);
 
   useEffect(() => {
-    if (initialSelectedOptions) {
+    if (!hasFullCheck && initialSelectedOptions) {
       setSelectedOptions(initialSelectedOptions);
     }
-  }, [initialSelectedOptions]);
+  }, [hasFullCheck, initialSelectedOptions]);
 
   const onClose = () => setOpen(false);
 
   const handlSelectBoxClick = () => {
+    if (onSelectBoxClick) {
+      onSelectBoxClick();
+    }
     if (multiOptions.length) {
       setOpen(prev => !prev);
     }

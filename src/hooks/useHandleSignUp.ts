@@ -1,33 +1,41 @@
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import { useDialogContext } from '@/hooks/useDialogContext';
 import { useTechStackList } from '@/hooks/useTechStackList';
 
-// import { usePostSignUpValue } from '@/services/auth/authMutations';
+import { usePostSignUpValue } from '@/services/auth/authMutations';
 import {
+  CourseListData,
   useGetCampusList,
-  useGetCourseList,
+  useGetCourseListByCampus,
 } from '@/services/course/courseQueries';
 import {
   useGetDomainList,
   useGetJobList,
 } from '@/services/specifications/specificationsQueries';
 
+import { initialLogin } from '@/atoms/initialLoginAtom';
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
-import { getQuestionListByRole } from '@/constants';
-import { KeyOfRole, UserProfileDto } from '@/types';
-import { useAtom } from 'jotai';
+import { getFormStepsByRole } from '@/constants';
+import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
+import { isCampusManager, isManager, isPreTrainee, isTrainee } from '@/utils';
+import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
 interface UseHandleSignUpProps {
-  currentCampusList: { id: number; name: string }[];
-  currentRole: KeyOfRole;
+  currCampusIdList: number[];
+  currRole: KeyOfRole;
 }
 
 export const useHandleSignUp = ({
-  currentCampusList,
-  currentRole,
+  currCampusIdList,
+  currRole,
 }: UseHandleSignUpProps) => {
   const [isVerifiedCode] = useAtom(verifiedCodeAtom);
+  const setIsInitialLogin = useSetAtom(initialLogin);
+
+  const { showToast } = useDialogContext();
 
   const {
     data: jobList,
@@ -46,26 +54,69 @@ export const useHandleSignUp = ({
     isLoading: isCampusListLoading, //
   } = useGetCampusList();
 
-  const { data: courseList } = useGetCourseList(currentCampusList[0]?.id);
+  const courseListByCampusData = useGetCourseListByCampus(currCampusIdList);
 
-  // const navigate = useNavigate();
+  const courseList = courseListByCampusData
+    .map(courseByCampus => {
+      return courseByCampus.isLoading ? [] : courseByCampus.data;
+    })
+    .flat() as CourseListData['courseList'];
 
-  // const { mutate } = usePostSignUpValue({
-  //   onSuccess: () => navigate('/'),
-  // });
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<UserProfileDto.Post> = formData => {
-    if (!isVerifiedCode) return;
+  const { mutate } = usePostSignUpValue({
+    onSuccess: () => {
+      navigate('/');
+      setIsInitialLogin(true);
+    },
+  });
 
-    const { verifyCode, ...rest } = formData;
-    const marketingConsent = formData.marketingConsent === '동의';
-    const data = { ...rest, marketingConsent };
+  const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
+    if (!isVerifiedCode && !isPreTrainee(submittedValue.role)) return;
 
-    console.log(data);
-    // mutate(rest);
+    try {
+      const { verifyCode, campusIdList, ...formData } = submittedValue;
+
+      if (isManager(formData.role)) {
+        const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
+        const initializeValue = {
+          jobIdList: [],
+          techStackIdList: [],
+          domainIdList: [],
+        };
+        const managerData: UserProfileDto.Post = {
+          ...rest,
+          ...initializeValue,
+        };
+
+        if (isCampusManager(formData.role)) {
+          const courseIdList = courseList.map(({ id }) => id);
+          const campusManangerData = { ...managerData, courseIdList };
+          mutate(campusManangerData);
+        } else {
+          mutate(managerData);
+        }
+      }
+
+      if (isPreTrainee(formData.role)) {
+        const { courseIdList, ...rest } = formData;
+        const preTraineeData: UserProfileDto.Post = {
+          ...rest,
+          courseIdList: [],
+        };
+        mutate(preTraineeData);
+      }
+
+      if (isTrainee(formData.role)) {
+        mutate(formData);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
-  const questionListByRole = getQuestionListByRole(currentRole);
+  const questionListByRole = getFormStepsByRole(currRole);
 
   const getQuestionNumber = (index: number, idx: number) => {
     const previousQuestionsCount = questionListByRole

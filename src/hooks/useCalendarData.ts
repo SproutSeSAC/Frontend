@@ -5,10 +5,6 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 import {
-  useGetCampusList,
-  useGetCourseList,
-} from '@/services/course/courseQueries';
-import {
   useGetCalendarIdByCourse,
   useGetCalendarList,
   useGetEventsByCalendar,
@@ -16,7 +12,7 @@ import {
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { CALENDAR_ADDRESS_ID, CALENDAR_KEY } from '@/constants';
+import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
 import { Event, FullCalendarEvent } from '@/types';
 import { createRrule, getCookie, setCookie } from '@/utils';
 import { useAtom } from 'jotai';
@@ -29,23 +25,17 @@ export const useCalendarData = () => {
     isLoading: isCalendarListLoading, //
   } = useGetCalendarList();
 
-  // NOTE: API가 변경되어 교육과정 ID를 바로 내려주면 삭제 예정
   const { data: userProfile } = useGetUserProfile();
-  const { data: campusList } = useGetCampusList();
-  const userCampus = campusList?.find(
-    ({ name }) => name === userProfile?.campusList?.[0],
+
+  const { data: calendarIdByCourse } = useGetCalendarIdByCourse(
+    userProfile?.courseList[0]?.courseId,
   );
-  const { data: courseList } = useGetCourseList(userCampus?.id);
-  const userCourse = courseList?.find(
-    ({ title }) => title === userProfile?.courseList?.[0].courseTitle,
-  );
-  const { data: calendarIdByCourse } = useGetCalendarIdByCourse(userCourse?.id);
+
   const sproutCalendarIds = useMemo(() => {
     return calendarIdByCourse?.calendarId
       ? [calendarIdByCourse?.calendarId]
       : [];
   }, [calendarIdByCourse?.calendarId]);
-  // -----------------------------------
 
   const allCalendars = useMemo(() => {
     return calendarList?.items
@@ -55,7 +45,9 @@ export const useCalendarData = () => {
 
   const sproutCalendars = useMemo(() => {
     return allCalendars
-      ? allCalendars?.filter(({ id }) => sproutCalendarIds.includes(id))
+      ? allCalendars
+          ?.filter(({ id }) => sproutCalendarIds.includes(id))
+          ?.sort((a, b) => b.id.localeCompare(a.id))
       : [];
   }, [allCalendars, sproutCalendarIds]);
 
@@ -135,9 +127,9 @@ export const useCalendarData = () => {
   }, [calendarList?.items, eventsByCalendar]);
 
   useEffect(() => {
-    if (!getCookie(CALENDAR_KEY)) {
+    if (!getCookie(CALENDAR_TOKEN_KEY)) {
       getCalendarToken().then(res => {
-        setCookie(CALENDAR_KEY, res?.data?.access_token, 1);
+        setCookie(CALENDAR_TOKEN_KEY, res?.data?.access_token, 1);
       });
     }
   }, []);

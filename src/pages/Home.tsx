@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import {
   initialUserProfile,
@@ -8,12 +8,15 @@ import {
 } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
-import { useCalendarData, useCheckLogin } from '@/hooks';
+import { initialLogin } from '@/atoms/initialLoginAtom';
+
+import { useCalendarData, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 import { RoleValues } from '@/types';
 import { getColorByRole } from '@/utils';
+import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
@@ -27,6 +30,8 @@ import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
 import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
 
 export default function Home() {
+  const [isInitialLogin, setIsInitialLogin] = useAtom(initialLogin);
+
   const {
     data: loungeList,
     isLoading: isGetLoungeListLoading, //
@@ -35,23 +40,25 @@ export default function Home() {
   const {
     data: userProfile = initialUserProfile,
     isLoading: isGetUserProfileLoading, //
+    isFetched,
   } = useGetUserProfile();
 
   const { name } = userProfile;
 
   const { fullCalendarEvents } = useCalendarData();
 
-  const { isLogin } = useCheckLogin();
-
-  const navigate = useNavigate();
+  const { showToast } = useDialogContext();
 
   useEffect(() => {
-    if (!isLogin) {
-      navigate('/login');
+    if (isInitialLogin) {
+      showToast('새싹 회원이 되신 것을 환영합니다!');
+      setIsInitialLogin(false);
     }
-  }, [isLogin, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialLogin]);
 
-  if (isGetUserProfileLoading || isGetLoungeListLoading) return <LoadingPage />;
+  if ((!isFetched && isGetUserProfileLoading) || isGetLoungeListLoading)
+    return <LoadingPage />;
 
   return (
     <>
@@ -88,7 +95,6 @@ export default function Home() {
           </ScrollContainer>
         </section>
       </MainView>
-
       <SideView>
         <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
         <Calendar type="small" events={fullCalendarEvents} />

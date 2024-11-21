@@ -4,3 +4,4 @@ export * from '@/utils/handleCookie';
 export * from '@/utils/getColorByRole';
 export * from '@/utils/getDateProgress';
 export * from '@/utils/createRrule';
+export * from '@/utils/checkRole';
