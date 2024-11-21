@@ -1,10 +1,9 @@
 import { contactMethodList } from '@/constants';
 import { Control, Controller, useWatch } from 'react-hook-form';
 
-import { FormValues, inputStyle } from '@/pages/LoungeEditor';
-
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
+import { FormValues, inputStyle } from '@/components/lounge/form/LoungeForm';
 
 export default function ContactMethodContainer({
   control,

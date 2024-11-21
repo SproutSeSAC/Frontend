@@ -5,6 +5,17 @@ import { axiosInstance } from '../axiosInstance';
 import { PostMeal, PutMealPost } from '@/types/store/storeMealPostDto';
 import { AxiosError } from 'axios';
 
+export const usePostStoreScrap = () => {
+  return useMutation<boolean, AxiosError, { storeId: number }>({
+    mutationFn: async requestParams => {
+      const { data } = await axiosInstance.post(
+        `/store/${requestParams.storeId}/scrap`,
+      );
+      return data;
+    },
+  });
+};
+
 export const usePostMeal = () => {
   return useMutation<boolean, AxiosError, PostMeal>({
     mutationFn: async requestBody => {

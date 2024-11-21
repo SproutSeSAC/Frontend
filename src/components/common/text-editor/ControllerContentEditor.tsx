@@ -54,12 +54,10 @@ export default function ControllerContentEditor({
         <Controller
           control={control}
           name={content}
-          render={({ field: { onChange, value } }) => {
+          render={({ field: { onChange } }) => {
             return (
               <TextEditor
-                value={value}
                 onChange={onChange}
-                className="h-[523px] w-full"
                 placeholder={`${name} 상세 정보를 작성해 주세요`}
               />
             );

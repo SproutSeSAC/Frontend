@@ -1,9 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
+import { usePostStoreScrap } from '@/services/store/storeMutations';
+
 import StoreMenuImage from './StoreMenuImage';
 
 import emptyImage from '@/assets/images/empty-image.png';
 import { FoodFilterType, foodFilterDisplay } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
 import {
   BsClockFill,
@@ -19,7 +24,6 @@ import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
 interface StoreDataType
   extends Omit<
     Store,
-    | 'id'
     | 'phoneNumber'
     | 'overFivePerson'
     | 'underPrice'
@@ -57,7 +61,37 @@ export default function StoreCard({
   storeData,
   showFavoriteButton = true,
 }: StoreCardProps) {
+  const { showToast } = useDialogContext();
   const [openHoursModal, setOpenHoursModal] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: postStoreScrap } = usePostStoreScrap();
+
+  const onStoreScrap = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        const result = await postStoreScrap({ storeId: storeData.id });
+
+        if (result) {
+          showToast('맛집을 찜했어요!', 1000);
+        } else {
+          showToast('맛집 찜하기를 취소 했어요!', 1000);
+        }
+
+        queryClient.invalidateQueries({
+          queryKey: ['useGetLoungeProjects', {}],
+        });
+      } catch (err) {
+        console.error(err);
+        showToast('맛집 찜하기를 실패했어요');
+      }
+    },
+    [postStoreScrap, queryClient, showToast, storeData.id],
+  );
 
   const parseBusinessHours = useCallback((input: string) => {
     const days = input.split(/(?=\p{Script=Hangul}요일)/u);
@@ -69,9 +103,9 @@ export default function StoreCard({
         const [open, close] = timeRange.split('~');
 
         return {
-          day: day.replace(':', '').trim(),
-          open: open.trim(),
-          close: close.trim(),
+          day: day.replace(':', '')?.trim(),
+          open: open?.trim(),
+          close: close?.trim(),
           id: idx + 1,
         };
       })
@@ -129,7 +163,11 @@ export default function StoreCard({
             </span>
           </div>
           {showFavoriteButton && (
-            <FavoriteButton size={18} isFavorite={false} onClick={() => {}} />
+            <FavoriteButton
+              size={18}
+              isFavorite={false}
+              onClick={onStoreScrap}
+            />
           )}
         </header>
 

@@ -14,7 +14,7 @@ export type Progress =
   | typeof PROGRESS_HYBRID;
 export const progressList: Array<{ id: number; name: string; key: Progress }> =
   [
-    { id: 1, name: '', key: PROGRESS_DEFAULT },
+    { id: 0, name: '', key: PROGRESS_DEFAULT },
     { id: 1, name: '전체', key: PROGRESS_HYBRID },
     { id: 2, name: '온라인', key: PROGRESS_ONLINE },
     { id: 3, name: '오프라인', key: PROGRESS_OFFLINE },
