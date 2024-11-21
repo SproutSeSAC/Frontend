@@ -31,31 +31,22 @@ export default function FormStepIndicator({
   const { trigger } = useFormContext();
 
   const formItemsByStepArr = questionListByRole.map(item => {
+    const keyName: Record<string, string> = {
+      roles: 'role',
+      campusList: 'campusIdList',
+      courseList: 'courseIdList',
+      domainList: 'domainIdList',
+      techStackList: 'techStackIdList',
+      jobList: 'jobIdList',
+    };
+
     const keys = item
       .map(i => {
-        const { additionalInfo, title, ...rest } =
-          i as unknown as SignUpFormTitle;
+        const { additionalInfo, title, ...rest } = i as SignUpFormTitle;
         return Object.keys(rest);
       })
       .flat()
-      .map(key => {
-        switch (key) {
-          case 'roles':
-            return 'role';
-          case 'campusList':
-            return 'campusIdList';
-          case 'courseList':
-            return 'courseIdList';
-          case 'domainList':
-            return 'domainIdList';
-          case 'techStackList':
-            return 'techStackIdList';
-          case 'jobList':
-            return 'jobIdList';
-          default:
-            return key;
-        }
-      });
+      .map(key => keyName[key] || key);
 
     return keys;
   }) as (keyof SignUpUserFormValue)[][];
