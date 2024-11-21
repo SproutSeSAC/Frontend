@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
 
     if (
       error.response &&
-      error.response.status === 401 &&
+      (error.response.status === 401 || error.response.status === 304) &&
       !originalRequest.retry
     ) {
       originalRequest.retry = true;
@@ -83,11 +83,11 @@ export const axiosCalendarInstance = axios.create({
 
 axiosCalendarInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const accessToken = getCookie(CALENDAR_KEY);
+    const calendarAccessToken = getCookie(CALENDAR_KEY);
 
     const headers = new AxiosHeaders(config.headers || {});
 
-    headers.set('Authorization', `Bearer ${accessToken}`);
+    headers.set('Authorization', `Bearer ${calendarAccessToken}`);
 
     const modifiedConfig: InternalAxiosRequestConfig = {
       ...config,
