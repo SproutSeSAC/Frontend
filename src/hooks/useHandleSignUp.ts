@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import { useDialogContext } from '@/hooks/useDialogContext';
 import { useTechStackList } from '@/hooks/useTechStackList';
 
 import { usePostSignUpValue } from '@/services/auth/authMutations';
@@ -18,7 +19,7 @@ import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
-import { isCampusManager, isManager, isPreTrainee } from '@/utils';
+import { isCampusManager, isManager, isPreTrainee, isTrainee } from '@/utils';
 import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
@@ -33,6 +34,8 @@ export const useHandleSignUp = ({
 }: UseHandleSignUpProps) => {
   const [isVerifiedCode] = useAtom(verifiedCodeAtom);
   const setIsInitialLogin = useSetAtom(initialLogin);
+
+  const { showToast } = useDialogContext();
 
   const {
     data: jobList,
@@ -69,32 +72,47 @@ export const useHandleSignUp = ({
   });
 
   const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
-    if (!isVerifiedCode && submittedValue.role !== 'PRE_TRAINEE') return;
+    if (!isVerifiedCode && !isPreTrainee(submittedValue.role)) return;
 
-    const { verifyCode, campusIdList, ...formData } = submittedValue;
+    try {
+      const { verifyCode, campusIdList, ...formData } = submittedValue;
 
-    if (isManager(formData.role)) {
-      const initializeValue = {
-        jobIdList: [],
-        techStackIdList: [],
-        domainIdList: [],
-      };
-      const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
-      const data: UserProfileDto.Post = { ...rest, ...initializeValue };
+      if (isManager(formData.role)) {
+        const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
+        const initializeValue = {
+          jobIdList: [],
+          techStackIdList: [],
+          domainIdList: [],
+        };
+        const managerData: UserProfileDto.Post = {
+          ...rest,
+          ...initializeValue,
+        };
 
-      if (isCampusManager(formData.role)) {
-        const courseIdList = courseList.map(({ id }) => id);
-        const campusManangerData = { ...data, courseIdList };
-        mutate(campusManangerData);
-      } else {
-        mutate(data);
+        if (isCampusManager(formData.role)) {
+          const courseIdList = courseList.map(({ id }) => id);
+          const campusManangerData = { ...managerData, courseIdList };
+          mutate(campusManangerData);
+        } else {
+          mutate(managerData);
+        }
       }
-    } else if (isPreTrainee(formData.role)) {
-      const { courseIdList, ...rest } = formData;
-      const data: UserProfileDto.Post = { ...rest, courseIdList: [] };
-      mutate(data);
-    } else {
-      mutate(formData);
+
+      if (isPreTrainee(formData.role)) {
+        const { courseIdList, ...rest } = formData;
+        const preTraineeData: UserProfileDto.Post = {
+          ...rest,
+          courseIdList: [],
+        };
+        mutate(preTraineeData);
+      }
+
+      if (isTrainee(formData.role)) {
+        mutate(formData);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 

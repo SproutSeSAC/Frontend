@@ -1,3 +1,9 @@
+import { useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import { loginCheck } from '@/services/auth/authQueries';
+
 import { currentStepAtom } from '@/atoms/formStepAtom';
 import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
@@ -61,6 +67,20 @@ export default function SignUp() {
     questionListByRole,
     getQuestionNumber,
   } = useHandleSignUp({ currCampusIdList, currRole });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    loginCheck().then(data => {
+      if (data.status === 304) return;
+
+      if (data.status === 200) {
+        navigate(-1);
+      } else {
+        navigate('/login', { replace: true });
+      }
+    });
+  }, [navigate]);
 
   const resolvedUnMatchCurrentStep =
     questionListByRole.length === 3 && currentStep >= 2

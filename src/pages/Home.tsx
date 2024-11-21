@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import {
   initialUserProfile,
@@ -10,7 +10,7 @@ import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
-import { useCalendarData, useCheckLogin, useDialogContext } from '@/hooks';
+import { useCalendarData, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
@@ -46,16 +46,6 @@ export default function Home() {
   const { name } = userProfile;
 
   const { fullCalendarEvents } = useCalendarData();
-
-  const { isLogin } = useCheckLogin();
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isLogin) {
-      navigate('/login');
-    }
-  }, [isLogin, navigate]);
 
   const { showToast } = useDialogContext();
 
