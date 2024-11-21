@@ -12,7 +12,7 @@ import {
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { CALENDAR_ADDRESS_ID, CALENDAR_KEY } from '@/constants';
+import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
 import { Event, FullCalendarEvent } from '@/types';
 import { createRrule, getCookie, setCookie } from '@/utils';
 import { useAtom } from 'jotai';
@@ -127,9 +127,9 @@ export const useCalendarData = () => {
   }, [calendarList?.items, eventsByCalendar]);
 
   useEffect(() => {
-    if (!getCookie(CALENDAR_KEY)) {
+    if (!getCookie(CALENDAR_TOKEN_KEY)) {
       getCalendarToken().then(res => {
-        setCookie(CALENDAR_KEY, res?.data?.access_token, 1);
+        setCookie(CALENDAR_TOKEN_KEY, res?.data?.access_token, 1);
       });
     }
   }, []);

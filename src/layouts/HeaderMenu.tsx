@@ -1,6 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-import { ACCESS_TOKEN_KEY, CALENDAR_KEY, REFRESH_TOKEN_KEY } from '@/constants';
+import {
+  ACCESS_TOKEN_KEY,
+  CALENDAR_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+} from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { deleteCookie } from '@/utils';
 
@@ -26,7 +30,7 @@ export default function HeaderMenu() {
             onClick={() => {
               deleteCookie(ACCESS_TOKEN_KEY);
               deleteCookie(REFRESH_TOKEN_KEY);
-              deleteCookie(CALENDAR_KEY);
+              deleteCookie(CALENDAR_TOKEN_KEY);
               navigate('/login');
               hideDialog();
             }}

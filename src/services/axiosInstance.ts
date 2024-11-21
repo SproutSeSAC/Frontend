@@ -3,7 +3,11 @@ import {
   getNewAccessToken,
 } from '@/services/auth/authQueries';
 
-import { ACCESS_TOKEN_KEY, CALENDAR_KEY, REFRESH_TOKEN_KEY } from '@/constants';
+import {
+  ACCESS_TOKEN_KEY,
+  CALENDAR_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+} from '@/constants';
 import { getCookie, setCookie } from '@/utils';
 import axios, {
   AxiosHeaders,
@@ -63,6 +67,13 @@ axiosInstance.interceptors.response.use(
 
         setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
 
+        if (error.response.status === 304 && !getCookie(CALENDAR_TOKEN_KEY)) {
+          const calendarResponse = await getCalendarToken();
+
+          const newCalendarAccessToken = calendarResponse.data.access_token;
+
+          setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
+        }
         return await axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error('refreshError', refreshError);
@@ -83,7 +94,7 @@ export const axiosCalendarInstance = axios.create({
 
 axiosCalendarInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const calendarAccessToken = getCookie(CALENDAR_KEY);
+    const calendarAccessToken = getCookie(CALENDAR_TOKEN_KEY);
 
     const headers = new AxiosHeaders(config.headers || {});
 
@@ -120,7 +131,7 @@ axiosCalendarInstance.interceptors.response.use(
 
         const newCalendarAccessToken = response.data.access_token;
 
-        setCookie(CALENDAR_KEY, newCalendarAccessToken, 1);
+        setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
 
         return await axiosCalendarInstance(originalRequest);
       } catch (refreshError) {
