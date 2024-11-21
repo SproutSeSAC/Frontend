@@ -2,11 +2,13 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
+import { CALENDAR_TOKEN_KEY } from '@/constants';
 import {
   GoogleCalendarApiDto,
   ManagerEmailListByCourseDto,
   SproutCalendarDto,
 } from '@/types';
+import { getCookie } from '@/utils';
 import { AxiosResponse } from 'axios';
 
 export const useGetCalendarList = (
@@ -22,6 +24,7 @@ export const useGetCalendarList = (
     queryKey: ['calendarList'],
     queryFn: getCalendarList,
     ...options,
+    enabled: !!getCookie(CALENDAR_TOKEN_KEY),
   });
 };
 
