@@ -67,13 +67,6 @@ axiosInstance.interceptors.response.use(
 
         setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
 
-        if (error.response.status === 304 && !getCookie(CALENDAR_TOKEN_KEY)) {
-          const calendarResponse = await getCalendarToken();
-
-          const newCalendarAccessToken = calendarResponse.data.access_token;
-
-          setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
-        }
         return await axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error('refreshError', refreshError);
