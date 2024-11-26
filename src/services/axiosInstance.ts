@@ -73,10 +73,6 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    if (error.response && error.response.status === 404) {
-      window.location.href = '/login';
-    }
-
     return Promise.reject(error);
   },
 );
@@ -130,6 +126,10 @@ axiosCalendarInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error('refreshError', refreshError);
       }
+    }
+
+    if (error.response.status === 404) {
+      return null; // 삭제했을 때 나타나는 듯.
     }
     return Promise.reject(error);
   },

@@ -5,8 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
 import {
   useGetAclListByCalendar,
-  useGetAdminEmailByCourse,
-  useGetCalendarIdByCourse,
+  useGetAuthorizedEmailsByCourse,
+  useGetCreatedCourseCalendar,
 } from '@/services/schedule/calendarQueries';
 
 import { managerAndAdminRolesObj } from '@/constants';
@@ -32,26 +32,26 @@ export default function CreateCalendarButton({
 
   const { alert, hideDialog } = useDialogContext();
 
-  const { data: adminEmailList } = useGetAdminEmailByCourse(courseId);
+  const { data: authorizedEmailList } =
+    useGetAuthorizedEmailsByCourse(courseId);
 
-  const { data: calendarIdByCourse } = useGetCalendarIdByCourse(courseId);
-
-  const sproutCalendarId = calendarIdByCourse?.calendarId;
+  const { calendarId: sproutCalendarId = '' } =
+    useGetCreatedCourseCalendar(courseId).data || {};
 
   const { data: aclList } = useGetAclListByCalendar(sproutCalendarId);
 
-  const adminEmailListExpectCurrentRole = adminEmailList?.filter(
-    item => item.roleType !== userRole,
-  );
+  const authorizedEmailListByRole = authorizedEmailList
+    ?.filter(item => item.roleType !== userRole)
+    ?.reduce<Partial<Record<KeyOfRole, string>>>((acc, user) => {
+      acc[user.roleType as KeyOfRole] = user.email;
+      return acc;
+    }, {}) as {
+    EDU_MANAGER?: string;
+    CAMPUS_MANAGER?: string;
+    JOB_COORDINATOR?: string;
+  };
 
-  const managerEmailsObj = (adminEmailListExpectCurrentRole || [])?.reduce<
-    Partial<Record<KeyOfRole, string>>
-  >((acc, user) => {
-    acc[user.roleType as KeyOfRole] = user.email;
-    return acc;
-  }, {});
-
-  const managerNameExceptUserRole = Object.values(
+  const managerListExceptUserRole = Object.values(
     Object.fromEntries(
       Object.entries(managerAndAdminRolesObj).filter(
         ([key]) => key !== userRole,
@@ -64,7 +64,7 @@ export default function CreateCalendarButton({
   const { mutateAsync } = useCreateCalendar(
     courseId,
     courseTitle,
-    managerEmailsObj,
+    authorizedEmailListByRole,
     userRole,
     {
       onMutate: () => {
@@ -102,8 +102,8 @@ export default function CreateCalendarButton({
           <div className="flex max-w-80 flex-col">
             <Title
               as="p"
-              highlight={managerNameExceptUserRole}
-              title={`${courseTitle} 캘린더는 누구나 볼 수 있는 공개 캘린더로 생성됩니다. ${managerNameExceptUserRole}는 캘린더에 대해 동일한 권한을 갖게 됩니다.`}
+              highlight={managerListExceptUserRole}
+              title={`${courseTitle} 캘린더는 누구나 볼 수 있는 공개 캘린더로 생성됩니다. ${managerListExceptUserRole}는 캘린더에 대해 동일한 권한을 갖게 됩니다.`}
               className="mt-2 px-2 text-center leading-6"
             />
             <div className="flex justify-center gap-2">

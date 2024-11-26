@@ -7,6 +7,7 @@ import {
   GoogleCalendarApiDto,
   ManagerEmailListByCourseDto,
   SproutCalendarDto,
+  UserProfileDto,
 } from '@/types';
 import { getCookie } from '@/utils';
 import { AxiosResponse } from 'axios';
@@ -86,7 +87,8 @@ export const useGetAclListByCalendar = (
   });
 };
 
-export const useGetCalendarIdByCourse = (
+// 생성된 교육과정 데이터 가져오기
+export const useGetCreatedCourseCalendar = (
   courseId?: number,
   options?: UseQueryOptions<SproutCalendarDto.Get>,
 ) => {
@@ -105,7 +107,40 @@ export const useGetCalendarIdByCourse = (
   });
 };
 
-export const useGetAdminEmailByCourse = (
+export const useCourseCalendarList = (
+  courseList: Pick<UserProfileDto.Get, 'courseList'>['courseList'],
+  options?: UseQueryOptions<
+    (SproutCalendarDto.Get & { isCreated: boolean; courseTitle: string })[]
+  >,
+) => {
+  const getCourseCalendarInfoList = async () => {
+    const requests = courseList.map(({ courseId, courseTitle }) =>
+      axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
+        return res.data.length === 0
+          ? [{ courseTitle, courseId, isCreated: false }]
+          : res.data.map((item: SproutCalendarDto.Get) => ({
+              ...item,
+              id: item.calendarId,
+              courseTitle,
+              isCreated: true,
+            }));
+      }),
+    );
+    const responses = await Promise.all(requests);
+    return responses.flat();
+  };
+
+  return useQuery<
+    (SproutCalendarDto.Get & { isCreated: boolean; courseTitle: string })[]
+  >({
+    queryKey: ['courseCalenderList', courseList],
+    queryFn: getCourseCalendarInfoList,
+    enabled: courseList.length > 0,
+    ...options,
+  });
+};
+
+export const useGetAuthorizedEmailsByCourse = (
   courseId?: number,
   options?: UseQueryOptions<ManagerEmailListByCourseDto.Get>,
 ) => {

@@ -135,31 +135,12 @@
     .fc-daygrid-body-unbalanced {
       @apply pb-2;
     }
+    .fc-daygrid-day-top {
+      @apply min-h-6 py-0;
+    }
     /* 이벤트 박스 */
     .fc-daygrid-day-events {
-      @apply absolute inset-x-0 -bottom-0.5 m-0 flex min-h-0 items-center justify-center p-0;
-
-      .fc-daygrid-event-harness {
-        @apply m-0 p-0;
-
-        /* 이벤트 점 표시 */
-        .fc-h-event {
-          @apply size-[5px] rounded-full border-0 p-0;
-          .fc-event-main {
-            @apply size-[5px];
-          }
-          .fc-event-title-container {
-            @apply flex items-center;
-            .fc-event-title {
-              @apply hidden;
-            }
-          }
-        }
-      }
-
-      .fc-daygrid-day-bottom {
-        @apply hidden;
-      }
+      @apply hidden;
     }
   }
   .fc-theme-standard {
