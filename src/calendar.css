@@ -74,8 +74,9 @@
     }
 
     .fc-daygrid-day-events {
-      @apply flex flex-col gap-0.5;
-
+      .fc-event {
+        @apply my-[1px];
+      }
       .fc-event-time {
         @apply text-[11px];
       }
@@ -87,10 +88,9 @@
       .fc-daygrid-dot-event {
         @apply p-0;
       }
-
       /* 종일 이벤트 */
       .fc-h-event {
-        @apply mx-0.5 flex items-center rounded-sm border-0 px-1 py-0;
+        @apply flex items-center rounded-sm border-0 px-1 py-0;
         .fc-event-title-container {
           @apply flex items-center;
         }
