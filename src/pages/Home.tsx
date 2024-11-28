@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <>
       <MainView>
-        <Header title={`${name}, 스프님 환영합니다!`} />
+        <Header title={`${name} 스프님, 환영합니다!`} />
 
         <section>
           <Title title="나의 새싹 정보" className="mb-[10px]" />
