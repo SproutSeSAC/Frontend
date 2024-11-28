@@ -17,7 +17,7 @@ const initialState: AnnouncementFilter = {
 
 export default function Announcement() {
   const [searchParams] = useSearchParams();
-  const ptype = searchParams.get('ptype') as KeyOfAnnouncementTabKind;
+  const noticeType = searchParams.get('noticeType') as KeyOfAnnouncementTabKind;
 
   const {
     currFilter,
@@ -27,7 +27,7 @@ export default function Announcement() {
     handleChangeFilter,
   } = useFilterData<AnnouncementFilter>({ initialState });
 
-  if (ptype === 'EDIT') return <AnnouncementForm />;
+  if (noticeType === 'EDIT') return <AnnouncementForm />;
 
   return (
     <>

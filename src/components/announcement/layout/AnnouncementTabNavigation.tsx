@@ -8,10 +8,10 @@ import { updateQueryParams } from '@/utils';
 export default function AnnouncementTabNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const params = searchParams.get('ptype');
+  const params = searchParams.get('noticeType');
 
   const handelChangeValue = (type: string) => {
-    updateQueryParams(searchParams, setSearchParams, 'ptype', type);
+    updateQueryParams(searchParams, setSearchParams, 'noticeType', type);
   };
 
   return (
@@ -23,7 +23,7 @@ export default function AnnouncementTabNavigation() {
       <button
         type="button"
         onClick={() =>
-          updateQueryParams(searchParams, setSearchParams, 'ptype', 'EDIT')
+          updateQueryParams(searchParams, setSearchParams, 'noticeType', 'EDIT')
         }
         className={`cursor-pointer whitespace-pre px-4 pb-[19px] text-center ${params === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
