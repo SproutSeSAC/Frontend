@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -10,10 +10,9 @@ import {
 import {
   announcementCategoryOptions,
   defaultAnnouncementFormValues,
-  tooltip,
 } from '@/constants/announcement';
 import { useDialogContext, usePageBlocker } from '@/hooks';
-import { AnnouncementDto } from '@/types';
+import { AnnouncementCategoryKey, AnnouncementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -24,17 +23,13 @@ import {
 } from 'react-hook-form';
 
 import { AnnouncementFormSchema } from '@/components/announcement/form/AnnouncementFormSchema';
-import ControlMeetingType from '@/components/announcement/form/ControlMeetingType';
-import ControllerParticipantCapacity from '@/components/announcement/form/ControllerParticipantCapacity';
-import ControllerSessions from '@/components/announcement/form/ControllerSessions';
+import ExtraInfoForm from '@/components/announcement/form/ExtraInfoForm';
 import CircleNumber from '@/components/common/CircleNumber';
 import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
-import ControllerDateTime from '@/components/common/input/ControllerDateTime';
 import LabeledSection from '@/components/common/input/LabeledSection';
-import TextInput from '@/components/common/input/TextInput';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
 
 export default function AnnouncementForm() {
@@ -49,14 +44,9 @@ export default function AnnouncementForm() {
     formState: { isDirty },
   } = methods;
 
+  // console.log(useWatch({ control, name: 'targetCourseList' }));
+
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
-
-  const noticeType = useWatch({ control, name: 'noticeType' });
-
-  const isNeedMoreInfoNoticeType =
-    noticeType === 'SPECIAL_LECTURE' || noticeType === 'EVENT';
-
-  const noticeTypeName = noticeType === 'SPECIAL_LECTURE' ? '특강' : '행사';
 
   const { hideDialog, alert, showToast } = useDialogContext();
 
@@ -64,9 +54,7 @@ export default function AnnouncementForm() {
 
   const { blocker } = usePageBlocker({
     isBlockRefresh: true,
-    form: {
-      isDirty,
-    },
+    form: { isDirty },
   });
 
   useEffect(() => {
@@ -111,6 +99,12 @@ export default function AnnouncementForm() {
       showToast(firstErrorMsg);
     }
   };
+
+  const noticeKey = useWatch({ control, name: 'noticeType' });
+
+  const findCurrNotice = useCallback((key: AnnouncementCategoryKey) => {
+    return announcementCategoryOptions.find(option => key === option.key);
+  }, []);
 
   return (
     <FormProvider {...methods}>
@@ -164,9 +158,8 @@ export default function AnnouncementForm() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
-                  const selectedOption = announcementCategoryOptions.find(
-                    ({ key }) => key === value,
-                  );
+                  const selectedOption = findCurrNotice(value);
+
                   return (
                     <SingleSelectDropdown
                       defaultLabel="일반공지, 특강, 취업정보 ..."
@@ -180,78 +173,10 @@ export default function AnnouncementForm() {
               />
             </LabeledSection>
 
-            {isNeedMoreInfoNoticeType && (
-              <>
-                <LabeledSection label="신청 폼">
-                  <Controller
-                    control={control}
-                    name="applicationForm"
-                    render={({
-                      field: { onChange },
-                      fieldState: { error },
-                    }) => {
-                      return (
-                        <TextInput
-                          name="신청 폼"
-                          placeholder="Google Forms 링크 등을 적어주세요."
-                          onChange={onChange}
-                          className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
-                          errorMsg={error?.message}
-                        />
-                      );
-                    }}
-                  />
-                </LabeledSection>
-
-                <LabeledSection label="신청 기간" className="col-span-2">
-                  <div className="flex w-full items-center gap-2">
-                    <ControllerDateTime name="applicationStartDateTime" />
-                    <span className="text-xl">~</span>
-                    <ControllerDateTime name="applicationEndDateTime" />
-                  </div>
-                </LabeledSection>
-
-                <ControllerSessions noticeType={noticeTypeName} />
-
-                <LabeledSection
-                  label={`${noticeTypeName} 장소`}
-                  tooltip={tooltip.meetingType}
-                >
-                  <ControlMeetingType />
-                </LabeledSection>
-
-                <LabeledSection label="인원 제한">
-                  <ControllerParticipantCapacity />
-                </LabeledSection>
-
-                <LabeledSection
-                  label="만족도 조사"
-                  tooltip={tooltip.satisfactionSurvey}
-                >
-                  <Controller
-                    control={control}
-                    name="satisfactionSurvey"
-                    render={({
-                      field: { onChange },
-                      fieldState: { error },
-                    }) => {
-                      return (
-                        <TextInput
-                          name="만족도 조사"
-                          placeholder="만족도 조사 링크를 적어주세요."
-                          onChange={onChange}
-                          className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
-                          errorMsg={error?.message}
-                        />
-                      );
-                    }}
-                  />
-                </LabeledSection>
-
-                <p className="self-end text-end text-gray2">
-                  Zoom, 만족도 조사 링크는 추후에 등록해 주셔도 됩니다.
-                </p>
-              </>
+            {findCurrNotice(noticeKey)?.needExtraInfo && (
+              <ExtraInfoForm
+                noticeType={findCurrNotice(noticeKey)?.name as '행사' | '특강'}
+              />
             )}
           </div>
         </section>
@@ -259,7 +184,9 @@ export default function AnnouncementForm() {
         {/* 에디터  */}
         <section>
           <header className="mt-12 flex items-center gap-1.5">
-            <CircleNumber number={isNeedMoreInfoNoticeType ? 3 : 2} />
+            <CircleNumber
+              number={findCurrNotice(noticeKey)?.needExtraInfo ? 3 : 2}
+            />
             <Title as="h1" title="공지사항 상세 내용" />
           </header>
 
