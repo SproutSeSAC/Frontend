@@ -89,8 +89,8 @@ interface EventOrganizer {
 
 interface EventDateTime {
   date: string;
-  dateTime: string;
-  timeZone: string;
+  dateTime?: string;
+  timeZone?: string;
 }
 
 interface EventAttendee {

@@ -4,6 +4,19 @@ export namespace GoogleCalendarApiDto {
   export type GetCalendarList = CalendarList;
   export type GetCalenderEvents = CalenderEvents;
   export type GetAclList = Acl[];
+
+  export type PostCalendar = {
+    userRole: KeyOfRole;
+    summary: string;
+    courseId: number;
+    authorizedEmails: AuthorizedEmailsByRole;
+  };
+  export type PostEvent = Partial<
+    Pick<Event, 'summary' | 'description' | 'location'>
+  > & {
+    start: { date?: string; dateTime?: string };
+    end: { date?: string; dateTime?: string };
+  };
 }
 
 type CalendarList = {

@@ -111,7 +111,7 @@ export default function Calendar({
             <ul className="mb-2 mt-1 flex flex-col gap-2">
               {futureEvents.slice(0, 4).map(event => (
                 <SmallCalendarBottomEvent
-                  key={event.title}
+                  key={event.id}
                   date={new Date(event.start).toLocaleDateString()}
                   title={event.title}
                 />

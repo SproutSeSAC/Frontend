@@ -13,6 +13,7 @@ import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';
 import Checkbox from '@/components/common/checkbox/Checkbox';
+import AclInfoButton from '@/components/schedule/AclInfoButton';
 import CreateCalendarButton from '@/components/schedule/CreateCalendarButton';
 import SubscribeCalendarButton from '@/components/schedule/SubscribeCalendarButton';
 
@@ -51,10 +52,10 @@ export default function CalendarCheckBoxList({
   const calendarListByCategory: CalendarListByCategory[] = useMemo(
     () => [
       {
-        category: 'Sprout 캘린더',
+        category: '교육과정 캘린더',
         calendarList: courseCalendarList,
       },
-      { category: '나의 캘린더', calendarList: personalCalendarList },
+      { category: '개인 캘린더', calendarList: personalCalendarList },
     ],
     [courseCalendarList, personalCalendarList],
   );
@@ -72,16 +73,17 @@ export default function CalendarCheckBoxList({
           initialOpen
           tooltip={
             (isTrainee(userRole) || isPreTrainee(userRole)) &&
-            category === 'Sprout 캘린더' &&
+            category === '교육과정 캘린더' &&
             calendarList.length === 0
               ? '훈련생이 되면 교육과정과 관련된 일정을 볼 수 있어요.'
               : undefined
           }
         >
           <ul className="flex flex-col gap-2">
-            {category === 'Sprout 캘린더' &&
+            {category === '교육과정 캘린더' &&
               calendarList?.map(
                 ({
+                  accessRole,
                   courseId,
                   courseTitle,
                   id,
@@ -90,15 +92,26 @@ export default function CalendarCheckBoxList({
                   isCreated,
                 }) =>
                   isCreated ? (
-                    <Checkbox
+                    <div
                       key={courseId}
-                      id={courseId}
-                      text={summary || courseTitle}
-                      checked={!!currentCalendarIds?.includes(id)}
-                      onChange={() => onCheckBoxChange(id)}
-                      textClassName="!text-text"
-                      checkBoxColor={backgroundColor}
-                    />
+                      className="flex items-center justify-between"
+                    >
+                      <Checkbox
+                        id={courseId}
+                        text={summary || courseTitle}
+                        checked={!!currentCalendarIds?.includes(id)}
+                        onChange={() => onCheckBoxChange(id)}
+                        textClassName="!text-text"
+                        checkBoxColor={backgroundColor}
+                      />
+
+                      {isManagerAndAdmin(userRole) && (
+                        <AclInfoButton
+                          courseId={courseId}
+                          accessRole={accessRole}
+                        />
+                      )}
+                    </div>
                   ) : (
                     <Fragment key={courseId}>
                       {isTrainee(userRole) && (
@@ -119,7 +132,7 @@ export default function CalendarCheckBoxList({
                   ),
               )}
 
-            {category === '나의 캘린더' &&
+            {category === '개인 캘린더' &&
               calendarList?.map(({ id, summary, backgroundColor, primary }) => (
                 <Checkbox
                   key={id}

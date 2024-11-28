@@ -10,7 +10,7 @@ import {
   UserProfileDto,
 } from '@/types';
 import { getCookie } from '@/utils';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export const useGetCalendarList = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalendarList>,
@@ -75,14 +75,24 @@ export const useGetAclListByCalendar = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetAclList>,
 ) => {
   const getAclList = async () => {
-    const res = await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
-    return res.data.items;
+    try {
+      const res = await axiosCalendarInstance.get(
+        `/calendars/${calendarId}/acl`,
+      );
+      return res.data.items;
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 403) {
+        return [];
+      }
+      throw error;
+    }
   };
 
   return useQuery<GoogleCalendarApiDto.GetAclList>({
     queryKey: ['calendarAcl', calendarId],
     queryFn: getAclList,
     enabled: !!calendarId,
+    retry: false,
     ...options,
   });
 };

@@ -42,10 +42,14 @@ export const useCalendarData = () => {
     return calendarList?.items?.filter(({ id }) => id !== CALENDAR_ADDRESS_ID);
   }, [calendarList?.items]);
 
-  const courseCalendarList = useMemo(() => {
-    const findCourseCalendarInMyCalendarList = (calendarId: string) =>
-      allCalendars?.find(({ id }) => id === calendarId);
+  const findCourseCalendarInMyCalendarList = useCallback(
+    (calendarId: string) => {
+      return allCalendars?.find(({ id }) => id === calendarId);
+    },
+    [allCalendars],
+  );
 
+  const courseCalendarList = useMemo(() => {
     const result = courseCalendarInfoList
       .map(info => {
         const createdCalendarDetails = info.isCreated
@@ -60,7 +64,7 @@ export const useCalendarData = () => {
       ?.sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
 
     return result;
-  }, [allCalendars, courseCalendarInfoList]);
+  }, [courseCalendarInfoList, findCourseCalendarInMyCalendarList]);
 
   const personalCalendarList = useMemo(() => {
     const ids = courseCalendarInfoList.map(item => item.calendarId);
@@ -143,5 +147,6 @@ export const useCalendarData = () => {
     personalCalendarList,
     fullCalendarEvents,
     fullCalendarCourseEvents,
+    findCourseCalendarInMyCalendarList,
   };
 };
