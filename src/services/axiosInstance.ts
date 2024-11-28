@@ -72,6 +72,7 @@ axiosInstance.interceptors.response.use(
         console.error('refreshError', refreshError);
       }
     }
+    // NOTE: 이외 에러 발생시 로그인 페이지로 이동시킬 예정
 
     return Promise.reject(error);
   },
@@ -108,29 +109,29 @@ axiosCalendarInstance.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest.retry
-    ) {
+    if (error.response && !originalRequest.retry) {
       originalRequest.retry = true;
 
-      try {
-        const response = await getCalendarToken();
+      if (error.response.status === 401) {
+        try {
+          const response = await getCalendarToken();
+          const newCalendarAccessToken = response.data.access_token;
+          setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
 
-        const newCalendarAccessToken = response.data.access_token;
-
-        setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
-
-        return await axiosCalendarInstance(originalRequest);
-      } catch (refreshError) {
-        console.error('refreshError', refreshError);
+          return await axiosCalendarInstance(originalRequest);
+        } catch (refreshError) {
+          console.error('refreshError', refreshError);
+        }
+      }
+      if (error.response.status === 403) {
+        return console.log('캘린더에 소유자 권한이 없습니다.');
       }
     }
 
     if (error.response.status === 404) {
       return null; // 삭제했을 때 나타나는 듯.
     }
+
     return Promise.reject(error);
   },
 );

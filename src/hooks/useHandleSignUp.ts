@@ -14,8 +14,8 @@ import {
   useGetJobList,
 } from '@/services/specifications/specificationsQueries';
 
+import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
 import { initialLogin } from '@/atoms/initialLoginAtom';
-import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
@@ -32,7 +32,7 @@ export const useHandleSignUp = ({
   currCampusIdList,
   currRole,
 }: UseHandleSignUpProps) => {
-  const [isVerifiedCode] = useAtom(verifiedCodeAtom);
+  const [isVerifiedCode] = useAtom(authenticationCodeAtom);
   const setIsInitialLogin = useSetAtom(initialLogin);
 
   const { showToast } = useDialogContext();
