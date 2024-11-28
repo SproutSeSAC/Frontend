@@ -1,130 +1,79 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+
+import { UseQueryResult } from '@tanstack/react-query';
 
 import {
   getCalendarToken,
+  initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 import {
-  useGetCalendarIdByCourse,
+  useCourseCalendarList,
   useGetCalendarList,
   useGetEventsByCalendar,
 } from '@/services/schedule/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
+import { changeFullCalendarEvents } from '@/utils/getFullCalendarEvents';
+
 import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
-import { Event, FullCalendarEvent } from '@/types';
-import { createRrule, getCookie, setCookie } from '@/utils';
+import { CalenderEvents, Event, FullCalendarEvent } from '@/types';
+import { getCookie, setCookie } from '@/utils';
 import { useAtom } from 'jotai';
 
 export const useCalendarData = () => {
-  const [currCalendarIds, setCurrCalendarIds] = useAtom(calendarIdsAtom);
+  const [currShowingCalendarIds, setCurrShowingCalendarIds] =
+    useAtom(calendarIdsAtom);
+
+  const { data: userProfile = initialUserProfile } = useGetUserProfile();
+
+  const { courseList } = userProfile;
+
+  const { data: courseCalendarInfoList = [] } =
+    useCourseCalendarList(courseList);
 
   const {
     data: calendarList,
     isLoading: isCalendarListLoading, //
   } = useGetCalendarList();
 
-  const { data: userProfile } = useGetUserProfile();
-
-  const { data: calendarIdByCourse } = useGetCalendarIdByCourse(
-    userProfile?.courseList[0]?.courseId,
-  );
-
-  const sproutCalendarIds = useMemo(() => {
-    return calendarIdByCourse?.calendarId
-      ? [calendarIdByCourse?.calendarId]
-      : [];
-  }, [calendarIdByCourse?.calendarId]);
-
   const allCalendars = useMemo(() => {
-    return calendarList?.items
-      ?.filter(({ id }) => id !== CALENDAR_ADDRESS_ID)
-      ?.sort((a, b) => b.id.localeCompare(a.id));
+    return calendarList?.items?.filter(({ id }) => id !== CALENDAR_ADDRESS_ID);
   }, [calendarList?.items]);
 
-  const sproutCalendars = useMemo(() => {
-    return allCalendars
-      ? allCalendars
-          ?.filter(({ id }) => sproutCalendarIds.includes(id))
-          ?.sort((a, b) => b.id.localeCompare(a.id))
-      : [];
-  }, [allCalendars, sproutCalendarIds]);
+  const findCourseCalendarInMyCalendarList = useCallback(
+    (calendarId: string) => {
+      return allCalendars?.find(({ id }) => id === calendarId);
+    },
+    [allCalendars],
+  );
 
-  const personalCalendars = useMemo(() => {
+  const courseCalendarList = useMemo(() => {
+    const result = courseCalendarInfoList
+      .map(info => {
+        const createdCalendarDetails = info.isCreated
+          ? findCourseCalendarInMyCalendarList(info.calendarId)
+          : {};
+
+        return {
+          ...info,
+          ...createdCalendarDetails,
+        };
+      })
+      ?.sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
+
+    return result;
+  }, [courseCalendarInfoList, findCourseCalendarInMyCalendarList]);
+
+  const personalCalendarList = useMemo(() => {
+    const ids = courseCalendarInfoList.map(item => item.calendarId);
     return allCalendars
       ? allCalendars
-          ?.filter(({ id }) => !sproutCalendarIds.includes(id))
+          ?.filter(({ id }) => !ids?.includes(id))
           ?.filter(({ accessRole }) => accessRole === 'owner')
       : [];
-  }, [allCalendars, sproutCalendarIds]);
-
-  const eventsByCalendar = useGetEventsByCalendar(currCalendarIds || []);
-
-  const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
-    const getCalendarColor = (calendarSummary: string) => {
-      const findCalendar = calendarList?.items?.find(
-        ({ summary }) => summary === calendarSummary,
-      );
-      return findCalendar?.backgroundColor;
-    };
-
-    const eventList =
-      eventsByCalendar?.length !== 0
-        ? (eventsByCalendar
-            ?.map(calendar => {
-              const summary = calendar?.data?.summary ?? '';
-              return calendar?.data?.items.map(item => {
-                const backgroundColor = getCalendarColor(summary);
-                return { ...item, backgroundColor };
-              });
-            })
-            ?.flat()
-            ?.filter(item => item?.status === 'confirmed') as (Event & {
-            backgroundColor: string;
-          })[])
-        : [];
-
-    const recurringEvents = eventList
-      .filter(event => event?.recurringEventId)
-      .map(event => ({
-        recurringEventId: event.recurringEventId,
-        start: event?.start?.dateTime || event?.start?.date,
-      }));
-
-    return eventList && eventList[0]?.summary
-      ? eventList
-          ?.map(event => {
-            const start = event?.start?.dateTime || event?.start?.date;
-            const end = event?.end?.dateTime || event?.end?.date;
-
-            const defaultEvent = {
-              title: event?.summary ?? '제목없음',
-              start,
-              end,
-              id: event?.id,
-              backgroundColor: event?.backgroundColor,
-              allDay: !event?.start?.dateTime && !event?.end?.dateTime,
-            };
-
-            const exdate = recurringEvents
-              .filter(({ recurringEventId }) => recurringEventId === event.id)
-              .map(item => item.start);
-
-            return event?.recurrence
-              ? {
-                  ...defaultEvent,
-                  rrule: {
-                    ...createRrule(event.recurrence[0]),
-                    dtstart: start,
-                  },
-                  exdate,
-                }
-              : defaultEvent;
-          })
-          ?.sort((a, b) => a.start.localeCompare(b.start))
-      : [];
-  }, [calendarList?.items, eventsByCalendar]);
+  }, [allCalendars, courseCalendarInfoList]);
 
   useEffect(() => {
     if (!getCookie(CALENDAR_TOKEN_KEY)) {
@@ -135,15 +84,69 @@ export const useCalendarData = () => {
   }, []);
 
   useEffect(() => {
-    if (sproutCalendarIds.length !== 0) {
-      setCurrCalendarIds(sproutCalendarIds);
+    const courseCalendarIdList = courseCalendarInfoList
+      .filter(({ isCreated }) => isCreated)
+      .map(({ calendarId }) => calendarId);
+
+    if (courseCalendarIdList?.length !== 0) {
+      setCurrShowingCalendarIds(courseCalendarIdList);
     }
-  }, [setCurrCalendarIds, sproutCalendarIds]);
+  }, [setCurrShowingCalendarIds, courseCalendarInfoList]);
+
+  const getCalendarColor = useMemo(() => {
+    return (calendarSummary: string) => {
+      const findCalendar = calendarList?.items?.find(
+        ({ summary }) => summary === calendarSummary,
+      );
+      return findCalendar?.backgroundColor;
+    };
+  }, [calendarList?.items]);
+
+  // 이벤트 리스트
+  const getEventList = useCallback(
+    (events: UseQueryResult<CalenderEvents, Error>[]) => {
+      return events
+        ?.map(calendar => {
+          const summary = calendar?.data?.summary ?? '';
+          return calendar?.data?.items.map(item => {
+            const backgroundColor = getCalendarColor(summary);
+            return { ...item, backgroundColor };
+          });
+        })
+        ?.flat()
+        ?.filter(item => item?.status === 'confirmed') as (Event & {
+        backgroundColor: string;
+      })[];
+    },
+    [getCalendarColor],
+  );
+
+  const eventsByCalendar = useGetEventsByCalendar(currShowingCalendarIds || []);
+
+  const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
+    const eventList = getEventList(eventsByCalendar);
+    return changeFullCalendarEvents(eventList);
+  }, [eventsByCalendar, getEventList]);
+
+  const createdCourseCalendarIds = courseCalendarList
+    .filter(({ calendarId }) => !!calendarId)
+    .map(({ calendarId }) => calendarId);
+
+  const courseEventsByCalendar = useGetEventsByCalendar(
+    createdCourseCalendarIds,
+  );
+
+  const fullCalendarCourseEvents: FullCalendarEvent[] = useMemo(() => {
+    const eventList = getEventList(courseEventsByCalendar);
+    return changeFullCalendarEvents(eventList);
+  }, [courseEventsByCalendar, getEventList]);
 
   return {
     isCalendarListLoading,
-    sproutCalendars,
-    personalCalendars,
+    courseCalendarList,
+    personalCalendarList,
     fullCalendarEvents,
+    fullCalendarCourseEvents,
+    findCourseCalendarInMyCalendarList,
   };
 };

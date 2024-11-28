@@ -1,13 +1,14 @@
 import { ReactNode } from 'react';
 
 import { currentStepAtom } from '@/atoms/formStepAtom';
+import { verificationNicknameAtom } from '@/atoms/verificationNicknameAtom';
 
 import {
   SignUpFormTitle,
   SignUpQuestionsByStep,
   SignUpUserFormValue,
 } from '@/types';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useFormContext } from 'react-hook-form';
 import { BiChevronLeft } from 'react-icons/bi';
 
@@ -26,9 +27,11 @@ export default function FormStepIndicator({
   questionListByRole,
   children,
 }: FormStepIndicatorProps) {
+  const verifiedNickname = useAtomValue(verificationNicknameAtom);
+
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
 
-  const { trigger } = useFormContext();
+  const { trigger, setError } = useFormContext();
 
   const formItemsByStepArr = questionListByRole.map(item => {
     const keyName: Record<string, string> = {
@@ -52,12 +55,19 @@ export default function FormStepIndicator({
   }) as (keyof SignUpUserFormValue)[][];
 
   const goNextStep = async () => {
+    if (!verifiedNickname) {
+      setError('nickname', {
+        type: 'manual',
+        message: '중복 확인을 해주세요.',
+      });
+      return;
+    }
+
     const currentFormItems = formItemsByStepArr[currentStep - 1];
 
     const checkValidKey = await Promise.all(
       currentFormItems.map(async key => {
         const isValids = await trigger(key);
-
         return isValids;
       }),
     );

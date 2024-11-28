@@ -2,6 +2,7 @@ import { KeyOfRole, SignUpQuestionsByStep, SignUpUserFormValue } from '@/types';
 import {
   isCampusManager,
   isEduManager,
+  isJobCoordinator,
   isPreTrainee,
   isTrainee,
 } from '@/utils';
@@ -59,26 +60,33 @@ const sesacStudentStep: SignUpQuestionsByStep[] = [
   },
 ];
 
-const adminCampusStep: SignUpQuestionsByStep[] = [
-  {
-    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '*중복가능' },
-    campusList: [],
-  },
-];
+const adminCampusStep: (condition?: 'isMultiple') => SignUpQuestionsByStep[] = (
+  condition?: 'isMultiple',
+) => {
+  return [
+    {
+      title: {
+        text: '담당 캠퍼스는 무엇인가요?',
+        condition: condition === 'isMultiple' ? '*다중선택가능' : '',
+      },
+      campusList: [],
+    },
+  ];
+};
 
-const eduManagerCampusStep: SignUpQuestionsByStep[] = [
-  {
-    title: { text: '담당 캠퍼스는 무엇인가요?', condition: '' },
-    campusList: [],
-  },
-];
-
-const adminCourseStep: SignUpQuestionsByStep[] = [
-  {
-    title: { text: '담당 교육 과정은 무엇인가요?' },
-    courseList: [],
-  },
-];
+const adminCourseStep: (condition?: 'isMultiple') => SignUpQuestionsByStep[] = (
+  condition?: 'isMultiple',
+) => {
+  return [
+    {
+      title: {
+        text: '담당 교육 과정은 무엇인가요?',
+        condition: condition === 'isMultiple' ? '*다중선택가능' : '',
+      },
+      courseList: [],
+    },
+  ];
+};
 
 const indentification: SignUpQuestionsByStep[] = [
   {
@@ -109,12 +117,18 @@ export const getFormStepsByRole = (
       return [commonStudentStep, marketingConsent];
     }
     if (isCampusManager(role)) {
-      return [adminCampusStep, lastStep];
+      return [adminCampusStep('isMultiple'), lastStep];
     }
     if (isEduManager(role)) {
-      return [[...eduManagerCampusStep, ...adminCourseStep], lastStep];
+      return [[...adminCampusStep(), ...adminCourseStep()], lastStep];
     }
-    return [[...adminCampusStep, ...adminCourseStep], lastStep];
+    if (isJobCoordinator(role)) {
+      return [
+        [...adminCampusStep('isMultiple'), ...adminCourseStep('isMultiple')],
+        lastStep,
+      ];
+    }
+    return [];
   };
 
   return [commonFirstStep, ...restStep()];

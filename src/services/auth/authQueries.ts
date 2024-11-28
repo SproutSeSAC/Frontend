@@ -12,6 +12,14 @@ export const loginCheck = () => axiosInstance.get('/login/check');
 export const getVerifyCodeResult = (code: string) =>
   axiosInstance.get(`/user/verification/${code}`);
 
+// 닉네임 중복확인
+export const getVerifyNicknameResult = (nickname: string) =>
+  axiosInstance.get(`/user/nickname/duplicate`, {
+    params: {
+      nickname,
+    },
+  });
+
 // 캘린더 인증
 export const getCalendarToken = () => axiosInstance.get('/user/calendar');
 

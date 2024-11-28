@@ -1,17 +1,19 @@
 import { getVerifyCodeResult } from '@/services/auth/authQueries';
 
-import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
+import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
 
 import { useDialogContext } from '@/hooks';
 import { useAtom } from 'jotai';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { BsCheckCircle } from 'react-icons/bs';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import TextInput from '@/components/common/input/TextInput';
+import VerificationContainer from '@/components/signup/VerificationContainer';
 
-export default function VerificationCode() {
-  const [isVerifiedCode, setIsVerifiedCode] = useAtom(verifiedCodeAtom);
+export default function AuthenticationCode() {
+  const [isAuthenticationCode, setIsAuthenticationCode] = useAtom(
+    authenticationCodeAtom,
+  );
 
   const {
     register,
@@ -35,7 +37,7 @@ export default function VerificationCode() {
             <SquareButton
               name="나가기"
               onClick={() => {
-                setIsVerifiedCode(true);
+                setIsAuthenticationCode(true);
                 hideDialog();
               }}
               type="button"
@@ -55,27 +57,18 @@ export default function VerificationCode() {
   };
 
   return (
-    <div className="relative pb-10">
+    <VerificationContainer
+      isVerified={isAuthenticationCode}
+      onVerifyClick={onVerifyCodeClick}
+      buttonName="인증 확인"
+    >
       <TextInput
-        disabled={isVerifiedCode}
+        disabled={isAuthenticationCode}
         placeholder="인증코드를 입력해주세요"
-        className={`!h-[50px] w-full bg-white pl-4 ${isVerifiedCode && 'border-vividGreen1'}`}
+        className="!h-[50px] w-full bg-white pl-4"
         {...register('verifyCode')}
         errorMsg={errors?.verifyCode?.message as string}
       />
-
-      {isVerifiedCode && (
-        <BsCheckCircle className="absolute right-4 top-4 text-lg text-vividGreen1" />
-      )}
-
-      <button
-        type="button"
-        className={`absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 ${isVerifiedCode ? 'text-gray2' : 'text-gray1'}`}
-        onClick={onVerifyCodeClick}
-        disabled={isVerifiedCode}
-      >
-        인증 확인
-      </button>
-    </div>
+    </VerificationContainer>
   );
 }

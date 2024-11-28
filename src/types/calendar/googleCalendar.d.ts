@@ -46,6 +46,7 @@ export type Event = {
   eventType: 'default';
   recurrence?: string[];
   recurringEventId?: string;
+  backgroundColor?: string;
 };
 
 type AccessRole = 'freeBusyReader' | 'reader' | 'writer' | 'owner';
@@ -88,8 +89,8 @@ interface EventOrganizer {
 
 interface EventDateTime {
   date: string;
-  dateTime: string;
-  timeZone: string;
+  dateTime?: string;
+  timeZone?: string;
 }
 
 interface EventAttendee {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import SelectOption, {
@@ -35,11 +35,6 @@ interface MultiSelectDropdownProps {
  * @param onSelectBoxClick - 셀렉트 박스를 클릭했을 때 발생해야하는 이벤트
  */
 
-const fullCheckOption = {
-  id: 0,
-  name: '전체',
-};
-
 export default function MultiSelectDropdown({
   defaultLabel,
   options,
@@ -56,10 +51,6 @@ export default function MultiSelectDropdown({
 
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
 
-  const multiOptions = useMemo(() => {
-    return hasFullCheck ? [fullCheckOption, ...options] : options;
-  }, [hasFullCheck, options]);
-
   const checkIsSelected = useCallback(
     (option: Option) => {
       return selectedOptions.some(({ name }) => name === option.name);
@@ -69,50 +60,26 @@ export default function MultiSelectDropdown({
 
   const handleCheckboxChange = useCallback(
     (option: Option) => {
-      /*
-        로직
-        1. 전체 버튼을 클릭하면 전체가 선택된다. 반대로 해체하면 전체 버튼이 해제된다.
-        2. 옵션 리스트 중 하나라도 해제되면 전체 버튼도 같이 해제된다.
-        3. 만약 옵션 리스트를 수동 조작으로 다 선택했다면 전체 버튼도 같이 선택된다.
-      */
-
-      if (option.name === '전체') {
-        const updatedOptions = checkIsSelected(option) ? [] : [...multiOptions];
-        setSelectedOptions(updatedOptions);
-        return onChangeValue(updatedOptions);
-      }
-
       const addedOption = [...selectedOptions, option];
-      const isFullChecked = addedOption.length === options.length;
-
-      const addOption =
-        isFullChecked && hasFullCheck
-          ? [fullCheckOption, ...addedOption]
-          : addedOption;
-
       const filteredOption = selectedOptions.filter(
         ({ id }) => id !== option.id,
       );
-      const isNotFullChecked = filteredOption.length === options.length;
-
-      const filterOption = isNotFullChecked
-        ? filteredOption.filter(item => item.name !== '전체')
-        : filteredOption;
-
-      const updatedOptions = checkIsSelected(option) ? filterOption : addOption;
+      const updatedOptions = checkIsSelected(option)
+        ? filteredOption
+        : addedOption;
 
       setSelectedOptions(updatedOptions);
       return onChangeValue(updatedOptions);
     },
-    [
-      selectedOptions,
-      options.length,
-      hasFullCheck,
-      checkIsSelected,
-      onChangeValue,
-      multiOptions,
-    ],
+    [selectedOptions, checkIsSelected, onChangeValue],
   );
+
+  const handleFullCheck = useCallback(() => {
+    const updatedOptions =
+      selectedOptions.length !== options.length ? options : [];
+    setSelectedOptions(updatedOptions);
+    return onChangeValue(updatedOptions);
+  }, [onChangeValue, options, selectedOptions.length]);
 
   const onResetClick = useCallback(() => {
     setSelectedOptions([]);
@@ -131,7 +98,7 @@ export default function MultiSelectDropdown({
     if (onSelectBoxClick) {
       onSelectBoxClick();
     }
-    if (multiOptions.length) {
+    if (options.length) {
       setOpen(prev => !prev);
     }
   };
@@ -149,15 +116,29 @@ export default function MultiSelectDropdown({
         onResetClick={onResetClick}
         className={selectBoxClassName}
       >
-        {multiOptions.map(option => (
-          <SelectOption
-            key={option.id}
-            option={option}
-            isSelected={checkIsSelected(option)}
-            onOptionClick={handleCheckboxChange}
-            isMultiSelectOption
-            className={optionClassName}
-          />
+        {hasFullCheck && (
+          <label
+            className={`mt-2 flex cursor-pointer items-center rounded-lg px-3 py-1.5 hover:bg-gray4 ${selectedOptions.length === options.length ? 'text-gray2' : 'text-text'} ${optionClassName}`}
+          >
+            <input
+              type="checkbox"
+              checked={selectedOptions.length === options.length}
+              onChange={handleFullCheck}
+              className="mr-3 size-4 rounded border-gray-300"
+            />
+            <span>전체선택</span>
+          </label>
+        )}
+        {options.map(option => (
+          <Fragment key={option.id}>
+            <SelectOption
+              option={option}
+              isSelected={checkIsSelected(option)}
+              onOptionClick={handleCheckboxChange}
+              isMultiSelectOption
+              className={optionClassName}
+            />
+          </Fragment>
         ))}
       </SelectBox>
     </OutsideClickContainer>

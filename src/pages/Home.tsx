@@ -45,7 +45,7 @@ export default function Home() {
 
   const { name } = userProfile;
 
-  const { fullCalendarEvents } = useCalendarData();
+  const { fullCalendarEvents, fullCalendarCourseEvents } = useCalendarData();
 
   const { showToast } = useDialogContext();
 
@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <>
       <MainView>
-        <Header title={`${name}, 스프님 환영합니다!`} />
+        <Header title={`${name} 스프님, 환영합니다!`} />
 
         <section>
           <Title title="나의 새싹 정보" className="mb-[10px]" />
@@ -97,7 +97,11 @@ export default function Home() {
       </MainView>
       <SideView>
         <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
-        <Calendar type="small" events={fullCalendarEvents} />
+        <Calendar
+          type="small"
+          events={fullCalendarEvents}
+          courseEvents={fullCalendarCourseEvents}
+        />
 
         {/* 공지사항 */}
         <div className="mb-2 mt-6 flex items-center justify-between">

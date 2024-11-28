@@ -14,10 +14,11 @@ export default function Schedule() {
     useGetUserProfile();
 
   const {
-    sproutCalendars,
-    personalCalendars,
+    courseCalendarList,
+    personalCalendarList,
     fullCalendarEvents,
-    isCalendarListLoading, //
+    fullCalendarCourseEvents,
+    isCalendarListLoading,
   } = useCalendarData();
 
   if (isCalendarListLoading || isUserProfileLoading) return <LoadingPage />;
@@ -30,11 +31,15 @@ export default function Schedule() {
       />
       <div className="flex h-[85vh] min-h-[700px] gap-4">
         <div className="flex h-full max-w-[270px] flex-col gap-4">
-          <Calendar type="small" events={fullCalendarEvents} />
+          <Calendar
+            type="small"
+            events={fullCalendarEvents}
+            courseEvents={fullCalendarCourseEvents}
+          />
 
           <CalendarCheckBoxList
-            sproutCalendars={sproutCalendars}
-            personalCalendars={personalCalendars}
+            courseCalendarList={courseCalendarList}
+            personalCalendarList={personalCalendarList}
             userRole={userProfile?.role}
           />
         </div>

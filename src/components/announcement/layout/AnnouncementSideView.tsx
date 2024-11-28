@@ -7,12 +7,16 @@ import Title from '@/components/common/Title';
 import Calendar from '@/components/schedule/Calendar';
 
 export default function AnnouncementSideView() {
-  const { fullCalendarEvents } = useCalendarData();
+  const { fullCalendarEvents, fullCalendarCourseEvents } = useCalendarData();
 
   return (
     <>
       <Title title="주요일정" className="mb-2" />
-      <Calendar type="small" events={fullCalendarEvents} />
+      <Calendar
+        type="small"
+        events={fullCalendarEvents}
+        courseEvents={fullCalendarCourseEvents}
+      />
 
       <div className="mb-2 mt-8 flex items-center justify-between">
         <Title title="최근 본 공지사항" className="!pl-0 text-sm" />

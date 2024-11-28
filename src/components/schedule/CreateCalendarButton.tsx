@@ -4,9 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
 import {
-  useGetAclListByCalendar,
-  useGetAdminEmailByCourse,
-  useGetCalendarIdByCourse,
+  useGetAuthorizedEmailsByCourse,
+  useGetCreatedCourseCalendar,
 } from '@/services/schedule/calendarQueries';
 
 import { managerAndAdminRolesObj } from '@/constants';
@@ -32,26 +31,24 @@ export default function CreateCalendarButton({
 
   const { alert, hideDialog } = useDialogContext();
 
-  const { data: adminEmailList } = useGetAdminEmailByCourse(courseId);
+  const { data: authorizedEmailList } =
+    useGetAuthorizedEmailsByCourse(courseId);
 
-  const { data: calendarIdByCourse } = useGetCalendarIdByCourse(courseId);
+  const { calendarId: sproutCalendarId = '' } =
+    useGetCreatedCourseCalendar(courseId).data || {};
 
-  const sproutCalendarId = calendarIdByCourse?.calendarId;
+  const authorizedEmailListByCourse = authorizedEmailList
+    ?.filter(item => item.roleType !== userRole)
+    ?.reduce<Partial<Record<KeyOfRole, string>>>((acc, user) => {
+      acc[user.roleType as KeyOfRole] = user.email;
+      return acc;
+    }, {}) as {
+    EDU_MANAGER?: string;
+    CAMPUS_MANAGER?: string;
+    JOB_COORDINATOR?: string;
+  };
 
-  const { data: aclList } = useGetAclListByCalendar(sproutCalendarId);
-
-  const adminEmailListExpectCurrentRole = adminEmailList?.filter(
-    item => item.roleType !== userRole,
-  );
-
-  const managerEmailsObj = (adminEmailListExpectCurrentRole || [])?.reduce<
-    Partial<Record<KeyOfRole, string>>
-  >((acc, user) => {
-    acc[user.roleType as KeyOfRole] = user.email;
-    return acc;
-  }, {});
-
-  const managerNameExceptUserRole = Object.values(
+  const managerListExceptUserRole = Object.values(
     Object.fromEntries(
       Object.entries(managerAndAdminRolesObj).filter(
         ([key]) => key !== userRole,
@@ -61,70 +58,58 @@ export default function CreateCalendarButton({
 
   const queryClient = useQueryClient();
 
-  const { mutateAsync } = useCreateCalendar(
-    courseId,
-    courseTitle,
-    managerEmailsObj,
-    userRole,
-    {
-      onMutate: () => {
-        setIsLoading(true);
-      },
-      onSuccess: () => {
-        setIsLoading(false);
-        queryClient.invalidateQueries({ queryKey: ['calendarList'] });
-      },
+  const { mutateAsync } = useCreateCalendar({
+    onMutate: () => {
+      setIsLoading(true);
     },
-  );
+    onSuccess: () => {
+      setIsLoading(false);
+      queryClient.invalidateQueries({ queryKey: ['calendarList'] });
+      queryClient.invalidateQueries({ queryKey: ['calendarIdByCourse'] });
+      queryClient.invalidateQueries({ queryKey: ['courseCalenderList'] });
+    },
+  });
 
   const onEduManagerCalendarClick = () => {
     const onConfirmCreateClick = () => {
-      mutateAsync();
+      mutateAsync({
+        courseId,
+        summary: courseTitle,
+        authorizedEmails: authorizedEmailListByCourse,
+        userRole,
+      });
       hideDialog();
     };
 
-    if (sproutCalendarId) {
-      alert({
-        className: 'max-w-[360px]',
-        text: `${courseTitle} 캘린더가 이미 생성되어 있습니다.`,
-        subText: aclList
-          ? '캘린더가 이미 생성되었으며 캘린더 권한이 부여된 상태입니다. Gmail을 확인해주세요.'
-          : '잠시만 기다려주시면 관리자가 확인 후 캘린더 권한을 부여해드리겠습니다. 알림을 확인해주세요.',
-        children: (
-          <SquareButton name="확인" onClick={hideDialog} type="button" />
-        ),
-      });
-    } else {
-      alert({
-        text: `${courseTitle} 캘린더`,
-        subText: '위 캘린더를 생성하시겠어요?',
-        children: (
-          <div className="flex max-w-80 flex-col">
-            <Title
-              as="p"
-              highlight={managerNameExceptUserRole}
-              title={`${courseTitle} 캘린더는 누구나 볼 수 있는 공개 캘린더로 생성됩니다. ${managerNameExceptUserRole}는 캘린더에 대해 동일한 권한을 갖게 됩니다.`}
-              className="mt-2 px-2 text-center leading-6"
+    alert({
+      text: `${courseTitle} 캘린더`,
+      subText: '위 캘린더를 생성하시겠어요?',
+      children: (
+        <div className="flex max-w-80 flex-col">
+          <Title
+            as="p"
+            highlight={managerListExceptUserRole}
+            title={`${courseTitle} 캘린더는 누구나 볼 수 있는 공개 캘린더로 생성됩니다. ${managerListExceptUserRole}는 캘린더에 대해 동일한 권한을 갖게 됩니다.`}
+            className="mt-2 px-2 text-center leading-6"
+          />
+          <div className="flex justify-center gap-2">
+            <SquareButton
+              name="취소"
+              onClick={hideDialog}
+              type="button"
+              color="gray"
+              className="mt-5"
             />
-            <div className="flex justify-center gap-2">
-              <SquareButton
-                name="취소"
-                onClick={hideDialog}
-                type="button"
-                color="gray"
-                className="mt-5"
-              />
-              <SquareButton
-                name="생성"
-                onClick={onConfirmCreateClick}
-                type="button"
-                className="mt-5"
-              />
-            </div>
+            <SquareButton
+              name="생성"
+              onClick={onConfirmCreateClick}
+              type="button"
+              className="mt-5"
+            />
           </div>
-        ),
-      });
-    }
+        </div>
+      ),
+    });
   };
 
   return (

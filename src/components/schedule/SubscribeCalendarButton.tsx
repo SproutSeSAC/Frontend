@@ -1,4 +1,4 @@
-import { useGetCalendarIdByCourse } from '@/services/schedule/calendarQueries';
+import { useGetCreatedCourseCalendar } from '@/services/schedule/calendarQueries';
 
 import { useDialogContext } from '@/hooks';
 import { FaPlus } from 'react-icons/fa6';
@@ -18,7 +18,7 @@ export default function SubscribeCalenderButton({
   const { alert, hideDialog } = useDialogContext();
 
   const { data: calendarIdByCourse, isLoading: isCalenderIdLoading } =
-    useGetCalendarIdByCourse(courseId);
+    useGetCreatedCourseCalendar(courseId);
 
   const sproutCalendarId = calendarIdByCourse?.calendarId;
 

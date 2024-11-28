@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginCheck } from '@/services/auth/authQueries';
 
+import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
 import { currentStepAtom } from '@/atoms/formStepAtom';
-import { verifiedCodeAtom } from '@/atoms/verificationCodeAtom';
+import { verificationNicknameAtom } from '@/atoms/verificationNicknameAtom';
 
 import { RolesObj, defaultSignUpFormValues } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
@@ -18,7 +19,7 @@ import {
   isTrainee,
 } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -26,20 +27,23 @@ import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdow
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import TextInput from '@/components/common/input/TextInput';
+import AuthenticationCode from '@/components/signup/AuthenticationCode';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
 import MultiSelectList from '@/components/signup/MultiSelectList';
 import { SignUpFormSchema } from '@/components/signup/SignUpFormSchema';
-import VerificationCode from '@/components/signup/VerificationCode';
+import VerificationNickname from '@/components/signup/VerificationNickname';
 
 export default function SignUp() {
-  const [currentStep] = useAtom(currentStepAtom);
-  const [isVerifiedCode] = useAtom(verifiedCodeAtom);
+  const currentStep = useAtomValue(currentStepAtom);
+  const isAuthenticationCode = useAtomValue(authenticationCodeAtom);
+  const isVerificationNickname = useAtomValue(verificationNicknameAtom);
 
   const methods = useForm({
     mode: 'onSubmit',
     defaultValues: defaultSignUpFormValues,
     resolver: zodResolver(SignUpFormSchema),
+    context: { extra: { isValid: isVerificationNickname } },
   });
 
   const {
@@ -73,7 +77,6 @@ export default function SignUp() {
   useEffect(() => {
     loginCheck().then(data => {
       if (data.status === 304) return;
-
       if (data.status === 200) {
         navigate(-1);
       } else {
@@ -161,14 +164,7 @@ export default function SignUp() {
                             />
                           )}
 
-                          {'nickname' in question && (
-                            <TextInput
-                              placeholder="사용하실 닉네임을 입력해주세요"
-                              className="h-[50px] w-full pl-4"
-                              {...register('nickname')}
-                              errorMsg={errors.nickname?.message}
-                            />
-                          )}
+                          {'nickname' in question && <VerificationNickname />}
 
                           {'campusList' in question && campusList && (
                             <Controller
@@ -318,7 +314,7 @@ export default function SignUp() {
                             />
                           )}
 
-                          {'verifyCode' in question && <VerificationCode />}
+                          {'verifyCode' in question && <AuthenticationCode />}
 
                           {'marketingConsent' in question && (
                             <>
@@ -375,7 +371,7 @@ export default function SignUp() {
             {currentStep === questionListByRole.length && (
               <SquareButton
                 color={
-                  !isVerifiedCode && currRole !== 'PRE_TRAINEE'
+                  !isAuthenticationCode && currRole !== 'PRE_TRAINEE'
                     ? 'gray'
                     : 'oliveGreen'
                 }
