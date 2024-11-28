@@ -36,10 +36,10 @@ export default function VerificationNickname() {
         const response = await getVerifyNicknameResult(watchedNickname);
         if (response.status === 200) {
           alert({
-            text: '닉네임이 사용 가능합니다!',
+            text: '사용 가능한 닉네임입니다!',
             children: (
               <SquareButton
-                name="나가기"
+                name="확인"
                 onClick={() => {
                   setIsVerifiedNickname(true);
                   hideDialog();
