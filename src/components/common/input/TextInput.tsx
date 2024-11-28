@@ -28,6 +28,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
     className,
     errorMsg,
     disabled,
+    ...props
   }: InputProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
@@ -46,6 +47,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
         onKeyDown={onEnter}
         disabled={disabled}
         className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border-red-600' : 'border-gray4'} ${className}`}
+        {...props}
       />
 
       {errorMsg && (

@@ -1,3 +1,5 @@
+import emptyImage from '@/assets/images/empty-image.png';
+
 interface FoodImageProps {
   width: string;
   height: string;
@@ -7,7 +9,7 @@ interface FoodImageProps {
 export default function StoreMenuImage({ width, height, src }: FoodImageProps) {
   return (
     <img
-      src={src}
+      src={src || emptyImage}
       alt="식당 대표 메뉴 사진"
       className={`${width} ${height} rounded-lg object-cover`}
     />

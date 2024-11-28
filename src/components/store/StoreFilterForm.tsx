@@ -6,8 +6,10 @@ import { useGetCampusList } from '@/services/course/courseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
 import SingleSelectDropdown from '../common/dropdown/SingleSelectDropdown';
+import StoreReportModal from './modal/StoreReportModal';
 
-import { foodFilterList, storeMainFilterList } from '@/constants';
+import { foodFilterDisplay, storeMainFilterList } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { updateQueryParams } from '@/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { MdOutlineRefresh } from 'react-icons/md';
@@ -15,6 +17,9 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
 
+interface StoreFilterFormProps {
+  onReset: () => void;
+}
 interface FormValues {
   campusId: number;
   sprout: {
@@ -26,13 +31,15 @@ interface FormValues {
   foodTypeList: string[];
 }
 
-export default function StoreFilterForm() {
+export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { data: campusList } = useGetCampusList();
   const { data: filterCount } = useGetFilterCount(
     campusList ? campusList[0]?.id : 0,
   );
+
+  const { showDialog } = useDialogContext();
 
   const { control, setValue, getValues, reset } = useForm<FormValues>({
     defaultValues: {
@@ -96,7 +103,8 @@ export default function StoreFilterForm() {
   const handleReset = useCallback(() => {
     reset();
     setSearchParams('', { replace: true });
-  }, [reset, setSearchParams]);
+    onReset();
+  }, [onReset, reset, setSearchParams]);
 
   useEffect(() => {
     if (searchParams.size > 0) {
@@ -124,24 +132,28 @@ export default function StoreFilterForm() {
         <Controller
           control={control}
           name="campusId"
-          render={({ field: { onChange }, fieldState: { error } }) => (
-            <SingleSelectDropdown
-              defaultLabel={campusList ? campusList[0].name : '선택'}
-              options={campusList || []}
-              onChangeValue={data => {
-                onChange(data[0].id);
-                updateQueryParams(
-                  searchParams,
-                  setSearchParams,
-                  'campusId',
-                  data[0].id.toString(),
-                );
-              }}
-              errorMsg={error?.message}
-              selectBoxClassName="py-[7px] px-3 bg-white rounded w-[120px] h-7 text-xs"
-              optionClassName="text-sm hover:rounded-sm hover:bg-gray3 pl-1"
-            />
-          )}
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            const selectedOption = campusList?.find(({ id }) => id === value);
+            return (
+              <SingleSelectDropdown
+                defaultLabel={campusList ? campusList[0].name : '선택'}
+                options={campusList || []}
+                selectedOption={selectedOption}
+                onChangeValue={data => {
+                  onChange(data[0].id);
+                  updateQueryParams(
+                    searchParams,
+                    setSearchParams,
+                    'campusId',
+                    data[0].id.toString(),
+                  );
+                }}
+                errorMsg={error?.message}
+                selectBoxClassName="py-[7px] px-3 bg-white rounded w-[120px] h-7 text-xs"
+                optionClassName="text-sm hover:rounded-sm hover:bg-gray3 pl-1"
+              />
+            );
+          }}
         />
       </div>
 
@@ -157,7 +169,11 @@ export default function StoreFilterForm() {
                   id={item.key}
                   text={item.key}
                   textClassName="text-sm"
-                  count={filterCount ? filterCount[item.countKey] : 0}
+                  count={
+                    filterCount
+                      ? filterCount.storeOptionCount[item.countKey]
+                      : 0
+                  }
                   checked={value[item.value as keyof FormValues['sprout']]}
                   onChange={e =>
                     handleSproutCheckboxChange(
@@ -174,24 +190,24 @@ export default function StoreFilterForm() {
       </CheckboxGroup>
 
       <CheckboxGroup title="메뉴별" className="text-sm font-semibold">
-        {foodFilterList.map(item => (
+        {filterCount?.foodTypeCount.map(item => (
           <Controller
-            key={item.key}
+            key={item.foodType}
             control={control}
             name="foodTypeList"
             render={({ field: { value } }) => {
-              const isChecked = value.includes(item.value);
+              const isChecked = value.includes(item.foodType);
               return (
                 <Checkbox
-                  id={item.key}
+                  id={item.foodType}
                   textClassName="text-sm"
-                  text={item.key}
-                  count={filterCount ? filterCount[item.countKey] : 0}
+                  text={foodFilterDisplay[item.foodType]}
+                  count={item.count}
                   checked={isChecked}
                   onChange={e =>
                     handleFoodTypeListCheckboxChange(
                       'foodTypeList',
-                      item.value,
+                      item.foodType,
                       e.target.checked,
                     )
                   }
@@ -201,6 +217,18 @@ export default function StoreFilterForm() {
           />
         ))}
       </CheckboxGroup>
+      <button
+        type="button"
+        className="w-full rounded-lg bg-oliveGreen1 py-[14px] text-center text-lg font-bold text-white"
+        onClick={async () => {
+          await showDialog({
+            key: 'STORE-REPORT-TYPE',
+            element: <StoreReportModal />,
+          });
+        }}
+      >
+        맛집 제보하기
+      </button>
     </form>
   );
 }

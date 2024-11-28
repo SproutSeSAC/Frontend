@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { axiosInstance } from '../axiosInstance';
 
+import { PostStoreReviewRequest } from '@/types/store/storeDto';
 import { PostMeal, PutMealPost } from '@/types/store/storeMealPostDto';
 import { AxiosError } from 'axios';
 
@@ -10,6 +11,22 @@ export const usePostStoreScrap = () => {
     mutationFn: async requestParams => {
       const { data } = await axiosInstance.post(
         `/store/${requestParams.storeId}/scrap`,
+      );
+      return data;
+    },
+  });
+};
+
+export const usePostStoreReview = () => {
+  return useMutation<boolean, AxiosError, PostStoreReviewRequest>({
+    mutationFn: async requestParams => {
+      const { data } = await axiosInstance.post(
+        `/store/${requestParams.storeId}/review`,
+
+        {
+          rating: requestParams.rating,
+          review: requestParams.review,
+        },
       );
       return data;
     },

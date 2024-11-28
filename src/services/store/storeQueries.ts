@@ -26,7 +26,7 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
 export const useGetInfiniteStoreList = (campusId: number) => {
   const [searchParams] = useSearchParams();
   const newSearchParams = extractValidParams(searchParams);
-
+  const pageSize = 10;
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteStoreList', newSearchParams],
     queryFn: async ({ pageParam = 1 }) => {
@@ -37,16 +37,16 @@ export const useGetInfiniteStoreList = (campusId: number) => {
             page: pageParam,
             campusId: newSearchParams.campusId || campusId,
             ...newSearchParams,
+            size: pageSize,
           },
         },
       );
-      return data;
+      return {
+        stores: data.stores,
+        nextPage: data.stores.length === pageSize ? pageParam + 1 : undefined,
+      };
     },
-    getNextPageParam: (data, pages) => {
-      if (data.totalPages === 0 || data.totalPages === pages.length)
-        return undefined;
-      return pages.length;
-    },
+    getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 1,
     enabled: !!campusId,
   });
@@ -93,17 +93,14 @@ export const useGetStoreDetail = (storeId: number) => {
 export const useGetInfiniteMealPostList = () => {
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteMealPostList'],
-    queryFn: async ({ pageParam = 1 }) => {
-      const { data } = await axiosInstance.get<GetMealPostList>(
-        `/mealPost/list`,
-        {
-          params: {
-            page: pageParam,
-            size: 10,
-            sort: [],
-          },
+    queryFn: async ({ pageParam = 0 }) => {
+      const { data } = await axiosInstance.get<GetMealPostList>(`/mealPost`, {
+        params: {
+          page: pageParam,
+          size: 10,
+          sort: [],
         },
-      );
+      });
       return data;
     },
     getNextPageParam: (data, pages) => {
@@ -111,7 +108,7 @@ export const useGetInfiniteMealPostList = () => {
         return undefined;
       return pages.length;
     },
-    initialPageParam: 1,
+    initialPageParam: 0,
   });
 };
 

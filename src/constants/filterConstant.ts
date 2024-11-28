@@ -1,5 +1,5 @@
 // 포지션
-import { GetFilterCountResponse } from '@/types/store/storeDto';
+import { StoreOptionCount } from '@/types/store/storeDto';
 
 // 진행방식
 export const PROGRESS_DEFAULT = 'ALL';
@@ -101,29 +101,6 @@ export const foodFilterDisplay: { [key in FoodFilterType]: string } = {
   CAFE: '카페',
 };
 
-export const foodFilterList: Array<{
-  key: string;
-  value: FoodFilterType;
-  countKey: keyof Pick<
-    GetFilterCountResponse,
-    | 'koreanFoodCount'
-    | 'westernFoodCount'
-    | 'chineseFoodCount'
-    | 'japanesesFoodCount'
-    | 'asianFoodCount'
-    | 'snackCount'
-    | 'cafeCount'
-  >;
-}> = [
-  { key: '한식', value: FOOD_FILTER_KOREAN, countKey: 'koreanFoodCount' },
-  { key: '양식', value: FOOD_FILTER_WESTERN, countKey: 'westernFoodCount' },
-  { key: '중식', value: FOOD_FILTER_CHINESE, countKey: 'chineseFoodCount' },
-  { key: '일식', value: FOOD_FILTER_JAPANESE, countKey: 'japanesesFoodCount' },
-  { key: '아시아', value: FOOD_FILTER_ASIAN, countKey: 'asianFoodCount' },
-  { key: '분식', value: FOOD_FILTER_SNACK, countKey: 'snackCount' },
-  { key: '카페', value: FOOD_FILTER_CAFE, countKey: 'cafeCount' },
-];
-
 // store main filter
 export const STORE_MAIN_FILTER_ZERO_PAY = 'isZeropay';
 export const STORE_MAIN_FILTER_UNDER_PRICE = 'underPrice';
@@ -139,29 +116,26 @@ export type StoreMainFilterType =
 export const storeMainFilterList: Array<{
   key: string;
   value: StoreMainFilterType;
-  countKey: keyof Pick<
-    GetFilterCountResponse,
-    'overPersonCount' | 'underPriceCount' | 'walkTimeCount' | 'zeropayCount'
-  >;
+  countKey: keyof StoreOptionCount;
 }> = [
   {
     key: '제로페이',
     value: STORE_MAIN_FILTER_ZERO_PAY,
-    countKey: 'zeropayCount',
+    countKey: 'isZeropayCount',
   },
   {
     key: '만원이하',
     value: STORE_MAIN_FILTER_UNDER_PRICE,
-    countKey: 'underPriceCount',
+    countKey: 'isLessThan10000Price',
   },
   {
     key: '5인 이상',
     value: STORE_MAIN_FILTER_OVER_FIVE_PERSON,
-    countKey: 'overPersonCount',
+    countKey: 'isOverPerson',
   },
   {
     key: '도보 5분 이내',
     value: STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES,
-    countKey: 'walkTimeCount',
+    countKey: 'isVoucherCount',
   },
 ];

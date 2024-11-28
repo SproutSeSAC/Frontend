@@ -1,4 +1,6 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
+
+import { useSearchParams } from 'react-router-dom';
 
 import useGetStoreList from '@/hooks/useGetStoreList';
 import useObserver from '@/hooks/useObserver';
@@ -6,6 +8,7 @@ import useObserver from '@/hooks/useObserver';
 import { useCollapsibleSideView } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { updateQueryParams } from '@/utils';
 import { FaChevronLeft } from 'react-icons/fa';
 
 import SearchInput from '@/components/common/input/SearchInput';
@@ -17,10 +20,12 @@ export default function StoreDetail() {
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
 
-  const observeRef = useRef(null);
+  const observeRef = useRef<HTMLDivElement>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const { storeList, fetchNextPage, hasNextPage, isLoading } =
-    useGetStoreList(); // TODO: 무한스크롤 테스트 후 hook 삭제하고 컴포넌트 내에서만 처리가능하도록 수정예정
+    useGetStoreList();
 
   const onIntersect = useCallback(
     (entry: IntersectionObserverEntry) => {
@@ -31,23 +36,38 @@ export default function StoreDetail() {
     [fetchNextPage, hasNextPage],
   );
 
-  useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
+  useObserver({ onIntersect, target: observeRef, threshold: 0.5 });
 
   return (
     <>
       <MainView>
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
           <SearchInput
-            name="search"
+            name="keyword"
             placeholder="검색어를 입력해 주세요"
             width="w-[422px]"
-            height="h-[40px]"
-            onChange={() => {}}
+            height="h-[45px]"
+            onEnter={() => {
+              updateQueryParams(
+                searchParams,
+                setSearchParams,
+                'keyword',
+                searchKeyword,
+              );
+            }}
+            value={searchKeyword}
+            onChange={e => {
+              setSearchKeyword(e.target.value);
+            }}
           />
         </Header>
 
         <section className="flex h-full w-full gap-8">
-          <StoreFilterForm />
+          <StoreFilterForm
+            onReset={() => {
+              setSearchKeyword('');
+            }}
+          />
 
           <StoreMap storeList={storeList} />
         </section>
