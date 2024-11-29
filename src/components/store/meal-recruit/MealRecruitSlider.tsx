@@ -7,7 +7,7 @@ import MealRecruitCard from './MealRecruitCard';
 import MealRecruitModal from './MealRecruitModal';
 
 import { useDialogContext } from '@/hooks';
-import { Content } from '@/types/store/storeMealPostDto';
+import { MealPosts } from '@/types/store/storeMealPostDto';
 import { BsPlus } from 'react-icons/bs';
 
 import VerticalSlider from '@/components/common/slider/VerticalSlider';
@@ -76,7 +76,7 @@ export default function MealRecruitSlider({
           paginationHeightOffset={380}
           hideNextButton={!sideViewOpen}
         >
-          {item => <MealRecruitCard slideItem={item as Content} />}
+          {item => <MealRecruitCard slideItem={item as MealPosts} />}
         </VerticalSlider>
       </div>
     </>

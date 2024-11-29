@@ -1,20 +1,43 @@
 import { PageableType } from './pageable';
 
 export interface GetMealPostList extends PageableType {
-  content: Content[];
+  mealPosts: MealPosts[];
 }
 
-export interface Content {
+export interface MealPosts {
   id: number;
   title: string;
   appointmentTime: string;
   memberCount: number;
   meetingPlace: string;
   ordinalNumber: number;
+  storeName: string;
+  targetMemberCount: number;
+  currentMemberCount: number;
+  ownerNickname: string;
+  ownerProfileImageUrl: string;
+  isParticipant: boolean;
 }
 
-export interface GetMealPostDetail extends PostMeal {
+export interface GetMealPostDetail
+  extends Omit<
+    MealPosts,
+    | 'id'
+    | 'memberCount'
+    | 'ordinalNumber'
+    | 'ownerNickname'
+    | 'ownerProfileImageUrl'
+    | 'isParticipant'
+  > {
   mealPostId: number;
+  members: Array<Members>;
+}
+
+export interface Members {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  isOwner: boolean;
 }
 
 export interface PostMeal {

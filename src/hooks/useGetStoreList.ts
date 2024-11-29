@@ -8,16 +8,15 @@ const useGetStoreList = () => {
 
   const campusId = campusList ? campusList[0]?.id : 0;
   const {
-    data = { pages: [{ storeList: [], totalPages: 0 }], pageParams: [] },
+    data = { pages: [{ stores: [], totalPages: 0 }], pageParams: [] },
     fetchNextPage,
     hasNextPage,
     isFetching,
     isLoading,
   } = useGetInfiniteStoreList(campusId);
+  const excellentIndex = data?.pages.map(item => item.stores);
 
-  const excellentIndex = data?.pages.map(item => item.storeList);
-
-  const storeList = excellentIndex.reduce<Store[]>((acc, arr) => {
+  const storeList = excellentIndex?.reduce<Store[]>((acc, arr) => {
     arr?.forEach(obj => {
       acc.push(obj);
     });

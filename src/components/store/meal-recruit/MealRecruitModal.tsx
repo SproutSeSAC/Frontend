@@ -82,12 +82,13 @@ export default function MealRecruitModal() {
         queryClient.invalidateQueries({
           queryKey: ['useGetInfiniteMealPostList'],
         });
+        hideDialog();
       } catch (err) {
         console.error(err);
         showToast('한끼팟을 생성하지 못했습니다.');
       }
     },
-    [mutateAsync, queryClient, showToast],
+    [hideDialog, mutateAsync, queryClient, showToast],
   );
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
@@ -108,7 +109,7 @@ export default function MealRecruitModal() {
   return (
     <Modal
       className="p-[50px]"
-      onToggleClick={() => hideDialog()}
+      onToggleClick={hideDialog}
       title={
         <>
           <div className="mb-4 text-2xl">한끼팟 만들기</div>

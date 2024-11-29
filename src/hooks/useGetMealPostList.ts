@@ -1,19 +1,19 @@
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
-import { Content } from '@/types/store/storeMealPostDto';
+import { MealPosts } from '@/types/store/storeMealPostDto';
 
 const useGetMealPostList = () => {
   const {
-    data = { pages: [{ content: [], totalPages: 0 }], pageParams: [] },
+    data = { pages: [{ mealPosts: [], totalPages: 0 }], pageParams: [] },
     fetchNextPage,
     hasNextPage,
     isFetching,
     isLoading,
   } = useGetInfiniteMealPostList();
 
-  const excellentIndex = data?.pages.map(item => item.content);
+  const excellentIndex = data?.pages.map(item => item.mealPosts);
 
-  const mealPostList = excellentIndex.reduce<Content[]>((acc, arr) => {
+  const mealPostList = excellentIndex.reduce<MealPosts[]>((acc, arr) => {
     arr?.forEach(obj => {
       acc.push(obj);
     });
