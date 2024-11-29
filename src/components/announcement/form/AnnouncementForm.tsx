@@ -12,7 +12,11 @@ import {
   defaultAnnouncementFormValues,
 } from '@/constants/announcement';
 import { useDialogContext, usePageBlocker } from '@/hooks';
-import { AnnouncementCategoryKey, AnnouncementDto } from '@/types';
+import {
+  AnnouncementCategoryKey,
+  AnnouncementDto,
+  SpecialLectureOrEventValue,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -43,8 +47,6 @@ export default function AnnouncementForm() {
     control,
     formState: { isDirty },
   } = methods;
-
-  // console.log(useWatch({ control, name: 'targetCourseList' }));
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
@@ -117,7 +119,7 @@ export default function AnnouncementForm() {
           <div className="relative mb-16 mt-6 grid grid-cols-2 gap-8 text-lg">
             <Controller
               control={control}
-              name="targetCourseList"
+              name="targetCourseIdList"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 const courseListOption = userProfile?.courseList.map(
                   ({ courseId, courseTitle }) => ({
@@ -175,7 +177,9 @@ export default function AnnouncementForm() {
 
             {findCurrNotice(noticeKey)?.needExtraInfo && (
               <ExtraInfoForm
-                noticeType={findCurrNotice(noticeKey)?.name as '행사' | '특강'}
+                noticeType={
+                  findCurrNotice(noticeKey)?.name as SpecialLectureOrEventValue
+                }
               />
             )}
           </div>

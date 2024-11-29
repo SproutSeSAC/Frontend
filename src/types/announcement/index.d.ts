@@ -33,6 +33,11 @@ export type AnnouncementCategoryKey = keyof AnnouncementCategory;
 export type AnnouncementCategoryValue =
   AnnouncementCategory[keyof AnnouncementCategory];
 
+export type SpecialLectureOrEventValue = Extract<
+  AnnouncementCategoryValue,
+  '행사' | '특강'
+>;
+
 export type TooltipKeys = keyof Pick<
   AnnouncementDto.PostRequest,
   'meetingType' | 'satisfactionSurvey'

@@ -1,4 +1,5 @@
 import { tooltip } from '@/constants/announcement';
+import { AnnouncementCategoryValue } from '@/types';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import ControlMeetingType from '@/components/announcement/form/ControlMeetingType';
@@ -8,11 +9,11 @@ import ControllerDateTime from '@/components/common/input/ControllerDateTime';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 
-export default function ExtraInfoForm({
-  noticeType,
-}: {
-  noticeType: '행사' | '특강';
-}) {
+interface ExtraInfoFormProps {
+  noticeType: AnnouncementCategoryValue;
+}
+
+export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
   const { control } = useFormContext();
 
   return (

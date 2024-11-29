@@ -1,5 +1,3 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import {
   AnnouncementCategoryKey,
   AnnouncementCategoryValue,
@@ -60,7 +58,6 @@ export const tooltip: Record<TooltipKeys, string> = {
 };
 
 const date = new Date();
-const today = dateFormat(date, 'YYYY-MM-DD') as string;
 date.setHours(18, 0, 0, 0);
 const todayDateTime = date.toString();
 
@@ -68,24 +65,22 @@ const specialLectureEventFormValues = {
   applicationForm: '',
   applicationStartDateTime: todayDateTime,
   applicationEndDateTime: todayDateTime,
-
-  eventDate: today,
-  eventStartTime: todayDateTime,
-  eventEndTime: todayDateTime,
-
-  meetingType: {
-    type: 'ONLINE' as keyof MeetingType,
-    detail: '',
-  },
+  sessions: [
+    {
+      sessionStartDateTime: '',
+      sessionEndDateTime: '',
+    },
+  ],
+  meetingType: 'ONLINE' as keyof MeetingType,
+  meetingPlace: '',
   participantCapacity: 0,
   satisfactionSurvey: '',
 };
 
 export const defaultAnnouncementFormValues: AnnouncementDto.PostRequest = {
-  targetCourseList: [],
+  targetCourseIdList: [],
   noticeType: 'GENERAL_ANNOUNCEMENT',
   title: '',
   content: '',
-  writerId: 0,
   ...specialLectureEventFormValues,
 };
