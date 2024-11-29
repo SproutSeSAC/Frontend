@@ -1,18 +1,30 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import axios from 'axios';
+import { zoomBehaviorFlagAtom } from '@/atoms/storeDetailsAtom';
+
+import { useAtom } from 'jotai';
 
 interface UseStoreMapOption extends naver.maps.MapOptions {
   lat: number;
   lng: number;
 }
 
+const modalOpenInitValue = {
+  open: false,
+  id: 0,
+};
+
 export const useStoreMap = (mapOption: UseStoreMapOption) => {
+  const [isZoomBehaviorFlag, setIsZoomBehaviorFlag] =
+    useAtom(zoomBehaviorFlagAtom);
+
   const storeMapRef = useRef(null);
   const storeMapInstanceRef = useRef<naver.maps.Map | null>(null);
   const markerListRef = useRef<naver.maps.Marker[]>([]);
-  const polylineRef = useRef<naver.maps.Polyline | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState<{ open: boolean; id: number }>(
+    modalOpenInitValue,
+  );
+  const [zoom, setZoom] = useState(mapOption.zoom || 15);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
@@ -45,7 +57,7 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
 
       const DEFAULT_OPTIONS = {
         center: new naver.maps.LatLng(mapOption.lat, mapOption.lng),
-        zoom: mapOption.zoom,
+        zoom,
         minZoom: 7,
         zoomControl: false,
         disableKineticPan: false,
@@ -63,23 +75,57 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
 
       setIsMapReady(true);
 
-      if (polylineRef.current) {
-        polylineRef.current.setMap(null);
-      }
-
-      // eslint-disable-next-line consistent-return
-      return () => {
-        if (storeMapInstanceRef.current) {
-          storeMapInstanceRef.current.destroy();
-        }
-      };
+      // zoom 변경 이벤트 리스너 추가
+      naver.maps.Event.addListener(
+        storeMapInstanceRef.current,
+        'zoom_changed',
+        () => {
+          const currentZoom = storeMapInstanceRef.current?.getZoom();
+          if (currentZoom !== undefined) {
+            setZoom(currentZoom);
+            if (isZoomBehaviorFlag) {
+              setIsZoomBehaviorFlag(false);
+            }
+          }
+        },
+      );
     };
 
-    // script 로드 된 후 초기화 진행되도록
     if (isScriptLoaded) {
       loadMap();
     }
-  }, [mapOption, isScriptLoaded]);
+  }, [
+    isScriptLoaded,
+    isZoomBehaviorFlag,
+    mapOption,
+    setIsZoomBehaviorFlag,
+    zoom,
+  ]);
+
+  useEffect(() => {
+    // 지도 초기화 후 마커 추가
+    if (isMapReady && storeMapInstanceRef.current) {
+      const mapInstance = storeMapInstanceRef.current;
+
+      // 지도 중심
+      mapInstance.setCenter(
+        new naver.maps.LatLng(mapOption.lat, mapOption.lng),
+      );
+      // 줌 업데이트
+      mapInstance.setZoom(isZoomBehaviorFlag ? mapOption.zoom || 15 : zoom);
+
+      // 마커 리스트를 순회하며 마커 업데이트
+      markerListRef.current.forEach(marker => {
+        const markerPosition = marker.getPosition();
+        marker.setMap(mapInstance);
+
+        if (markerPosition) {
+          // 마커 위치를 다시 설정
+          marker.setPosition(markerPosition);
+        }
+      });
+    }
+  }, [isMapReady, isZoomBehaviorFlag, mapOption, zoom]);
 
   const setCenter = useCallback((lat: number, lng: number) => {
     if (storeMapInstanceRef.current) {
@@ -87,9 +133,19 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
     }
   }, []);
 
-  const addMarker = useCallback((lat: number, lng: number) => {
+  const addMarker = useCallback((lat: number, lng: number, id: number) => {
     if (!storeMapInstanceRef.current) {
       return null;
+    }
+
+    // 이미 마커가 존재하면 추가하지 않도록
+    const markerExists = markerListRef.current.find(marker =>
+      marker.getPosition().equals(new naver.maps.LatLng(lat, lng)),
+    );
+
+    if (markerExists) {
+      // eslint-disable-next-line consistent-return
+      return;
     }
 
     const marker = new naver.maps.Marker({
@@ -97,55 +153,23 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
       map: storeMapInstanceRef.current,
     });
 
-    naver.maps.Event.addListener(marker, 'click', () => setIsModalOpen(true));
+    naver.maps.Event.addListener(marker, 'click', () =>
+      setModalOpen({ open: true, id }),
+    );
 
+    // 마커 리스트에 추가
     markerListRef.current.push(marker);
 
     return marker;
   }, []);
 
-  const drawRoute = useCallback(async (start: string, goal: string) => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/directions', {
-        params: { start, goal },
-      });
-      console.log(response);
-      const { path } = response.data.route.trafast[0];
-
-      const routePath = path.map(
-        (point: [number, number]) => new naver.maps.LatLng(point[1], point[0]),
-      );
-
-      if (polylineRef.current) {
-        polylineRef.current.setMap(null);
-      }
-
-      polylineRef.current = new naver.maps.Polyline({
-        path: routePath,
-        strokeColor: '#FF0000',
-        strokeWeight: 5,
-        strokeOpacity: 1,
-        map: storeMapInstanceRef.current || undefined,
-      });
-
-      if (storeMapInstanceRef.current) {
-        storeMapInstanceRef.current.setCenter(
-          routePath[Math.floor(routePath.length / 2)],
-        );
-      }
-    } catch (error) {
-      console.error('Failed to fetch the route:', error);
-    }
-  }, []);
-
   return {
     storeMapRef,
     isMapReady,
-    isModalOpen,
-    setIsModalOpen,
+    modalOpen,
+    setModalOpen,
     setCenter,
     addMarker,
-    polylineRef,
-    drawRoute,
+    modalOpenInitValue,
   };
 };

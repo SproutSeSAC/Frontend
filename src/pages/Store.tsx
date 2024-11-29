@@ -1,6 +1,6 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import useGetStoreList from '@/hooks/useGetStoreList';
 import useObserver from '@/hooks/useObserver';
@@ -8,6 +8,7 @@ import useObserver from '@/hooks/useObserver';
 import { useCollapsibleSideView, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { updateQueryParams } from '@/utils';
 import { BsMap } from 'react-icons/bs';
 import { FaChevronLeft } from 'react-icons/fa';
 
@@ -26,10 +27,13 @@ export default function Store() {
   const navigate = useNavigate();
   const { showDialog, hideDialog } = useDialogContext();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchKeyword, setSearchKeyword] = useState('');
+
   const observeRef = useRef(null);
 
   const { storeList, fetchNextPage, hasNextPage, isLoading } =
-    useGetStoreList(); // TODO: 무한스크롤 테스트 후 hook 삭제하고 컴포넌트 내에서만 처리가능하도록 수정예정
+    useGetStoreList();
 
   const onIntersect = useCallback(
     (entry: IntersectionObserverEntry) => {
@@ -47,7 +51,7 @@ export default function Store() {
       key: 'STORE_MODAL',
       element: (
         <div className="bg-red fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform bg-red-300">
-          <StoreModal onClose={() => hideDialog()} storeId={storeId} />
+          <StoreModal onClose={hideDialog} storeId={storeId} />
         </div>
       ),
     });
@@ -58,16 +62,31 @@ export default function Store() {
       <MainView>
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
           <SearchInput
-            name="search"
+            name="keyword"
             placeholder="검색어를 입력해 주세요"
             width="w-[422px]"
             height="h-[45px]"
-            onChange={() => {}}
+            onEnter={() => {
+              updateQueryParams(
+                searchParams,
+                setSearchParams,
+                'keyword',
+                searchKeyword,
+              );
+            }}
+            value={searchKeyword}
+            onChange={e => {
+              setSearchKeyword(e.target.value);
+            }}
           />
         </Header>
 
         <section className="flex gap-8">
-          <StoreFilterForm />
+          <StoreFilterForm
+            onReset={() => {
+              setSearchKeyword('');
+            }}
+          />
 
           <div className="relative flex-auto">
             <div className="mb-6 flex justify-between">

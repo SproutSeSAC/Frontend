@@ -5,23 +5,21 @@ import Header from './Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
-import AnnouncementSideView from '@/components/announcement/layout/AnnouncementSideView';
-import AnnouncementTabNavigation from '@/components/announcement/layout/AnnouncementTabNavigation';
+import NoticeSideView from '@/components/notice/layout/NoticeSideView';
+import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
 
-export default function AnnouncementLayout() {
+export default function NoticeLayout() {
   const { pathname } = useLocation();
 
   return (
     <>
       <MainView>
         <Header title="공지사항" />
-        {!pathname.includes('announcement/post') && (
-          <AnnouncementTabNavigation />
-        )}
+        {!pathname.includes('notice/post') && <NoticeTabNavigation />}
         <Outlet />
       </MainView>
       <SideView>
-        <AnnouncementSideView />
+        <NoticeSideView />
       </SideView>
     </>
   );

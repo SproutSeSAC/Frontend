@@ -1,4 +1,4 @@
-import { meetingTypeOptions } from '@/constants/announcement';
+import { meetingTypeOptions } from '@/constants';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';

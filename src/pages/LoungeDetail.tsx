@@ -98,7 +98,7 @@ export default function LoungeDetail() {
           <SquareButton
             color="gray"
             name="닫기"
-            onClick={() => hideDialog()}
+            onClick={hideDialog}
             type="button"
           />
           <SquareButton

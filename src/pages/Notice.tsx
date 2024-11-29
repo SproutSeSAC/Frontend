@@ -1,23 +1,23 @@
 import { useSearchParams } from 'react-router-dom';
 
-import { announcementCategoryFilterList } from '@/constants/announcement';
+import { noticeCategoryFilterList } from '@/constants';
 import { useFilterData } from '@/hooks';
-import { AnnouncementFilter, KeyOfAnnouncementTabKind } from '@/types';
+import { KeyOfNoticeTabKind, NoticeFilter } from '@/types';
 
-import AnnouncementPostCard from '@/components/announcement/AnnouncementPostCard';
-import AnnouncementForm from '@/components/announcement/form/AnnouncementForm';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
+import NoticePostCard from '@/components/notice/NoticePostCard';
+import NoticeForm from '@/components/notice/form/NoticeForm';
 
-const initialState: AnnouncementFilter = {
+const initialState: NoticeFilter = {
   page: 1,
   size: 20,
-  announcementType: 'ALL',
+  noticeType: 'ALL',
 };
 
-export default function Announcement() {
+export default function Notice() {
   const [searchParams] = useSearchParams();
-  const noticeType = searchParams.get('noticeType') as KeyOfAnnouncementTabKind;
+  const noticeType = searchParams.get('noticeType') as KeyOfNoticeTabKind;
 
   const {
     currFilter,
@@ -25,9 +25,9 @@ export default function Announcement() {
     handleSearchSubmit,
     handleChangeKeyword,
     handleChangeFilter,
-  } = useFilterData<AnnouncementFilter>({ initialState });
+  } = useFilterData<NoticeFilter>({ initialState });
 
-  if (noticeType === 'EDIT') return <AnnouncementForm />;
+  if (noticeType === 'EDIT') return <NoticeForm />;
 
   return (
     <>
@@ -48,14 +48,14 @@ export default function Announcement() {
       </div>
 
       <ul className="mt-6 flex items-center gap-2.5">
-        {announcementCategoryFilterList.map(({ key, name }) => (
+        {noticeCategoryFilterList.map(({ key, name }) => (
           <li
             key={key}
-            className={`rounded-2xl ${currFilter.announcementType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}
+            className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}
           >
             <button
               type="button"
-              onClick={() => handleChangeFilter({ announcementType: key })}
+              onClick={() => handleChangeFilter({ noticeType: key })}
               className="px-4 py-2.5"
             >
               {name}
@@ -66,7 +66,7 @@ export default function Announcement() {
 
       <div className="mt-8 flex flex-col gap-4">
         {Array.from({ length: 5 }, (_, index) => (
-          <AnnouncementPostCard key={index + 1} />
+          <NoticePostCard key={index + 1} />
         ))}
       </div>
     </>

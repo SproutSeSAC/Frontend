@@ -3,18 +3,24 @@ import { FoodFilterType } from '@/constants';
 export interface Store {
   id: number;
   name: string;
-  storeImage: string;
   workingDay: string;
   foodType: FoodFilterType;
   breakTime: string;
   walkTime: number;
-  overFivePerson: boolean;
   underPrice: boolean;
   address: string;
   campusName: string;
   contact: string;
-  tagList: string[];
-  mapSchemaUrl: string;
+  holiday: string;
+  isZeropay: boolean;
+  isOverPerson: boolean;
+  longitude: string;
+  latitude: string;
+  scrapCount: number;
+  isScrap: boolean;
+  storeImageList: StoreImage[];
+  storeMenuList: StoreMenu[];
+  isLessThan10000Menu: boolean;
 }
 export interface StoreMenu {
   id: number;
@@ -23,8 +29,21 @@ export interface StoreMenu {
   imageUrl: string;
 }
 
+export interface StoreImage {
+  id?: number;
+  path: string;
+}
+
+export interface StoreReviewList {
+  nickname: string;
+  review: string;
+  profileImageUrl: string;
+  rating: number;
+  createdAt: string;
+}
+
 export interface GetStoreListResponse {
-  storeList: Store[];
+  stores: Store[];
   totalCount: number;
   currentPage: number;
   pageSize: number;
@@ -32,28 +51,37 @@ export interface GetStoreListResponse {
   nextPage: number | null;
 }
 export interface GetFilterCountResponse {
-  zeropayCount: number;
-  underPriceCount: number;
-  overPersonCount: number;
-  walkTimeCount: number;
-  koreanFoodCount: number;
-  chineseFoodCount: number;
-  japanesesFoodCount: number;
-  westernFoodCount: number;
-  asianFoodCount: number;
-  snackCount: number;
-  cafeCount?: number;
+  foodTypeCount: {
+    foodType: FoodFilterType;
+    count: number;
+  }[];
+
+  storeOptionCount: StoreOptionCount;
+}
+
+export interface StoreOptionCount {
+  isZeropayCount: number;
+  isVoucherCount: number;
+  isOverPerson: number;
+  isLessThan10000Price: number;
 }
 export interface GetStoreDetailResponse
-  extends Omit<Store, 'storeImage' | 'overFivePerson' | 'underPrice'> {
-  storeMenuList: StoreMenu[];
-  mapSchemaUrl?: string;
+  extends Omit<
+    Store,
+    | 'scrapCount'
+    | 'underPrice'
+    | 'storeImageList'
+    | 'id'
+    | 'holiday'
+    | 'longitude'
+    | 'latitude'
+  > {
   storeImageList: string[];
-  storeReviewList: {
-    nickname: string;
-    review: string;
-    profileImageUrl: string;
-    rating: number;
-    createdAt: string;
-  }[];
+  storeReviewList: StoreReviewList[];
+}
+
+export interface PostStoreReviewRequest {
+  rating: number;
+  review: string;
+  storeId: number;
 }

@@ -34,7 +34,12 @@ export default forwardRef(function StoreListSlider(
       )}
 
       {(!storeList || storeList.length === 0) && sideViewOpen && (
-        <EmptyContent message="맛집 데이터가 없습니다." />
+        <div className="flex h-[calc(100vh-188px)] flex-col items-center">
+          <EmptyContent
+            message="맛집 데이터가 없습니다."
+            className="h-inherit"
+          />
+        </div>
       )}
     </div>
   );

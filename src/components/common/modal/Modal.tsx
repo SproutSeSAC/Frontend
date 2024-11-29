@@ -11,6 +11,7 @@ interface Props {
   children: ReactNode;
   className?: string;
   headerType?: 'title-xIcon' | 'squareBackBtn-title';
+  hideClose?: boolean;
 }
 
 export default function Modal({
@@ -18,6 +19,7 @@ export default function Modal({
   title,
   children,
   className,
+  hideClose = false,
   headerType = 'title-xIcon',
 }: Props) {
   const el = document.getElementById('modal') as Element;
@@ -37,13 +39,15 @@ export default function Modal({
         {headerType === 'title-xIcon' && (
           <header className="flex items-start justify-between p-3">
             <h2 className="text-xl font-semibold">{title}</h2>
-            <button
-              type="button"
-              aria-label="모달 닫기"
-              onClick={onToggleClick}
-            >
-              <BsX size={30} />
-            </button>
+            {!hideClose && (
+              <button
+                type="button"
+                aria-label="모달 닫기"
+                onClick={onToggleClick}
+              >
+                <BsX size={30} />
+              </button>
+            )}
           </header>
         )}
 

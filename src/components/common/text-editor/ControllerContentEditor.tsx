@@ -5,7 +5,7 @@ import TextInput from '@/components/common/input/TextInput';
 import TextEditor from '@/components/common/text-editor/TextEditor';
 
 interface ControllerContentEditorProps {
-  type: 'announcement';
+  type: 'notice';
 }
 
 export default function ControllerContentEditor({
@@ -20,7 +20,7 @@ export default function ControllerContentEditor({
       content: string;
     };
   } = {
-    announcement: {
+    notice: {
       name: '공지사항',
       title: 'title',
       content: 'content',

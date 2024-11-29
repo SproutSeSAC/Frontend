@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { AnnouncementCategoryValue } from '@/types';
+import { NoticeCategoryValue } from '@/types';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
@@ -10,7 +10,7 @@ import ControllerTime from '@/components/common/input/ControllerTime';
 import LabeledSection from '@/components/common/input/LabeledSection';
 
 interface ControllerSessionsProps {
-  noticeType: AnnouncementCategoryValue;
+  noticeType: NoticeCategoryValue;
 }
 
 export default function ControllerSessions({

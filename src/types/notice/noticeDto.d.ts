@@ -1,13 +1,13 @@
-import { AnnouncementCategoryKey } from '@/types/announcement';
+import { NoticeCategoryKey } from '@/types/notice';
 
-export namespace AnnouncementDto {
-  export type GetResponse = AnnouncementGetResponse;
-  export type PostRequest = AnnouncementPostRequest;
+export namespace NoticeDto {
+  export type GetResponse = NoticeGetResponse;
+  export type PostRequest = NoticePostRequest;
 }
 
 type Status = 'ACTIVE' | 'INACTIVE' | 'END';
 
-type AnnouncementGetResponse = {
+type NoticeGetResponse = {
   id: number;
   title: string;
   content: string;
@@ -30,14 +30,14 @@ type Session = {
   sessionEndDateTime: string;
 };
 
-type AnnouncementPostRequiredParams = {
+type NoticePostRequiredParams = {
   targetCourseIdList: number[];
-  noticeType: AnnouncementCategoryKey;
+  noticeType: NoticeCategoryKey;
   title: string;
   content: string;
 };
 
-type AnnouncementPostExtraParams = {
+type NoticePostExtraParams = {
   applicationForm?: string;
   applicationStartDateTime?: string;
   applicationEndDateTime?: string;
@@ -48,5 +48,5 @@ type AnnouncementPostExtraParams = {
   satisfactionSurvey?: string;
 };
 
-type AnnouncementPostRequest = AnnouncementPostRequiredParams &
-  Partial<AnnouncementPostExtraParams>;
+type NoticePostRequest = NoticePostRequiredParams &
+  Partial<NoticePostExtraParams>;

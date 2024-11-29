@@ -5,16 +5,26 @@ import { dateFormat, timeFormat } from '@/utils/dateFormat';
 import MealRecruitCardModal from './MealRecruitCardModal';
 
 import { useDialogContext } from '@/hooks';
-import { Content } from '@/types/store/storeMealPostDto';
+import { MealPosts } from '@/types/store/storeMealPostDto';
 
-export default function MealRecruitCard({ slideItem }: { slideItem: Content }) {
+import UserImage from '@/components/user/UserImage';
+
+export default function MealRecruitCard({
+  slideItem,
+}: {
+  slideItem: MealPosts;
+}) {
   const { showDialog } = useDialogContext();
 
   const getButtonState = useCallback(() => {
-    // if (slideItem === 2) return { text: '참여중', style: 'bg-gray2' };
-    // if (slideItem === 3) return { text: '모집완료', style: 'bg-vividGreen3' };
+    if (slideItem.targetMemberCount === slideItem.currentMemberCount) {
+      return { text: '모집완료', style: 'bg-vividGreen3' };
+    }
+    if (slideItem.isParticipant) {
+      return { text: '참여중', style: 'bg-gray2' };
+    }
     return { text: '자세히', style: 'bg-vividGreen1' };
-  }, []);
+  }, [slideItem]);
 
   const isDisabled = false;
 
@@ -50,7 +60,9 @@ export default function MealRecruitCard({ slideItem }: { slideItem: Content }) {
               {' '}
               |{' '}
             </span>
-            <span className={`${isDisabled && 'text-gray1'}`}>롯데리아</span>
+            <span className={`${isDisabled && 'text-gray1'}`}>
+              {slideItem.storeName}
+            </span>
           </p>
           <p>
             <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
@@ -67,13 +79,18 @@ export default function MealRecruitCard({ slideItem }: { slideItem: Content }) {
         </div>
 
         <footer className="flex items-center justify-between">
-          <div className="size-10 rounded-full bg-gray3" />
-          <div>
-            <p className={`${isDisabled && 'text-gray1'}`}>모집자 닉네임</p>
+          <UserImage
+            className="size-10 p-0.5"
+            // profileImageUrl={slideItem.ownerProfileImageUrl} // TODO: img url 수정되면 노출
+          />
+          <div className="ml-2.5 flex-1">
+            <p className={`${isDisabled && 'text-gray1'}`}>
+              {slideItem.ownerNickname}
+            </p>
             <p
               className={`text-sm ${isDisabled ? 'text-gray2' : 'text-gray1'}`}
             >
-              {slideItem.ordinalNumber}명
+              {slideItem.currentMemberCount}/{slideItem.targetMemberCount}명
             </p>
           </div>
           <button
@@ -83,7 +100,12 @@ export default function MealRecruitCard({ slideItem }: { slideItem: Content }) {
             onClick={async () => {
               await showDialog({
                 key: 'MEAL-RECRUIT-CARD-TYPE',
-                element: <MealRecruitCardModal id={slideItem.id} />,
+                element: (
+                  <MealRecruitCardModal
+                    id={slideItem.id}
+                    isParticipant={slideItem.isParticipant}
+                  />
+                ),
               });
             }}
           >

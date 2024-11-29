@@ -76,7 +76,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
             (windowHeight - paginationHeightOffset) / slideItemHeight
           }
           modules={[Pagination]}
-          cssMode
+          cssMode={false}
           style={{ height: 'inherit' }}
           onSwiper={setSwiperInstance}
         >
@@ -85,7 +85,11 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
               {children(item)}
             </SwiperSlide>
           ))}
-          {observeRef && <div ref={observeRef} />}
+          {observeRef && (
+            <SwiperSlide>
+              <div ref={observeRef} />
+            </SwiperSlide>
+          )}
         </Swiper>
       </div>
       {isLoading && (

@@ -46,7 +46,7 @@ export default function Lounge() {
   const { techStackList, isTechStackListLoading } = useTechStackList();
 
   const handleChangeFilterValue = useCallback(
-    (value: { id: number; name: string }[], name: string) => {
+    (value: { id: number | string; name: string }[], name: string) => {
       const ids = value.map(item => item.id);
       setFilterData(prev => ({ ...prev, [name]: ids, modify: true }));
     },

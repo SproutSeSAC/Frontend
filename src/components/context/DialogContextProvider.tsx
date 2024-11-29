@@ -82,17 +82,20 @@ export default function DialogContextProvider({
   );
 
   // Dialog 제거하는 함수
-  const hideDialog = useCallback(async (key?: string): Promise<void> => {
-    setDialogs(prevDialogs => {
-      if (key) {
-        prevDialogs.map(dialog =>
+  const hideDialog = useCallback(
+    async (key?: string): Promise<void> => {
+      if (typeof key === 'string' && key) {
+        const newDialogs = dialogs.map(dialog =>
           dialog.key === key ? { ...dialog, visible: false } : dialog,
         );
-      }
 
-      return [];
-    });
-  }, []);
+        setDialogs(newDialogs);
+      } else {
+        setDialogs([]);
+      }
+    },
+    [dialogs],
+  );
 
   const alert = useCallback(
     async ({ key, showDim = true, ...rest }: AlertType): Promise<void> => {

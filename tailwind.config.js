@@ -42,6 +42,9 @@ export default {
         '2fr': 'minmax(0, 2fr)',
         '3fr': 'minmax(0, 3fr)',
       },
+      height: {
+        inherit: 'inherit',
+      },
     },
     animation: {
       'slide-fade-in-dropdown': 'slide-fade-in-dropdown-animation 0.4s ease',

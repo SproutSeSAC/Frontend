@@ -2,10 +2,7 @@ import { useCallback } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import {
-  usePutMealPost,
-  usePutMealPostLeave,
-} from '@/services/store/storeMutations';
+import { usePutMealPost } from '@/services/store/storeMutations';
 import { useGetMealPostDetail } from '@/services/store/storeQueries';
 
 import { dateFormat, timeFormat } from '@/utils/dateFormat';
@@ -19,17 +16,18 @@ import UserImage from '@/components/user/UserImage';
 
 interface MealRecruitCardModalProps {
   id: number;
+  isParticipant: boolean;
 }
 
 export default function MealRecruitCardModal({
   id,
+  isParticipant,
 }: MealRecruitCardModalProps) {
   const { hideDialog, showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
   const { data } = useGetMealPostDetail(id);
   const { mutateAsync } = usePutMealPost();
-  const { mutateAsync: leaveMutateAsync } = usePutMealPostLeave();
 
   const handleJoinClick = useCallback(async () => {
     try {
@@ -38,29 +36,19 @@ export default function MealRecruitCardModal({
       queryClient.invalidateQueries({
         queryKey: ['useGetInfiniteMealPostList'],
       });
+      hideDialog();
     } catch (err) {
       console.error(err);
       showToast('참여요청을 실패했습니다.');
+      hideDialog();
     }
-  }, [id, mutateAsync, queryClient, showToast]);
-
-  const handleLeaveClick = useCallback(async () => {
-    try {
-      await leaveMutateAsync({ mealPostId: id });
-      showToast('모임에서 성공적으로 탈퇴했습니다.');
-      queryClient.invalidateQueries({
-        queryKey: ['useGetInfiniteMealPostList'],
-      });
-    } catch (err) {
-      console.error(err);
-      showToast('탈퇴 요청을 처리하는 데 문제가 발생했습니다.');
-    }
-  }, [id, leaveMutateAsync, queryClient, showToast]);
+  }, [hideDialog, id, mutateAsync, queryClient, showToast]);
 
   return (
     <Modal
       className="main-w-[284px] px-8 py-10"
-      onToggleClick={() => hideDialog()}
+      onToggleClick={hideDialog}
+      hideClose
       title={
         <div className="text-base font-semibold">{data?.title || '-'}</div>
       }
@@ -94,17 +82,20 @@ export default function MealRecruitCardModal({
       </div>
 
       <div className="mt-6">
-        <div className="text-sm text-gray1">{`참여중인 멤버 ${data?.memberCount || 0}/4명`}</div>
+        <div className="text-sm text-gray1">{`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}</div>
 
         <ul className="mt-3 flex flex-col gap-3">
-          {[1, 2].map(item => {
+          {(data?.members || []).map(member => {
             return (
-              <li key={item} className="flex gap-2.5">
-                <UserImage className="size-10 p-0.5" profileImageUrl="" />
+              <li key={member.userId} className="flex gap-2.5">
+                <UserImage
+                  className="size-10 p-0.5"
+                  // profileImageUrl={member.profileImageUrl} //TODO: img url 수정되면 노출
+                />
                 <div className="w-full">
                   <div className="flex items-center justify-between gap-9">
-                    <span className="text-sm">모집자 닉네임</span>
-                    {item === 1 && (
+                    <span className="text-sm">{member.nickname}</span>
+                    {member.isOwner && (
                       <div className="flex items-center justify-between gap-1 rounded bg-[#FEFAE0] px-1.5 py-1 text-xs text-[#FF6D28]">
                         <FaCrown />
                         <span>모임장</span>
@@ -122,17 +113,20 @@ export default function MealRecruitCardModal({
       <div className="mt-6 flex gap-3">
         <SquareButton
           type="button"
-          onClick={handleLeaveClick}
+          className={`${isParticipant && 'flex-1'}`}
+          onClick={hideDialog}
           color="gray"
           name="나가기"
         />
-        <SquareButton
-          color="vividGreen"
-          type="button"
-          name="참여하기"
-          className="w-full flex-1"
-          onClick={handleJoinClick}
-        />
+        {!isParticipant && (
+          <SquareButton
+            color="vividGreen"
+            type="button"
+            name="참여하기"
+            className="w-full flex-1"
+            onClick={handleJoinClick}
+          />
+        )}
       </div>
     </Modal>
   );

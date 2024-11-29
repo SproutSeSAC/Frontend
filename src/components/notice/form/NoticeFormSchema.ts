@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-export type RegisterSchemaType = z.infer<typeof AnnouncementFormSchema>;
+export type RegisterSchemaType = z.infer<typeof NoticeFormSchema>;
 
-export const AnnouncementFormSchema = z
+export const NoticeFormSchema = z
   .object({
     targetCourseIdList: z //
       .array(

@@ -2,30 +2,59 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useStoreMap } from '@/hooks';
+import {
+  resetStoreDetailsAtom,
+  storeDetailsAtom,
+} from '@/atoms/storeDetailsAtom';
+
+import { useDialogContext, usePageBlocker, useStoreMap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
+import { useAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
 import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function StoreMap({ storeList }: { storeList: Store[] }) {
-  const { isModalOpen, setIsModalOpen, storeMapRef, addMarker, isMapReady } =
-    useStoreMap({
-      lat: 37.5665,
-      lng: 126.978,
-      zoom: 13,
-    });
+  const [storeDetails] = useAtom(storeDetailsAtom);
+
+  const resetStoreDetails = useResetAtom(resetStoreDetailsAtom);
+
+  const {
+    modalOpen,
+    setModalOpen,
+    storeMapRef,
+    addMarker,
+    isMapReady,
+    modalOpenInitValue,
+  } = useStoreMap({
+    lat: Number(storeDetails.latitude || storeList[0]?.latitude) || 37.5665,
+    lng: Number(storeDetails.longitude || storeList[0]?.longitude) || 126.978,
+    zoom: storeDetails.zoom > 15 ? storeDetails.zoom : 15,
+  });
   const navigate = useNavigate();
 
-  // NOTE - 마커 클릭 시 modal 띄우는 것을 보여주기 위해 임의로 찍어놓은 마커입니다. 추후에 삭제하셔도 됩니다.
   useEffect(() => {
     if (isMapReady) {
-      storeList.forEach(() => addMarker(37.5665, 126.978));
-
-      // addMarker(37.5665, 126.978);
-      // addMarker(37.6545122, 127.012516);
+      storeList.forEach(store =>
+        addMarker(Number(store?.latitude), Number(store?.longitude), store.id),
+      );
     }
   }, [addMarker, isMapReady, storeList]);
+
+  const { hideDialog, alert } = useDialogContext();
+
+  const { blocker } = usePageBlocker({
+    isBlockRefresh: false,
+    form: { isDirty: !!storeDetails.id },
+  });
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      resetStoreDetails();
+      blocker.proceed();
+    }
+  }, [alert, blocker, blocker.state, hideDialog, resetStoreDetails]);
 
   return (
     <div className="relative w-full">
@@ -40,19 +69,20 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
         <BsList size={16} />
       </button>
 
-      {/* {isModalOpen && <StoreModal onClose={() => setIsModalOpen(false)} />} */}
-
-      {isModalOpen && (
-        <StoreModal onClose={() => setIsModalOpen(false)} storeId={1} />
+      {modalOpen.open && (
+        <StoreModal
+          onClose={() => setModalOpen(modalOpenInitValue)}
+          storeId={modalOpen.id}
+        />
       )}
 
-      {isModalOpen && (
+      {modalOpen.open && (
         <div
           className="fixed inset-0 z-10"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setModalOpen(modalOpenInitValue)}
           onKeyDown={event => {
             if (event.key === 'Escape') {
-              setIsModalOpen(false);
+              setModalOpen(modalOpenInitValue);
             }
           }}
           tabIndex={-1}
