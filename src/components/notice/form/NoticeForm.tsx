@@ -7,12 +7,13 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
-import {
-  announcementCategoryOptions,
-  defaultAnnouncementFormValues,
-} from '@/constants/announcement';
+import { defaultNoticeFormValues, noticeCategoryOptions } from '@/constants';
 import { useDialogContext, usePageBlocker } from '@/hooks';
-import { AnnouncementCategoryKey, AnnouncementDto } from '@/types';
+import {
+  NoticeCategoryKey,
+  NoticeDto,
+  SpecialLectureOrEventValue,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -22,8 +23,6 @@ import {
   useWatch,
 } from 'react-hook-form';
 
-import { AnnouncementFormSchema } from '@/components/announcement/form/AnnouncementFormSchema';
-import ExtraInfoForm from '@/components/announcement/form/ExtraInfoForm';
 import CircleNumber from '@/components/common/CircleNumber';
 import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
@@ -31,11 +30,13 @@ import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdow
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
+import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
+import { NoticeFormSchema } from '@/components/notice/form/NoticeFormSchema';
 
-export default function AnnouncementForm() {
-  const methods = useForm<AnnouncementDto.PostRequest>({
-    defaultValues: defaultAnnouncementFormValues,
-    resolver: zodResolver(AnnouncementFormSchema),
+export default function NoticeForm() {
+  const methods = useForm<NoticeDto.PostRequest>({
+    defaultValues: defaultNoticeFormValues,
+    resolver: zodResolver(NoticeFormSchema),
   });
 
   const {
@@ -43,8 +44,6 @@ export default function AnnouncementForm() {
     control,
     formState: { isDirty },
   } = methods;
-
-  // console.log(useWatch({ control, name: 'targetCourseList' }));
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
@@ -89,10 +88,10 @@ export default function AnnouncementForm() {
     }
   }, [alert, blocker, blocker.state, hideDialog]);
 
-  const onError: SubmitErrorHandler<AnnouncementDto.PostRequest> = errors => {
+  const onError: SubmitErrorHandler<NoticeDto.PostRequest> = errors => {
     const firstErrorKey = Object?.keys(
       errors,
-    )?.[0] as keyof AnnouncementDto.PostRequest;
+    )?.[0] as keyof NoticeDto.PostRequest;
     const firstErrorMsg = errors[firstErrorKey]?.message;
 
     if (firstErrorMsg) {
@@ -102,8 +101,8 @@ export default function AnnouncementForm() {
 
   const noticeKey = useWatch({ control, name: 'noticeType' });
 
-  const findCurrNotice = useCallback((key: AnnouncementCategoryKey) => {
-    return announcementCategoryOptions.find(option => key === option.key);
+  const findCurrNotice = useCallback((key: NoticeCategoryKey) => {
+    return noticeCategoryOptions.find(option => key === option.key);
   }, []);
 
   return (
@@ -117,7 +116,7 @@ export default function AnnouncementForm() {
           <div className="relative mb-16 mt-6 grid grid-cols-2 gap-8 text-lg">
             <Controller
               control={control}
-              name="targetCourseList"
+              name="targetCourseIdList"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 const courseListOption = userProfile?.courseList.map(
                   ({ courseId, courseTitle }) => ({
@@ -163,7 +162,7 @@ export default function AnnouncementForm() {
                   return (
                     <SingleSelectDropdown
                       defaultLabel="일반공지, 특강, 취업정보 ..."
-                      options={announcementCategoryOptions}
+                      options={noticeCategoryOptions}
                       selectedOption={selectedOption}
                       onChangeValue={data => onChange(data[0].key)}
                       errorMsg={error?.message}
@@ -175,7 +174,9 @@ export default function AnnouncementForm() {
 
             {findCurrNotice(noticeKey)?.needExtraInfo && (
               <ExtraInfoForm
-                noticeType={findCurrNotice(noticeKey)?.name as '행사' | '특강'}
+                noticeType={
+                  findCurrNotice(noticeKey)?.name as SpecialLectureOrEventValue
+                }
               />
             )}
           </div>
@@ -190,14 +191,14 @@ export default function AnnouncementForm() {
             <Title as="h1" title="공지사항 상세 내용" />
           </header>
 
-          <ControllerContentEditor type="announcement" />
+          <ControllerContentEditor type="notice" />
 
           <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
             <SquareButton
               name="취소"
               color="gray"
               type="button"
-              onClick={() => navigate('/announcement')}
+              onClick={() => navigate('/notice')}
             />
             <SquareButton name="등록하기" type="submit" />
           </div>

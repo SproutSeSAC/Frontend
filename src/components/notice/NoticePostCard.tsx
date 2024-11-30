@@ -6,10 +6,10 @@ import { BsEye } from 'react-icons/bs';
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
-export default function AnnouncementPostCard() {
+export default function NoticePostCard() {
   return (
     <Link
-      to="/announcement/post/1"
+      to="/notice/post/1"
       className="flex w-full flex-col rounded-2xl bg-white p-4 px-6 py-4"
     >
       <div className="flex w-full items-center justify-between">
@@ -42,9 +42,7 @@ export default function AnnouncementPostCard() {
         </p>
 
         <div className="mt-6 border-b border-solid border-gray4 pb-[18px]">
-          <span className="announcement-text-divider leading-4 text-text">
-            특강
-          </span>
+          <span className="notice-text-divider leading-4 text-text">특강</span>
           <span className="leading-4 text-gray2">
             프론트엔드, 백엔드, 서버 개발
           </span>

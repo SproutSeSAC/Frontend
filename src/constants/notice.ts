@@ -1,17 +1,17 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import {
-  AnnouncementCategoryKey,
-  AnnouncementCategoryValue,
-  AnnouncementDto,
-  AnnouncementTab,
+  NoticeCategoryKey,
+  NoticeCategoryValue,
+  NoticeTab,
+  TooltipKeys,
+} from '@/types/notice';
+import {
   MeetingType,
   MeetingTypeKey,
   MeetingTypeValue,
-  TooltipKeys,
-} from '@/types';
+  NoticeDto,
+} from '@/types/notice/noticeDto';
 
-export const announcementTabList: AnnouncementTab[] = [
+export const noticeTabList: NoticeTab[] = [
   { text: '전체', type: 'ALL' },
   { text: '캠퍼스 매니저', type: 'CAMPUS_MANAGER' },
   { text: '교육 매니저', type: 'EDU_MANAGER' },
@@ -19,15 +19,15 @@ export const announcementTabList: AnnouncementTab[] = [
   { text: '북마크', type: 'BOOKMARK' },
 ];
 
-export const announcementCategoryOptions: {
+export const noticeCategoryOptions: {
   id: number;
-  key: AnnouncementCategoryKey;
-  name: AnnouncementCategoryValue;
+  key: NoticeCategoryKey;
+  name: NoticeCategoryValue;
   needExtraInfo: boolean;
 }[] = [
   {
     id: 1,
-    key: 'GENERAL_ANNOUNCEMENT',
+    key: 'GENERAL_NOTICE',
     name: '일반공지',
     needExtraInfo: false,
   },
@@ -37,11 +37,11 @@ export const announcementCategoryOptions: {
   { id: 5, key: 'ETC', name: '기타', needExtraInfo: false },
 ];
 
-export const announcementCategoryFilterList: {
+export const noticeCategoryFilterList: {
   id: number;
-  key: AnnouncementCategoryKey;
-  name: AnnouncementCategoryValue;
-}[] = [{ id: 1, key: 'ALL', name: '통합' }, ...announcementCategoryOptions];
+  key: NoticeCategoryKey;
+  name: NoticeCategoryValue;
+}[] = [{ id: 1, key: 'ALL', name: '통합' }, ...noticeCategoryOptions];
 
 export const meetingTypeOptions: {
   id: number;
@@ -60,7 +60,6 @@ export const tooltip: Record<TooltipKeys, string> = {
 };
 
 const date = new Date();
-const today = dateFormat(date, 'YYYY-MM-DD') as string;
 date.setHours(18, 0, 0, 0);
 const todayDateTime = date.toString();
 
@@ -68,24 +67,22 @@ const specialLectureEventFormValues = {
   applicationForm: '',
   applicationStartDateTime: todayDateTime,
   applicationEndDateTime: todayDateTime,
-
-  eventDate: today,
-  eventStartTime: todayDateTime,
-  eventEndTime: todayDateTime,
-
-  meetingType: {
-    type: 'ONLINE' as keyof MeetingType,
-    detail: '',
-  },
+  sessions: [
+    {
+      sessionStartDateTime: '',
+      sessionEndDateTime: '',
+    },
+  ],
+  meetingType: 'ONLINE' as keyof MeetingType,
+  meetingPlace: '',
   participantCapacity: 0,
   satisfactionSurvey: '',
 };
 
-export const defaultAnnouncementFormValues: AnnouncementDto.PostRequest = {
-  targetCourseList: [],
-  noticeType: 'GENERAL_ANNOUNCEMENT',
+export const defaultNoticeFormValues: NoticeDto.PostRequest = {
+  targetCourseIdList: [],
+  noticeType: 'GENERAL_NOTICE',
   title: '',
   content: '',
-  writerId: 0,
   ...specialLectureEventFormValues,
 };

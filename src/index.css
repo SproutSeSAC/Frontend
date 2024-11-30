@@ -88,7 +88,7 @@
     }
   }
 
-  .announcement-text-divider::after {
+  .notice-text-divider::after {
     content: '|';
     margin: 14px;
     color: #b5b5b5;

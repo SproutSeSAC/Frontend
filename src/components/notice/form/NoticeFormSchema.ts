@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-export type RegisterSchemaType = z.infer<typeof AnnouncementFormSchema>;
+export type RegisterSchemaType = z.infer<typeof NoticeFormSchema>;
 
-export const AnnouncementFormSchema = z
+export const NoticeFormSchema = z
   .object({
-    targetCourseList: z //
+    targetCourseIdList: z //
       .array(
         z.object({
           id: z.number(),
@@ -29,22 +29,16 @@ export const AnnouncementFormSchema = z
       .string()
       .min(1, '신청 종료 일시가 선택되지 않았습니다.'),
 
-    eventDate: z //
-      .string()
-      .min(1, '일시가 선택되지 않았습니다.'),
+    sessions: z.array(
+      z.object({
+        sessionStartDateTime: z.string(),
+        sessionEndDateTime: z.string(),
+      }),
+    ),
 
-    eventStartTime: z //
-      .string()
-      .min(1, '시간이 선택되지 않았습니다.'),
+    meetingType: z.enum(['ONLINE', 'OFFLINE']).default('ONLINE'),
 
-    eventEndTime: z //
-      .string()
-      .min(1, '시간이 선택되지 않았습니다.'),
-
-    meetingType: z.object({
-      type: z.enum(['ONLINE', 'OFFLINE']),
-      detail: z.string(),
-    }),
+    meetingPlace: z.string(),
 
     participantCapacity: z.number().min(0),
 
@@ -67,8 +61,8 @@ export const AnnouncementFormSchema = z
   )
   .refine(
     data => {
-      if (data.meetingType.type === 'OFFLINE') {
-        return data.meetingType.detail.trim().length > 0;
+      if (data.meetingType === 'OFFLINE') {
+        return data.meetingPlace.trim().length > 0;
       }
       return true;
     },

@@ -1,18 +1,19 @@
-import { tooltip } from '@/constants/announcement';
+import { tooltip } from '@/constants';
+import { NoticeCategoryValue } from '@/types';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import ControlMeetingType from '@/components/announcement/form/ControlMeetingType';
-import ControllerParticipantCapacity from '@/components/announcement/form/ControllerParticipantCapacity';
-import ControllerSessions from '@/components/announcement/form/ControllerSessions';
 import ControllerDateTime from '@/components/common/input/ControllerDateTime';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
+import ControlMeetingType from '@/components/notice/form/ControlMeetingType';
+import ControllerParticipantCapacity from '@/components/notice/form/ControllerParticipantCapacity';
+import ControllerSessions from '@/components/notice/form/ControllerSessions';
 
-export default function ExtraInfoForm({
-  noticeType,
-}: {
-  noticeType: '행사' | '특강';
-}) {
+interface ExtraInfoFormProps {
+  noticeType: NoticeCategoryValue;
+}
+
+export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
   const { control } = useFormContext();
 
   return (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { NoticeCategoryValue } from '@/types';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
@@ -9,7 +10,7 @@ import ControllerTime from '@/components/common/input/ControllerTime';
 import LabeledSection from '@/components/common/input/LabeledSection';
 
 interface ControllerSessionsProps {
-  noticeType: '특강' | '행사';
+  noticeType: NoticeCategoryValue;
 }
 
 export default function ControllerSessions({

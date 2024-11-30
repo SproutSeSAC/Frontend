@@ -2,9 +2,9 @@ import { lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
-const AnnouncementLayout = lazy(() => import('@/layouts/AnnouncementLayout'));
-const Announcement = lazy(() => import('@/pages/Announcement'));
-const AnnouncementDetail = lazy(() => import('@/pages/AnnouncementDetail'));
+const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
+const Notice = lazy(() => import('@/pages/Notice'));
+const NoticeDetail = lazy(() => import('@/pages/NoticeDetail'));
 const Layout = lazy(() => import('@/layouts/Layout'));
 const LoungeLayout = lazy(() => import('@/layouts/LoungeLayout'));
 const Home = lazy(() => import('@/pages/Home'));
@@ -26,16 +26,16 @@ const mainRoutes: RouteObject[] = [
         element: <Home />,
       },
       {
-        path: 'announcement',
-        element: <AnnouncementLayout />,
+        path: 'notice',
+        element: <NoticeLayout />,
         children: [
           {
             index: true,
-            element: <Announcement />,
+            element: <Notice />,
           },
           {
             path: 'post/:postId',
-            element: <AnnouncementDetail />,
+            element: <NoticeDetail />,
           },
         ],
       },

@@ -4,8 +4,8 @@ import { axiosInstance } from '@/services/axiosInstance';
 
 import { AxiosResponse } from 'axios';
 
-export const useGetAnnouncementList = (options?: UseQueryOptions) => {
-  const getAnnouncementList = async () => {
+export const useGetNoticeList = (options?: UseQueryOptions) => {
+  const getNoticeList = async () => {
     const params = {
       noticeType: 'GENERAL',
       page: 1,
@@ -20,8 +20,8 @@ export const useGetAnnouncementList = (options?: UseQueryOptions) => {
   };
 
   return useQuery({
-    queryKey: ['announcement'],
-    queryFn: getAnnouncementList,
+    queryKey: ['notice'],
+    queryFn: getNoticeList,
     initialData: [],
     ...options,
   });

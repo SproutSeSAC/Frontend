@@ -8,7 +8,7 @@ import ApplicationInfoTemplate from '@/components/common/post-template/Applicati
 import CommentTemplate from '@/components/common/post-template/CommentTemplate';
 import PostDetailsTemplate from '@/components/common/post-template/PostDetailsTemplate';
 
-export default function AnnouncementDetail() {
+export default function NoticeDetail() {
   const navigate = useNavigate();
   return (
     <div className="w-full">

@@ -6,7 +6,7 @@ import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
 import Calendar from '@/components/schedule/Calendar';
 
-export default function AnnouncementSideView() {
+export default function NoticeSideView() {
   const { fullCalendarEvents, fullCalendarCourseEvents } = useCalendarData();
 
   return (

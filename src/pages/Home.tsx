@@ -106,10 +106,7 @@ export default function Home() {
         {/* 공지사항 */}
         <div className="mb-2 mt-6 flex items-center justify-between">
           <Title title="공지사항" className="!pl-0 text-sm" />
-          <Link
-            to="/announcement"
-            className="p-1 text-xs font-semibold text-gray2"
-          >
+          <Link to="/notice" className="p-1 text-xs font-semibold text-gray2">
             더보기
           </Link>
         </div>

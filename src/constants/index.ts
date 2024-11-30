@@ -6,3 +6,4 @@ export * from '@/constants/calendar';
 export * from '@/constants/courseGrowthLevel';
 export * from '@/constants/cookieKey';
 export * from '@/constants/role';
+export * from '@/constants/notice';

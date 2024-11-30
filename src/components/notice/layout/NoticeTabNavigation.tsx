@@ -2,10 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 
 import TabNavigation from '../../common/TabNavigation';
 
-import { announcementTabList } from '@/constants/announcement';
+import { noticeTabList } from '@/constants/notice';
 import { updateQueryParams } from '@/utils';
 
-export default function AnnouncementTabNavigation() {
+export default function NoticeTabNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const params = searchParams.get('noticeType');
@@ -16,7 +16,7 @@ export default function AnnouncementTabNavigation() {
 
   return (
     <TabNavigation
-      tabList={announcementTabList}
+      tabList={noticeTabList}
       selectValue={params ?? 'ALL'}
       onChangeValue={handelChangeValue}
     >

@@ -15,7 +15,7 @@ export default function HeaderMenu() {
 
   const menuList = [
     { title: '마이페이지', to: '/mypage' },
-    { title: '공지사항', to: '/announcement' },
+    { title: '공지사항', to: '/notice' },
   ];
 
   const navigate = useNavigate();
