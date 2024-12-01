@@ -2,6 +2,8 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import TabNavigation from '../TabNavigation';
 
+import { TechStackTab } from '@/types';
+
 import XButton from '@/components/common/button/XButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import TechStackOption from '@/components/common/dropdown/option/TechStackOption';
@@ -82,7 +84,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
     [checkIsSelected, onChangeValue, selectedOptions],
   );
 
-  const handleTabValue = useCallback((tabState: string) => {
+  const handleTabValue = useCallback((tabState: TechStackTab) => {
     setTabValue(tabState);
   }, []);
 

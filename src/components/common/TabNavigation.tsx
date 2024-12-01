@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 
-interface TabNavigationProps {
-  tabList: { text: string; type: string }[];
+interface TabNavigationProps<T> {
+  tabList: { text: string; type: T }[];
   onChangeValue: (
-    value: string,
+    value: T,
     e?:
       | React.MouseEvent<HTMLLIElement, MouseEvent>
       | React.KeyboardEvent<HTMLLIElement>,
@@ -13,20 +13,20 @@ interface TabNavigationProps {
   tabClassName?: string;
 }
 
-export default function TabNavigation({
+export default function TabNavigation<T>({
   tabList,
   children,
   selectValue,
   onChangeValue,
   tabClassName,
-}: TabNavigationProps) {
+}: TabNavigationProps<T>) {
   return (
     <nav className="flex justify-between border-b border-solid border-b-gray4 pt-4 text-lg font-semibold">
       <ul className="flex flex-wrap justify-start gap-4">
         {tabList.map(({ text, type }) => (
           <li
             role="presentation"
-            key={type}
+            key={text}
             className={`box-border flex cursor-pointer justify-center whitespace-nowrap px-5 pb-[19px] ${selectValue === type ? 'border-b-2 border-text' : 'text-gray2'} ${tabClassName}`}
             onClick={e => onChangeValue(type, e)}
             onKeyDown={e => {

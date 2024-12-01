@@ -18,7 +18,7 @@ export type KeyOfNoticeTabKind = keyof NoticeTabKind;
 
 export type NoticeTab = {
   text: NoticeTabKind[KeyOfNoticeTabKind];
-  type: keyof NoticeTabKind;
+  type: KeyOfNoticeTabKind;
 };
 
 export type NoticeCategory = {
