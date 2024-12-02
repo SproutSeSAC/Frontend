@@ -110,13 +110,14 @@ export default function LoungeForm() {
   const {
     handleSubmit,
     control,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = methods;
 
   const { blocker } = usePageBlocker({
     isBlockRefresh: true,
     form: {
       isDirty,
+      isSubmitted: isSubmitting,
     },
   });
 
@@ -148,7 +149,8 @@ export default function LoungeForm() {
         </>
       ),
     });
-  }, [alert, blocker, hideDialog]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blocker.state]);
 
   useEffect(() => {
     if (blocker.state === 'blocked') {

@@ -6,14 +6,11 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
+import { usePostNotice } from '@/services/notice/noticeMutation';
 
 import { defaultNoticeFormValues, noticeCategoryOptions } from '@/constants';
 import { useDialogContext, usePageBlocker } from '@/hooks';
-import {
-  NoticeCategoryKey,
-  NoticeDto,
-  SpecialLectureOrEventValue,
-} from '@/types';
+import { NoticeDto, SpecialLectureOrEventValue } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -31,10 +28,13 @@ import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropd
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
 import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
-import { NoticeFormSchema } from '@/components/notice/form/NoticeFormSchema';
+import {
+  NoticeCategoryKeySchemaType,
+  NoticeFormSchema,
+} from '@/components/notice/form/NoticeFormSchema';
 
 export default function NoticeForm() {
-  const methods = useForm<NoticeDto.PostRequest>({
+  const methods = useForm<NoticeDto.Post>({
     defaultValues: defaultNoticeFormValues,
     resolver: zodResolver(NoticeFormSchema),
   });
@@ -42,7 +42,7 @@ export default function NoticeForm() {
   const {
     handleSubmit,
     control,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitted },
   } = methods;
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
@@ -53,7 +53,7 @@ export default function NoticeForm() {
 
   const { blocker } = usePageBlocker({
     isBlockRefresh: true,
-    form: { isDirty },
+    form: { isDirty, isSubmitted },
   });
 
   useEffect(() => {
@@ -86,14 +86,33 @@ export default function NoticeForm() {
         ),
       });
     }
-  }, [alert, blocker, blocker.state, hideDialog]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blocker.state]);
 
-  const onError: SubmitErrorHandler<NoticeDto.PostRequest> = errors => {
-    const firstErrorKey = Object?.keys(
-      errors,
-    )?.[0] as keyof NoticeDto.PostRequest;
+  const { mutate } = usePostNotice({
+    onError: () => {
+      alert({
+        text: '오류가 발생했습니다.',
+        subText: '다시 시도해주세요.',
+        children: (
+          <SquareButton
+            name="확인"
+            onClick={() => {
+              hideDialog();
+              navigate('/notice');
+            }}
+          />
+        ),
+      });
+    },
+    onSuccess: () => {
+      navigate('/notice');
+    },
+  });
+
+  const onError: SubmitErrorHandler<NoticeDto.Post> = errors => {
+    const firstErrorKey = Object?.keys(errors)?.[0] as keyof NoticeDto.Post;
     const firstErrorMsg = errors[firstErrorKey]?.message;
-
     if (firstErrorMsg) {
       showToast(firstErrorMsg);
     }
@@ -101,13 +120,17 @@ export default function NoticeForm() {
 
   const noticeKey = useWatch({ control, name: 'noticeType' });
 
-  const findCurrNotice = useCallback((key: NoticeCategoryKey) => {
+  const findCurrNotice = useCallback((key: NoticeCategoryKeySchemaType) => {
     return noticeCategoryOptions.find(option => key === option.key);
   }, []);
 
+  const onSubmit = async (submittedValue: NoticeDto.Post) => {
+    mutate(submittedValue);
+  };
+
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(() => {}, onError)} className="mt-[26px]">
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-[26px]">
         <section>
           <header className="mb-6 flex items-center gap-1.5">
             <CircleNumber number={1} />
@@ -134,7 +157,7 @@ export default function NoticeForm() {
                       onChange(ids);
                     }}
                     errorMsg={error?.message}
-                    hasFullCheck
+                    hasFullCheck={courseListOption.length > 1}
                   />
                 );
               }}
