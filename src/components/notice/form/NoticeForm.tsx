@@ -8,7 +8,11 @@ import {
 } from '@/services/auth/authQueries';
 import { usePostNotice } from '@/services/notice/noticeMutation';
 
-import { defaultNoticeFormValues, noticeCategoryOptions } from '@/constants';
+import {
+  defaultNoticeFormValues,
+  noticeCategoryOptions,
+  specialLectureEventFormValues,
+} from '@/constants';
 import { useDialogContext, usePageBlocker } from '@/hooks';
 import { NoticeDto, SpecialLectureOrEventValue } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,22 +31,25 @@ import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdow
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
+import { Session } from '@/components/notice/form/ControllerSessions';
 import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
 import {
   NoticeCategoryKeySchemaType,
-  NoticeFormSchema,
+  NoticeConditionalFormSchema,
 } from '@/components/notice/form/NoticeFormSchema';
 
 export default function NoticeForm() {
   const methods = useForm<NoticeDto.Post>({
     defaultValues: defaultNoticeFormValues,
-    resolver: zodResolver(NoticeFormSchema),
+    resolver: zodResolver(NoticeConditionalFormSchema),
   });
 
   const {
     handleSubmit,
     control,
     formState: { isDirty, isSubmitted },
+    reset,
+    getValues,
   } = methods;
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
@@ -125,7 +132,38 @@ export default function NoticeForm() {
   }, []);
 
   const onSubmit = async (submittedValue: NoticeDto.Post) => {
-    mutate(submittedValue);
+    const {
+      noticeType,
+      title,
+      content,
+      targetCourseIdList,
+      satisfactionSurvey,
+      sessions,
+    } = submittedValue;
+
+    const sessionsWithNoId = (sessions as Session[])?.map(
+      ({ id, ...rest }) => rest,
+    );
+    if (noticeType === 'SPECIAL_LECTURE' || noticeType === 'EVENT') {
+      const formValue = {
+        ...submittedValue,
+        satisfactionSurvey: satisfactionSurvey || '',
+        sessions: sessionsWithNoId,
+      };
+      mutate(formValue);
+    } else {
+      const formValue = { noticeType, title, content, targetCourseIdList };
+      mutate(formValue);
+    }
+  };
+
+  const setConditionalKey = (type: NoticeCategoryKeySchemaType) => {
+    if (type === 'SPECIAL_LECTURE' || type === 'EVENT') {
+      reset({ ...specialLectureEventFormValues, ...getValues() });
+    } else {
+      const { noticeType, title, content, targetCourseIdList } = getValues();
+      reset({ noticeType, title, content, targetCourseIdList });
+    }
   };
 
   return (
@@ -187,7 +225,12 @@ export default function NoticeForm() {
                       defaultLabel="일반공지, 특강, 취업정보 ..."
                       options={noticeCategoryOptions}
                       selectedOption={selectedOption}
-                      onChangeValue={data => onChange(data[0].key)}
+                      onChangeValue={data => {
+                        const newNoticeKey = data[0]
+                          .key as NoticeCategoryKeySchemaType;
+                        onChange(newNoticeKey);
+                        setConditionalKey(newNoticeKey);
+                      }}
                       errorMsg={error?.message}
                     />
                   );

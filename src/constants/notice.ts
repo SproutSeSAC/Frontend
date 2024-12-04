@@ -1,15 +1,12 @@
-import {
-  NoticeCategoryKey,
-  NoticeCategoryValue,
-  NoticeTab,
-  TooltipKeys,
-} from '@/types/notice';
+import { NoticeCategoryValue, NoticeTab, TooltipKeys } from '@/types/notice';
 import {
   MeetingType,
   MeetingTypeKey,
   MeetingTypeValue,
   NoticeDto,
 } from '@/types/notice/noticeDto';
+
+import { NoticeCategoryKeySchemaType } from '@/components/notice/form/NoticeFormSchema';
 
 export const noticeTabList: NoticeTab[] = [
   { text: '전체', type: 'ALL' },
@@ -21,13 +18,13 @@ export const noticeTabList: NoticeTab[] = [
 
 export const noticeCategoryOptions: {
   id: number;
-  key: NoticeCategoryKey;
+  key: NoticeCategoryKeySchemaType;
   name: NoticeCategoryValue;
   needExtraInfo: boolean;
 }[] = [
   {
     id: 1,
-    key: 'GENERAL_NOTICE',
+    key: 'GENERAL',
     name: '일반공지',
     needExtraInfo: false,
   },
@@ -39,7 +36,7 @@ export const noticeCategoryOptions: {
 
 export const noticeCategoryFilterList: {
   id: number;
-  key: NoticeCategoryKey;
+  key: NoticeCategoryKeySchemaType;
   name: NoticeCategoryValue;
 }[] = [{ id: 1, key: 'ALL', name: '통합' }, ...noticeCategoryOptions];
 
@@ -60,29 +57,31 @@ export const tooltip: Record<TooltipKeys, string> = {
 };
 
 const date = new Date();
-date.setHours(18, 0, 0, 0);
-const todayDateTime = date.toString();
+date.setHours(19, 0, 0, 0);
+export const defaultIsoDateTime = date.toISOString();
 
-const specialLectureEventFormValues = {
-  applicationForm: '',
-  applicationStartDateTime: todayDateTime,
-  applicationEndDateTime: todayDateTime,
+export const LIMITLESS_CAPACITY_NUM = 10000;
+
+export const specialLectureEventFormValues = {
+  applicationStartDateTime: defaultIsoDateTime,
+  applicationEndDateTime: defaultIsoDateTime,
   sessions: [
     {
-      sessionStartDateTime: '',
-      sessionEndDateTime: '',
+      id: 1,
+      sessionStartDateTime: defaultIsoDateTime,
+      sessionEndDateTime: defaultIsoDateTime,
     },
   ],
   meetingType: 'ONLINE' as keyof MeetingType,
-  meetingPlace: '',
-  participantCapacity: 0,
-  satisfactionSurvey: '',
+  meetingPlace: undefined,
+  participantCapacity: LIMITLESS_CAPACITY_NUM,
+  satisfactionSurvey: undefined,
+  isPhoneNumberRequired: false,
 };
 
-export const defaultNoticeFormValues: NoticeDto.PostRequest = {
+export const defaultNoticeFormValues: NoticeDto.Post = {
   targetCourseIdList: [],
-  noticeType: 'GENERAL_NOTICE',
+  noticeType: 'GENERAL',
   title: '',
   content: '',
-  ...specialLectureEventFormValues,
 };

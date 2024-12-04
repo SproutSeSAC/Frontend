@@ -1,5 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 import TextEditor from '@/components/common/text-editor/TextEditor';
@@ -54,12 +55,17 @@ export default function ControllerContentEditor({
         <Controller
           control={control}
           name={content}
-          render={({ field: { onChange } }) => {
+          render={({ field: { onChange }, fieldState: { error } }) => {
             return (
-              <TextEditor
-                onChange={onChange}
-                placeholder={`${name} 상세 정보를 작성해 주세요`}
-              />
+              <div
+                className={`${error?.message ? '[&>div]:rounded-lg [&>div]:border [&>div]:border-red-500' : ''}`}
+              >
+                <TextEditor
+                  onChange={onChange}
+                  placeholder={`${name} 상세 정보를 작성해 주세요`}
+                />
+                {error?.message && <ErrorMsg msg={error.message} />}
+              </div>
             );
           }}
         />

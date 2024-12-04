@@ -7,6 +7,7 @@ import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 import ControlMeetingType from '@/components/notice/form/ControlMeetingType';
 import ControllerParticipantCapacity from '@/components/notice/form/ControllerParticipantCapacity';
+import ControllerRequiredPhoneNumber from '@/components/notice/form/ControllerRequiredPhoneNumber';
 import ControllerSessions from '@/components/notice/form/ControllerSessions';
 
 interface ExtraInfoFormProps {
@@ -18,22 +19,11 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
 
   return (
     <>
-      <LabeledSection label="신청 폼">
-        <Controller
-          control={control}
-          name="applicationForm"
-          render={({ field: { onChange }, fieldState: { error } }) => {
-            return (
-              <TextInput
-                name="신청 폼"
-                placeholder="Google Forms 링크 등을 적어주세요."
-                onChange={onChange}
-                className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
-                errorMsg={error?.message}
-              />
-            );
-          }}
-        />
+      <LabeledSection
+        label={`${noticeType} 장소`}
+        tooltip={tooltip.meetingType}
+      >
+        <ControlMeetingType />
       </LabeledSection>
 
       <LabeledSection label="신청 기간" className="col-span-2">
@@ -46,15 +36,12 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
 
       <ControllerSessions noticeType={noticeType} />
 
-      <LabeledSection
-        label={`${noticeType} 장소`}
-        tooltip={tooltip.meetingType}
-      >
-        <ControlMeetingType />
+      <LabeledSection label="참여 정원">
+        <ControllerParticipantCapacity />
       </LabeledSection>
 
-      <LabeledSection label="인원 제한">
-        <ControllerParticipantCapacity />
+      <LabeledSection label="핸드폰 번호 요청">
+        <ControllerRequiredPhoneNumber />
       </LabeledSection>
 
       <LabeledSection label="만족도 조사" tooltip={tooltip.satisfactionSurvey}>
