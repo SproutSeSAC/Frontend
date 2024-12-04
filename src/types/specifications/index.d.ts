@@ -10,3 +10,5 @@ export type TechStack = {
   iconImageUrl: string;
   jobName: string;
 };
+
+export type TechStackTab = '프론트엔드' | '백엔드' | 'PM';

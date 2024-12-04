@@ -6,6 +6,7 @@ interface UsePageBlockerProps {
   isBlockRefresh?: boolean;
   form?: {
     isDirty: boolean;
+    isSubmitted?: boolean;
   };
 }
 
@@ -19,7 +20,7 @@ export const usePageBlocker = ({
       `${nextLocation.pathname}${nextLocation.search}`;
 
     if (form) {
-      return isDiffLocation && form.isDirty;
+      return isDiffLocation && form.isDirty && !form.isSubmitted;
     }
     return isDiffLocation;
   };

@@ -28,7 +28,11 @@ export default function ControllerDateTime({ name }: ControllerDateTimeProps) {
           <div className="relative flex h-full w-full items-center gap-1.5">
             <CustomDatePicker
               currentDate={value ? new Date(value) : undefined}
-              onChange={onChange}
+              onChange={data => {
+                if (data) {
+                  onChange(data.toISOString());
+                }
+              }}
               errorMsg={error?.message || ''}
             />
 
@@ -38,7 +42,7 @@ export default function ControllerDateTime({ name }: ControllerDateTimeProps) {
               selectedOption={selectedHourOption}
               onChangeValue={data => {
                 date.setHours(data[0].id, 0, 0, 0);
-                return onChange(date.toString());
+                return onChange(date.toISOString());
               }}
               errorMsg={error?.message ? ' ' : undefined}
               selectBoxClassName="min-w-[95px]"
@@ -50,7 +54,7 @@ export default function ControllerDateTime({ name }: ControllerDateTimeProps) {
               selectedOption={selectedMinuteOption}
               onChangeValue={data => {
                 date.setMinutes(data[0].id, 0, 0);
-                return onChange(date.toString());
+                return onChange(date.toISOString());
               }}
               errorMsg={error?.message ? ' ' : undefined}
               selectBoxClassName="min-w-[95px]"
