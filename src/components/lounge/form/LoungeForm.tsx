@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -89,7 +89,7 @@ export default function LoungeForm() {
   const [searchParams] = useSearchParams();
   const modifyProjectId = searchParams.get('modifyProject');
 
-  const { hideDialog, showToast, alert } = useDialogContext();
+  const { showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
   const { data: positionsList } = useGetLoungePositionsFilterList();
@@ -113,50 +113,13 @@ export default function LoungeForm() {
     formState: { isDirty, isSubmitting },
   } = methods;
 
-  const { blocker } = usePageBlocker({
+  usePageBlocker({
     isBlockRefresh: true,
     form: {
       isDirty,
       isSubmitted: isSubmitting,
     },
   });
-
-  const handleLeave = useCallback(() => {
-    alert({
-      text: '정말 나가시겠어요?',
-      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
-      children: (
-        <>
-          <SquareButton
-            color="gray"
-            name="계속 작성하기"
-            onClick={() => {
-              hideDialog();
-              if (blocker.state === 'blocked') {
-                blocker.reset();
-              }
-            }}
-          />
-          <SquareButton
-            name="나가기"
-            onClick={() => {
-              hideDialog();
-              if (blocker.state === 'blocked') {
-                blocker.proceed();
-              }
-            }}
-          />
-        </>
-      ),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blocker.state]);
-
-  useEffect(() => {
-    if (blocker.state === 'blocked') {
-      handleLeave();
-    }
-  }, [blocker.state, handleLeave]);
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
     const params = {
@@ -442,7 +405,7 @@ export default function LoungeForm() {
           <button
             type="button"
             className="mr-2 rounded-lg bg-gray2 px-4 py-2 tracking-tight text-white"
-            onClick={handleLeave}
+            onClick={() => navigate('/lounge')}
           >
             취소
           </button>
