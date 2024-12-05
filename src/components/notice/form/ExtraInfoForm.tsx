@@ -40,7 +40,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
         <ControllerParticipantCapacity />
       </LabeledSection>
 
-      <LabeledSection label="핸드폰 번호 요청">
+      <LabeledSection label="핸드폰 번호">
         <ControllerRequiredPhoneNumber />
       </LabeledSection>
 

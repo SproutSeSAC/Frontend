@@ -6,6 +6,9 @@ export default function ControllerRequiredPhoneNumber() {
 
   const isRequired = useWatch({ control, name: 'isPhoneNumberRequired' });
 
+  const activeClassName = 'font-medium text-oliveGreen1';
+  const inActiveClassName = 'bg-gray4 text-gray2';
+
   return (
     <Controller
       control={control}
@@ -15,19 +18,19 @@ export default function ControllerRequiredPhoneNumber() {
           <div className="flex h-full gap-2">
             <button
               type="button"
-              className={`flex h-full w-full items-center justify-between rounded-2xl border bg-[#fafafa] px-5 py-1.5 ${isRequired ? 'font-medium text-oliveGreen1' : 'text-gray2'}`}
+              className={`flex h-full w-full items-center justify-between rounded-2xl border bg-[#fafafa] px-5 py-1.5 ${isRequired ? activeClassName : inActiveClassName}`}
               onClick={() => onChange(true)}
             >
-              <span>입력 요청 필수</span>
+              <span>입력 요청</span>
               <FiCheckCircle className="size-4" />
             </button>
 
             <button
               type="button"
-              className={`flex h-full w-full items-center justify-between rounded-2xl border bg-[#fafafa] px-5 py-1.5 ${!isRequired ? 'font-medium text-oliveGreen1' : 'text-gray2'}`}
+              className={`flex h-full w-full items-center justify-between rounded-2xl border bg-[#fafafa] px-5 py-1.5 ${isRequired ? activeClassName : inActiveClassName}`}
               onClick={() => onChange(false)}
             >
-              <span>입력 요청 비필수</span>
+              <span>입력 비요청</span>
               <FiCheckCircle className="size-4" />
             </button>
           </div>

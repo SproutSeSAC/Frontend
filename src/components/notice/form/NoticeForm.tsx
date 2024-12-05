@@ -113,7 +113,18 @@ export default function NoticeForm() {
       });
     },
     onSuccess: () => {
-      navigate('/notice');
+      alert({
+        text: '공지사항이 등록되었습니다!',
+        children: (
+          <SquareButton
+            name="확인"
+            onClick={() => {
+              hideDialog();
+              navigate('/notice');
+            }}
+          />
+        ),
+      });
     },
   });
 
