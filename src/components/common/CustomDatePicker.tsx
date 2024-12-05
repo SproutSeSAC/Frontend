@@ -122,7 +122,7 @@ export default function CustomDatePicker({
           dateFormat="YYYY년 MM월 dd일"
           locale={ko}
           placeholderText={
-            placeholder || `${dateFormat(new Date(), 'YYYY년 MM월 DD일')}`
+            placeholder || `${dateFormat('', 'yyyy년 MM월 dd일')}`
           }
           selected={currentDate}
           onChange={onChange}

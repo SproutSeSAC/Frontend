@@ -1,54 +1,74 @@
+import { useCallback } from 'react';
+
 import { Link } from 'react-router-dom';
 
+import { dateFormat } from '@/utils/dateFormat';
+
+import { RolesObj, noticeCategoryDisplay } from '@/constants';
+import { Notice } from '@/types';
 import { getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
-export default function NoticePostCard() {
+interface NoticePostCardProps {
+  notice: Notice;
+}
+
+export default function NoticePostCard({ notice }: NoticePostCardProps) {
+  const stripHTML = useCallback((htmlString: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    return doc.body.textContent || '-';
+  }, []);
+
   return (
     <Link
-      to="/notice/post/1"
+      to={`/notice/post/${notice.noticeId}`}
       className="flex w-full flex-col rounded-2xl bg-white p-4 px-6 py-4"
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getColorByRole('캠퍼스 매니저')}
+          color={getColorByRole(RolesObj[notice.roleType])}
           size="big"
-          text="캠퍼스 매니저"
+          text={RolesObj[notice.roleType]}
           emphasisText
           className="px-[10px] py-[5px]"
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-gray2">
             <BsEye size={20} />
-            <span>99</span>
+            <span>{notice.viewCount || 0}</span>
           </div>
-          <FavoriteButton isFavorite onClick={() => {}} size={20} />
+          <FavoriteButton
+            isFavorite={notice.isScraped}
+            onClick={() => {}}
+            size={20}
+          />
         </div>
       </div>
 
       <div className="mt-6">
-        <h4 className="text-xl font-semibold">개발관련 취업 꿀팁 공지</h4>
-
-        <p className="mt-3 text-lg text-gray1">
-          점점 더 높아지는 취업의 벽 앞에 꿈꾸던 회사로의 입사는 요원해 보이기만
-          합니다. 이런 막막함 속에서 먼저 입사한 선배의 조언은 취준생에게
-          길잡이가 되어주기도 하죠. 오늘은 카카오에서 3년 차 백엔드 개발자로
-          근무 중인 강승현 님과 함께 취업 이야기를 나눠보았습니다. 승현 님은
-          자신의 취업 준비 시절을 회고하며 유용한 취업 팁을 아낌없이
-          공유해주셨습니다.
+        <h4 className="text-xl font-semibold">{notice.title || '-'}</h4>
+        <p className="mt-3 max-w-[960px] break-words text-lg text-gray1">
+          {stripHTML(notice.content)}
         </p>
 
         <div className="mt-6 border-b border-solid border-gray4 pb-[18px]">
-          <span className="notice-text-divider leading-4 text-text">특강</span>
+          <span className="notice-text-divider leading-4 text-text">
+            {noticeCategoryDisplay[notice.noticeType]}
+          </span>
           <span className="leading-4 text-gray2">
-            프론트엔드, 백엔드, 서버 개발
+            {(notice?.targetCourse || []).map(target => {
+              return <span key={target}>{target}</span>;
+            })}
           </span>
         </div>
 
-        <div className="mt-4 w-full text-right text-gray2">2024.08.27</div>
+        <div className="mt-4 w-full text-right text-gray2">
+          {dateFormat(notice.createdDateTime)}
+        </div>
       </div>
     </Link>
   );

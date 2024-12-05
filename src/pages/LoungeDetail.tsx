@@ -22,9 +22,9 @@ import { FaChevronLeft } from 'react-icons/fa';
 import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import SquareButton from '@/components/common/button/SquareButton';
-import ApplicationInfoTemplate from '@/components/common/post-template/ApplicationInfoTemplate';
 import CommentTemplate from '@/components/common/post-template/CommentTemplate';
 import PostDetailsTemplate from '@/components/common/post-template/PostDetailsTemplate';
+import LoungeApplicationInfoTemplate from '@/components/lounge/LoungeApplicationInfoTemplate';
 
 export default function LoungeDetail() {
   const params = useParams();
@@ -159,7 +159,7 @@ export default function LoungeDetail() {
               text={projectsDetail ? ptypeDisplay[projectsDetail.ptype] : ''}
               className="mt-12 w-fit"
             />
-            <ApplicationInfoTemplate
+            <LoungeApplicationInfoTemplate
               startPeriod={projectsDetail?.recruitmentStart}
               endPeriod={projectsDetail?.recruitmentEnd}
               personRecruited={projectsDetail?.recruitmentCount}
@@ -182,7 +182,7 @@ export default function LoungeDetail() {
                         label: '수정하기',
                         onClick: () => {
                           navigate(
-                            `/lounge/editor?modifyProject=${params.postId!}`,
+                            `/lounge?ptype=EDIT&modifyProject=${params.postId!}`,
                           );
                         },
                         className: 'bg-oliveGreen1',

@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePutMealPost } from '@/services/store/storeMutations';
 import { useGetMealPostDetail } from '@/services/store/storeQueries';
 
-import { dateFormat, timeFormat } from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/dateFormat';
 
 import { useDialogContext } from '@/hooks';
 import { FaCrown } from 'react-icons/fa';
@@ -59,7 +59,7 @@ export default function MealRecruitCardModal({
 
           <span className="flex flex-1 gap-1 overflow-hidden">
             {data
-              ? `${dateFormat(data.appointmentTime)} ${timeFormat(data.appointmentTime, 'A h시')}`
+              ? `${dateFormat(data.appointmentTime, 'yyyy.MM.dd a h시')}`
               : '-'}
           </span>
         </div>

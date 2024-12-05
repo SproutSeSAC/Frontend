@@ -34,6 +34,32 @@ export const noticeCategoryOptions: {
   { id: 5, key: 'ETC', name: '기타', needExtraInfo: false },
 ];
 
+export const NOTICE_ALL = 'ALL';
+export const NOTICE_GENERAL = 'GENERAL';
+export const NOTICE_SPECIAL_LECTURE = 'SPECIAL_LECTURE';
+export const NOTICE_EMPLOYMENT = 'EMPLOYMENT';
+export const NOTICE_EVENT = 'EVENT';
+export const NOTICE_ETC = 'ETC';
+
+export type NoticeCategoryKey =
+  | typeof NOTICE_ALL
+  | typeof NOTICE_GENERAL
+  | typeof NOTICE_SPECIAL_LECTURE
+  | typeof NOTICE_EMPLOYMENT
+  | typeof NOTICE_EVENT
+  | typeof NOTICE_ETC;
+
+// NoticeCategoryKeySchemaType 사용시 사용처에서 타입에러 발생해서 NoticeCategoryKey 새로운 타입 정의함.
+// notice type 정리가 안되어있어서 전체적으로 타입 재정의 필요함.
+export const noticeCategoryDisplay: { [key in NoticeCategoryKey]: string } = {
+  ALL: '통합',
+  GENERAL: '일반공지',
+  SPECIAL_LECTURE: '특강',
+  EMPLOYMENT: '취업정보',
+  EVENT: '행사',
+  ETC: '기타',
+};
+
 export const noticeCategoryFilterList: {
   id: number;
   key: NoticeCategoryKeySchemaType;

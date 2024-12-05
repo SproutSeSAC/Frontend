@@ -251,7 +251,7 @@ export default function LoungeForm() {
                   fieldState: { error },
                 }) => {
                   const handleStartDate = (date: Date | null) => {
-                    onChange(dateFormat(date, 'YYYY-MM-DD') || '');
+                    onChange(dateFormat(date || '', 'yyyy-MM-dd') || '');
                   };
                   return (
                     <div className="flex w-full min-w-[46%] flex-col">
@@ -273,7 +273,7 @@ export default function LoungeForm() {
                   fieldState: { error },
                 }) => {
                   const handleEndDate = (date: Date | null) => {
-                    onChange(dateFormat(date, 'YYYY-MM-DD') || '');
+                    onChange(dateFormat(date || '', 'yyyy-MM-dd') || '');
                   };
                   return (
                     <div className="flex w-full min-w-[46%] flex-col">

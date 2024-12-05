@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { dateFormat, timeFormat } from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/dateFormat';
 
 import MealRecruitCardModal from './MealRecruitCardModal';
 
@@ -48,7 +48,7 @@ export default function MealRecruitCard({
             </span>
             <span className={`${isDisabled && 'text-gray1'}`}>
               {slideItem
-                ? `${dateFormat(slideItem.appointmentTime)} ${timeFormat(slideItem.appointmentTime, 'A h시')}`
+                ? `${dateFormat(slideItem.appointmentTime, 'yyyy.MM.dd a h시')}`
                 : '-'}
             </span>
           </p>

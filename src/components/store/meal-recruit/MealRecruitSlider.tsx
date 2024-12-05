@@ -1,7 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
-import useGetMealPostList from '@/hooks/useGetMealPostList';
 import useObserver from '@/hooks/useObserver';
+
+import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
 import MealRecruitCard from './MealRecruitCard';
 import MealRecruitModal from './MealRecruitModal';
@@ -22,8 +23,24 @@ export default function MealRecruitSlider({
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
 
-  const { mealPostList, fetchNextPage, hasNextPage, isLoading } =
-    useGetMealPostList();
+  const {
+    data = { pages: [{ mealPosts: [], totalPages: 0 }], pageParams: [] },
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useGetInfiniteMealPostList();
+
+  const mealPostList = useMemo(() => {
+    return data?.pages
+      .map(item => item.mealPosts)
+      .reduce<MealPosts[]>((acc, arr) => {
+        arr?.forEach(obj => {
+          acc.push(obj);
+        });
+
+        return acc;
+      }, []);
+  }, [data?.pages]);
 
   const onIntersect = useCallback(
     (entry: IntersectionObserverEntry) => {
