@@ -18,6 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import CircleNumber from '@/components/common/CircleNumber';
+import LoopLoading from '@/components/common/LoopLoading';
 import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
@@ -46,7 +47,8 @@ export default function NoticeForm() {
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { onSubmit, onError, findCurrNotice } = useHandlePostNotice();
+  const { onSubmit, onError, findCurrNotice, isCreateEventsPending } =
+    useHandlePostNotice();
 
   const navigate = useNavigate();
 
@@ -67,109 +69,120 @@ export default function NoticeForm() {
   const noticeKey = useWatch({ control, name: 'noticeType' });
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-[26px]">
-        <section>
-          <header className="mb-6 flex items-center gap-1.5">
-            <CircleNumber number={1} />
-            <Title as="h1" title="공지사항 대상 과정" />
-          </header>
-          <div className="relative mb-16 mt-6 grid grid-cols-2 gap-8 text-lg">
-            <Controller
-              control={control}
-              name="targetCourseIdList"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                const courseListOption = userProfile?.courseList.map(
-                  ({ courseId, courseTitle }) => ({
-                    id: courseId,
-                    name: courseTitle,
-                  }),
-                );
-
-                return (
-                  <MultiSelectDropdown
-                    defaultLabel="교육과정을 선택해주세요."
-                    options={courseListOption}
-                    onChangeValue={data => {
-                      const ids = data.map(({ id }) => id);
-                      onChange(ids);
-                    }}
-                    errorMsg={error?.message}
-                    hasFullCheck={courseListOption.length > 1}
-                  />
-                );
-              }}
-            />
-          </div>
-        </section>
-
-        <section>
-          <header className="flex items-center gap-1.5">
-            <CircleNumber number={2} />
-            <Title as="h1" title="공지사항 상세 정보" />
-          </header>
-
-          <div className="relative mb-16 mt-8 grid grid-cols-2 gap-8 text-lg">
-            <LabeledSection label="공지 유형">
+    <>
+      {isCreateEventsPending && (
+        <div className="fixed inset-0 bottom-0 top-0 z-[1000] flex flex-col items-center justify-center gap-10 bg-gray-500 bg-opacity-10">
+          <LoopLoading />
+          <span className="text-lg font-medium text-gray1">
+            캘린더에 일정을 생성중입니다...
+          </span>
+        </div>
+      )}
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-[26px]">
+          <section>
+            <header className="mb-6 flex items-center gap-1.5">
+              <CircleNumber number={1} />
+              <Title as="h1" title="공지사항 대상 과정" />
+            </header>
+            <div className="relative mb-16 mt-6 grid grid-cols-2 gap-8 text-lg">
               <Controller
                 control={control}
-                name="noticeType"
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => {
-                  const selectedOption = findCurrNotice(value);
+                name="targetCourseIdList"
+                render={({ field: { onChange }, fieldState: { error } }) => {
+                  const courseListOption = userProfile?.courseList.map(
+                    ({ courseId, courseTitle }) => ({
+                      id: courseId,
+                      name: courseTitle,
+                    }),
+                  );
 
                   return (
-                    <SingleSelectDropdown
-                      defaultLabel="일반공지, 특강, 취업정보 ..."
-                      options={noticeCategoryOptions}
-                      selectedOption={selectedOption}
+                    <MultiSelectDropdown
+                      defaultLabel="교육과정을 선택해주세요."
+                      options={courseListOption}
                       onChangeValue={data => {
-                        const newNoticeKey = data[0]
-                          .key as NoticeCategoryKeySchemaType;
-                        onChange(newNoticeKey);
-                        setConditionalKey(newNoticeKey);
+                        const ids = data.map(({ id }) => id);
+                        onChange(ids);
                       }}
                       errorMsg={error?.message}
+                      hasFullCheck={courseListOption.length > 1}
                     />
                   );
                 }}
               />
-            </LabeledSection>
+            </div>
+          </section>
 
-            {findCurrNotice(noticeKey)?.needExtraInfo && (
-              <ExtraInfoForm
-                noticeType={
-                  findCurrNotice(noticeKey)?.name as SpecialLectureOrEventValue
-                }
+          <section>
+            <header className="flex items-center gap-1.5">
+              <CircleNumber number={2} />
+              <Title as="h1" title="공지사항 상세 정보" />
+            </header>
+
+            <div className="relative mb-16 mt-8 grid grid-cols-2 gap-8 text-lg">
+              <LabeledSection label="공지 유형">
+                <Controller
+                  control={control}
+                  name="noticeType"
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => {
+                    const selectedOption = findCurrNotice(value);
+
+                    return (
+                      <SingleSelectDropdown
+                        defaultLabel="일반공지, 특강, 취업정보 ..."
+                        options={noticeCategoryOptions}
+                        selectedOption={selectedOption}
+                        onChangeValue={data => {
+                          const newNoticeKey = data[0]
+                            .key as NoticeCategoryKeySchemaType;
+                          onChange(newNoticeKey);
+                          setConditionalKey(newNoticeKey);
+                        }}
+                        errorMsg={error?.message}
+                      />
+                    );
+                  }}
+                />
+              </LabeledSection>
+
+              {findCurrNotice(noticeKey)?.needExtraInfo && (
+                <ExtraInfoForm
+                  noticeType={
+                    findCurrNotice(noticeKey)
+                      ?.name as SpecialLectureOrEventValue
+                  }
+                />
+              )}
+            </div>
+          </section>
+
+          {/* 에디터  */}
+          <section>
+            <header className="mt-12 flex items-center gap-1.5">
+              <CircleNumber
+                number={findCurrNotice(noticeKey)?.needExtraInfo ? 3 : 2}
               />
-            )}
-          </div>
-        </section>
+              <Title as="h1" title="공지사항 상세 내용" />
+            </header>
 
-        {/* 에디터  */}
-        <section>
-          <header className="mt-12 flex items-center gap-1.5">
-            <CircleNumber
-              number={findCurrNotice(noticeKey)?.needExtraInfo ? 3 : 2}
-            />
-            <Title as="h1" title="공지사항 상세 내용" />
-          </header>
+            <ControllerContentEditor type="notice" />
 
-          <ControllerContentEditor type="notice" />
-
-          <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
-            <SquareButton
-              name="취소"
-              color="gray"
-              type="button"
-              onClick={() => navigate('/notice')}
-            />
-            <SquareButton name="등록하기" type="submit" />
-          </div>
-        </section>
-      </form>
-    </FormProvider>
+            <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
+              <SquareButton
+                name="취소"
+                color="gray"
+                type="button"
+                onClick={() => navigate('/notice')}
+              />
+              <SquareButton name="등록하기" type="submit" />
+            </div>
+          </section>
+        </form>
+      </FormProvider>
+    </>
   );
 }

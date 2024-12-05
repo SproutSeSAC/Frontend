@@ -146,30 +146,31 @@ export const useCreateCalendar = (
   });
 };
 
-export const useCreateCalendarEvents = (
-  calendarId: string,
+export const useCreateEventsForMultipleCalendars = (
   options?: UseMutationOptions<
     unknown,
     Error,
-    GoogleCalendarApiDto.PostEvent[]
+    { calendarId: string; events: GoogleCalendarApiDto.PostEvent[] }[]
   >,
 ) => {
-  const createMultipleEvents = async (
-    events: GoogleCalendarApiDto.PostEvent[],
+  const createEventsForMultipleCalendars = async (
+    data: { calendarId: string; events: GoogleCalendarApiDto.PostEvent[] }[],
   ) => {
     try {
-      const promises = events.map(event =>
-        axiosCalendarInstance.post(`/calendars/${calendarId}/events`, event),
+      const promises = data.flatMap(({ calendarId, events }) =>
+        events.map(event =>
+          axiosCalendarInstance.post(`/calendars/${calendarId}/events`, event),
+        ),
       );
       await Promise.all(promises);
     } catch (error) {
-      console.error('Error creating events:', error);
+      console.error('구글 캘린더에 일정 생성 중 에러 발생:', error);
     }
   };
 
   return useMutation({
-    mutationFn: createMultipleEvents,
-    mutationKey: ['createEvents'],
+    mutationFn: createEventsForMultipleCalendars,
+    mutationKey: ['createEventsForMultipleCalendars'],
     ...options,
   });
 };

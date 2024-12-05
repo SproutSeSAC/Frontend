@@ -2,51 +2,116 @@ import { useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { useCalendarData } from '@/hooks/useCalendarData';
 import { useDialogContext } from '@/hooks/useDialogContext';
 
 import { usePostNotice } from '@/services/notice/noticeMutation';
+import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { noticeCategoryOptions } from '@/constants';
-import { NoticeDto } from '@/types';
+import { GoogleCalendarApiDto, NoticeDto } from '@/types';
 import { SubmitErrorHandler } from 'react-hook-form';
 
 import { Session } from '@/components/notice/form/ControllerSessions';
-import { NoticeCategoryKeySchemaType } from '@/components/notice/form/NoticeFormSchema';
+import {
+  NoticeCategoryKeySchemaType,
+  SessionSchemaType,
+} from '@/components/notice/form/NoticeFormSchema';
 
 export const useHandlePostNotice = () => {
   const { showToast, alert, hideDialog } = useDialogContext();
 
+  const findCurrNotice = useCallback((key: NoticeCategoryKeySchemaType) => {
+    return noticeCategoryOptions.find(option => key === option.key);
+  }, []);
+
+  const { courseCalendarList } = useCalendarData();
+
   const navigate = useNavigate();
+
+  const { mutateAsync, isPending: isCreateEventsPending } =
+    useCreateEventsForMultipleCalendars();
+
+  const createEventsForTargetCourse = (data: {
+    sessions: SessionSchemaType[];
+    title: string;
+    targetCourseIdList: number[];
+    meetingPlace?: string;
+  }) => {
+    const { sessions, title, meetingPlace, targetCourseIdList } = data;
+
+    const eventsFromSession: GoogleCalendarApiDto.PostEvent[] = sessions.map(
+      (session, index) => ({
+        summary: `${title} ${index + 1}회차`,
+        start: { dateTime: session.sessionStartDateTime },
+        end: { dateTime: session.sessionEndDateTime },
+        location: meetingPlace,
+      }),
+    );
+
+    const targetCalendar = courseCalendarList.filter(({ courseId }) =>
+      targetCourseIdList.includes(courseId),
+    );
+
+    return targetCalendar.map(({ calendarId, courseTitle }) => ({
+      calendarId,
+      events: eventsFromSession.map(event => ({
+        ...event,
+        description: courseTitle,
+      })),
+    }));
+  };
+
+  const confirmBtn = {
+    name: '확인',
+    onClick: () => {
+      hideDialog();
+      navigate('/notice');
+    },
+  };
 
   const { mutate } = usePostNotice({
     onError: () => {
       alert({
         text: '오류가 발생했습니다.',
         subText: '다시 시도해주세요.',
-        buttonList: [
-          {
-            name: '확인',
-            onClick: () => {
-              hideDialog();
-              navigate('/notice');
-            },
-          },
-        ],
+        buttonList: [confirmBtn],
       });
     },
-    onSuccess: () => {
-      alert({
-        text: '공지사항이 등록되었습니다!',
-        buttonList: [
-          {
-            name: '확인',
-            onClick: () => {
-              hideDialog();
-              navigate('/notice');
-            },
-          },
-        ],
-      });
+    onSuccess: async (_, data: NoticeDto.Post) => {
+      const currNotice = findCurrNotice(data.noticeType);
+
+      if (currNotice?.needExtraInfo && data.sessions) {
+        try {
+          const events = createEventsForTargetCourse({
+            sessions: data.sessions,
+            title: data.title,
+            targetCourseIdList: data.targetCourseIdList,
+            meetingPlace: data.meetingPlace,
+          });
+          await mutateAsync(events);
+
+          alert({
+            dimClick: false,
+            text: '공지사항이 성공적으로 등록되었습니다!',
+            subText: `${currNotice?.name} 일정이 캘린더에 추가되었습니다!`,
+            buttonList: [confirmBtn],
+          });
+        } catch (error) {
+          console.error('일정 등록 시 에러 발생', error);
+          alert({
+            text: '캘린더에 일정 등록 중 오류가 발생했습니다.',
+            subText: '일정을 다시 확인해주세요.',
+            buttonList: [confirmBtn],
+          });
+        }
+      } else {
+        alert({
+          dimClick: false,
+          text: '공지사항이 성공적으로 등록되었습니다!',
+          buttonList: [confirmBtn],
+        });
+      }
     },
   });
 
@@ -57,10 +122,6 @@ export const useHandlePostNotice = () => {
       showToast(firstErrorMsg);
     }
   };
-
-  const findCurrNotice = useCallback((key: NoticeCategoryKeySchemaType) => {
-    return noticeCategoryOptions.find(option => key === option.key);
-  }, []);
 
   const onSubmit = async (submittedValue: NoticeDto.Post) => {
     const {
@@ -89,11 +150,10 @@ export const useHandlePostNotice = () => {
     }
   };
 
-  // 캘린더 데이터에 등록하기
-
   return {
     onError,
     findCurrNotice,
     onSubmit,
+    isCreateEventsPending,
   };
 };
