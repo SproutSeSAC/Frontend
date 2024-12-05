@@ -53,13 +53,15 @@ export const useHandlePostNotice = () => {
       targetCourseIdList.includes(courseId),
     );
 
-    return targetCalendar.map(({ calendarId, courseTitle }) => ({
+    const events = targetCalendar.map(({ calendarId, courseTitle }) => ({
       calendarId,
       events: eventsFromSession.map(event => ({
         ...event,
         description: courseTitle,
       })),
     }));
+
+    return mutateAsync(events);
   };
 
   const confirmBtn = {
@@ -73,7 +75,7 @@ export const useHandlePostNotice = () => {
   const { mutate } = usePostNotice({
     onError: () => {
       alert({
-        text: '오류가 발생했습니다.',
+        text: '공지사항 등록 중 오류가 발생했습니다.',
         subText: '다시 시도해주세요.',
         buttonList: [confirmBtn],
       });
@@ -83,14 +85,12 @@ export const useHandlePostNotice = () => {
 
       if (currNotice?.needExtraInfo && data.sessions) {
         try {
-          const events = createEventsForTargetCourse({
+          await createEventsForTargetCourse({
             sessions: data.sessions,
             title: data.title,
             targetCourseIdList: data.targetCourseIdList,
             meetingPlace: data.meetingPlace,
           });
-          await mutateAsync(events);
-
           alert({
             dimClick: false,
             text: '공지사항이 성공적으로 등록되었습니다!',

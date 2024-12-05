@@ -12,7 +12,7 @@ import {
   noticeCategoryOptions,
   specialLectureEventFormValues,
 } from '@/constants';
-import { usePageBlocker } from '@/hooks';
+import { useCalendarData, useDialogContext, usePageBlocker } from '@/hooks';
 import { NoticeDto, SpecialLectureOrEventValue } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -37,6 +37,8 @@ export default function NoticeForm() {
     resolver: zodResolver(NoticeConditionalFormSchema),
   });
 
+  const { alert, hideDialog } = useDialogContext();
+
   const {
     handleSubmit,
     control,
@@ -44,6 +46,8 @@ export default function NoticeForm() {
     reset,
     getValues,
   } = methods;
+
+  const { courseCalendarList } = useCalendarData();
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
@@ -89,7 +93,10 @@ export default function NoticeForm() {
               <Controller
                 control={control}
                 name="targetCourseIdList"
-                render={({ field: { onChange }, fieldState: { error } }) => {
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => {
                   const courseListOption = userProfile?.courseList.map(
                     ({ courseId, courseTitle }) => ({
                       id: courseId,
@@ -101,9 +108,41 @@ export default function NoticeForm() {
                     <MultiSelectDropdown
                       defaultLabel="교육과정을 선택해주세요."
                       options={courseListOption}
+                      value={value}
                       onChangeValue={data => {
-                        const ids = data.map(({ id }) => id);
-                        onChange(ids);
+                        const courseIds = data.map(({ id }) => id);
+
+                        const isNotCreatedCalendarCourseTite =
+                          courseCalendarList
+                            .filter(({ courseId }) =>
+                              courseIds.includes(courseId),
+                            )
+                            .filter(calendar => !calendar.isCreated)
+                            .map(({ courseTitle }) => courseTitle);
+
+                        if (isNotCreatedCalendarCourseTite.length > 0) {
+                          alert({
+                            text: `${isNotCreatedCalendarCourseTite.join(', ')} 캘린더가 아직 생성되어 있지 않습니다!`,
+                            subText:
+                              '일정 관리 페이지에서 캘린더를 먼저 생성해주세요.',
+                            buttonList: [
+                              {
+                                name: '나가기',
+                                color: 'gray',
+                                onClick: () => hideDialog(),
+                              },
+                              {
+                                name: '바로 이동하기',
+                                onClick: () => {
+                                  hideDialog();
+                                  navigate('/schedule');
+                                },
+                              },
+                            ],
+                          });
+                        } else {
+                          onChange(courseIds);
+                        }
                       }}
                       errorMsg={error?.message}
                       hasFullCheck={courseListOption.length > 1}
