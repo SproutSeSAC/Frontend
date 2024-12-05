@@ -10,11 +10,12 @@ export default function LoungeTextEditor() {
     <Controller
       control={control}
       name="projectDescription"
-      render={({ field: { onChange }, fieldState: { error } }) => {
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (
           <div className="flex flex-col">
             <TextEditor
               onChange={onChange}
+              value={value}
               placeholder="프로젝트 상세 정보를 작성해 주세요"
             />
             {error && <ErrorMsg msg={error?.message || ''} className="ml-2" />}

@@ -9,12 +9,14 @@ interface TextEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   formats?: string[];
+  value?: string;
 }
 
 export default function TextEditor({
   onChange,
   placeholder,
   formats,
+  value,
 }: TextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const quillRef = useRef<Quill | null>(null);
@@ -81,6 +83,15 @@ export default function TextEditor({
       quillRef.current.on('text-change', handleChange);
     }
   }, [defaultFormats, formats, handleChange, modules, placeholder]);
+
+  useEffect(() => {
+    if (quillRef.current && value !== undefined) {
+      const editorContent = quillRef.current.root.innerHTML;
+      if (editorContent !== value) {
+        quillRef.current.clipboard.dangerouslyPasteHTML(value);
+      }
+    }
+  }, [value]);
 
   return (
     <div>

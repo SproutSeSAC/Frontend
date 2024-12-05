@@ -1,4 +1,4 @@
-import { dateFormat, timeFormat } from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/dateFormat';
 
 import SquareButton from '../button/SquareButton';
 
@@ -65,20 +65,18 @@ export default function CommentTemplate({
             <div className="flex items-center gap-2">
               <UserImage
                 className="size-[30px] p-0.5"
-                profileImageUrl="" // commentItem.imgUrl ||
+                profileImageUrl="" // TODO: commentItem.imgUrl ||
               />
-              <div>{`@${commentItem.writer}`}</div>
+              <div>{commentItem.writer ? `@${commentItem.writer}` : '-'}</div>
             </div>
 
             <div>{commentItem.content}</div>
             <div className="flex gap-10 text-gray1">
               <div className="flex gap-4">
-                <div>{dateFormat(commentItem.createdAt)}</div>
-                <div>{timeFormat(commentItem.createdAt, 'HH:mm')}</div>
+                <div>
+                  {dateFormat(commentItem.createdAt, 'yyyy.MM.dd HH:mm')}
+                </div>
               </div>
-              <button type="button" className="font-medium">
-                신고
-              </button>
             </div>
           </div>
         ))}

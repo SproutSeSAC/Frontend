@@ -1,16 +1,20 @@
-import { dateFormat, timeFormat } from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/dateFormat';
 
 import { BsEye } from 'react-icons/bs';
 
 import UserImage from '@/components/user/UserImage';
 
 interface PostDetailsTemplateProps {
-  actions?: Array<{ label: string; onClick: () => void; className?: string }>;
+  actions?: Array<{
+    label: string;
+    onClick: () => void;
+    className?: string;
+    disabled?: boolean;
+  }>;
   nickName?: string;
   createdAt?: string;
   viewCount?: number;
   description?: string;
-  // imgUrl?: string | null;
 }
 
 export default function PostDetailsTemplate({
@@ -19,7 +23,6 @@ export default function PostDetailsTemplate({
   createdAt,
   viewCount,
   description,
-  // imgUrl,
 }: PostDetailsTemplateProps) {
   return (
     <>
@@ -37,8 +40,9 @@ export default function PostDetailsTemplate({
           <div className="mt-3 flex items-center gap-10 text-lg text-gray1">
             <div className="flex items-center gap-3">
               <div>작성일</div>
-              <div>{dateFormat(createdAt)}</div>
-              <div>{timeFormat(createdAt, 'HH:mm')}</div>
+              <div>
+                {createdAt ? dateFormat(createdAt, 'yyyy.MM.dd HH:mm') : '-'}
+              </div>
             </div>
             <div className="ml-10 flex items-center gap-1">
               <BsEye className="h-[18px] w-[18px]" />
@@ -52,6 +56,7 @@ export default function PostDetailsTemplate({
             <button
               key={item.label}
               type="button"
+              disabled={item.disabled}
               className={`rounded-lg px-4 py-2 tracking-tight text-white ${item.className}`}
               onClick={item.onClick}
             >

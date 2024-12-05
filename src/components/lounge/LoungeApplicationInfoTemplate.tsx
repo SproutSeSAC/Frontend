@@ -26,7 +26,7 @@ interface LoungeApplicationInfoProps {
 const commonContactMethodStyle =
   'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
 
-export default function ApplicationInfoTemplate({
+export default function LoungeApplicationInfoTemplate({
   startPeriod,
   endPeriod,
   personRecruited,
