@@ -21,6 +21,7 @@ interface DialogContextProviderProps {
 
 interface AlertType extends AlertProps {
   showDim?: boolean;
+  dimClick?: boolean;
   key?: string;
 }
 interface ToastType {
@@ -98,7 +99,12 @@ export default function DialogContextProvider({
   );
 
   const alert = useCallback(
-    async ({ key, showDim = true, ...rest }: AlertType): Promise<void> => {
+    async ({
+      key,
+      showDim = true,
+      dimClick = true,
+      ...rest
+    }: AlertType): Promise<void> => {
       await showDialog({
         key: key || 'alert',
         element: (
@@ -106,8 +112,8 @@ export default function DialogContextProvider({
             <Alert {...rest} />
             {showDim && (
               <div
-                className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
-                onClick={async () => hideDialog()}
+                className={`${dimClick ? 'cursor-pointer' : 'cursor-default'} fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50`}
+                onClick={dimClick ? async () => hideDialog() : undefined}
                 onKeyDown={event => {
                   if (event.key === 'Escape') {
                     hideDialog();
