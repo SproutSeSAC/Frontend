@@ -1,11 +1,13 @@
 import { ReactNode } from 'react';
 
+export type ButtonColor = 'gray' | 'oliveGreen' | 'vividGreen';
+
 interface SquareButtonProps {
   name: string;
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit';
-  color?: 'gray' | 'oliveGreen' | 'vividGreen';
+  color?: ButtonColor;
   children?: ReactNode;
   disabled?: boolean;
 }
