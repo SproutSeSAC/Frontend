@@ -25,7 +25,7 @@ export default function Alert({
 
   return createPortal(
     <section
-      className={`fixed inset-0 z-40 m-auto flex h-fit w-fit min-w-[300px] flex-col items-center justify-between rounded-2xl bg-white p-8 shadow-card ${className}`}
+      className={`fixed inset-0 z-[60] m-auto flex h-fit w-fit min-w-[300px] flex-col items-center justify-between rounded-2xl bg-white p-8 shadow-card ${className}`}
     >
       <p className="text-center text-lg font-semibold">{text}</p>
       <p className="mb-5 whitespace-pre-wrap text-center text-sm text-gray2">
