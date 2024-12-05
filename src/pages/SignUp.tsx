@@ -193,6 +193,7 @@ export default function SignUp() {
                                 ) : (
                                   <MultiSelectDropdown
                                     defaultLabel="캠퍼스 선택"
+                                    value={value}
                                     options={campusList}
                                     initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {
@@ -232,6 +233,7 @@ export default function SignUp() {
                                 return isJobCoordinator(currRole) ? (
                                   <MultiSelectDropdown
                                     defaultLabel="교육과정 선택"
+                                    value={value}
                                     options={options}
                                     initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {

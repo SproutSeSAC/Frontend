@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import SelectOption, {
@@ -11,6 +11,7 @@ import SelectBox, {
 
 interface MultiSelectDropdownProps {
   defaultLabel: string;
+  value: number[];
   options: Option[];
   onChangeValue: (value: Option[]) => void;
   errorMsg?: string;
@@ -37,6 +38,7 @@ interface MultiSelectDropdownProps {
 
 export default function MultiSelectDropdown({
   defaultLabel,
+  value,
   options,
   onChangeValue,
   errorMsg,
@@ -49,7 +51,7 @@ export default function MultiSelectDropdown({
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
 
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+  const selectedOptions = options.filter(({ id }) => value.includes(id));
 
   const checkIsSelected = useCallback(
     (option: Option) => {
@@ -68,7 +70,6 @@ export default function MultiSelectDropdown({
         ? filteredOption
         : addedOption;
 
-      setSelectedOptions(updatedOptions);
       return onChangeValue(updatedOptions);
     },
     [selectedOptions, checkIsSelected, onChangeValue],
@@ -77,20 +78,18 @@ export default function MultiSelectDropdown({
   const handleFullCheck = useCallback(() => {
     const updatedOptions =
       selectedOptions.length !== options.length ? options : [];
-    setSelectedOptions(updatedOptions);
     return onChangeValue(updatedOptions);
   }, [onChangeValue, options, selectedOptions.length]);
 
   const onResetClick = useCallback(() => {
-    setSelectedOptions([]);
     onChangeValue([]);
   }, [onChangeValue]);
 
   useEffect(() => {
     if (!hasFullCheck && initialSelectedOptions) {
-      setSelectedOptions(initialSelectedOptions);
+      onChangeValue(initialSelectedOptions);
     }
-  }, [hasFullCheck, initialSelectedOptions]);
+  }, [hasFullCheck, initialSelectedOptions, onChangeValue]);
 
   const onClose = () => setOpen(false);
 
@@ -130,15 +129,14 @@ export default function MultiSelectDropdown({
           </label>
         )}
         {options.map(option => (
-          <Fragment key={option.id}>
-            <SelectOption
-              option={option}
-              isSelected={checkIsSelected(option)}
-              onOptionClick={handleCheckboxChange}
-              isMultiSelectOption
-              className={optionClassName}
-            />
-          </Fragment>
+          <SelectOption
+            key={option.id}
+            option={option}
+            isSelected={checkIsSelected(option)}
+            onOptionClick={handleCheckboxChange}
+            isMultiSelectOption
+            className={optionClassName}
+          />
         ))}
       </SelectBox>
     </OutsideClickContainer>

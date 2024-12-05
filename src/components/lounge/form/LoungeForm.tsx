@@ -291,6 +291,7 @@ export default function LoungeForm() {
                   <MultiSelectDropdown
                     defaultLabel="모집 직무"
                     initialSelectedOptions={selectedOption}
+                    value={value}
                     options={positionsList || []}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
