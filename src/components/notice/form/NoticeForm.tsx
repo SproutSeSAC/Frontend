@@ -125,16 +125,8 @@ export default function NoticeForm() {
         className: '!w-[380px]',
         buttonList: [
           {
-            name: '나가기',
-            color: 'gray',
-            onClick: () => hideDialog(),
-          },
-          {
-            name: '바로 이동하기',
-            onClick: () => {
-              hideDialog();
-              navigate('/schedule');
-            },
+            name: '확인',
+            onClick: hideDialog,
           },
         ],
       });
