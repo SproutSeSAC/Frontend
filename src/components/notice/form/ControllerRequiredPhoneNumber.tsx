@@ -27,7 +27,7 @@ export default function ControllerRequiredPhoneNumber() {
 
             <button
               type="button"
-              className={`flex h-full w-full items-center justify-between rounded-2xl border bg-[#fafafa] px-5 py-1.5 ${isRequired ? activeClassName : inActiveClassName}`}
+              className={`flex h-full w-full items-center justify-between rounded-2xl border bg-[#fafafa] px-5 py-1.5 ${!isRequired ? activeClassName : inActiveClassName}`}
               onClick={() => onChange(false)}
             >
               <span>입력 비요청</span>

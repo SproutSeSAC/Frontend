@@ -123,15 +123,7 @@ axiosCalendarInstance.interceptors.response.use(
           console.error('refreshError', refreshError);
         }
       }
-      if (error.response.status === 403) {
-        return console.log('캘린더에 소유자 권한이 없습니다.');
-      }
     }
-
-    if (error.response.status === 404) {
-      return null; // 삭제했을 때 나타나는 듯.
-    }
-
     return Promise.reject(error);
   },
 );

@@ -24,7 +24,8 @@ interface MultiSelectDropdownProps {
 }
 
 /**
- * @param defaultLabel - 옵션에서 선택한 값이 없을 때 보여지는 디폴트 라벨입니다. (ex 관심 직무)
+ * @param defaultLabel - 옵션에서 선택한 값이 없을 때 보여지는 디폴트 라벨입니다. (ex 관심 직무)'
+ * @param value - 현재 선택된 옵션 id 리스트입니다.
  * @param options - 드롭다운 옵션 리스트입니다.
  * @param onChangeValue - 옵션 변경 함수입니다.
  * @param errorMsg - 폼 관련 에러 메시지입니다.

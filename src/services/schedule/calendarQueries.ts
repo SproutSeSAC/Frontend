@@ -97,6 +97,40 @@ export const useGetAclListByCalendar = (
   });
 };
 
+export type UserCalendarInfo = {
+  courseTitle: string;
+  courseId: number;
+  calendarId?: number;
+  isCreated: boolean;
+};
+
+// 다중 캘린더별 권한 데이터 가져오기
+export const useGetAllCalendarAclList = (
+  userCalendarInfos: UserCalendarInfo[],
+  options?: UseQueryOptions<(UserCalendarInfo & { hasAcl: boolean })[]>,
+) => {
+  const getCourseCalendarInfoList = async () => {
+    const requests = userCalendarInfos.map(calendarInfo => {
+      if (!calendarInfo.isCreated) {
+        return Promise.resolve({ ...calendarInfo, hasAcl: false });
+      }
+      return axiosCalendarInstance
+        .get(`/calendars/${calendarInfo.calendarId}/acl`)
+        .then(res => ({ ...calendarInfo, hasAcl: !!res.data.items.length }))
+        .catch(() => ({ ...calendarInfo, hasAcl: false }));
+    });
+    return Promise.all(requests);
+  };
+
+  return useQuery<(UserCalendarInfo & { hasAcl: boolean })[]>({
+    queryKey: ['userAclList'],
+    queryFn: getCourseCalendarInfoList,
+    enabled: userCalendarInfos.length > 0,
+    retry: false,
+    ...options,
+  });
+};
+
 // 생성된 교육과정 데이터 가져오기
 export const useGetCreatedCourseCalendar = (
   courseId?: number,

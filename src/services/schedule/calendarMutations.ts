@@ -165,6 +165,7 @@ export const useCreateEventsForMultipleCalendars = (
       await Promise.all(promises);
     } catch (error) {
       console.error('구글 캘린더에 일정 생성 중 에러 발생:', error);
+      throw error; // 상위로 에러 전달
     }
   };
 

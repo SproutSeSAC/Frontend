@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCalendarData } from '@/hooks/useCalendarData';
 import { useDialogContext } from '@/hooks/useDialogContext';
 
-import { usePostNotice } from '@/services/notice/noticeMutation';
+import { usePostNotice } from '@/services/notice/noticeMutations';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { noticeCategoryOptions } from '@/constants';
@@ -31,6 +31,14 @@ export const useHandlePostNotice = () => {
 
   const { mutateAsync, isPending: isCreateEventsPending } =
     useCreateEventsForMultipleCalendars();
+
+  const confirmBtn = {
+    name: '확인',
+    onClick: () => {
+      hideDialog();
+      navigate('/notice');
+    },
+  };
 
   const createEventsForTargetCourse = (data: {
     sessions: SessionSchemaType[];
@@ -64,13 +72,8 @@ export const useHandlePostNotice = () => {
     return mutateAsync(events);
   };
 
-  const confirmBtn = {
-    name: '확인',
-    onClick: () => {
-      hideDialog();
-      navigate('/notice');
-    },
-  };
+  // 2. TODO: 교육과정 캘린더가 생성되어있지만 일정관리 권한을 대기중인 경우 - 일단 공지사항 등록 후 등록된 공지사항에서 추가 버튼.
+  // 3. TODO: 캘린더 권한 비교 표, 비교후 length가 다르면 ADMIN에게 alert
 
   const { mutate } = usePostNotice({
     onError: () => {
@@ -84,27 +87,18 @@ export const useHandlePostNotice = () => {
       const currNotice = findCurrNotice(data.noticeType);
 
       if (currNotice?.needExtraInfo && data.sessions) {
-        try {
-          await createEventsForTargetCourse({
-            sessions: data.sessions,
-            title: data.title,
-            targetCourseIdList: data.targetCourseIdList,
-            meetingPlace: data.meetingPlace,
-          });
-          alert({
-            dimClick: false,
-            text: '공지사항이 성공적으로 등록되었습니다!',
-            subText: `${currNotice?.name} 일정이 캘린더에 추가되었습니다!`,
-            buttonList: [confirmBtn],
-          });
-        } catch (error) {
-          console.error('일정 등록 시 에러 발생', error);
-          alert({
-            text: '캘린더에 일정 등록 중 오류가 발생했습니다.',
-            subText: '일정을 다시 확인해주세요.',
-            buttonList: [confirmBtn],
-          });
-        }
+        await createEventsForTargetCourse({
+          sessions: data.sessions,
+          title: data.title,
+          targetCourseIdList: data.targetCourseIdList,
+          meetingPlace: data.meetingPlace,
+        });
+        alert({
+          dimClick: false,
+          text: '공지사항이 성공적으로 등록되었습니다!',
+          subText: `${currNotice?.name} 일정이 각 교육과정 캘린더에 추가되었습니다!`,
+          buttonList: [confirmBtn],
+        });
       } else {
         alert({
           dimClick: false,

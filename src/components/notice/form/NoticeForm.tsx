@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import { useGetUserAclList } from '@/hooks/useGetUserAclList';
 import { useHandlePostNotice } from '@/hooks/useHandlePostNotice';
 
 import {
@@ -23,6 +24,7 @@ import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import { Option } from '@/components/common/dropdown/option/SelectOption';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
 import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
@@ -72,6 +74,74 @@ export default function NoticeForm() {
 
   const noticeKey = useWatch({ control, name: 'noticeType' });
 
+  const { hasNotAclCalendarList } = useGetUserAclList();
+
+  const onTargetCourseIdChange = (
+    data: Option[],
+    onChange: (event: number[]) => void,
+  ) => {
+    const courseIds = data.map(({ id }) => id);
+
+    const selectedCourseCalendarList = courseCalendarList.filter(
+      ({ courseId }) => courseIds.includes(courseId),
+    );
+
+    // 캘린더 비생성 확인 Alert
+    const isNotCreatedCalendarCourseTitle = selectedCourseCalendarList
+      .filter(calendar => !calendar.isCreated)
+      .map(({ courseTitle }) => courseTitle);
+
+    if (isNotCreatedCalendarCourseTitle.length > 0) {
+      return alert({
+        text: `${isNotCreatedCalendarCourseTitle.join(', ')} 캘린더가 아직 생성되어 있지 않습니다!`,
+        subText: '일정 관리 페이지에서 캘린더를 먼저 생성해주세요.',
+        className: '!w-[360px]',
+        buttonList: [
+          {
+            name: '나가기',
+            color: 'gray',
+            onClick: () => hideDialog(),
+          },
+          {
+            name: '바로 이동하기',
+            onClick: () => {
+              hideDialog();
+              navigate('/schedule');
+            },
+          },
+        ],
+      });
+    }
+
+    // 캘린더 권한 확인 Alert
+    const hasNotAclCourse = hasNotAclCalendarList.find(({ courseId }) =>
+      courseIds.includes(courseId),
+    );
+
+    if (hasNotAclCourse) {
+      return alert({
+        text: `${hasNotAclCourse.courseTitle} 교육과정 캘린더에 일정관리 권한이 부여되지 않았습니다.`,
+        subText: '잠시만 기다려주시면 바로 부여해드리겠습니다.',
+        className: '!w-[380px]',
+        buttonList: [
+          {
+            name: '나가기',
+            color: 'gray',
+            onClick: () => hideDialog(),
+          },
+          {
+            name: '바로 이동하기',
+            onClick: () => {
+              hideDialog();
+              navigate('/schedule');
+            },
+          },
+        ],
+      });
+    }
+    return onChange(courseIds);
+  };
+
   return (
     <>
       {isCreateEventsPending && (
@@ -110,39 +180,7 @@ export default function NoticeForm() {
                       options={courseListOption}
                       value={value}
                       onChangeValue={data => {
-                        const courseIds = data.map(({ id }) => id);
-
-                        const isNotCreatedCalendarCourseTite =
-                          courseCalendarList
-                            .filter(({ courseId }) =>
-                              courseIds.includes(courseId),
-                            )
-                            .filter(calendar => !calendar.isCreated)
-                            .map(({ courseTitle }) => courseTitle);
-
-                        if (isNotCreatedCalendarCourseTite.length > 0) {
-                          alert({
-                            text: `${isNotCreatedCalendarCourseTite.join(', ')} 캘린더가 아직 생성되어 있지 않습니다!`,
-                            subText:
-                              '일정 관리 페이지에서 캘린더를 먼저 생성해주세요.',
-                            buttonList: [
-                              {
-                                name: '나가기',
-                                color: 'gray',
-                                onClick: () => hideDialog(),
-                              },
-                              {
-                                name: '바로 이동하기',
-                                onClick: () => {
-                                  hideDialog();
-                                  navigate('/schedule');
-                                },
-                              },
-                            ],
-                          });
-                        } else {
-                          onChange(courseIds);
-                        }
+                        onTargetCourseIdChange(data, onChange);
                       }}
                       errorMsg={error?.message}
                       hasFullCheck={courseListOption.length > 1}
