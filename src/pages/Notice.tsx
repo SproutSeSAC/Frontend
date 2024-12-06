@@ -1,9 +1,21 @@
+import { useCallback, useMemo, useRef } from 'react';
+
 import { useSearchParams } from 'react-router-dom';
+
+import useObserver from '@/hooks/useObserver';
+
+import { useGetInfiniteNoticeList } from '@/services/notice/noticeQueries';
 
 import { noticeCategoryFilterList } from '@/constants';
 import { useFilterData } from '@/hooks';
-import { KeyOfNoticeTabKind, NoticeFilter } from '@/types';
+import {
+  KeyOfNoticeTabKind,
+  NoticeFilter,
+  Notice as NoticeType,
+} from '@/types';
 
+import EmptyContent from '@/components/common/EmptyContent';
+import LoopLoading from '@/components/common/LoopLoading';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import NoticePostCard from '@/components/notice/NoticePostCard';
@@ -17,7 +29,7 @@ const initialState: NoticeFilter = {
 
 export default function Notice() {
   const [searchParams] = useSearchParams();
-  const noticeType = searchParams.get('noticeType') as KeyOfNoticeTabKind;
+  const roleType = searchParams.get('roleType') as KeyOfNoticeTabKind;
 
   const {
     currFilter,
@@ -27,8 +39,39 @@ export default function Notice() {
     handleChangeFilter,
   } = useFilterData<NoticeFilter>({ initialState });
 
-  if (noticeType === 'EDIT') return <NoticeForm />;
+  const observeRef = useRef(null);
 
+  const {
+    data = { pages: [{ notices: [], totalPages: 0 }], pageParams: [] },
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useGetInfiniteNoticeList(currFilter);
+
+  const noticeList = useMemo(() => {
+    return data?.pages
+      .map(item => item.notices)
+      ?.reduce<Array<NoticeType>>((acc, arr) => {
+        arr?.forEach(obj => {
+          acc.push(obj);
+        });
+
+        return acc;
+      }, []);
+  }, [data?.pages]);
+
+  const onIntersect = useCallback(
+    (entry: IntersectionObserverEntry) => {
+      if (entry.isIntersecting) {
+        if (hasNextPage) fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage],
+  );
+
+  useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
+
+  if (roleType === 'EDIT') return <NoticeForm />;
   return (
     <>
       <div className="mt-6 flex items-center gap-10">
@@ -65,9 +108,21 @@ export default function Notice() {
       </ul>
 
       <div className="mt-8 flex flex-col gap-4">
-        {Array.from({ length: 5 }, (_, index) => (
-          <NoticePostCard key={index + 1} />
-        ))}
+        {(noticeList || []).map(notice => {
+          return <NoticePostCard key={notice.noticeId} notice={notice} />;
+        })}
+        <div ref={observeRef} />
+      </div>
+
+      <div className="pt-32">
+        {noticeList.length === 0 && (
+          <EmptyContent message="등록된 공지사항이 없습니다." />
+        )}
+        {isLoading && (
+          <div className="flex w-full justify-center py-10">
+            <LoopLoading />
+          </div>
+        )}
       </div>
     </>
   );

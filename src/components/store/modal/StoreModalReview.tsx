@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostStoreReview } from '@/services/store/storeMutations';
 
-import { dateFormat, timeFormat } from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/dateFormat';
 
 import StoreStarRating from './StoreStarRating';
 
@@ -180,7 +180,7 @@ export default function StoreModalReview({
               <div>{commentItem.review}</div>
               <div className="flex gap-10 text-gray1">
                 <div className="flex gap-4">
-                  <div>{`${dateFormat(commentItem.createdAt, 'YYYY-MM-DD')} ${timeFormat(commentItem.createdAt, 'HH:mm:ss')}`}</div>
+                  <div>{`${dateFormat(commentItem.createdAt, 'yyyy-MM-dd HH:mm:ss')}`}</div>
                 </div>
               </div>
             </div>

@@ -14,10 +14,10 @@ import { isManagerAndAdmin, updateQueryParams } from '@/utils';
 export default function NoticeTabNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const params = searchParams.get('noticeType');
+  const params = searchParams.get('roleType');
 
   const handleChangeValue = (type: KeyOfNoticeTabKind) => {
-    updateQueryParams(searchParams, setSearchParams, 'noticeType', type);
+    updateQueryParams(searchParams, setSearchParams, 'roleType', type);
   };
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();

@@ -7,7 +7,7 @@ import {
   storeDetailsAtom,
 } from '@/atoms/storeDetailsAtom';
 
-import { useDialogContext, usePageBlocker, useStoreMap } from '@/hooks';
+import { usePageBlocker, useStoreMap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
@@ -42,8 +42,6 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
     }
   }, [addMarker, isMapReady, storeList]);
 
-  const { hideDialog, alert } = useDialogContext();
-
   const { blocker } = usePageBlocker({
     isBlockRefresh: false,
     form: { isDirty: !!storeDetails.id },
@@ -54,7 +52,7 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
       resetStoreDetails();
       blocker.proceed();
     }
-  }, [alert, blocker, blocker.state, hideDialog, resetStoreDetails]);
+  }, [blocker, resetStoreDetails]);
 
   return (
     <div className="relative w-full">
