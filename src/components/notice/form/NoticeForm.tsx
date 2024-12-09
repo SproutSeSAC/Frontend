@@ -96,7 +96,7 @@ export default function NoticeForm() {
       return alert({
         text: `${isNotCreatedCalendarCourseTitle.join(', ')} 캘린더가 아직 생성되어 있지 않습니다!`,
         subText: '일정 관리 페이지에서 캘린더를 먼저 생성해주세요.',
-        className: '!w-[360px]',
+        subTextColor: 'green',
         buttonList: [
           {
             name: '나가기',
@@ -122,8 +122,9 @@ export default function NoticeForm() {
     if (hasNotAclCourse) {
       return alert({
         text: `${hasNotAclCourse.courseTitle} 교육과정 캘린더에 일정관리 권한이 부여되지 않았습니다.`,
-        subText: '잠시만 기다려주시면 바로 부여해드리겠습니다.',
-        className: '!w-[380px]',
+        subText:
+          '잠시만 기다려주시면 바로 관리자가 확인 후 권한을 부여해드리겠습니다.',
+        subTextColor: 'green',
         buttonList: [
           {
             name: '확인',

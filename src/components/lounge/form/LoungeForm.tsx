@@ -22,9 +22,10 @@ import SquareButton from '../../common/button/SquareButton';
 import LoungeTextEditor from './LoungeTextEditor';
 import { loungeFormSchema } from './loungeFormSchema';
 
-import { Progress, PtypeList, progressList } from '@/constants';
+import { PtypeList, progressList } from '@/constants';
 import { recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext, usePageBlocker } from '@/hooks';
+import { Progress } from '@/types';
 import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

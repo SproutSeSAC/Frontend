@@ -1,5 +1,5 @@
-import { Progress, Ptype } from '@/constants';
 import { StatusBase } from '@/constants/serviceConstant';
+import { Progress, Ptype } from '@/types';
 
 export interface Lounge {
   isScraped: boolean;

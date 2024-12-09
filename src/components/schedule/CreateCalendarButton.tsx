@@ -85,7 +85,7 @@ export default function CreateCalendarButton({
       text: `${courseTitle} 캘린더`,
       subText: '위 캘린더를 생성하시겠어요?',
       children: (
-        <div className="flex max-w-80 flex-col">
+        <div className="flex flex-col">
           <Title
             as="p"
             highlight={managerListExceptUserRole}

@@ -1,10 +1,10 @@
-import { FoodFilterType } from '@/constants';
+import { FoodFilterDisplayKey } from '@/types/lounge';
 
 export interface Store {
   id: number;
   name: string;
   workingDay: string;
-  foodType: FoodFilterType;
+  foodType: FoodFilterDisplayKey;
   breakTime: string;
   walkTime: number;
   underPrice: boolean;
@@ -52,7 +52,7 @@ export interface GetStoreListResponse {
 }
 export interface GetFilterCountResponse {
   foodTypeCount: {
-    foodType: FoodFilterType;
+    foodType: FoodFilterDisplayKey;
     count: number;
   }[];
 

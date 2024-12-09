@@ -3,13 +3,11 @@ import { dateFormat } from '@/utils/dateFormat';
 import {
   CONTACT_METHOD_EMAIL,
   CONTACT_METHOD_MESSENGER,
-  ContactMethodType,
-  Progress,
   contactMethodDisplay,
   progressDisplay,
 } from '@/constants';
 import { useDialogContext } from '@/hooks';
-import { FilterType } from '@/types';
+import { ContactMethodDisplayKey, FilterType, Progress } from '@/types';
 import { DetailPostTechStack } from '@/types/lounge/loungeDto';
 import { BsCopy, BsLink45Deg } from 'react-icons/bs';
 
@@ -18,7 +16,7 @@ interface LoungeApplicationInfoProps {
   endPeriod?: string;
   personRecruited?: number;
   position?: FilterType[];
-  contactMethod?: ContactMethodType;
+  contactMethod?: ContactMethodDisplayKey;
   contactDetail?: string;
   meetingType?: Progress;
   techStack?: DetailPostTechStack[];

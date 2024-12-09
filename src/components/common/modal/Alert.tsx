@@ -10,6 +10,7 @@ export interface AlertProps {
   text: string;
   subText?: string;
   className?: string;
+  subTextColor?: 'gray' | 'green';
   children?: ReactNode;
   buttonList?: { name: string; onClick: () => void; color?: ButtonColor }[];
 }
@@ -19,16 +20,19 @@ export default function Alert({
   children,
   text,
   subText,
+  subTextColor = 'gray',
   buttonList,
 }: AlertProps) {
   const el = document.getElementById('modal') as Element;
 
   return createPortal(
     <section
-      className={`fixed inset-0 z-[60] m-auto flex h-fit w-fit min-w-[300px] flex-col items-center justify-between rounded-2xl bg-white p-8 shadow-card ${className}`}
+      className={`fixed inset-0 z-[60] m-auto flex h-fit w-fit min-w-[300px] max-w-[800px] flex-col items-center justify-between rounded-2xl bg-white p-8 shadow-card ${className}`}
     >
       <p className="text-center text-lg font-semibold">{text}</p>
-      <p className="mb-5 whitespace-pre-wrap text-center text-sm text-gray2">
+      <p
+        className={`mb-5 break-all text-center text-[15px] ${subTextColor === 'gray' ? 'text-gray2' : 'text-oliveGreen1'}`}
+      >
         {subText}
       </p>
       {children && <div className="flex items-center gap-2">{children}</div>}

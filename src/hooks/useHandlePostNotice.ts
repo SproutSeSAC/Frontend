@@ -73,9 +73,6 @@ export const useHandlePostNotice = () => {
     return mutateAsync(events);
   };
 
-  // 2. TODO: 교육과정 캘린더가 생성되어있지만 일정관리 권한을 대기중인 경우 - 일단 공지사항 등록 후 등록된 공지사항에서 추가 버튼.
-  // 3. TODO: 캘린더 권한 비교 표, 비교후 length가 다르면 ADMIN에게 alert
-
   const { mutate } = usePostNotice({
     onError: () => {
       alert({

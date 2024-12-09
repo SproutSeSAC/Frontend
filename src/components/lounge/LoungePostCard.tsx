@@ -11,8 +11,9 @@ import {
 
 import { dateFormat } from '@/utils/dateFormat';
 
-import { PTYPE_STUDY, Ptype, progressDisplay, ptypeDisplay } from '@/constants';
+import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
 import { useDialogContext } from '@/hooks';
+import { Ptype } from '@/types';
 import { Lounge } from '@/types/lounge/loungeDto';
 import { BsEye } from 'react-icons/bs';
 
