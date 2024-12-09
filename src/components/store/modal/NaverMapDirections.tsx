@@ -1,6 +1,6 @@
 // import { useEffect } from 'react';
 
-// import { campusList } from '@/constants/seviceConstant';
+// import { campusList } from '@/constants/serviceConstant';
 // import { useStoreMap } from '@/hooks';
 
 // interface NaverMapDirectionsProps {

@@ -1,5 +1,5 @@
 import { tooltip } from '@/constants';
-import { NoticeCategoryValue } from '@/types';
+import { NoticeCategoryDisplayValue } from '@/types';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import ControllerDateTime from '@/components/common/input/ControllerDateTime';
@@ -11,7 +11,7 @@ import ControllerRequiredPhoneNumber from '@/components/notice/form/ControllerRe
 import ControllerSessions from '@/components/notice/form/ControllerSessions';
 
 interface ExtraInfoFormProps {
-  noticeType: NoticeCategoryValue;
+  noticeType: NoticeCategoryDisplayValue;
 }
 
 export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
@@ -19,11 +19,8 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
 
   return (
     <>
-      <LabeledSection
-        label={`${noticeType} 장소`}
-        tooltip={tooltip.meetingType}
-      >
-        <ControlMeetingType />
+      <LabeledSection label="참여 정원">
+        <ControllerParticipantCapacity />
       </LabeledSection>
 
       <LabeledSection label="신청 기간" className="col-span-2">
@@ -36,8 +33,11 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
 
       <ControllerSessions noticeType={noticeType} />
 
-      <LabeledSection label="참여 정원">
-        <ControllerParticipantCapacity />
+      <LabeledSection
+        label={`${noticeType} 장소`}
+        tooltip={tooltip.meetingType}
+      >
+        <ControlMeetingType />
       </LabeledSection>
 
       <LabeledSection label="핸드폰 번호">

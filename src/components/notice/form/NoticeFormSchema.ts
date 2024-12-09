@@ -10,7 +10,6 @@ const noticeCategoryKeyEnum = z.enum([
   'EVENT',
   'ETC',
 ]);
-export type NoticeCategoryKeySchemaType = z.infer<typeof noticeCategoryKeyEnum>;
 
 const session = z
   .object({

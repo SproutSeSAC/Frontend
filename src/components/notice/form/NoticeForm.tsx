@@ -10,11 +10,15 @@ import {
 
 import {
   defaultNoticeFormValues,
-  noticeCategoryOptions,
+  noticeCategoryListOfForm,
   specialLectureEventFormValues,
 } from '@/constants';
 import { useCalendarData, useDialogContext, usePageBlocker } from '@/hooks';
-import { NoticeDto, SpecialLectureOrEventValue } from '@/types';
+import {
+  NoticeCategoryDisplayKey,
+  NoticeDto,
+  SpecialLectureOrEventValue,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -28,13 +32,10 @@ import { Option } from '@/components/common/dropdown/option/SelectOption';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
 import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
-import {
-  NoticeCategoryKeySchemaType,
-  NoticeConditionalFormSchema,
-} from '@/components/notice/form/NoticeFormSchema';
+import { NoticeConditionalFormSchema } from '@/components/notice/form/NoticeFormSchema';
 
 export default function NoticeForm() {
-  const methods = useForm<NoticeDto.Post>({
+  const methods = useForm<NoticeDto.PostNotice>({
     defaultValues: defaultNoticeFormValues,
     resolver: zodResolver(NoticeConditionalFormSchema),
   });
@@ -63,7 +64,7 @@ export default function NoticeForm() {
     form: { isDirty, isSubmitted },
   });
 
-  const setConditionalKey = (type: NoticeCategoryKeySchemaType) => {
+  const setConditionalKey = (type: NoticeCategoryDisplayKey) => {
     if (type === 'SPECIAL_LECTURE' || type === 'EVENT') {
       reset({ ...specialLectureEventFormValues, ...getValues() });
     } else {
@@ -203,11 +204,11 @@ export default function NoticeForm() {
                     return (
                       <SingleSelectDropdown
                         defaultLabel="일반공지, 특강, 취업정보 ..."
-                        options={noticeCategoryOptions}
+                        options={noticeCategoryListOfForm}
                         selectedOption={selectedOption}
                         onChangeValue={data => {
                           const newNoticeKey = data[0]
-                            .key as NoticeCategoryKeySchemaType;
+                            .key as NoticeCategoryDisplayKey;
                           onChange(newNoticeKey);
                           setConditionalKey(newNoticeKey);
                         }}

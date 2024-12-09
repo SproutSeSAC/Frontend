@@ -8,7 +8,7 @@ import {
 import TabNavigation from '../../common/TabNavigation';
 
 import { noticeTabList } from '@/constants/notice';
-import { KeyOfNoticeTabKind } from '@/types';
+import { NoticeTabDisplayKey } from '@/types';
 import { isManagerAndAdmin, updateQueryParams } from '@/utils';
 
 export default function NoticeTabNavigation() {
@@ -16,7 +16,7 @@ export default function NoticeTabNavigation() {
 
   const params = searchParams.get('roleType');
 
-  const handleChangeValue = (type: KeyOfNoticeTabKind) => {
+  const handleChangeValue = (type: NoticeTabDisplayKey) => {
     updateQueryParams(searchParams, setSearchParams, 'roleType', type);
   };
 

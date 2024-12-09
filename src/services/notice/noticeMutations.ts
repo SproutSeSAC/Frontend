@@ -6,13 +6,13 @@ import { NoticeDto } from '@/types';
 import { AxiosError } from 'axios';
 
 export const usePostNotice = (
-  options?: UseMutationOptions<unknown, Error, NoticeDto.Post>,
+  options?: UseMutationOptions<unknown, Error, NoticeDto.PostNotice>,
 ) => {
-  const postNotice = async (formData: NoticeDto.Post) => {
+  const postNotice = async (formData: NoticeDto.PostNotice) => {
     await axiosInstance.post('/notices', formData);
   };
 
-  return useMutation<unknown, AxiosError, NoticeDto.Post>({
+  return useMutation<unknown, AxiosError, NoticeDto.PostNotice>({
     mutationFn: postNotice,
     mutationKey: ['notices'],
     ...options,

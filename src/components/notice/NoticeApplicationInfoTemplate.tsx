@@ -33,11 +33,13 @@ export default function NoticeApplicationInfoTemplate({
               일시
             </div>
             <div>
-              {notice && notice.sessions.length > 0
-                ? notice?.sessions.map((item, index) => (
+              {notice && notice?.sessions
+                ? notice.sessions.map((item, index) => (
                     <span key={item.sessionId}>
                       {dateFormat(item.sessionStartDateTime)}
-                      {index < notice.sessions.length - 1 && ', '}
+                      {index !==
+                        (notice?.sessions && notice.sessions.length - 1) &&
+                        ' / '}
                     </span>
                   ))
                 : '-'}

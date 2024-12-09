@@ -1,4 +1,5 @@
 import { Progress, Ptype } from '@/constants';
+import { StatusBase } from '@/constants/serviceConstant';
 
 export interface Lounge {
   isScraped: boolean;
@@ -67,7 +68,7 @@ export interface GetLoungeProjectDetail {
   isScraped: boolean;
   recruitmentEnd: string;
   viewCount: number;
-  projectStatus: ProjectStatusType;
+  projectStatus: StatusBase;
   meetingType: Progress;
   createdAt: string;
   position: FilterType[];

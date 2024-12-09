@@ -8,21 +8,22 @@ import { useDialogContext } from '@/hooks/useDialogContext';
 import { usePostNotice } from '@/services/notice/noticeMutations';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
-import { noticeCategoryOptions } from '@/constants';
-import { GoogleCalendarApiDto, NoticeDto } from '@/types';
+import { noticeCategoryList } from '@/constants';
+import {
+  GoogleCalendarApiDto,
+  NoticeCategoryDisplayKey,
+  NoticeDto,
+} from '@/types';
 import { SubmitErrorHandler } from 'react-hook-form';
 
 import { Session } from '@/components/notice/form/ControllerSessions';
-import {
-  NoticeCategoryKeySchemaType,
-  SessionSchemaType,
-} from '@/components/notice/form/NoticeFormSchema';
+import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
 export const useHandlePostNotice = () => {
   const { showToast, alert, hideDialog } = useDialogContext();
 
-  const findCurrNotice = useCallback((key: NoticeCategoryKeySchemaType) => {
-    return noticeCategoryOptions.find(option => key === option.key);
+  const findCurrNotice = useCallback((key: NoticeCategoryDisplayKey) => {
+    return noticeCategoryList.find(option => key === option.key);
   }, []);
 
   const { courseCalendarList } = useCalendarData();
@@ -83,7 +84,7 @@ export const useHandlePostNotice = () => {
         buttonList: [confirmBtn],
       });
     },
-    onSuccess: async (_, data: NoticeDto.Post) => {
+    onSuccess: async (_, data: NoticeDto.PostNotice) => {
       const currNotice = findCurrNotice(data.noticeType);
 
       if (currNotice?.needExtraInfo && data.sessions) {
@@ -109,15 +110,17 @@ export const useHandlePostNotice = () => {
     },
   });
 
-  const onError: SubmitErrorHandler<NoticeDto.Post> = errors => {
-    const firstErrorKey = Object?.keys(errors)?.[0] as keyof NoticeDto.Post;
+  const onError: SubmitErrorHandler<NoticeDto.PostNotice> = errors => {
+    const firstErrorKey = Object?.keys(
+      errors,
+    )?.[0] as keyof NoticeDto.PostNotice;
     const firstErrorMsg = errors[firstErrorKey]?.message;
     if (firstErrorMsg) {
       showToast(firstErrorMsg);
     }
   };
 
-  const onSubmit = async (submittedValue: NoticeDto.Post) => {
+  const onSubmit = async (submittedValue: NoticeDto.PostNotice) => {
     const {
       noticeType,
       title,

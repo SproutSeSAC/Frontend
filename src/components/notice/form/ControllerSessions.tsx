@@ -1,6 +1,6 @@
 import { defaultIsoDateTime } from '@/constants';
 import { hours, minutes } from '@/constants/optionList';
-import { NoticeCategoryValue } from '@/types';
+import { NoticeCategoryDisplayValue } from '@/types';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
@@ -11,7 +11,7 @@ import LabeledSection from '@/components/common/input/LabeledSection';
 import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
 interface ControllerSessionsProps {
-  noticeType: NoticeCategoryValue;
+  noticeType: NoticeCategoryDisplayValue;
 }
 
 type ErrorMsg = {

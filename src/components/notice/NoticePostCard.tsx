@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { dateFormat } from '@/utils/dateFormat';
 
 import { RolesObj, noticeCategoryDisplay } from '@/constants';
-import { Notice } from '@/types';
+import { NoticeDisplay } from '@/types';
 import { getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
@@ -13,7 +13,7 @@ import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
 interface NoticePostCardProps {
-  notice: Notice;
+  notice: NoticeDisplay;
 }
 
 export default function NoticePostCard({ notice }: NoticePostCardProps) {

@@ -6,12 +6,12 @@ import useObserver from '@/hooks/useObserver';
 
 import { useGetInfiniteNoticeList } from '@/services/notice/noticeQueries';
 
-import { noticeCategoryFilterList } from '@/constants';
+import { noticeCategoryList } from '@/constants';
 import { useFilterData } from '@/hooks';
 import {
-  KeyOfNoticeTabKind,
-  NoticeFilter,
-  Notice as NoticeType,
+  NoticeDisplay,
+  NoticeFilterParams,
+  NoticeTabDisplayKey,
 } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
@@ -21,7 +21,7 @@ import SearchInput from '@/components/common/input/SearchInput';
 import NoticePostCard from '@/components/notice/NoticePostCard';
 import NoticeForm from '@/components/notice/form/NoticeForm';
 
-const initialState: NoticeFilter = {
+const initialState: NoticeFilterParams = {
   page: 1,
   size: 20,
   noticeType: 'ALL',
@@ -29,7 +29,7 @@ const initialState: NoticeFilter = {
 
 export default function Notice() {
   const [searchParams] = useSearchParams();
-  const roleType = searchParams.get('roleType') as KeyOfNoticeTabKind;
+  const roleType = searchParams.get('roleType') as NoticeTabDisplayKey;
 
   const {
     currFilter,
@@ -37,7 +37,7 @@ export default function Notice() {
     handleSearchSubmit,
     handleChangeKeyword,
     handleChangeFilter,
-  } = useFilterData<NoticeFilter>({ initialState });
+  } = useFilterData<NoticeFilterParams>({ initialState });
 
   const observeRef = useRef(null);
 
@@ -51,8 +51,8 @@ export default function Notice() {
   const noticeList = useMemo(() => {
     return data?.pages
       .map(item => item.notices)
-      ?.reduce<Array<NoticeType>>((acc, arr) => {
-        arr?.forEach(obj => {
+      ?.reduce<Array<NoticeDisplay>>((acc, arr) => {
+        arr?.forEach((obj: NoticeDisplay) => {
           acc.push(obj);
         });
 
@@ -91,7 +91,7 @@ export default function Notice() {
       </div>
 
       <ul className="mt-6 flex items-center gap-2.5">
-        {noticeCategoryFilterList.map(({ key, name }) => (
+        {noticeCategoryList.map(({ key, name }) => (
           <li
             key={key}
             className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}

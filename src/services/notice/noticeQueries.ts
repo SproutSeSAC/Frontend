@@ -4,15 +4,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import {
-  GetNoticeCommentResponse,
-  GetNoticeDetailResponse,
-  GetNoticeListResponse,
-  NoticeFilter,
-  Role,
-} from '@/types';
-
-import { NoticeCategoryKeySchemaType } from '@/components/notice/form/NoticeFormSchema';
+import { NoticeDto, NoticeFilterParams } from '@/types';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
   return Object.fromEntries(
@@ -24,20 +16,12 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
   );
 };
 
-interface Params {
-  onlyScraped?: string | undefined;
-  page: number;
-  size: number;
-  noticeType?: NoticeCategoryKeySchemaType;
-  roleType?: Role;
-  keyword?: string;
-}
-export const useGetInfiniteNoticeList = (params: NoticeFilter) => {
+export const useGetInfiniteNoticeList = (params: NoticeFilterParams) => {
   const [searchParams] = useSearchParams();
 
   const validParams = extractValidParams(searchParams);
 
-  const mergedParams: Params = {
+  const mergedParams = {
     ...params,
     ...validParams,
     ...(validParams.roleType === 'BOOKMARK' && { onlyScraped: 'true' }),
@@ -56,7 +40,7 @@ export const useGetInfiniteNoticeList = (params: NoticeFilter) => {
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteNoticeList', mergedParams],
     queryFn: async ({ pageParam = 1 }) => {
-      const { data } = await axiosInstance.get<GetNoticeListResponse>(
+      const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
         `/notices`,
         {
           params: mergedParams,
@@ -76,7 +60,7 @@ export const useGetNoticeDetail = (noticeId: number) => {
   return useQuery({
     queryKey: ['useGetNoticeDetail'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<GetNoticeDetailResponse>(
+      const { data } = await axiosInstance.get<NoticeDto.GetNoticeDetail>(
         `/notices/${noticeId}`,
       );
       return data;
@@ -88,7 +72,7 @@ export const useGetNoticeCommentList = (noticeId: number) => {
   return useQuery({
     queryKey: ['useGetNoticeCommentList'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<GetNoticeCommentResponse>(
+      const { data } = await axiosInstance.get<NoticeDto.GetNoticeComment>(
         `/notices/${noticeId}/comments`,
       );
       return data;
