@@ -2,13 +2,11 @@ import { useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useCalendarData } from '@/hooks/useCalendarData';
-import { useDialogContext } from '@/hooks/useDialogContext';
-
 import { usePostNotice } from '@/services/notice/noticeMutations';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { noticeCategoryList } from '@/constants';
+import { useCalendarData, useDialogContext } from '@/hooks';
 import {
   GoogleCalendarApiDto,
   NoticeCategoryDisplayKey,
@@ -19,7 +17,7 @@ import { SubmitErrorHandler } from 'react-hook-form';
 import { Session } from '@/components/notice/form/ControllerSessions';
 import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
-export const useHandlePostNotice = () => {
+export const useSubmitNotice = () => {
   const { showToast, alert, hideDialog } = useDialogContext();
 
   const findCurrNotice = useCallback((key: NoticeCategoryDisplayKey) => {

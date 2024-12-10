@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
-import { useCalendarData } from '@/hooks/useCalendarData';
-
 import {
   UserCalendarInfo,
   useGetAllCalendarAclList,
 } from '@/services/schedule/calendarQueries';
+
+import { useCalendarData } from '@/hooks';
 
 // 유저의 캘린더별 권한 리스트 가져오기
 export const useGetUserAclList = () => {

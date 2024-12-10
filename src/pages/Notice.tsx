@@ -2,12 +2,10 @@ import { useCallback, useMemo, useRef } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import useObserver from '@/hooks/useObserver';
-
 import { useGetInfiniteNoticeList } from '@/services/notice/noticeQueries';
 
 import { noticeCategoryList } from '@/constants';
-import { useFilterData } from '@/hooks';
+import { useFilterData, useObserver } from '@/hooks';
 import {
   NoticeDisplay,
   NoticeFilterParams,

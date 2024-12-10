@@ -17,8 +17,8 @@ import { Ptype } from '@/types';
 import { Lounge } from '@/types/lounge/loungeDto';
 import { BsEye } from 'react-icons/bs';
 
-import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import Tag from '@/components/common/tag/Tag';
 
 interface LoungePostCardProps {
   card: Lounge;
@@ -68,7 +68,6 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
   const onViewCount = useCallback(async () => {
     try {
       await postViewCount({ projectId: card.id });
-      console.log('성공');
     } catch (err) {
       console.error(err);
     }

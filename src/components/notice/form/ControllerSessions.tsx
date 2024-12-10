@@ -4,9 +4,9 @@ import { NoticeCategoryDisplayValue } from '@/types';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
-import CustomDatePicker from '@/components/common/CustomDatePicker';
 import XButton from '@/components/common/button/XButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import CustomDatePicker from '@/components/common/input/CustomDatePicker';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
@@ -109,6 +109,7 @@ export default function ControllerSessions({
                       <div className="col-span-2 flex gap-4">
                         {/* 날짜 선택 */}
                         <CustomDatePicker
+                          id={`${id}`}
                           currentDate={startDate || undefined}
                           onChange={data => {
                             const sessionDate = data?.toISOString();

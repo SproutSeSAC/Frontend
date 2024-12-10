@@ -5,6 +5,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { NoticeDto, NoticeFilterParams } from '@/types';
+import { AxiosResponse } from 'axios';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
   return Object.fromEntries(
@@ -69,13 +70,13 @@ export const useGetNoticeDetail = (noticeId: number) => {
 };
 
 export const useGetNoticeCommentList = (noticeId: number) => {
+  const getComment = async () => {
+    const { data }: AxiosResponse<NoticeDto.GetNoticeComment> =
+      await axiosInstance.get(`/notices/${noticeId}/comments`);
+    return data?.comments;
+  };
   return useQuery({
     queryKey: ['useGetNoticeCommentList'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<NoticeDto.GetNoticeComment>(
-        `/notices/${noticeId}/comments`,
-      );
-      return data;
-    },
+    queryFn: getComment,
   });
 };

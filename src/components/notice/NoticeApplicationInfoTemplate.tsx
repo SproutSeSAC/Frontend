@@ -1,9 +1,10 @@
 import { dateFormat } from '@/utils/dateFormat';
 
+import { LIMITLESS_CAPACITY_NUM } from '@/constants';
 import { MeetingType, NoticeDetail } from '@/types';
 
 interface NoticeApplicationInfoTemplateProps {
-  notice: NoticeDetail | undefined;
+  notice: NoticeDetail;
 }
 export const noticeDisplay: { [key in keyof MeetingType]: string } = {
   ONLINE: '온라인',
@@ -11,78 +12,82 @@ export const noticeDisplay: { [key in keyof MeetingType]: string } = {
 };
 
 export default function NoticeApplicationInfoTemplate({
-  notice,
+  notice: {
+    applicationEndDateTime = '',
+    applicationStartDateTime = '',
+    sessions = [],
+    participantCapacity = 10000,
+    meetingType = 'OFFLINE',
+    meetingPlace = '',
+  },
 }: NoticeApplicationInfoTemplateProps) {
-  return (
-    <div>
-      <div className="mt-4 flex w-full gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
-        <div className="flex w-1/2 flex-col gap-6">
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid min-w-14 border-r border-r-gray2 pr-3 text-gray2">
-              기간
-            </div>
-            <div className="">
-              {notice?.applicationStartDateTime &&
-              notice?.applicationEndDateTime
-                ? ` ${dateFormat(notice.applicationStartDateTime)} ~ ${dateFormat(notice.applicationEndDateTime)}`
-                : '-'}
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid min-w-14 border-r border-r-gray2 pr-3 text-gray2">
-              일시
-            </div>
-            <div>
-              {notice && notice?.sessions
-                ? notice.sessions.map((item, index) => (
-                    <span key={item.sessionId}>
-                      {dateFormat(item.sessionStartDateTime)}
-                      {index !==
-                        (notice?.sessions && notice.sessions.length - 1) &&
-                        ' / '}
-                    </span>
-                  ))
-                : '-'}
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              유형
-            </div>
-            <div className="">
-              {notice?.meetingType
-                ? noticeDisplay[notice.meetingType] || '-'
-                : '-'}
-            </div>
-          </div>
-        </div>
+  const noticeApplicationInfo = [
+    {
+      type: '신청기간',
+      data: `${dateFormat(applicationStartDateTime)} ~ ${dateFormat(applicationEndDateTime)}`,
+    },
+    {
+      type: '인원',
+      data:
+        participantCapacity >= LIMITLESS_CAPACITY_NUM
+          ? '제한 없음'
+          : `${participantCapacity}명`,
+    },
+    {
+      type: '일시',
+      data: sessions
+        ? sessions.map((item, index) => (
+            <li key={item.sessionId}>
+              <span>
+                {dateFormat(item.sessionStartDateTime)}
+                <span className="px-2">
+                  {index !== sessions.length - 1 && '/ '}
+                </span>
+              </span>
+            </li>
+          ))
+        : '-',
+    },
+    {
+      type: '시간',
+      data: sessions
+        ? sessions.map((item, index) => (
+            <li key={item.sessionId}>
+              <span>
+                {dateFormat(item.sessionStartDateTime, 'HH:mm')} ~{' '}
+                {dateFormat(item.sessionEndDateTime, 'HH:mm')}
+                <span className="px-2">
+                  {index !== sessions.length - 1 && '/ '}
+                </span>
+              </span>
+            </li>
+          ))
+        : '-',
+    },
+    {
+      type: '유형',
+      data: noticeDisplay[meetingType],
+    },
+    {
+      type: '장소',
+      data: meetingPlace || '-',
+    },
+  ] as const;
 
-        <div className="flex w-1/2 flex-col gap-6">
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid min-w-14 border-r border-r-gray2 pr-3 text-gray2">
-              인원
-            </div>
-            <div>{notice?.participantCapacity || 0}명</div>
-          </div>
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              시간
-            </div>
-            <div className="">
-              {notice?.applicationStartDateTime &&
-              notice?.applicationEndDateTime
-                ? `${dateFormat(notice?.applicationStartDateTime, 'HH:mm')} ~ ${dateFormat(notice?.applicationEndDateTime, 'HH:mm')}`
-                : 0}
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              장소
-            </div>
-            <div>{notice?.meetingPlace || '-'}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+  return (
+    <ul className="mt-4 grid list-none grid-cols-2 gap-4 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
+      {noticeApplicationInfo.map(({ type, data }) => (
+        <li key={type} className="flex items-center gap-3 py-1 text-[22px]">
+          <h4 className="border-r-solid border-r border-r-gray2 pr-3 tracking-tighter text-gray2">
+            {type}
+          </h4>
+          {type === '일시' || type === '시간' ? (
+            <ul className="flex flex-1 flex-wrap">{data}</ul>
+          ) : (
+            <span>{data}</span>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }

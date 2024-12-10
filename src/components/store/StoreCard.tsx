@@ -23,8 +23,8 @@ import {
 } from 'react-icons/io';
 import { PiArrowSquareInThin } from 'react-icons/pi';
 
-import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import Tag from '@/components/common/tag/Tag';
 import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
 
 interface StoreDataType

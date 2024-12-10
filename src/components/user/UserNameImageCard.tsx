@@ -12,7 +12,7 @@ import UserNameImageModal from '@/components/user/UserNameImageModal';
 export default function UserNameImageCard() {
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { name, nickname, profileImageUrl } = userProfile;
+  const { name, nickname, imgUrl } = userProfile;
 
   const { showDialog } = useDialogContext();
 
@@ -25,10 +25,7 @@ export default function UserNameImageCard() {
 
   return (
     <div className="relative flex w-[45%] max-w-[305px] items-center gap-8 rounded-xl bg-oliveGreen1 px-6 py-10">
-      <UserImage
-        profileImageUrl={profileImageUrl}
-        className="size-[100px] p-5"
-      />
+      <UserImage imgUrl={imgUrl} className="size-[100px]" />
 
       <div className="flex flex-col gap-2">
         <span className="text-2xl font-medium text-white">{name}</span>

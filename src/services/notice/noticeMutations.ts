@@ -47,3 +47,14 @@ export const usePostNoticeComment = (noticeId: number) => {
     },
   });
 };
+
+export const useDeleteNotice = () => {
+  return useMutation<boolean, AxiosError, { noticeId: number }>({
+    mutationFn: async requestBody => {
+      const { data } = await axiosInstance.delete(
+        `/notices/${requestBody.noticeId}`,
+      );
+      return data;
+    },
+  });
+};

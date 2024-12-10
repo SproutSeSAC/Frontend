@@ -1,13 +1,11 @@
 import { useCallback, useMemo, useRef } from 'react';
 
-import useObserver from '@/hooks/useObserver';
-
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
 import MealRecruitCard from './MealRecruitCard';
 import MealRecruitModal from './MealRecruitModal';
 
-import { useDialogContext } from '@/hooks';
+import { useDialogContext, useObserver } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
 import { BsPlus } from 'react-icons/bs';
 

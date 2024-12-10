@@ -47,7 +47,7 @@ export default function Header({ title, highlight, children }: Props) {
             <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
           </button>
 
-          <UserImage className="size-[50px] p-3">
+          <UserImage className="size-[50px]">
             <HeaderMenu />
           </UserImage>
         </aside>

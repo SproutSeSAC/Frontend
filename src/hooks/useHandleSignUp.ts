@@ -1,8 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useDialogContext } from '@/hooks/useDialogContext';
-import { useTechStackList } from '@/hooks/useTechStackList';
-
 import { usePostSignUpValue } from '@/services/auth/authMutations';
 import {
   CourseListData,
@@ -18,6 +15,7 @@ import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
 import { getFormStepsByRole } from '@/constants';
+import { useDialogContext, useTechStackList } from '@/hooks';
 import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
 import { isCampusManager, isManager, isPreTrainee, isTrainee } from '@/utils';
 import { useAtom, useSetAtom } from 'jotai';

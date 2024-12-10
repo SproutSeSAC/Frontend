@@ -1,7 +1,5 @@
 import { dateFormat } from '@/utils/dateFormat';
 
-import ErrorMsg from './input/ErrorMsg';
-
 import { ko } from 'date-fns/locale';
 import DatePicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,6 +8,8 @@ import {
   BsFillCaretLeftFill,
   BsFillCaretRightFill,
 } from 'react-icons/bs';
+
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 
 function CustomDatePickerHeader({
   date,
@@ -92,6 +92,7 @@ function CustomDatePickerHeader({
 }
 
 interface CustomDatePickerProps {
+  id: string;
   currentDate?: Date;
   onChange: (date: Date | null) => void;
   className?: string;
@@ -100,6 +101,7 @@ interface CustomDatePickerProps {
 }
 
 export default function CustomDatePicker({
+  id,
   currentDate,
   onChange,
   className,
@@ -114,9 +116,11 @@ export default function CustomDatePicker({
           className="absolute left-4 top-5 z-10 size-[18px] cursor-pointer text-gray2"
         />
         <DatePicker
-          id="date-picker"
+          id={`date-picker-${id}`}
+          autoComplete="off"
           className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'} ${className}`}
           renderCustomHeader={CustomDatePickerHeader}
+          preventOpenOnFocus
           closeOnScroll
           popperPlacement="top-start"
           dateFormat="YYYY년 MM월 dd일"

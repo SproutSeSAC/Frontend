@@ -8,7 +8,6 @@ import {
   useForm,
 } from 'react-hook-form';
 
-import Tag from '@/components/common/Tag';
 import SquareButton from '@/components/common/button/SquareButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
@@ -18,6 +17,7 @@ import TechStackDropdown, {
 import { Option } from '@/components/common/dropdown/option/SelectOption';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
+import Tag from '@/components/common/tag/Tag';
 import { DomainJobTechStackSchema } from '@/components/user/DomainJobTechStackSchema';
 
 type FormValue = {

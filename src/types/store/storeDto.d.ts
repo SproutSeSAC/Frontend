@@ -37,7 +37,7 @@ export interface StoreImage {
 export interface StoreReviewList {
   nickname: string;
   review: string;
-  profileImageUrl: string;
+  imgUrl: string;
   rating: number;
   createdAt: string;
 }

@@ -2,8 +2,8 @@ import { useCalendarData } from '@/hooks';
 import { RoleValues } from '@/types';
 import { getColorByRole } from '@/utils';
 
-import Tag from '@/components/common/Tag';
 import Title from '@/components/common/Title';
+import Tag from '@/components/common/tag/Tag';
 import Calendar from '@/components/schedule/Calendar';
 
 export default function NoticeSideView() {

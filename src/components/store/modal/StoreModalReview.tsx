@@ -21,7 +21,7 @@ import UserImage from '@/components/user/UserImage';
 interface StoreModalReviewProps {
   reviewList: StoreReviewList[];
   storeId: number;
-  nickName: string;
+  nickname: string;
 }
 
 interface FormValues {
@@ -44,7 +44,7 @@ const reviewFormSchema = z.object({
 export default function StoreModalReview({
   reviewList,
   storeId,
-  nickName,
+  nickname,
 }: StoreModalReviewProps) {
   const queryClient = useQueryClient();
   const { mutateAsync } = usePostStoreReview();
@@ -100,9 +100,9 @@ export default function StoreModalReview({
     <section className="pb-14">
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="flex items-center gap-2">
-          <UserImage className="size-[30px] p-0.5" />
+          <UserImage className="size-[30px]" />
           <div className="relative">
-            <div>{nickName}</div>
+            <div>{nickname}</div>
             <Controller
               control={control}
               name="rating"
@@ -167,8 +167,8 @@ export default function StoreModalReview({
             >
               <div className="flex items-center gap-2">
                 <UserImage
-                  className="size-[30px] p-0.5"
-                  // profileImageUrl={commentItem.profileImageUrl} //TODO: 이미지url 정상적으로 들어오면 노출
+                  className="size-[30px]"
+                  // imgUrl={commentItem.imgUrl} //TODO: 이미지url 정상적으로 들어오면 노출
                 />
 
                 <div>

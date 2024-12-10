@@ -16,7 +16,6 @@ export const progressDisplay = {
 } as const;
 export const progressList: Array<{ id: number; name: string; key: Progress }> =
   [
-    { id: 0, name: '', key: 'ALL' },
     { id: 1, name: '전체', key: 'HYBRID' },
     { id: 2, name: '온라인', key: 'ONLINE' },
     { id: 3, name: '오프라인', key: 'OFFLINE' },

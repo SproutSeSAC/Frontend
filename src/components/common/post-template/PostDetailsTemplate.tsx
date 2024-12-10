@@ -2,7 +2,7 @@ import { dateFormat } from '@/utils/dateFormat';
 
 import { BsEye } from 'react-icons/bs';
 
-import UserImage from '@/components/user/UserImage';
+import UserNicknameImageBox from '@/components/user/UserNicknameImageBox';
 
 interface PostDetailsTemplateProps {
   actions?: Array<{
@@ -11,7 +11,8 @@ interface PostDetailsTemplateProps {
     className?: string;
     disabled?: boolean;
   }>;
-  nickName?: string;
+  // imgUrl?: string;
+  nickname: string;
   createdAt?: string;
   viewCount?: number;
   description?: string;
@@ -19,36 +20,30 @@ interface PostDetailsTemplateProps {
 
 export default function PostDetailsTemplate({
   actions,
-  nickName,
+  // imgUrl,
+  nickname,
   createdAt,
   viewCount,
   description,
 }: PostDetailsTemplateProps) {
   return (
     <>
-      <div className="border-b-solid mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
+      <header className="mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
         <div>
-          <div className="mt-2 flex items-center gap-2 text-[22px]">
-            <UserImage
-              className="size-[30px] p-0.5"
-              // TODO: img 수정
-              // profileImageUrl={imgUrl || ''}
-            />
-            <div>{nickName || '-'}</div>
-          </div>
+          <UserNicknameImageBox imgUrl="" nickname={nickname} />
 
-          <div className="mt-3 flex items-center gap-10 text-lg text-gray1">
-            <div className="flex items-center gap-3">
-              <div>작성일</div>
-              <div>
+          <ul className="mt-3 flex items-center gap-10 text-lg text-gray1">
+            <li className="flex items-center gap-3">
+              <span>작성일</span>
+              <span>
                 {createdAt ? dateFormat(createdAt, 'yyyy.MM.dd HH:mm') : '-'}
-              </div>
-            </div>
-            <div className="ml-10 flex items-center gap-1">
+              </span>
+            </li>
+            <li className="ml-10 flex items-center gap-1">
               <BsEye className="h-[18px] w-[18px]" />
-              <div>{viewCount || 0}</div>
-            </div>
-          </div>
+              <span>{viewCount || 0}</span>
+            </li>
+          </ul>
         </div>
 
         <div className="flex gap-4">
@@ -64,9 +59,9 @@ export default function PostDetailsTemplate({
             </button>
           ))}
         </div>
-      </div>
+      </header>
 
-      <div
+      <article
         className="mt-6 text-lg"
         dangerouslySetInnerHTML={{ __html: description || '' }}
       />

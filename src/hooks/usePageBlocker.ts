@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 
 import { BlockerFunction, useBlocker } from 'react-router-dom';
 
-import { useDialogContext } from '@/hooks/useDialogContext';
+import { useDialogContext } from '@/hooks';
 
 interface UsePageBlockerProps {
   isBlockRefresh?: boolean;

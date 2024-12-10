@@ -31,7 +31,6 @@ export const noticeTabList: NoticeTabList = [
   { text: '교육 매니저', type: 'EDU_MANAGER' },
   { text: '잡코디', type: 'JOB_COORDINATOR' },
   { text: '북마크', type: 'BOOKMARK' },
-  { text: '공지사항 등록', type: 'EDIT' },
 ];
 
 export const noticeCategoryListOfForm: NoticeCategoryList = [

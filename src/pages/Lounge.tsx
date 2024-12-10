@@ -2,14 +2,13 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useTechStackList } from '@/hooks/useTechStackList';
-
 import {
   useGetLoungePositionsFilterList,
   useGetLoungeProjects,
 } from '@/services/lounge/loungeQueries';
 
 import { progressList, sortList } from '@/constants';
+import { useTechStackList } from '@/hooks';
 import { GetLoungeProjects } from '@/types/lounge/loungeDto';
 
 import EmptyContent from '@/components/common/EmptyContent';

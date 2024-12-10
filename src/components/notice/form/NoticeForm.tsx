@@ -1,8 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useGetUserAclList } from '@/hooks/useGetUserAclList';
-import { useHandlePostNotice } from '@/hooks/useHandlePostNotice';
-
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -13,7 +10,13 @@ import {
   noticeCategoryListOfForm,
   specialLectureEventFormValues,
 } from '@/constants';
-import { useCalendarData, useDialogContext, usePageBlocker } from '@/hooks';
+import {
+  useCalendarData,
+  useDialogContext,
+  useGetUserAclList,
+  usePageBlocker,
+  useSubmitNotice,
+} from '@/hooks';
 import {
   NoticeCategoryDisplayKey,
   NoticeDto,
@@ -55,7 +58,7 @@ export default function NoticeForm() {
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
   const { onSubmit, onError, findCurrNotice, isCreateEventsPending } =
-    useHandlePostNotice();
+    useSubmitNotice();
 
   const navigate = useNavigate();
 

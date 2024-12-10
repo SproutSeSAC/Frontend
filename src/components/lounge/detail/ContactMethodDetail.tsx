@@ -1,0 +1,55 @@
+import {
+  CONTACT_METHOD_EMAIL,
+  CONTACT_METHOD_MESSENGER,
+  contactMethodDisplay,
+} from '@/constants';
+import { useDialogContext } from '@/hooks';
+import { ContactMethodDisplayKey } from '@/types';
+import { BsCopy, BsLink45Deg } from 'react-icons/bs';
+
+interface ContactMethodDetailProps {
+  contactMethod: ContactMethodDisplayKey;
+  contactDetail?: string;
+}
+
+export default function ContactMethodDetail({
+  contactMethod,
+  contactDetail,
+}: ContactMethodDetailProps) {
+  const { showToast } = useDialogContext();
+
+  const handleCopyClick = () => {
+    navigator.clipboard
+      .writeText(contactDetail || '')
+      .then(() => {
+        showToast(
+          `${contactMethod === CONTACT_METHOD_EMAIL ? '이메일 주소' : '연락처'}가 복사되었습니다!`,
+        );
+      })
+      .catch(err => {
+        showToast('복사에 실패했습니다.');
+        console.error('복사 실패:', err);
+      });
+  };
+
+  const commonContactMethodStyle =
+    'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
+
+  return contactMethod === CONTACT_METHOD_MESSENGER ? (
+    <div className={commonContactMethodStyle}>
+      <a href={contactDetail}>
+        {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
+      </a>
+      <BsLink45Deg size={22} className="mt-1" />
+    </div>
+  ) : (
+    <button
+      type="button"
+      onClick={handleCopyClick}
+      className={commonContactMethodStyle}
+    >
+      {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
+      <BsCopy className="ml-1 mt-1" size={22} />
+    </button>
+  );
+}

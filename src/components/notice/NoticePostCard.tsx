@@ -9,8 +9,8 @@ import { NoticeDisplay } from '@/types';
 import { getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
-import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import Tag from '@/components/common/tag/Tag';
 
 interface NoticePostCardProps {
   notice: NoticeDisplay;
