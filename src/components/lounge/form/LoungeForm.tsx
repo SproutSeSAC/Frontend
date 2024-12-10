@@ -132,7 +132,6 @@ export default function LoungeForm() {
         });
         navigate('/lounge');
       } catch (err) {
-        console.error(err);
         showToast('프로젝트 수정을 실패했습니다.');
       }
       return;
@@ -146,24 +145,18 @@ export default function LoungeForm() {
       });
       navigate('/lounge');
     } catch (err) {
-      console.error(err);
       showToast('프로젝트 등록을 실패했습니다.');
     }
   };
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
     err => {
-      console.error('hook form error >>', {
-        data: methods.getValues(),
-        error: err,
-      });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
-
       if (firstErrorMessage) {
         showToast(firstErrorMessage);
       }
     },
-    [methods, showToast],
+    [showToast],
   );
 
   return (
@@ -242,14 +235,9 @@ export default function LoungeForm() {
                 field: { onChange, value },
                 fieldState: { error },
               }) => {
-                // const selectedOption = positionsList?.filter(position =>
-                //   value.includes(position.id),
-                // );
-
                 return (
                   <MultiSelectDropdown
                     defaultLabel="모집 직무"
-                    // initialSelectedOptions={selectedOptiontest(value)}
                     value={value}
                     options={positionsList || []}
                     onChangeValue={data => {

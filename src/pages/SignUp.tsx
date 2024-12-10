@@ -195,7 +195,6 @@ export default function SignUp() {
                                     defaultLabel="캠퍼스 선택"
                                     value={value}
                                     options={campusList}
-                                    initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {
                                       if (errors.courseIdList?.message) {
                                         clearErrors('courseIdList');
@@ -235,7 +234,6 @@ export default function SignUp() {
                                     defaultLabel="교육과정 선택"
                                     value={value}
                                     options={options}
-                                    initialSelectedOptions={selectedOptions}
                                     onChangeValue={data => {
                                       onChange(data.map(({ id }) => id));
                                     }}

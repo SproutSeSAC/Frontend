@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import SelectOption, {
@@ -16,7 +16,6 @@ interface MultiSelectDropdownProps {
   onChangeValue: (value: Option[]) => void;
   errorMsg?: string;
   boxShape?: SelectBoxShape;
-  initialSelectedOptions?: Option[];
   selectBoxClassName?: string;
   optionClassName?: string;
   hasFullCheck?: boolean;
@@ -30,7 +29,6 @@ interface MultiSelectDropdownProps {
  * @param onChangeValue - 옵션 변경 함수입니다.
  * @param errorMsg - 폼 관련 에러 메시지입니다.
  * @param boxShape - 라운지에서의 버튼 모양이거나 모집글에서의 input 모양 둘중 하나를 선택할 수 있습니다. props로 설정하지 않았을 시 기본값은 input 모양입니다.
- * @param initialSelectedOptions - 이전에 선택완료한 옵션들입니다. 드롭다운은 한번에 한가지만 선택할 수 있지만 여러번 선택하는 경우입니다.
  * @param selectBoxClassName - 셀렉트 박스 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  * @param optionClassName - 옵션 리스트 박스가 아닌 하나의 옵션 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  * @param hasFullCheck - 전체 선택 버튼
@@ -44,7 +42,6 @@ export default function MultiSelectDropdown({
   onChangeValue,
   errorMsg,
   boxShape,
-  initialSelectedOptions,
   selectBoxClassName = '',
   optionClassName = '',
   hasFullCheck = false,
@@ -85,12 +82,6 @@ export default function MultiSelectDropdown({
   const onResetClick = useCallback(() => {
     onChangeValue([]);
   }, [onChangeValue]);
-
-  useEffect(() => {
-    if (!hasFullCheck && initialSelectedOptions) {
-      onChangeValue(initialSelectedOptions);
-    }
-  }, [hasFullCheck, initialSelectedOptions, onChangeValue]);
 
   const onClose = () => setOpen(false);
 
