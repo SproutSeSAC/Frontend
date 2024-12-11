@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 
-import SelectOption, {
-  Option,
-} from '@/components/common/dropdown/option/SelectOption';
+import { Option } from '@/types';
+
+import SelectOption from '@/components/common/dropdown/option/SelectOption';
 import SelectBox, {
   SelectBoxShape,
   SingleSelectProps,
