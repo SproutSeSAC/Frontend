@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UseMutateAsyncFunction, useQueryClient } from '@tanstack/react-query';
 
-import { useDialogContext } from '@/hooks/useDialogContext';
+import { useDialogContext } from '@/hooks/common/useDialogContext';
 
 import { AxiosError } from 'axios';
 

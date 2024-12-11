@@ -1,4 +1,4 @@
-import { useGetCampusList } from '@/services/course/courseQueries';
+import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetInfiniteStoreList } from '@/services/store/storeQueries';
 
 import { Store } from '@/types/store/storeDto';

@@ -84,11 +84,7 @@ export default function Store() {
         </Header>
 
         <section className="flex gap-8">
-          <StoreFilterForm
-            onReset={() => {
-              setSearchKeyword('');
-            }}
-          />
+          <StoreFilterForm onReset={() => setSearchKeyword('')} />
 
           <div className="relative flex-auto">
             <div className="mb-6 flex justify-between">

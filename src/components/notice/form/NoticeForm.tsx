@@ -20,6 +20,7 @@ import {
 import {
   NoticeCategoryDisplayKey,
   NoticeDto,
+  Option,
   SpecialLectureOrEventValue,
 } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,7 +32,6 @@ import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
-import { Option } from '@/components/common/dropdown/option/SelectOption';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
 import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';

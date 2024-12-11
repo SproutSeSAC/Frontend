@@ -1,7 +1,7 @@
 import { dateFormat } from '@/utils/dateFormat';
 
 import { progressDisplay } from '@/constants';
-import { ContactMethodDisplayKey, FilterType, Progress } from '@/types';
+import { ContactMethodDisplayKey, Option, Progress } from '@/types';
 import { DetailPostTechStack } from '@/types/lounge/loungeDto';
 
 import Tag from '@/components/common/tag/Tag';
@@ -11,7 +11,7 @@ interface LoungeApplicationInfoProps {
   startPeriod?: string;
   endPeriod?: string;
   personRecruited?: number;
-  position?: FilterType[];
+  position?: Option[];
   contactMethod?: ContactMethodDisplayKey;
   contactDetail?: string;
   meetingType?: Progress;

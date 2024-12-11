@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 
+import { Option } from '@/types';
+
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
-import SelectOption, {
-  Option,
-} from '@/components/common/dropdown/option/SelectOption';
+import SelectOption from '@/components/common/dropdown/option/SelectOption';
 import SelectBox, {
   MultiSelectProps,
   SelectBoxShape,

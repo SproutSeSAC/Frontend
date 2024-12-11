@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetCampusList } from '@/services/course/courseQueries';
+import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
 import SingleSelectDropdown from '../common/dropdown/SingleSelectDropdown';
@@ -20,6 +20,7 @@ import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
 interface StoreFilterFormProps {
   onReset: () => void;
 }
+
 interface FormValues {
   campusId: number;
   sprout: {

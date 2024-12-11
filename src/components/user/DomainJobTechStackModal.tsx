@@ -1,5 +1,5 @@
 import { useDialogContext, useUpdateProfile } from '@/hooks';
-import { Domain, Job, TechStack, UserProfileDto } from '@/types';
+import { Domain, Job, Option, TechStack, UserProfileDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -14,7 +14,6 @@ import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropd
 import TechStackDropdown, {
   OptionItem,
 } from '@/components/common/dropdown/TechStackDropdown';
-import { Option } from '@/components/common/dropdown/option/SelectOption';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';

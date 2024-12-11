@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { useHandlePost } from '@/hooks/useHandlePost';
-
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -19,7 +17,7 @@ import {
 } from '@/services/lounge/loungeQueries';
 
 import { ptypeDisplay } from '@/constants';
-import { useHandleComment, useHandleOnScrap } from '@/hooks';
+import { useHandleComment, useHandleOnScrap, useHandlePost } from '@/hooks';
 
 import BackButton from '@/components/common/button/BackButton';
 import FavoriteButton from '@/components/common/button/FavoriteButton';

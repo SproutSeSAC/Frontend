@@ -71,7 +71,7 @@ export const useGetCampusList = (
   };
 
   return useQuery<CampusListData['campusList']>({
-    queryKey: ['campusList'],
+    queryKey: ['useGetCampusList'],
     queryFn: getCampusList,
     ...options,
   });

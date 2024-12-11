@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { useHandlePost } from '@/hooks/useHandlePost';
-
 import {
   useDeleteNotice,
   usePostNoticeComment,
@@ -14,7 +12,12 @@ import {
 } from '@/services/notice/noticeQueries';
 
 import { RolesObj, noticeCategoryDisplay } from '@/constants';
-import { useDialogContext, useHandleComment, useSubmitNotice } from '@/hooks';
+import {
+  useDialogContext,
+  useHandleComment,
+  useHandlePost,
+  useSubmitNotice,
+} from '@/hooks';
 import { getColorByRole, isTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 

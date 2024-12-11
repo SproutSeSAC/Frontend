@@ -4,7 +4,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { NoticeDto, NoticeFilterParams } from '@/types';
+import { NoticeDto, NoticeFilter } from '@/types';
 import { AxiosResponse } from 'axios';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
@@ -17,7 +17,7 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
   );
 };
 
-export const useGetInfiniteNoticeList = (params: NoticeFilterParams) => {
+export const useGetInfiniteNoticeList = (params: NoticeFilter) => {
   const [searchParams] = useSearchParams();
 
   const validParams = extractValidParams(searchParams);

@@ -5,7 +5,7 @@ import {
   CourseListData,
   useGetCampusList,
   useGetCourseListByCampus,
-} from '@/services/course/courseQueries';
+} from '@/services/campusCourse/campusCourseQueries';
 import {
   useGetDomainList,
   useGetJobList,
@@ -109,7 +109,6 @@ export const useHandleSignUp = ({
         mutate(formData);
       }
     } catch (error) {
-      console.error(error);
       showToast('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };

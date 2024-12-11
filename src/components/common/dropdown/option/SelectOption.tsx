@@ -1,8 +1,4 @@
-export interface Option {
-  id: number;
-  name: string;
-  key?: string;
-}
+import { Option } from '@/types';
 
 interface SelectOptionProps {
   option: Option;

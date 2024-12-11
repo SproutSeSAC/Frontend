@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -8,8 +8,8 @@ import {
 } from '@/services/lounge/loungeQueries';
 
 import { progressList, sortList } from '@/constants';
-import { useTechStackList } from '@/hooks';
-import { GetLoungeProjects } from '@/types/lounge/loungeDto';
+import { useFilterData, useTechStackList } from '@/hooks';
+import { LoungeProjectFilters } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -21,69 +21,44 @@ import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import LoungeForm from '@/components/lounge/form/LoungeForm';
 
-export interface FilterDataType extends GetLoungeProjects {
-  modify?: boolean;
-}
-
-const defaultFilterData = {
+const initialState: LoungeProjectFilters = {
   page: 1,
   size: 21,
   modify: false,
 };
 
 export default function Lounge() {
-  const [filterData, setFilterData] =
-    useState<FilterDataType>(defaultFilterData);
+  const {
+    searchRef,
+    currFilter,
+    handleChangeKeyword,
+    handleSearchSubmit,
+    handleChangeFilter,
+    handleResetFilter,
+  } = useFilterData({ initialState });
 
-  const searchRef = useRef<HTMLInputElement | null>(null);
   const [searchParams] = useSearchParams();
   const ptype = searchParams.get('ptype');
 
-  const { data, isLoading } = useGetLoungeProjects(filterData);
+  const { data, isLoading } = useGetLoungeProjects(currFilter);
   const { data: positionsList } = useGetLoungePositionsFilterList();
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
 
-  const handleChangeFilterValue = useCallback(
-    (value: { id: number | string; name: string }[], name: string) => {
-      const ids = value.map(item => item.id);
-      setFilterData(prev => ({ ...prev, [name]: ids, modify: true }));
-    },
-    [],
-  );
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (searchRef.current) {
-      searchRef.current.value = e.target.value;
-    }
-  }, []);
-
-  const handleSearchSubmit = useCallback(() => {
-    setFilterData(prev => ({
-      ...prev,
-      keyword: searchRef.current?.value,
-      modify: true,
-    }));
-  }, []);
-
-  const handleReset = useCallback(() => {
-    setFilterData(defaultFilterData);
-  }, []);
-
   const selectedPositionOption = useMemo(() => {
-    const { position } = filterData;
+    const { position } = currFilter;
     return positionsList?.filter(({ id }) => position?.includes(id))?.[0];
-  }, [filterData, positionsList]);
+  }, [currFilter, positionsList]);
 
   const selectedProgressOption = useMemo(() => {
-    const { meetingType } = filterData;
+    const { meetingType } = currFilter;
     return progressList?.filter(({ key }) => meetingType?.includes(key))?.[0];
-  }, [filterData]);
+  }, [currFilter]);
 
   const selectedSortOption = useMemo(() => {
-    const { sort } = filterData;
+    const { sort } = currFilter;
     return sortList?.filter(({ key }) => sort?.includes(key))?.[0];
-  }, [filterData]);
+  }, [currFilter]);
 
   if (ptype === 'EDIT') return <LoungeForm />;
 
@@ -97,7 +72,7 @@ export default function Lounge() {
           width="w-full"
           height="h-12"
           onEnter={handleSearchSubmit}
-          onChange={handleChange}
+          onChange={handleChangeKeyword}
         />
         <div className="flex gap-2">
           <SquareButton
@@ -106,7 +81,7 @@ export default function Lounge() {
             className="w-[88px] whitespace-nowrap px-3.5 py-3 text-white"
           />
           <button
-            onClick={handleReset}
+            onClick={handleResetFilter}
             className="w-20 whitespace-nowrap rounded-lg bg-gray2 px-3.5 py-3 text-white"
           >
             초기화
@@ -121,10 +96,11 @@ export default function Lounge() {
               defaultLabel="기술스택"
               defaultTabValue="백엔드"
               options={techStackList}
-              isReset={!filterData.modify}
-              onChangeValue={value =>
-                handleChangeFilterValue(value, 'techStack')
-              }
+              isReset={!currFilter.modify}
+              onChangeValue={value => {
+                const newValue = value.map(item => item.id);
+                handleChangeFilter({ techStack: newValue });
+              }}
               boxShape="buttonShape"
             />
           )}
@@ -132,7 +108,11 @@ export default function Lounge() {
           <SingleSelectDropdown
             defaultLabel="포지션"
             options={positionsList || []}
-            onChangeValue={value => handleChangeFilterValue(value, 'position')}
+            onChangeValue={value => {
+              console.log(value);
+              const newValue = value.map(item => item.id);
+              handleChangeFilter({ position: newValue });
+            }}
             boxShape="buttonShape"
             selectedOption={selectedPositionOption}
           />
@@ -142,11 +122,7 @@ export default function Lounge() {
             options={progressList || []}
             onChangeValue={value => {
               const newValue = value.map(item => item.key);
-              setFilterData(prev => ({
-                ...prev,
-                meetingType: newValue[0],
-                modify: true,
-              }));
+              handleChangeFilter({ meetingType: newValue[0], modify: true });
             }}
             boxShape="buttonShape"
             selectedOption={selectedProgressOption}
@@ -158,11 +134,7 @@ export default function Lounge() {
           options={sortList}
           onChangeValue={value => {
             const newValue = value.map(item => item.key);
-            setFilterData(prev => ({
-              ...prev,
-              sort: newValue[0],
-              modify: true,
-            }));
+            handleChangeFilter({ sort: newValue[0], modify: true });
           }}
           boxShape="buttonShape"
           selectedOption={selectedSortOption}
@@ -190,11 +162,7 @@ export default function Lounge() {
           totalPages={data?.totalPages || 0}
           currentPage={data?.currentPage || 0 || 1}
           onPageChange={(pageNumber: number) => {
-            setFilterData(prev => ({
-              ...prev,
-              page: pageNumber,
-              modify: true,
-            }));
+            handleChangeFilter({ page: pageNumber, modify: true });
           }}
         />
       )}

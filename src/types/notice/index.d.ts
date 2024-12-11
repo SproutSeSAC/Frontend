@@ -59,24 +59,8 @@ export type NoticeSession = {
 };
 
 /* Notice Request Params */
-export type PagableParams = {
-  page: number;
-  size: number;
-  sort?: string[];
-};
 export type NoticeIdParams = {
   noticeId: string;
-};
-export type NoticeFilterParams = PagableParams & {
-  noticeType?: NoticeCategoryDisplayKey;
-  roleType?: NoticeTabDisplayKey;
-  keyword?: string;
-  onlyScraped?: boolean;
-  offset?: boolean;
-};
-export type NoticeParticipantParams = PagableParams & {
-  sessionId: number;
-  searchParticipantStatus: SessionStatus;
 };
 export type NoticeSessionParams = {
   sessionId: number;

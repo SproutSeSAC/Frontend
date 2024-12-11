@@ -6,11 +6,7 @@ import { useGetInfiniteNoticeList } from '@/services/notice/noticeQueries';
 
 import { noticeCategoryList } from '@/constants';
 import { useFilterData, useObserver } from '@/hooks';
-import {
-  NoticeDisplay,
-  NoticeFilterParams,
-  NoticeTabDisplayKey,
-} from '@/types';
+import { NoticeDisplay, NoticeFilter, NoticeTabDisplayKey } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -19,7 +15,7 @@ import SearchInput from '@/components/common/input/SearchInput';
 import NoticePostCard from '@/components/notice/NoticePostCard';
 import NoticeForm from '@/components/notice/form/NoticeForm';
 
-const initialState: NoticeFilterParams = {
+const initialState: NoticeFilter = {
   page: 1,
   size: 20,
   noticeType: 'ALL',
@@ -35,7 +31,7 @@ export default function Notice() {
     handleSearchSubmit,
     handleChangeKeyword,
     handleChangeFilter,
-  } = useFilterData<NoticeFilterParams>({ initialState });
+  } = useFilterData<NoticeFilter>({ initialState });
 
   const observeRef = useRef(null);
 
