@@ -85,7 +85,7 @@ export default function CreateCalendarButton({
       text: `${courseTitle} 캘린더`,
       subText: '위 캘린더를 생성하시겠어요?',
       children: (
-        <div className="flex max-w-80 flex-col">
+        <div className="flex flex-col">
           <Title
             as="p"
             highlight={managerListExceptUserRole}
@@ -113,7 +113,7 @@ export default function CreateCalendarButton({
   };
 
   return (
-    <div className="relative flex items-center justify-between">
+    <div className="relative flex items-start justify-between">
       {isLoading ? (
         <span className="flex-1 tracking-tight text-gray2">
           {courseTitle} 캘린더 생성 중...
@@ -123,16 +123,16 @@ export default function CreateCalendarButton({
           <button
             type="button"
             onClick={onEduManagerCalendarClick}
-            className="pr-2"
+            className="mt-1 pr-2"
           >
             <FaPlus
               className={`size-4 ${sproutCalendarId ? 'text-gray2' : 'text-oliveGreen1'}`}
             />
           </button>
           <span
-            className={`flex-1 overflow-hidden text-ellipsis whitespace-nowrap tracking-tight ${sproutCalendarId ? 'text-gray2' : 'text-text'}`}
+            className={`flex-1 tracking-tight ${sproutCalendarId ? 'text-gray2' : 'text-text'}`}
           >
-            {courseTitle} 캘린더 생성하기
+            {courseTitle} <span className="text-gray2">캘린더 생성하기</span>
           </span>
         </>
       )}

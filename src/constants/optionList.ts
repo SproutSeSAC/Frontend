@@ -1,4 +1,4 @@
-import { Option } from '@/components/common/dropdown/option/SelectOption';
+import { Option } from '@/types';
 
 // 시간선택 option
 export const hours: Option[] = Array.from({ length: 23 }, (_, i) => ({

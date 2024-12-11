@@ -50,7 +50,7 @@ export default function UserNameImageModal() {
           className="flex w-[350px] flex-col"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <UserImage className="mx-auto mb-6 size-[220px] p-12">
+          <UserImage className="mx-auto mb-6 size-[220px]">
             <CameraButton
               onClick={() => {}}
               className="bottom-5 right-2"

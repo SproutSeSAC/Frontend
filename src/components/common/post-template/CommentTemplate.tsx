@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import UserImage from '@/components/user/UserImage';
 
-interface CommentItem {
+export interface CommentItem {
   id: number;
   content: string;
   createdAt: string;
@@ -39,48 +39,41 @@ export default function CommentTemplate({
   };
 
   return (
-    <div className="mb-24 ml-20 mt-10">
-      <div className="flex gap-2 text-2xl font-semibold">
+    <section className="mb-24 mt-10">
+      <header className="flex gap-2 text-2xl font-semibold">
         <div className="">댓글</div>
         <div className="text-oliveGreen1">{commentList.length}</div>
-      </div>
-      <form onSubmit={handleSubmit(handleSearch)}>
+      </header>
+
+      <form onSubmit={handleSubmit(handleSearch)} className="flex flex-col">
         <textarea
           {...register('content')}
-          className="mt-2.5 w-full resize-none rounded border border-solid border-gray5 p-[15px] text-lg"
+          className="my-2.5 w-full resize-none rounded border border-solid border-gray5 p-[15px] text-lg"
           placeholder="댓글을 작성해 주세요."
           rows={5}
         />
-        <div className="flex w-full justify-end">
-          <SquareButton type="submit" name="등록" />
-        </div>
+        <SquareButton type="submit" name="등록" className="self-end" />
       </form>
 
-      <div className="mt-8 flex flex-col gap-8">
-        {commentList.map(commentItem => (
-          <div
-            key={commentItem.id}
-            className="flex w-full flex-col gap-4 text-lg"
-          >
-            <div className="flex items-center gap-2">
+      <ul className="mt-8 flex flex-col gap-8">
+        {commentList.map(({ id, writer, content, createdAt }) => (
+          <li key={id} className="flex w-full flex-col gap-4 text-lg">
+            <header className="flex items-center gap-2">
               <UserImage
-                className="size-[30px] p-0.5"
-                profileImageUrl="" // TODO: commentItem.imgUrl ||
+                className="size-[30px]"
+                imgUrl="" // TODO: commentItem.imgUrl ||
               />
-              <div>{commentItem.writer ? `@${commentItem.writer}` : '-'}</div>
-            </div>
-
-            <div>{commentItem.content}</div>
-            <div className="flex gap-10 text-gray1">
+              <div>{writer ? `@${writer}` : '-'}</div>
+            </header>
+            <p>{content}</p>
+            <footer className="flex gap-10 text-gray1">
               <div className="flex gap-4">
-                <div>
-                  {dateFormat(commentItem.createdAt, 'yyyy.MM.dd HH:mm')}
-                </div>
+                <div>{dateFormat(createdAt, 'yyyy.MM.dd HH:mm')}</div>
               </div>
-            </div>
-          </div>
+            </footer>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 }

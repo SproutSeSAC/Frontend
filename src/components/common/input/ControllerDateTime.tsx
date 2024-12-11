@@ -1,68 +1,100 @@
 import { hours, minutes } from '@/constants/optionList';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import CustomDatePicker from '@/components/common/CustomDatePicker';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import CustomDatePicker from '@/components/common/input/CustomDatePicker';
 
 interface ControllerDateTimeProps {
-  name: 'applicationStartDateTime' | 'applicationEndDateTime';
+  type?: 'date' | 'dateTime';
+  name: string;
 }
 
-export default function ControllerDateTime({ name }: ControllerDateTimeProps) {
+export default function ControllerDateTime({
+  type = 'dateTime',
+  name,
+}: ControllerDateTimeProps) {
   const { control } = useFormContext();
 
   return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const date = new Date(value);
+    <>
+      {type === 'date' && (
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            return (
+              <CustomDatePicker
+                id={name}
+                currentDate={value ? new Date(value) : undefined}
+                onChange={data => {
+                  if (data) {
+                    onChange(data.toISOString());
+                  }
+                }}
+                errorMsg={error?.message || ''}
+              />
+            );
+          }}
+        />
+      )}
 
-        const hour = date.getHours();
-        const selectedHourOption = hours.find(({ id }) => id === hour);
+      {type === 'dateTime' && (
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            const date = new Date(value);
 
-        const minute = date.getMinutes();
-        const selectedMinuteOption = minutes.find(({ id }) => id === minute);
+            const hour = date.getHours();
+            const selectedHourOption = hours.find(({ id }) => id === hour);
 
-        return (
-          <div className="relative flex h-full w-full items-center gap-1.5">
-            <CustomDatePicker
-              currentDate={value ? new Date(value) : undefined}
-              onChange={data => {
-                if (data) {
-                  onChange(data.toISOString());
-                }
-              }}
-              errorMsg={error?.message || ''}
-            />
+            const minute = date.getMinutes();
+            const selectedMinuteOption = minutes.find(
+              ({ id }) => id === minute,
+            );
 
-            <SingleSelectDropdown
-              defaultLabel="시"
-              options={hours}
-              selectedOption={selectedHourOption}
-              onChangeValue={data => {
-                date.setHours(data[0].id, 0, 0, 0);
-                return onChange(date.toISOString());
-              }}
-              errorMsg={error?.message ? ' ' : undefined}
-              selectBoxClassName="min-w-[95px]"
-              optionClassName="hover:bg-vividGreen3 text-gray1"
-            />
-            <SingleSelectDropdown
-              defaultLabel="분"
-              options={minutes}
-              selectedOption={selectedMinuteOption}
-              onChangeValue={data => {
-                date.setMinutes(data[0].id, 0, 0);
-                return onChange(date.toISOString());
-              }}
-              errorMsg={error?.message ? ' ' : undefined}
-              selectBoxClassName="min-w-[95px]"
-              optionClassName="hover:bg-vividGreen3 text-gray1"
-            />
-          </div>
-        );
-      }}
-    />
+            return (
+              <div className="relative flex h-full w-full items-center gap-1.5">
+                <CustomDatePicker
+                  id={name}
+                  currentDate={value ? new Date(value) : undefined}
+                  onChange={data => {
+                    if (data) {
+                      onChange(data.toISOString());
+                    }
+                  }}
+                  errorMsg={error?.message || ''}
+                />
+
+                <SingleSelectDropdown
+                  defaultLabel="시"
+                  options={hours}
+                  selectedOption={selectedHourOption}
+                  onChangeValue={data => {
+                    date.setHours(data[0].id, 0, 0, 0);
+                    return onChange(date.toISOString());
+                  }}
+                  errorMsg={error?.message ? ' ' : undefined}
+                  selectBoxClassName="min-w-[95px]"
+                  optionClassName="hover:bg-vividGreen3 text-gray1"
+                />
+                <SingleSelectDropdown
+                  defaultLabel="분"
+                  options={minutes}
+                  selectedOption={selectedMinuteOption}
+                  onChangeValue={data => {
+                    date.setMinutes(data[0].id, 0, 0);
+                    return onChange(date.toISOString());
+                  }}
+                  errorMsg={error?.message ? ' ' : undefined}
+                  selectBoxClassName="min-w-[95px]"
+                  optionClassName="hover:bg-vividGreen3 text-gray1"
+                />
+              </div>
+            );
+          }}
+        />
+      )}
+    </>
   );
 }

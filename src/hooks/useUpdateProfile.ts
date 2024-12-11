@@ -1,7 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useTechStackList } from '@/hooks/useTechStackList';
-
 import { useUpdateUserProfile } from '@/services/auth/authMutations';
 import {
   initialUserProfile,
@@ -11,6 +9,8 @@ import {
   useGetDomainList,
   useGetJobList,
 } from '@/services/specifications/specificationsQueries';
+
+import { useTechStackList } from '@/hooks';
 
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();

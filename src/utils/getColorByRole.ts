@@ -1,12 +1,14 @@
-import { RoleValues } from '@/types';
+import { ManagerAdminRole, ManagerRole, Role } from '@/types';
 
-export const getColorByRole = (role: RoleValues) => {
+export const getColorByRole = (
+  role: keyof ManagerAdminRole | keyof ManagerRole | keyof Role,
+) => {
   switch (role) {
-    case '잡코디':
+    case 'JOB_COORDINATOR':
       return 'yellow';
-    case '캠퍼스 매니저':
+    case 'CAMPUS_MANAGER':
       return 'pink';
-    case '교육 매니저':
+    case 'EDU_MANAGER':
       return 'blue';
     default:
       return 'purple';

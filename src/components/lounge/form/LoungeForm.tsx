@@ -1,10 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
-
-import { useTechStackList } from '@/hooks/useTechStackList';
 
 import {
   usePostLoungeProject,
@@ -15,16 +13,15 @@ import {
   useGetLoungeProjectsDetail,
 } from '@/services/lounge/loungeQueries';
 
-import { dateFormat } from '@/utils/dateFormat';
-
 import Title from '../../common/Title';
 import SquareButton from '../../common/button/SquareButton';
 import LoungeTextEditor from './LoungeTextEditor';
 import { loungeFormSchema } from './loungeFormSchema';
 
-import { Progress, PtypeList, progressList } from '@/constants';
+import { PtypeList, progressList } from '@/constants';
 import { recruitmentCountList } from '@/constants/optionList';
-import { useDialogContext, usePageBlocker } from '@/hooks';
+import { useDialogContext, usePageBlocker, useTechStackList } from '@/hooks';
+import { Progress } from '@/types';
 import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -37,10 +34,10 @@ import {
 import { BsLink45Deg } from 'react-icons/bs';
 
 import CircleNumber from '@/components/common/CircleNumber';
-import CustomDatePicker from '@/components/common/CustomDatePicker';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
+import ControllerDateTime from '@/components/common/input/ControllerDateTime';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ContactMethodContainer from '@/components/lounge/form/ContactMethodContainer';
@@ -89,7 +86,7 @@ export default function LoungeForm() {
   const [searchParams] = useSearchParams();
   const modifyProjectId = searchParams.get('modifyProject');
 
-  const { hideDialog, showToast, alert } = useDialogContext();
+  const { showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
   const { data: positionsList } = useGetLoungePositionsFilterList();
@@ -113,50 +110,13 @@ export default function LoungeForm() {
     formState: { isDirty, isSubmitting },
   } = methods;
 
-  const { blocker } = usePageBlocker({
+  usePageBlocker({
     isBlockRefresh: true,
     form: {
       isDirty,
       isSubmitted: isSubmitting,
     },
   });
-
-  const handleLeave = useCallback(() => {
-    alert({
-      text: '정말 나가시겠어요?',
-      subText: '저장하지 않은 내용을 잃어버릴 수 있어요.',
-      children: (
-        <>
-          <SquareButton
-            color="gray"
-            name="계속 작성하기"
-            onClick={() => {
-              hideDialog();
-              if (blocker.state === 'blocked') {
-                blocker.reset();
-              }
-            }}
-          />
-          <SquareButton
-            name="나가기"
-            onClick={() => {
-              hideDialog();
-              if (blocker.state === 'blocked') {
-                blocker.proceed();
-              }
-            }}
-          />
-        </>
-      ),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blocker.state]);
-
-  useEffect(() => {
-    if (blocker.state === 'blocked') {
-      handleLeave();
-    }
-  }, [blocker.state, handleLeave]);
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
     const params = {
@@ -172,7 +132,6 @@ export default function LoungeForm() {
         });
         navigate('/lounge');
       } catch (err) {
-        console.error(err);
         showToast('프로젝트 수정을 실패했습니다.');
       }
       return;
@@ -186,24 +145,18 @@ export default function LoungeForm() {
       });
       navigate('/lounge');
     } catch (err) {
-      console.error(err);
       showToast('프로젝트 등록을 실패했습니다.');
     }
   };
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
     err => {
-      console.error('hook form error >>', {
-        data: methods.getValues(),
-        error: err,
-      });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
-
       if (firstErrorMessage) {
         showToast(firstErrorMessage);
       }
     },
-    [methods, showToast],
+    [showToast],
   );
 
   return (
@@ -242,52 +195,13 @@ export default function LoungeForm() {
           </LabeledSection>
 
           <LabeledSection label="모집 기간">
-            <div className="flex w-full items-center">
-              <Controller
-                control={control}
-                name="startDate"
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => {
-                  const handleStartDate = (date: Date | null) => {
-                    onChange(dateFormat(date || '', 'yyyy-MM-dd') || '');
-                  };
-                  return (
-                    <div className="flex w-full min-w-[46%] flex-col">
-                      <CustomDatePicker
-                        currentDate={value ? new Date(value) : undefined}
-                        onChange={handleStartDate}
-                        errorMsg={error?.message || ''}
-                      />
-                    </div>
-                  );
-                }}
-              />
-              <span className="mx-2 text-center">~</span>
-              <Controller
-                control={control}
-                name="endDate"
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => {
-                  const handleEndDate = (date: Date | null) => {
-                    onChange(dateFormat(date || '', 'yyyy-MM-dd') || '');
-                  };
-                  return (
-                    <div className="flex w-full min-w-[46%] flex-col">
-                      <CustomDatePicker
-                        currentDate={value ? new Date(value) : undefined}
-                        onChange={handleEndDate}
-                        errorMsg={error?.message || ''}
-                      />
-                    </div>
-                  );
-                }}
-              />
+            <div className="flex w-full items-center gap-2">
+              <ControllerDateTime type="date" name="startDate" />
+              <span className="text-xl">~</span>
+              <ControllerDateTime type="date" name="endDate" />
             </div>
           </LabeledSection>
+
           <LabeledSection label="모집 인원">
             <Controller
               control={control}
@@ -312,6 +226,7 @@ export default function LoungeForm() {
               }}
             />
           </LabeledSection>
+
           <LabeledSection label="모집 직무">
             <Controller
               control={control}
@@ -320,14 +235,10 @@ export default function LoungeForm() {
                 field: { onChange, value },
                 fieldState: { error },
               }) => {
-                const selectedOption = positionsList?.filter(position =>
-                  value.includes(position.id),
-                );
-
                 return (
                   <MultiSelectDropdown
                     defaultLabel="모집 직무"
-                    initialSelectedOptions={selectedOption}
+                    value={value}
                     options={positionsList || []}
                     onChangeValue={data => {
                       const ids = data.map(item => item.id);
@@ -442,7 +353,7 @@ export default function LoungeForm() {
           <button
             type="button"
             className="mr-2 rounded-lg bg-gray2 px-4 py-2 tracking-tight text-white"
-            onClick={handleLeave}
+            onClick={() => navigate('/lounge')}
           >
             취소
           </button>

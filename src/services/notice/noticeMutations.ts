@@ -1,8 +1,23 @@
-import { useMutation } from '@tanstack/react-query';
+import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosInstance } from '../axiosInstance';
 
+import { NoticeDto } from '@/types';
 import { AxiosError } from 'axios';
+
+export const usePostNotice = (
+  options?: UseMutationOptions<unknown, Error, NoticeDto.PostNotice>,
+) => {
+  const postNotice = async (formData: NoticeDto.PostNotice) => {
+    await axiosInstance.post('/notices', formData);
+  };
+
+  return useMutation<unknown, AxiosError, NoticeDto.PostNotice>({
+    mutationFn: postNotice,
+    mutationKey: ['notices'],
+    ...options,
+  });
+};
 
 export const usePostNoticeSessions = () => {
   return useMutation<
@@ -27,6 +42,17 @@ export const usePostNoticeComment = (noticeId: number) => {
       const { data } = await axiosInstance.post(
         `/notices/${noticeId}/comments`,
         requestBody,
+      );
+      return data;
+    },
+  });
+};
+
+export const useDeleteNotice = () => {
+  return useMutation<boolean, AxiosError, { noticeId: number }>({
+    mutationFn: async requestBody => {
+      const { data } = await axiosInstance.delete(
+        `/notices/${requestBody.noticeId}`,
       );
       return data;
     },

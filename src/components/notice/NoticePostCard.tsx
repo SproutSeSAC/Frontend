@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 import { dateFormat } from '@/utils/dateFormat';
 
 import { RolesObj, noticeCategoryDisplay } from '@/constants';
-import { Notice } from '@/types';
+import { NoticeDisplay } from '@/types';
 import { getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
-import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import Tag from '@/components/common/tag/Tag';
 
 interface NoticePostCardProps {
-  notice: Notice;
+  notice: NoticeDisplay;
 }
 
 export default function NoticePostCard({ notice }: NoticePostCardProps) {
@@ -30,7 +30,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getColorByRole(RolesObj[notice.roleType])}
+          color={getColorByRole(notice.roleType)}
           size="big"
           text={RolesObj[notice.roleType]}
           emphasisText

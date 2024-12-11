@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 
+import { Option } from '@/types';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 import ResetButton from '@/components/common/button/ResetButton';
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
-import { Option } from '@/components/common/dropdown/option/SelectOption';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 
 export interface SingleSelectProps {

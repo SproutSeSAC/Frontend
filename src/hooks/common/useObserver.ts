@@ -8,7 +8,7 @@ interface UseObserverProps {
   threshold?: number | number[];
 }
 
-const useObserver = ({
+export const useObserver = ({
   onIntersect,
   root = null,
   rootMargin = '0px',
@@ -39,5 +39,3 @@ const useObserver = ({
 
   return { target };
 };
-
-export default useObserver;

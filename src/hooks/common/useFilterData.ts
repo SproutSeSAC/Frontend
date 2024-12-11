@@ -22,11 +22,16 @@ export const useFilterData = <T>({ initialState }: { initialState: T }) => {
     setCurrFilter(prev => ({ ...prev, keyword: searchRef.current?.value }));
   }, []);
 
+  const handleResetFilter = useCallback(() => {
+    setCurrFilter(initialState);
+  }, [initialState]);
+
   return {
     searchRef,
     currFilter,
     handleChangeKeyword,
     handleSearchSubmit,
     handleChangeFilter,
+    handleResetFilter,
   };
 };

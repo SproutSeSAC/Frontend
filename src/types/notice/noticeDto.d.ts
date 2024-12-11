@@ -1,114 +1,59 @@
-import { Role } from '../user';
+import { ManagerRole } from '../user';
 
-import { NoticeCategoryKey } from '@/constants';
+import { StatusBase } from '@/constants/serviceConstant';
+import {
+  MeetingTypeKey,
+  NoticeCategoryDisplayKey,
+  NoticeSession,
+  NoticeTargetCourse,
+  NoticeWriter,
+} from '@/types/notice';
 
 export namespace NoticeDto {
-  export type GetResponse = NoticeGetResponse;
-  export type Post = NoticeFormSchemaType;
+  export type GetNoticeList = { notices: NoticeDisplay[] };
+  export type GetNoticeDetail = NoticeDetail;
+  export type GetNoticeComment = { comments: NoticeComment[] };
+
+  export type PostNotice = NoticeFormSchemaType;
 }
 
-type Status = 'ACTIVE' | 'INACTIVE' | 'END';
-
-type NoticeGetResponse = {
-  id: number;
+interface NoticeCommonFields {
   title: string;
   content: string;
-  writerName: string;
-  startDate: string;
-  endDate: string;
-  status: Status;
-  noticeType: string;
-  createdDateTime: string;
-  modifiedDateTime: string;
-}[];
+  noticeType: NoticeCategoryDisplayKey;
+  isScraped: boolean;
+  viewCount: number;
+}
 
-type MeetingType = { ONLINE: '온라인'; OFFLINE: '오프라인' };
-
-type MeetingTypeKey = keyof MeetingType;
-type MeetingTypeValue = MeetingType[keyof MeetingType];
-
-type Session = {
-  sessionStartDateTime: string;
-  sessionEndDateTime: string;
-};
-
-type NoticePostRequiredParams = {
-  targetCourseIdList: number[];
-  noticeType: NoticeCategoryKey;
-  title: string;
-  content: string;
-};
-
-type NoticePostExtraParams = {
-  applicationForm?: string;
-  applicationStartDateTime?: string;
-  applicationEndDateTime?: string;
-  sessions: Session[];
-  meetingType: MeetingTypeKey;
-  meetingPlace: string;
-  participantCapacity?: number;
-  satisfactionSurvey?: string;
-};
-
-type NoticePostRequest = NoticePostRequiredParams &
-  Partial<NoticePostExtraParams>;
-
-// -------- type 재정의 --------
-interface Notice {
+interface NoticeDisplay extends NoticeCommonFields {
   noticeId: number;
   userId: number;
   username: string;
-  roleType: keyof Role;
-  content: string;
-  title: string;
-  viewCount: number;
-  noticeType: NoticeCategoryKey;
+  roleType: keyof ManagerRole;
+  isContentOverMaxLength: boolean;
   createdDateTime: string;
   modifiedDateTime: string;
-  isScraped: false;
   targetCourse: string[];
 }
 
-interface NoticeDetail
-  extends Pick<Notice, 'title' | 'viewCount' | 'noticeType' | 'isScraped'> {
+interface NoticeDetail extends NoticeCommonFields {
   id: number;
-  content: string;
-  status: Status;
-  isPhoneNumberRequired: boolean;
-  applicationStartDateTime: string;
-  applicationEndDateTime: string;
-  meetingPlace: string;
-  meetingType: MeetingTypeKey;
-  applicationForm: string;
-  satisfactionSurvey: string;
-  participantCapacity: number;
-  writer: Writer;
-  targetCourses: TargetCourses[];
-  isScraped: boolean;
-  sessions: Sessions[];
+  viewCount: number;
+  status: StatusBase;
+  writer: NoticeWriter;
+  targetCourses: NoticeTargetCourse[];
+  // Optional
+  sessions?: NoticeSession[];
+  isPhoneNumberRequired?: boolean;
+  applicationStartDateTime?: string;
+  applicationEndDateTime?: string;
+  meetingPlace?: string;
+  meetingType?: MeetingTypeKey;
+  satisfactionSurvey?: string;
+  participantCapacity?: number;
 }
 
-interface Writer {
-  userId: number;
-  userName: string;
-  profileUrl: string;
-  role: keyof Role;
-}
-
-interface TargetCourses {
-  courseId: number;
-  courseName: string;
-}
-
-interface Sessions {
-  sessionId: number;
-  sessionStartDateTime: string;
-  sessionEndDateTime: string;
-  participantCount: number;
-  currentStatus: string | null;
-}
-
-interface Comment {
+interface NoticeComment {
   commentId: number;
   content: string;
   createdAt: string;
@@ -118,7 +63,3 @@ interface Comment {
   userProfileUrl: string;
   roleType: keyof Role;
 }
-
-type GetNoticeListResponse = { notices: Notice[] };
-type GetNoticeDetailResponse = NoticeDetail;
-type GetNoticeCommentResponse = { comments: Comment[] };

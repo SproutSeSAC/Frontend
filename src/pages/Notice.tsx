@@ -2,17 +2,11 @@ import { useCallback, useMemo, useRef } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import useObserver from '@/hooks/useObserver';
-
 import { useGetInfiniteNoticeList } from '@/services/notice/noticeQueries';
 
-import { noticeCategoryFilterList } from '@/constants';
-import { useFilterData } from '@/hooks';
-import {
-  KeyOfNoticeTabKind,
-  NoticeFilter,
-  Notice as NoticeType,
-} from '@/types';
+import { noticeCategoryList } from '@/constants';
+import { useFilterData, useObserver } from '@/hooks';
+import { NoticeDisplay, NoticeFilter, NoticeTabDisplayKey } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -23,13 +17,15 @@ import NoticeForm from '@/components/notice/form/NoticeForm';
 
 const initialState: NoticeFilter = {
   page: 1,
-  size: 20,
+  size: 10,
   noticeType: 'ALL',
 };
 
+export const NOTICE_SEARCH_PARAMS = 'tab';
+
 export default function Notice() {
   const [searchParams] = useSearchParams();
-  const roleType = searchParams.get('roleType') as KeyOfNoticeTabKind;
+  const tab = searchParams.get(NOTICE_SEARCH_PARAMS) as NoticeTabDisplayKey;
 
   const {
     currFilter,
@@ -42,7 +38,10 @@ export default function Notice() {
   const observeRef = useRef(null);
 
   const {
-    data = { pages: [{ notices: [], totalPages: 0 }], pageParams: [] },
+    data = {
+      pages: [{ notices: [], totalPages: 0 }],
+      pageParams: [],
+    },
     fetchNextPage,
     hasNextPage,
     isLoading,
@@ -51,8 +50,8 @@ export default function Notice() {
   const noticeList = useMemo(() => {
     return data?.pages
       .map(item => item.notices)
-      ?.reduce<Array<NoticeType>>((acc, arr) => {
-        arr?.forEach(obj => {
+      ?.reduce<Array<NoticeDisplay>>((acc, arr) => {
+        arr?.forEach((obj: NoticeDisplay) => {
           acc.push(obj);
         });
 
@@ -71,7 +70,8 @@ export default function Notice() {
 
   useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
 
-  if (roleType === 'EDIT') return <NoticeForm />;
+  if (tab === 'EDIT') return <NoticeForm />;
+
   return (
     <>
       <div className="mt-6 flex items-center gap-10">
@@ -91,7 +91,7 @@ export default function Notice() {
       </div>
 
       <ul className="mt-6 flex items-center gap-2.5">
-        {noticeCategoryFilterList.map(({ key, name }) => (
+        {noticeCategoryList.map(({ key, name }) => (
           <li
             key={key}
             className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}

@@ -1,4 +1,4 @@
-import { meetingTypeOptions } from '@/constants';
+import { meetingTypeOptionList } from '@/constants';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
@@ -22,13 +22,13 @@ export default function ControlMeetingType() {
         control={control}
         name="meetingType"
         render={({ field: { onChange, value } }) => {
-          const selectedOption = meetingTypeOptions.find(
+          const selectedOption = meetingTypeOptionList.find(
             ({ key }) => key === value,
           );
           return (
             <SingleSelectDropdown
               defaultLabel="온오프라인"
-              options={meetingTypeOptions}
+              options={meetingTypeOptionList}
               selectedOption={selectedOption}
               onChangeValue={data => {
                 const type = data[0].key;

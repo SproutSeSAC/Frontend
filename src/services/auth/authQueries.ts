@@ -42,7 +42,7 @@ export const initialUserProfile: UserProfileDto.Get = {
   jobList: [],
   techStackList: [],
   nickname: '',
-  profileImageUrl: '',
+  imgUrl: '',
   role: 'TRAINEE',
 };
 

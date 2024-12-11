@@ -11,13 +11,14 @@ import {
 
 import { dateFormat } from '@/utils/dateFormat';
 
-import { PTYPE_STUDY, Ptype, progressDisplay, ptypeDisplay } from '@/constants';
+import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
 import { useDialogContext } from '@/hooks';
+import { Ptype } from '@/types';
 import { Lounge } from '@/types/lounge/loungeDto';
 import { BsEye } from 'react-icons/bs';
 
-import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import Tag from '@/components/common/tag/Tag';
 
 interface LoungePostCardProps {
   card: Lounge;
@@ -54,10 +55,9 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         }
 
         queryClient.invalidateQueries({
-          queryKey: ['useGetLoungeProjects', {}],
+          queryKey: ['useGetLoungeProjects'],
         });
       } catch (err) {
-        console.error(err);
         showToast('게시물 찜하기를 실패했어요');
       }
     },
@@ -67,7 +67,6 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
   const onViewCount = useCallback(async () => {
     try {
       await postViewCount({ projectId: card.id });
-      console.log('성공');
     } catch (err) {
       console.error(err);
     }

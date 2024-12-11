@@ -34,6 +34,7 @@ export default function VerificationNickname() {
     if (isValid) {
       try {
         const response = await getVerifyNicknameResult(watchedNickname);
+
         if (response.status === 200) {
           alert({
             text: '사용 가능한 닉네임입니다!',
@@ -50,6 +51,7 @@ export default function VerificationNickname() {
           });
         }
       } catch (error) {
+        console.log(error);
         alert({
           text: '이미 사용중인 닉네임입니다.',
           children: (

@@ -7,8 +7,9 @@ import { usePostStoreScrap } from '@/services/store/storeMutations';
 import StoreMenuImage from './StoreMenuImage';
 import StoreProposalEditModal from './modal/StoreProposalEditModal';
 
-import { FoodFilterType, foodFilterDisplay } from '@/constants';
+import { foodFilterDisplay } from '@/constants';
 import { useDialogContext } from '@/hooks';
+import { FoodFilterDisplayKey } from '@/types';
 import { Store } from '@/types/store/storeDto';
 import {
   BsClockFill,
@@ -22,8 +23,8 @@ import {
 } from 'react-icons/io';
 import { PiArrowSquareInThin } from 'react-icons/pi';
 
-import Tag from '@/components/common/Tag';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
+import Tag from '@/components/common/tag/Tag';
 import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
 
 interface StoreDataType
@@ -40,7 +41,7 @@ interface StoreDataType
     | 'holiday'
   > {
   phoneNumber?: string;
-  foodType?: FoodFilterType;
+  foodType?: FoodFilterDisplayKey;
   scrapCount?: number;
   longitude?: string;
   latitude?: string;

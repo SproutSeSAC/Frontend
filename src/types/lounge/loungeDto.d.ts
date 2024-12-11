@@ -1,4 +1,5 @@
-import { Progress, Ptype } from '@/constants';
+import { StatusBase } from '@/constants/serviceConstant';
+import { Option, Progress, Ptype } from '@/types';
 
 export interface Lounge {
   isScraped: boolean;
@@ -67,10 +68,10 @@ export interface GetLoungeProjectDetail {
   isScraped: boolean;
   recruitmentEnd: string;
   viewCount: number;
-  projectStatus: ProjectStatusType;
+  projectStatus: StatusBase;
   meetingType: Progress;
   createdAt: string;
-  position: FilterType[];
+  position: Option[];
   ptype: Ptype;
   techStack: DetailPostTechStack[];
 }

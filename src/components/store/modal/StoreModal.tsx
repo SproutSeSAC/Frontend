@@ -70,7 +70,7 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
           <StoreModalReview
             reviewList={storeData?.storeReviewList || []}
             storeId={storeId}
-            nickName={profile?.nickname || '-'}
+            nickname={profile?.nickname || '-'}
           />
         )}
       </div>

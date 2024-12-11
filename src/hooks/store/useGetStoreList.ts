@@ -1,9 +1,9 @@
-import { useGetCampusList } from '@/services/course/courseQueries';
+import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetInfiniteStoreList } from '@/services/store/storeQueries';
 
 import { Store } from '@/types/store/storeDto';
 
-const useGetStoreList = () => {
+export const useGetStoreList = () => {
   const { data: campusList } = useGetCampusList();
 
   const campusId = campusList ? campusList[0]?.id : 0;
@@ -33,5 +33,3 @@ const useGetStoreList = () => {
     storeList,
   };
 };
-
-export default useGetStoreList;

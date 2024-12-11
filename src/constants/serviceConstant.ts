@@ -1,9 +1,18 @@
-// projectStatus
+// status
 export const STATUS_ACTIVE = 'ACTIVE';
 export const STATUS_INACTIVE = 'INACTIVE';
 export const STATUS_END = 'END';
 
-export type ProjectStatusType =
+export type StatusBase =
+  | typeof STATUS_ACTIVE
+  | typeof STATUS_INACTIVE
+  | typeof STATUS_END;
+
+export const STATUS_WAIT = 'WAIT';
+export const STATUS_PARTICIPANT = 'PARTICIPANT';
+export const STATUS_REJECT = 'REJECT';
+
+export type SessionStatus =
   | typeof STATUS_ACTIVE
   | typeof STATUS_INACTIVE
   | typeof STATUS_END;

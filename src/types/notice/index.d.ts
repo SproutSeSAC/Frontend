@@ -1,51 +1,71 @@
+import { noticeCategoryDisplay, noticeTabDisplay } from '@/constants';
+import { SessionStatus } from '@/constants/serviceConstant';
 import { NoticeDto } from '@/types/notice/noticeDto';
-import { Role } from '@/types/userInfoDto';
-
-import { NoticeCategoryKeySchemaType } from '@/components/notice/form/NoticeFormSchema';
+import { ManagerRole } from '@/types/user';
 
 export * from '@/types/notice/noticeDto';
 
-type AdminRole = Pick<
-  Role,
-  'CAMPUS_MANAGER' | 'EDU_MANAGER' | 'JOB_COORDINATOR'
->;
+/* Notice Tab */
+export type NoticeTabDisplay = typeof noticeTabDisplay;
+export type NoticeTabDisplayKey = keyof NoticeTabDisplay;
+export type NoticeTabDisplayValue = NoticeTabDisplay[keyof NoticeTabDisplay];
+export type NoticeTabList = {
+  type: NoticeTabDisplayKey;
+  text: NoticeTabDisplayValue;
+}[];
 
-type NoticeTabKind = {
-  ALL: '전체';
-  BOOKMARK: '북마크';
-  EDIT: '공지사항 등록';
-} & AdminRole;
+/* Notice Category */
+export type NoticeCategoryDisplay = typeof noticeCategoryDisplay;
+export type NoticeCategoryDisplayKey = keyof NoticeCategoryDisplay;
+export type NoticeCategoryDisplayValue =
+  NoticeCategoryDisplay[keyof NoticeCategoryDisplay];
+export type NoticeCategoryList = {
+  id: number;
+  key: NoticeCategoryDisplayKey;
+  name: NoticeCategoryDisplayValue;
+  needExtraInfo: boolean;
+}[];
 
-export type KeyOfNoticeTabKind = keyof NoticeTabKind;
-
-export type NoticeTab = {
-  text: NoticeTabKind[KeyOfNoticeTabKind];
-  type: KeyOfNoticeTabKind;
-};
-
-export type NoticeCategory = {
-  ALL: '통합';
-  GENERAL: '일반공지';
-  SPECIAL_LECTURE: '특강';
-  EMPLOYMENT: '취업정보';
-  EVENT: '행사';
-  ETC: '기타';
-};
-export type NoticeCategoryValue = NoticeCategory[keyof NoticeCategory];
-
+/* Notice Form */
 export type SpecialLectureOrEventValue = Extract<
   NoticeCategoryValue,
   '행사' | '특강'
 >;
-
 export type TooltipKeys = keyof Pick<
-  NoticeDto.Post,
+  NoticeDto.PostNotice,
   'meetingType' | 'satisfactionSurvey'
 >;
+export type MeetingType = { ONLINE: '온라인'; OFFLINE: '오프라인' };
+export type MeetingTypeKey = keyof MeetingType;
+export type MeetingTypeValue = MeetingType[keyof MeetingType];
 
-export type NoticeFilter = {
-  page: number;
-  size: number;
-  noticeType: NoticeCategoryKeySchemaType;
-  keyword?: string;
+/* Notice Detail */
+export type NoticeTargetCourse = {
+  courseId: number;
+  courseName: string;
+};
+export type NoticeWriter = {
+  userId: number;
+  userName: string;
+  profileUrl: string;
+  role: keyof ManagerRole;
+};
+export type NoticeSession = {
+  sessionId: number;
+  sessionStartDateTime: string;
+  sessionEndDateTime: string;
+  participantCount: number;
+  currentStatus: SessionStatus;
+};
+
+/* Notice Request Params */
+export type NoticeIdParams = {
+  noticeId: string;
+};
+export type NoticeSessionParams = {
+  sessionId: number;
+  participantId?: number;
+};
+export type NoticeCommentParams = {
+  commentId: number;
 };

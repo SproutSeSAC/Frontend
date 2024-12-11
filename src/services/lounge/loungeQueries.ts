@@ -5,15 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../axiosInstance';
 
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
-import { FilterType } from '@/types';
+import { LoungeProjectFilters, Option } from '@/types';
 import {
   GetEndingTomorrowProjects,
   GetLoungeProject,
   GetLoungeProjectComment,
   GetLoungeProjectDetail,
 } from '@/types/lounge/loungeDto';
-
-import { FilterDataType } from '@/pages/Lounge';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
   return Object.fromEntries(
@@ -26,7 +24,7 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
   );
 };
 
-export const useGetLoungeProjects = (params: FilterDataType) => {
+export const useGetLoungeProjects = (params: LoungeProjectFilters) => {
   const [searchParams] = useSearchParams();
   const newSearchParams =
     extractValidParams(searchParams).pType === 'onlyScraped'
@@ -63,7 +61,7 @@ export const useGetLoungePositionsFilterList = () => {
   return useQuery({
     queryKey: ['useGetLoungePositionsFilterList'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<FilterType[]>('/positions');
+      const { data } = await axiosInstance.get<Option[]>('/positions');
       return data;
     },
   });

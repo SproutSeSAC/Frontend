@@ -34,13 +34,13 @@ type UserProfile = {
   jobList: Job[];
   techStackList: TechStack[];
   nickname: string;
-  profileImageUrl: string;
+  imgUrl: string;
   role: KeyOfRole;
 };
 
 type UpdateableUserProfile = Partial<{
   nickname: string;
-  profileImageUrl: string;
+  imgUrl: string;
   updatedDomainIdList: number[];
   updatedJobIdList: number[];
   updatedTechStackIdList: number[];

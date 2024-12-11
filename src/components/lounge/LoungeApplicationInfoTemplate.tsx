@@ -1,30 +1,22 @@
 import { dateFormat } from '@/utils/dateFormat';
 
-import {
-  CONTACT_METHOD_EMAIL,
-  CONTACT_METHOD_MESSENGER,
-  ContactMethodType,
-  Progress,
-  contactMethodDisplay,
-  progressDisplay,
-} from '@/constants';
-import { useDialogContext } from '@/hooks';
-import { FilterType } from '@/types';
+import { progressDisplay } from '@/constants';
+import { ContactMethodDisplayKey, Option, Progress } from '@/types';
 import { DetailPostTechStack } from '@/types/lounge/loungeDto';
-import { BsCopy, BsLink45Deg } from 'react-icons/bs';
+
+import Tag from '@/components/common/tag/Tag';
+import ContactMethodDetail from '@/components/lounge/detail/ContactMethodDetail';
 
 interface LoungeApplicationInfoProps {
   startPeriod?: string;
   endPeriod?: string;
   personRecruited?: number;
-  position?: FilterType[];
-  contactMethod?: ContactMethodType;
+  position?: Option[];
+  contactMethod?: ContactMethodDisplayKey;
   contactDetail?: string;
   meetingType?: Progress;
   techStack?: DetailPostTechStack[];
 }
-const commonContactMethodStyle =
-  'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
 
 export default function LoungeApplicationInfoTemplate({
   startPeriod,
@@ -36,105 +28,68 @@ export default function LoungeApplicationInfoTemplate({
   meetingType,
   techStack,
 }: LoungeApplicationInfoProps) {
-  const { showToast } = useDialogContext();
+  const loungeApplicationInfo = [
+    {
+      type: '기간',
+      data:
+        startPeriod && endPeriod
+          ? `${dateFormat(startPeriod)} ~ ${dateFormat(endPeriod)}`
+          : '-',
+    },
+    {
+      type: '모집',
+      data: personRecruited,
+    },
+    {
+      type: '직무',
+      data: position && (
+        <ul className="flex w-full flex-1 flex-wrap gap-1">
+          {position?.map(({ id, name }) => (
+            <Tag
+              key={id}
+              text={name}
+              size="big"
+              className="whitespace-nowrap rounded bg-text !px-2 !font-normal text-white"
+            />
+          ))}
+        </ul>
+      ),
+    },
+    {
+      type: '스택',
+      data: techStack && (
+        <ul className="flex w-full flex-1 flex-wrap gap-1">
+          {techStack.map(({ id, path, name }) => (
+            <img key={id} src={path} alt={name} className="size-10" />
+          ))}
+        </ul>
+      ),
+    },
+    {
+      type: '유형',
+      data: meetingType && progressDisplay[meetingType],
+    },
+    {
+      type: '연락',
+      data: contactMethod && (
+        <ContactMethodDetail
+          contactMethod={contactMethod}
+          contactDetail={contactDetail}
+        />
+      ),
+    },
+  ] as const;
 
-  const handleCopyClick = () => {
-    navigator.clipboard
-      .writeText(contactDetail || '')
-      .then(() => {
-        showToast(
-          `${contactMethod === CONTACT_METHOD_EMAIL ? '이메일 주소' : '연락처'}가 복사되었습니다!`,
-        );
-      })
-      .catch(err => {
-        showToast('복사에 실패했습니다.');
-        console.error('복사 실패:', err);
-      });
-  };
   return (
-    <div>
-      <div className="mt-4 flex w-full gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
-        <div className="flex w-1/2 flex-col gap-6">
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              기간
-            </div>
-            <div className="">
-              {startPeriod && endPeriod
-                ? ` ${dateFormat(startPeriod)} ~ ${dateFormat(endPeriod)}`
-                : '-'}
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              모집
-            </div>
-            <div className="">{personRecruited || 0}</div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              직무
-            </div>
-            <ul className="flex w-full flex-1 flex-wrap gap-1">
-              {(position || []).map(item => (
-                <li
-                  key={item.id}
-                  className="whitespace-nowrap rounded-sm bg-text px-1 py-0.5 text-white"
-                >
-                  {item.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex w-1/2 flex-col gap-6">
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              스택
-            </div>
-            <ul className="flex flex-wrap gap-2">
-              {techStack && techStack?.length > 0
-                ? techStack.map(stack => {
-                    return <li key={stack.id}>stack</li>;
-                  })
-                : '-'}
-            </ul>
-          </div>
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              유형
-            </div>
-            <div className="">
-              {meetingType ? progressDisplay[meetingType] : '-'}
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-[22px]">
-            <div className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
-              연락
-            </div>
-            <div>
-              {contactMethod === CONTACT_METHOD_MESSENGER ? (
-                <div className={commonContactMethodStyle}>
-                  <a href={contactDetail}>
-                    {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
-                  </a>
-                  <BsLink45Deg size={22} className="mt-1" />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleCopyClick}
-                  className={commonContactMethodStyle}
-                >
-                  {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
-                  <BsCopy className="ml-1 mt-1" size={22} />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ul className="mt-4 grid list-none grid-cols-2 gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
+      {loungeApplicationInfo.map(({ type, data }) => (
+        <li key={type} className="flex items-center gap-3 text-[22px]">
+          <h4 className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
+            {type}
+          </h4>
+          {data}
+        </li>
+      ))}
+    </ul>
   );
 }

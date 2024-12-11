@@ -45,7 +45,9 @@ export default function Tag({
     pink: emphasisText
       ? 'bg-[#FFF3F4] text-[#F5004F]'
       : 'bg-[#E94159] text-white',
-    purple: 'bg-[#6B5FFD] text-white',
+    purple: emphasisText
+      ? 'text-[#6B5FFD] bg-[#eae8ff]'
+      : 'bg-[#6B5FFD] text-white',
   };
 
   const tagStyle = styleBySize[size];

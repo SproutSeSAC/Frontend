@@ -4,7 +4,6 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '../axiosInstance';
 
-import { FilterType } from '@/types';
 import {
   GetFilterCountResponse,
   GetStoreDetailResponse,
@@ -49,18 +48,6 @@ export const useGetInfiniteStoreList = (campusId: number) => {
     getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 1,
     enabled: !!campusId,
-  });
-};
-
-export const useGetCampusList = () => {
-  return useQuery({
-    queryKey: ['useGetCampusList'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<{ campusList: FilterType[] }>(
-        '/campus/list',
-      );
-      return data;
-    },
   });
 };
 

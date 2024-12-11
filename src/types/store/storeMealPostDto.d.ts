@@ -36,7 +36,7 @@ export interface GetMealPostDetail
 export interface Members {
   userId: number;
   nickname: string;
-  profileImageUrl: string;
+  imgUrl: string;
   isOwner: boolean;
 }
 

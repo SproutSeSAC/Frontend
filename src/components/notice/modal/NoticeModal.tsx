@@ -9,7 +9,7 @@ import Modal from '../../common/modal/Modal';
 import NoticeModalForm from './NoticeModalForm';
 
 import { useDialogContext } from '@/hooks';
-import { Sessions } from '@/types';
+import { NoticeSession } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import {
@@ -21,7 +21,7 @@ import {
 import { z } from 'zod';
 
 interface NoticeModalProps {
-  sessions: Sessions[];
+  sessions: NoticeSession[];
   isPhoneNumberRequired: boolean;
 }
 

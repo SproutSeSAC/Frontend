@@ -2,10 +2,12 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import useGetStoreList from '@/hooks/useGetStoreList';
-import useObserver from '@/hooks/useObserver';
-
-import { useCollapsibleSideView, useDialogContext } from '@/hooks';
+import {
+  useCollapsibleSideView,
+  useDialogContext,
+  useGetStoreList,
+  useObserver,
+} from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { updateQueryParams } from '@/utils';
@@ -82,11 +84,7 @@ export default function Store() {
         </Header>
 
         <section className="flex gap-8">
-          <StoreFilterForm
-            onReset={() => {
-              setSearchKeyword('');
-            }}
-          />
+          <StoreFilterForm onReset={() => setSearchKeyword('')} />
 
           <div className="relative flex-auto">
             <div className="mb-6 flex justify-between">

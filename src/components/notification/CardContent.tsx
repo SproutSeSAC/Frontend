@@ -52,7 +52,7 @@ export default function CardContent({ item, disabled }: CardContentProps) {
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <UserImage className="size-6 p-0.5" profileImageUrl="" />
+          <UserImage className="size-6" imgUrl="" />
           <div className="text-text">박민석 매니저</div>
         </div>
 

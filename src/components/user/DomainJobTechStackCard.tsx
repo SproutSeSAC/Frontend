@@ -5,9 +5,9 @@ import {
 
 import { useDialogContext } from '@/hooks';
 
-import Tag from '@/components/common/Tag';
 import EditButton from '@/components/common/button/EditButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
+import Tag from '@/components/common/tag/Tag';
 import DomainJobTechStackModal from '@/components/user/DomainJobTechStackModal';
 
 export default function DomainJobTechStackCard() {
