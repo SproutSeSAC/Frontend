@@ -30,7 +30,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getColorByRole(RolesObj[notice.roleType])}
+          color={getColorByRole(notice.roleType)}
           size="big"
           text={RolesObj[notice.roleType]}
           emphasisText

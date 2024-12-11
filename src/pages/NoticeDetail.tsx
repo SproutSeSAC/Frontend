@@ -120,7 +120,7 @@ export default function NoticeDetail() {
           <div className="mt-12 flex gap-2">
             {noticeDetail?.writer.role && (
               <Tag
-                color={getColorByRole(RolesObj[noticeDetail?.writer.role])}
+                color={getColorByRole(noticeDetail?.writer.role)}
                 size="big"
                 text={RolesObj[noticeDetail?.writer.role]}
                 emphasisText

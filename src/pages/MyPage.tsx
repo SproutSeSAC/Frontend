@@ -22,14 +22,27 @@ export default function MyPage() {
   const { name, email, campusList, courseList } = userProfile;
 
   const userInfoList = [
-    { label: 'E-mail', value: email },
+    {
+      label: 'E-mail',
+      value: <span>{email}</span>,
+    },
     {
       label: '소속 캠퍼스',
       value: campusList.map(({ campusName }) => campusName).join(', '),
     },
     {
       label: '소속 교육과정',
-      value: courseList.map(({ courseTitle }) => courseTitle).join(', '),
+      value: (
+        <ul className="flex-1">
+          {courseList.map(({ courseTitle }) => (
+            <span key={courseTitle} className="mb-1 block">
+              {courseTitle.length > 25
+                ? `${courseTitle.slice(0, 25)}...`
+                : courseTitle}
+            </span>
+          ))}
+        </ul>
+      ),
     },
   ];
 
@@ -42,16 +55,16 @@ export default function MyPage() {
       <section className="mb-16 flex gap-4">
         <UserNameImageCard />
 
-        <ul className="flex min-w-[25%] max-w-[450px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
+        <ul className="flex min-w-[25%] max-w-[500px] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4">
           {userInfoList.map(({ value, label }) => (
             <li
               key={label}
-              className="flex items-center justify-between py-2.5"
+              className="flex items-start justify-between py-2.5 text-end font-medium text-white"
             >
               <span className="mr-5 font-medium text-vividGreen3">
                 {label}:
               </span>
-              <span className="font-medium text-white">{value}</span>
+              {value}
             </li>
           ))}
         </ul>

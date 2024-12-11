@@ -55,10 +55,9 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         }
 
         queryClient.invalidateQueries({
-          queryKey: ['useGetLoungeProjects', {}],
+          queryKey: ['useGetLoungeProjects'],
         });
       } catch (err) {
-        console.error(err);
         showToast('게시물 찜하기를 실패했어요');
       }
     },

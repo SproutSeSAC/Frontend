@@ -37,11 +37,13 @@ export default function Checkbox({
         name={id}
         checked={checked}
         onChange={onChange}
-        className={`mr-2 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-blue-500 checked:bg-[url('./assets/images/check.png')] checked:bg-contain ${inputClassName}`}
+        className={`mr-2 mt-1 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-blue-500 checked:bg-[url('./assets/images/check.png')] checked:bg-contain ${inputClassName}`}
         style={{ backgroundColor: checked ? checkBoxColor : '' }}
       />
       {text && (
-        <span className={`mr-1 text-[#646567] ${textClassName}`}>{text}</span>
+        <span className={`mr-1 flex-1 text-[#646567] ${textClassName}`}>
+          {text}
+        </span>
       )}
       {count !== undefined && count !== null && (
         <span className={`text-[#989B9E] ${textClassName}`}>

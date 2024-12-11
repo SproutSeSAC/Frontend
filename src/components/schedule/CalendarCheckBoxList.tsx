@@ -94,7 +94,7 @@ export default function CalendarCheckBoxList({
                   isCreated ? (
                     <div
                       key={courseId}
-                      className="flex items-center justify-between"
+                      className="flex items-start justify-between [&>label]:items-start"
                     >
                       <Checkbox
                         id={courseId}

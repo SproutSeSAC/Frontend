@@ -37,7 +37,7 @@ export interface PostLoungeProject
 export interface GetLoungeProjects {
   techStack?: number[];
   position?: number[];
-  keyWord?: string;
+  keyword?: string;
   onlyScraped?: boolean;
   meetingType?: string;
   sort?: string;

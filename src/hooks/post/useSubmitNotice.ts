@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { usePostNotice } from '@/services/notice/noticeMutations';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
@@ -20,6 +22,8 @@ import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 export const useSubmitNotice = () => {
   const { showToast, alert, hideDialog } = useDialogContext();
 
+  const queryClient = useQueryClient();
+
   const findCurrNotice = useCallback((key: NoticeCategoryDisplayKey) => {
     return noticeCategoryList.find(option => key === option.key);
   }, []);
@@ -33,8 +37,16 @@ export const useSubmitNotice = () => {
 
   const confirmBtn = {
     name: '확인',
-    onClick: () => {
+    onClick: async () => {
       hideDialog();
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetInfiniteNoticeList'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetLatestNoticeList'],
+        exact: false,
+      });
       navigate('/notice');
     },
   };
@@ -71,7 +83,7 @@ export const useSubmitNotice = () => {
     return mutateAsync(events);
   };
 
-  const { mutate } = usePostNotice({
+  const { mutateAsync: mutatePostNotice } = usePostNotice({
     onError: () => {
       alert({
         text: '공지사항 등록 중 오류가 발생했습니다.',
@@ -135,11 +147,13 @@ export const useSubmitNotice = () => {
         satisfactionSurvey: satisfactionSurvey || '',
         sessions: sessionsWithNoId,
       };
-      mutate(formValue);
+      mutatePostNotice(formValue);
     } else {
       const formValue = { noticeType, title, content, targetCourseIdList };
-      mutate(formValue);
+      mutatePostNotice(formValue);
     }
+
+    await queryClient.refetchQueries({ queryKey: ['useGetLatestNoticeList'] });
   };
 
   return {

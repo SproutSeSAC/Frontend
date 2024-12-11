@@ -11,13 +11,20 @@ import { noticeTabList } from '@/constants/notice';
 import { NoticeTabDisplayKey } from '@/types';
 import { isManagerAndAdmin, updateQueryParams } from '@/utils';
 
+import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
+
 export default function NoticeTabNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const params = searchParams.get('roleType');
+  const tabName = searchParams.get(NOTICE_SEARCH_PARAMS);
 
   const handleChangeValue = (type: NoticeTabDisplayKey) => {
-    updateQueryParams(searchParams, setSearchParams, 'roleType', type);
+    updateQueryParams(
+      searchParams,
+      setSearchParams,
+      NOTICE_SEARCH_PARAMS,
+      type,
+    );
   };
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
@@ -25,14 +32,14 @@ export default function NoticeTabNavigation() {
   return (
     <TabNavigation
       tabList={noticeTabList}
-      selectValue={params ?? 'ALL'}
+      selectValue={tabName ?? 'ALL'}
       onChangeValue={handleChangeValue}
     >
       {isManagerAndAdmin(userProfile?.role) && (
         <button
           type="button"
           onClick={() => handleChangeValue('EDIT')}
-          className={`cursor-pointer whitespace-pre px-4 pb-[19px] text-center ${params === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
+          className={`cursor-pointer whitespace-pre px-4 pb-[19px] text-center ${tabName === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
         >
           공지사항 등록
         </button>

@@ -17,13 +17,15 @@ import NoticeForm from '@/components/notice/form/NoticeForm';
 
 const initialState: NoticeFilter = {
   page: 1,
-  size: 20,
+  size: 10,
   noticeType: 'ALL',
 };
 
+export const NOTICE_SEARCH_PARAMS = 'tab';
+
 export default function Notice() {
   const [searchParams] = useSearchParams();
-  const roleType = searchParams.get('roleType') as NoticeTabDisplayKey;
+  const tab = searchParams.get(NOTICE_SEARCH_PARAMS) as NoticeTabDisplayKey;
 
   const {
     currFilter,
@@ -36,7 +38,10 @@ export default function Notice() {
   const observeRef = useRef(null);
 
   const {
-    data = { pages: [{ notices: [], totalPages: 0 }], pageParams: [] },
+    data = {
+      pages: [{ notices: [], totalPages: 0 }],
+      pageParams: [],
+    },
     fetchNextPage,
     hasNextPage,
     isLoading,
@@ -65,7 +70,8 @@ export default function Notice() {
 
   useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
 
-  if (roleType === 'EDIT') return <NoticeForm />;
+  if (tab === 'EDIT') return <NoticeForm />;
+
   return (
     <>
       <div className="mt-6 flex items-center gap-10">

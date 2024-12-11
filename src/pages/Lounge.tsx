@@ -109,7 +109,6 @@ export default function Lounge() {
             defaultLabel="포지션"
             options={positionsList || []}
             onChangeValue={value => {
-              console.log(value);
               const newValue = value.map(item => item.id);
               handleChangeFilter({ position: newValue });
             }}

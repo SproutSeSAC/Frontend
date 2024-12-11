@@ -14,16 +14,14 @@ import { useCalendarData, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
-import { RoleValues } from '@/types';
-import { getColorByRole } from '@/utils';
 import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
 import Title from '@/components/common/Title';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
-import Tag from '@/components/common/tag/Tag';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
+import NoticeListSideBox from '@/components/notice/layout/NoticeListSideBox';
 import Calendar from '@/components/schedule/Calendar';
 import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
@@ -103,32 +101,7 @@ export default function Home() {
           courseEvents={fullCalendarCourseEvents}
         />
 
-        {/* 공지사항 */}
-        <div className="mb-2 mt-6 flex items-center justify-between">
-          <Title title="공지사항" className="!pl-0 text-sm" />
-          <Link to="/notice" className="p-1 text-xs font-semibold text-gray2">
-            더보기
-          </Link>
-        </div>
-
-        <ul className="flex flex-col gap-2">
-          {(['캠퍼스 매니저', '잡코디', '교육 매니저'] as RoleValues[]).map(
-            item => (
-              <li key={item} className="flex h-7 w-full items-center gap-1.5">
-                <Tag
-                  size="big"
-                  color={getColorByRole(item)}
-                  text={item}
-                  className="!p-0 font-medium"
-                  emphasisText
-                />
-                <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-                  1세대에게 직접 배우는 안드로이드 앱
-                </span>
-              </li>
-            ),
-          )}
-        </ul>
+        <NoticeListSideBox title="공지사항" />
       </SideView>
     </>
   );
