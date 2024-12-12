@@ -5,6 +5,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { NoticeDto, NoticeFilter } from '@/types';
+import { isInThisWeek } from '@/utils';
 import { AxiosResponse } from 'axios';
 
 import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
@@ -61,25 +62,28 @@ export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
   });
 };
 
-export const useGetLatestNoticeList = () => {
-  const getLatestNotice = async () => {
+export const useGetThisWeekNoticeList = () => {
+  const getThisWeekNotice = async () => {
     const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
       `/notices`,
-      { params: { page: 1, size: 6 } },
+      { params: { page: 1, size: 20 } },
     );
-    return data.notices;
+    const thisWeekNotice = data.notices
+      .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
+      .slice(0, 6);
+    return thisWeekNotice;
   };
 
   return useQuery({
-    queryKey: ['useGetLatestNoticeList'],
-    queryFn: getLatestNotice,
+    queryKey: ['useGetThisWeekNoticeList'],
+    queryFn: getThisWeekNotice,
     retry: false,
   });
 };
 
 export const useGetNoticeDetail = (noticeId: number) => {
   return useQuery({
-    queryKey: ['useGetNoticeDetail'],
+    queryKey: ['useGetNoticeDetail', noticeId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<NoticeDto.GetNoticeDetail>(
         `/notices/${noticeId}`,
@@ -96,7 +100,7 @@ export const useGetNoticeCommentList = (noticeId: number) => {
     return data?.comments;
   };
   return useQuery({
-    queryKey: ['useGetNoticeCommentList'],
+    queryKey: ['useGetNoticeCommentList', noticeId],
     queryFn: getComment,
   });
 };

@@ -2,13 +2,21 @@ import { useNavigate } from 'react-router-dom';
 
 import { FaChevronLeft } from 'react-icons/fa6';
 
-export default function BackButton() {
+interface BackButtonProps {
+  onClick?: () => void;
+}
+
+export default function BackButton({ onClick }: BackButtonProps) {
   const navigate = useNavigate();
+
+  const onBackClick = () => {
+    return onClick ? onClick() : navigate(-1);
+  };
 
   return (
     <button
       type="button"
-      onClick={() => navigate(-1)}
+      onClick={onBackClick}
       className="flex size-10 h-[38px] w-[38px] items-center justify-center rounded bg-vividGreen2 text-white"
     >
       <FaChevronLeft />

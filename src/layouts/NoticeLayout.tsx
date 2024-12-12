@@ -31,8 +31,7 @@ export default function NoticeLayout() {
           events={fullCalendarEvents}
           courseEvents={fullCalendarCourseEvents}
         />
-
-        <NoticeListSideBox title="최근 본 공지사항" />
+        <NoticeListSideBox title="이번주 공지사항" />
       </SideView>
     </>
   );

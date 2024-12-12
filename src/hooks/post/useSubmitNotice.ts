@@ -44,7 +44,7 @@ export const useSubmitNotice = () => {
         exact: false,
       });
       await queryClient.invalidateQueries({
-        queryKey: ['useGetLatestNoticeList'],
+        queryKey: ['useGetThisWeekNoticeList'],
         exact: false,
       });
       navigate('/notice');
@@ -152,8 +152,6 @@ export const useSubmitNotice = () => {
       const formValue = { noticeType, title, content, targetCourseIdList };
       mutatePostNotice(formValue);
     }
-
-    await queryClient.refetchQueries({ queryKey: ['useGetLatestNoticeList'] });
   };
 
   return {

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
@@ -40,15 +40,15 @@ export default function MealRecruitSlider({
       }, []);
   }, [data?.pages]);
 
-  const onIntersect = useCallback(
-    (entry: IntersectionObserverEntry) => {
-      if (entry.isIntersecting) {
-        if (hasNextPage) fetchNextPage();
-      }
-    },
-    [fetchNextPage, hasNextPage],
-  );
-  useObserver({ onIntersect, target: mealPostObserveRef, threshold: 0.1 });
+  const runFucAtIntersect = () => {
+    if (hasNextPage) fetchNextPage();
+  };
+
+  useObserver({
+    runFucAtIntersect,
+    target: mealPostObserveRef,
+    threshold: 0.1,
+  });
 
   return (
     <>

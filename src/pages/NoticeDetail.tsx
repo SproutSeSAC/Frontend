@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   useDeleteNotice,
@@ -100,9 +100,13 @@ export default function NoticeDetail() {
     return actions;
   }, [noticeDetail, showDialog]);
 
+  const navigate = useNavigate();
+
+  const onBackClick = () => navigate('/notice');
+
   return (
     <div className="w-full">
-      <BackButton />
+      <BackButton onClick={onBackClick} />
 
       <div className="w-full">
         <div className="w-full px-6 pb-[45px] pt-5">
