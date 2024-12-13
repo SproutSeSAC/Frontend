@@ -49,7 +49,7 @@ export default function MultiSelectDropdown({
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
 
-  const selectedOptions = options.filter(({ id }) => value.includes(id));
+  const selectedOptions = options.filter(({ id }) => value?.includes(id));
 
   const checkIsSelected = useCallback(
     (option: Option) => {

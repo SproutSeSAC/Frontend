@@ -7,10 +7,12 @@ import TextEditor from '@/components/common/text-editor/TextEditor';
 
 interface ControllerContentEditorProps {
   type: 'notice';
+  initialValue: string;
 }
 
 export default function ControllerContentEditor({
   type,
+  initialValue,
 }: ControllerContentEditorProps) {
   const { control } = useFormContext();
 
@@ -63,6 +65,7 @@ export default function ControllerContentEditor({
                 <TextEditor
                   onChange={onChange}
                   placeholder={`${name} 상세 내용을 작성해 주세요`}
+                  value={initialValue}
                 />
                 {error?.message && <ErrorMsg msg={error.message} />}
               </div>

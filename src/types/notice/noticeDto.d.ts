@@ -9,6 +9,8 @@ import {
   NoticeWriter,
 } from '@/types/notice';
 
+import { NoticeFormSchemaType } from '@/components/notice/form/NoticeFormSchema';
+
 export namespace NoticeDto {
   export type GetNoticeList = { notices: NoticeDisplay[] };
   export type GetNoticeDetail = NoticeDetail;

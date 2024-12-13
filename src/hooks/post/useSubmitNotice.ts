@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { usePostNotice } from '@/services/notice/noticeMutations';
+import {
+  useEditNotice,
+  usePostNotice,
+} from '@/services/notice/noticeMutations';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { noticeCategoryList } from '@/constants';
@@ -19,7 +22,12 @@ import { SubmitErrorHandler } from 'react-hook-form';
 import { Session } from '@/components/notice/form/ControllerSessions';
 import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
-export const useSubmitNotice = () => {
+interface UseSubmitNotice {
+  isEditing: boolean;
+  noticeId: number;
+}
+
+export const useSubmitNotice = (props?: UseSubmitNotice) => {
   const { showToast, alert, hideDialog } = useDialogContext();
 
   const queryClient = useQueryClient();
@@ -32,22 +40,26 @@ export const useSubmitNotice = () => {
 
   const navigate = useNavigate();
 
-  const { mutateAsync, isPending: isCreateEventsPending } =
+  const { mutateAsync: mutateCreateEvent, isPending: isCreateEventsPending } =
     useCreateEventsForMultipleCalendars();
 
   const confirmBtn = {
     name: '확인',
     onClick: async () => {
       hideDialog();
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetInfiniteNoticeList'],
-        exact: false,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetThisWeekNoticeList'],
-        exact: false,
-      });
-      navigate('/notice');
+      if (props?.isEditing) {
+        await queryClient.invalidateQueries({
+          queryKey: ['useGetInfiniteNoticeList'],
+          exact: false,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ['useGetThisWeekNoticeList'],
+          exact: false,
+        });
+        navigate('/notice');
+      } else {
+        navigate(`/notice/${props?.noticeId}`);
+      }
     },
   };
 
@@ -80,8 +92,38 @@ export const useSubmitNotice = () => {
       })),
     }));
 
-    return mutateAsync(events);
+    return mutateCreateEvent(events);
   };
+
+  const { mutateAsync: mutateEditedNotice } = useEditNotice({
+    onError: () => {
+      alert({
+        text: '공지사항 수정 중 오류가 발생했습니다.',
+        subText: '다시 시도해주세요.',
+        buttonList: [confirmBtn],
+      });
+    },
+    onSuccess: async (_, data: NoticeDto.PostNotice) => {
+      // NOTE: 교육과정 캘린더 일정도 수정해야함.
+      const currNotice = findCurrNotice(data.noticeType);
+
+      if (currNotice?.needExtraInfo && data.sessions) {
+        await createEventsForTargetCourse({
+          sessions: data.sessions,
+          title: data.title,
+          targetCourseIdList: data.targetCourseIdList,
+          meetingPlace: data.meetingPlace,
+        });
+        alert({
+          dimClick: false,
+          text: props?.isEditing
+            ? '공지사항을 수정했습니다!'
+            : '공지사항이 성공적으로 등록되었습니다!',
+          buttonList: [confirmBtn],
+        });
+      }
+    },
+  });
 
   const { mutateAsync: mutatePostNotice } = usePostNotice({
     onError: () => {
@@ -110,7 +152,9 @@ export const useSubmitNotice = () => {
       } else {
         alert({
           dimClick: false,
-          text: '공지사항이 성공적으로 등록되었습니다!',
+          text: props?.isEditing
+            ? '공지사항을 수정했습니다!'
+            : '공지사항이 성공적으로 등록되었습니다!',
           buttonList: [confirmBtn],
         });
       }
@@ -147,10 +191,19 @@ export const useSubmitNotice = () => {
         satisfactionSurvey: satisfactionSurvey || '',
         sessions: sessionsWithNoId,
       };
-      mutatePostNotice(formValue);
+      if (props && props.isEditing) {
+        const { noticeId } = props;
+        mutateEditedNotice({ ...formValue, noticeId });
+      } else {
+        mutatePostNotice(formValue);
+      }
     } else {
       const formValue = { noticeType, title, content, targetCourseIdList };
-      mutatePostNotice(formValue);
+      if (props?.isEditing) {
+        mutateEditedNotice({ ...formValue, noticeId: props.noticeId });
+      } else {
+        mutatePostNotice(formValue);
+      }
     }
   };
 

@@ -19,6 +19,31 @@ export const usePostNotice = (
   });
 };
 
+export const useEditNotice = (
+  options?: UseMutationOptions<
+    unknown,
+    Error,
+    NoticeDto.PostNotice & { noticeId: number }
+  >,
+) => {
+  const postEditedNotice = async (
+    editedFormData: NoticeDto.PostNotice & { noticeId: number },
+  ) => {
+    const { noticeId, ...rest } = editedFormData;
+    await axiosInstance.put(`/notices/${noticeId}`, rest);
+  };
+
+  return useMutation<
+    unknown,
+    AxiosError,
+    NoticeDto.PostNotice & { noticeId: number }
+  >({
+    mutationFn: postEditedNotice,
+    mutationKey: ['editedNotice'],
+    ...options,
+  });
+};
+
 export const usePostNoticeSessions = () => {
   return useMutation<
     boolean,

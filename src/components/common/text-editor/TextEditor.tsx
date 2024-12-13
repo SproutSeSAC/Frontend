@@ -8,9 +8,14 @@ import 'quill/dist/quill.snow.css';
 interface TextEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
+  value?: string;
 }
 
-export default function TextEditor({ onChange, placeholder }: TextEditorProps) {
+export default function TextEditor({
+  onChange,
+  placeholder,
+  value,
+}: TextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const quillRef = useRef<Quill | null>(null);
 
@@ -60,6 +65,15 @@ export default function TextEditor({ onChange, placeholder }: TextEditorProps) {
       quillRef.current.on('text-change', handleChange);
     }
   }, [handleChange, handleEmojiSelect, placeholder, toolbarOptions]);
+
+  useEffect(() => {
+    if (quillRef.current && value !== undefined) {
+      const editorContent = quillRef.current.root.innerHTML;
+      if (editorContent !== value) {
+        quillRef.current.clipboard.dangerouslyPasteHTML(value);
+      }
+    }
+  }, [value]);
 
   return (
     <div id="quill-editor">

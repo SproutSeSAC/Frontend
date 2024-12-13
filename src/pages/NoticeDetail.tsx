@@ -3,6 +3,10 @@ import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
+import {
   useDeleteNotice,
   usePostNoticeComment,
 } from '@/services/notice/noticeMutations';
@@ -18,6 +22,7 @@ import {
   useHandlePost,
   useSubmitNotice,
 } from '@/hooks';
+import { NoticeDto } from '@/types';
 import { getColorByRole, isTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
@@ -36,6 +41,8 @@ export default function NoticeDetail() {
 
   const { showDialog } = useDialogContext();
 
+  const { data: userProfile = initialUserProfile } = useGetUserProfile();
+
   const { data: noticeDetail } = useGetNoticeDetail(noticeId);
 
   const { mutateAsync: postNoticeComment } = usePostNoticeComment(noticeId);
@@ -51,9 +58,10 @@ export default function NoticeDetail() {
     invalidateQueryKeys: ['useGetNoticeCommentList'],
   });
 
-  const { actions: postActions } = useHandlePost<{
-    noticeId: number;
-  }>({
+  const { actions: postActions } = useHandlePost<
+    { noticeId: number },
+    NoticeDto.GetNoticeDetail
+  >({
     postId: { noticeId },
     postType: '공지사항을',
     handleDelete: {
@@ -61,7 +69,8 @@ export default function NoticeDetail() {
       navigateTo: '/notice',
     },
     handleEdit: {
-      navigateTo: `/notice?roleType=EDIT&modifyNotice=${noticeId}`,
+      detail: noticeDetail,
+      navigateTo: `/notice?tab=EDIT&modifyNotice=${noticeId}`,
     },
     invalidateQueryKeys: ['useGetInfiniteNoticeList'],
   });
@@ -105,7 +114,7 @@ export default function NoticeDetail() {
   const onBackClick = () => navigate('/notice');
 
   return (
-    <div className="w-full">
+    <div className="flex w-full">
       <BackButton onClick={onBackClick} />
 
       <div className="w-full">
@@ -139,22 +148,29 @@ export default function NoticeDetail() {
                 className="w-fit"
               />
             )}
-            <div className="group relative ml-auto flex items-center justify-center">
-              <button className="px-2">
-                <IoEllipsisHorizontalSharp className="size-8 text-oliveGreen1" />
-              </button>
-              <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
-                <ul className="flex w-[90px] flex-col items-center gap-2 rounded-md bg-oliveGreen1 px-2 py-3 shadow-card">
-                  {postActions.map(action => (
-                    <li key={action.label}>
-                      <button onClick={action.onClick}>
-                        <span className="text-white">{action.label}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+
+            {/* NOTE: nickname 비교로 변경하기 */}
+            {noticeDetail?.writer.userName === userProfile.name && (
+              <div className="group relative ml-auto flex items-center justify-center">
+                <button className="px-2">
+                  <IoEllipsisHorizontalSharp className="size-7 text-gray1" />
+                </button>
+                <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
+                  <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
+                    {postActions.map(action => (
+                      <li key={action.label}>
+                        <button
+                          onClick={action.onClick}
+                          className={action.className}
+                        >
+                          {action.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {noticeDetail?.noticeType &&
