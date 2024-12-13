@@ -25,26 +25,27 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
       </div>
       <ul className="flex flex-col gap-2">
         {thisWeekNoticeList.length !== 0 ? (
-          thisWeekNoticeList.map(({ roleType, noticeId, content }) => (
-            <li key={noticeId}>
-              <Link
-                to={`/notice/post/${noticeId}` || `${noticeId}`}
-                className="flex h-7 w-full items-center gap-1.5"
-              >
-                <Tag
-                  size="big"
-                  color={getColorByRole(roleType)}
-                  text={RolesObj[roleType]}
-                  className="!rounded-md !px-2 font-medium"
-                  emphasisText
-                />
-                <p
-                  className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[17px]"
-                  dangerouslySetInnerHTML={{ __html: content || '' }}
-                />
-              </Link>
-            </li>
-          ))
+          thisWeekNoticeList.map(
+            ({ roleType, noticeId, title: noticeTitle }) => (
+              <li key={noticeId}>
+                <Link
+                  to={`/notice/post/${noticeId}` || `${noticeId}`}
+                  className="flex h-7 w-full items-center gap-1.5"
+                >
+                  <Tag
+                    size="big"
+                    color={getColorByRole(roleType)}
+                    text={RolesObj[roleType]}
+                    className="!rounded-md !px-2 font-medium"
+                    emphasisText
+                  />
+                  <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[17px]">
+                    {noticeTitle}
+                  </p>
+                </Link>
+              </li>
+            ),
+          )
         ) : (
           <span className="text-gray1">이번주 공지사항이 없습니다.</span>
         )}

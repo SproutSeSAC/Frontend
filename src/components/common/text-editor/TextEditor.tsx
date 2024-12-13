@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import EditorModule from './EditorModule';
+import EmojiTool from './EmojiTool';
 
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
@@ -8,46 +8,11 @@ import 'quill/dist/quill.snow.css';
 interface TextEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
-  formats?: string[];
-  value?: string;
 }
 
-export default function TextEditor({
-  onChange,
-  placeholder,
-  formats,
-  value,
-}: TextEditorProps) {
+export default function TextEditor({ onChange, placeholder }: TextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const quillRef = useRef<Quill | null>(null);
-
-  const defaultFormats: string[] = useMemo(() => {
-    return [
-      'size',
-      'bold',
-      'italic',
-      'underline',
-      'strike',
-      'blockquote',
-      'list',
-      'indent',
-      'link',
-      'color',
-      'background',
-      'align',
-      'script',
-      'code-block',
-    ];
-  }, []);
-
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: '#toolBar',
-      },
-    }),
-    [],
-  );
 
   const handleChange = useCallback(() => {
     if (quillRef.current) {
@@ -56,50 +21,50 @@ export default function TextEditor({
     }
   }, [onChange]);
 
-  const handleEmojiSelect = useCallback(
-    (emoji: { native: string }) => {
-      if (quillRef.current) {
-        const editor = quillRef.current;
-        const range = editor.getSelection();
-        if (range) {
-          editor.insertText(range.index, emoji.native);
-          editor.setSelection(range.index + emoji.native.length, 0);
-          handleChange();
-        }
+  const handleEmojiSelect = useCallback((emoji: { native: string }) => {
+    if (quillRef.current) {
+      const editor = quillRef.current;
+      let range = editor.getSelection();
+      if (!range) {
+        range = { index: editor.getLength() - 1, length: 0 };
       }
-    },
-    [handleChange],
-  );
+      editor.insertText(range.index, emoji.native);
+      editor.setSelection(range.index + emoji.native.length, 0);
+    }
+  }, []);
+
+  const toolbarOptions = useMemo(() => {
+    return [
+      [{ size: ['small', false, 'large', 'huge'] }],
+      ['bold', 'italic', 'underline', 'strike'],
+
+      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
+      ['blockquote', 'link', 'image'],
+    ];
+  }, []);
 
   useEffect(() => {
     if (editorRef.current && !quillRef.current) {
       quillRef.current = new Quill(editorRef.current, {
         theme: 'snow',
-        modules,
-        formats: [...defaultFormats, ...(formats || [])],
+        modules: {
+          toolbar: toolbarOptions,
+        },
         placeholder: placeholder || '',
       });
 
       quillRef.current.on('text-change', handleChange);
     }
-  }, [defaultFormats, formats, handleChange, modules, placeholder]);
-
-  useEffect(() => {
-    if (quillRef.current && value !== undefined) {
-      const editorContent = quillRef.current.root.innerHTML;
-      if (editorContent !== value) {
-        quillRef.current.clipboard.dangerouslyPasteHTML(value);
-      }
-    }
-  }, [value]);
+  }, [handleChange, handleEmojiSelect, placeholder, toolbarOptions]);
 
   return (
-    <div>
-      <div id="toolBar">
-        <EditorModule onEmojiSelect={handleEmojiSelect} />
-      </div>
-
-      <div ref={editorRef} />
+    <div id="quill-editor">
+      <EmojiTool onEmojiSelect={handleEmojiSelect} />
+      <div ref={editorRef} className="!h-[523px] pb-6" />
     </div>
   );
 }

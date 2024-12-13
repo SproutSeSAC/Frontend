@@ -1,5 +1,6 @@
 import { dateFormat } from '@/utils/dateFormat';
 
+import 'quill/dist/quill.snow.css';
 import { BsEye } from 'react-icons/bs';
 
 import UserNicknameImageBox from '@/components/user/UserNicknameImageBox';
@@ -62,7 +63,8 @@ export default function PostDetailsTemplate({
       </header>
 
       <article
-        className="mt-6 text-lg"
+        id="quill-content"
+        className="ql-editor mt-6 text-lg"
         dangerouslySetInnerHTML={{ __html: description || '' }}
       />
     </>

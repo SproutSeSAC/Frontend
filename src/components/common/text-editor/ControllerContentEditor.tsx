@@ -62,7 +62,7 @@ export default function ControllerContentEditor({
               >
                 <TextEditor
                   onChange={onChange}
-                  placeholder={`${name} 상세 정보를 작성해 주세요`}
+                  placeholder={`${name} 상세 내용을 작성해 주세요`}
                 />
                 {error?.message && <ErrorMsg msg={error.message} />}
               </div>
