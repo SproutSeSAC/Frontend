@@ -24,7 +24,7 @@ export default function NoticeApplicationInfoTemplate({
   const noticeApplicationInfo = [
     {
       type: '신청기간',
-      data: `${dateFormat(applicationStartDateTime)} ~ ${dateFormat(applicationEndDateTime)}`,
+      data: `${dateFormat(applicationStartDateTime, 'yyyy.MM.dd a h시')} ~ ${dateFormat(applicationEndDateTime, 'yyyy.MM.dd a h시')}`,
     },
     {
       type: '인원',

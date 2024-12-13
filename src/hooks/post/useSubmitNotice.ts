@@ -47,7 +47,7 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     name: '확인',
     onClick: async () => {
       hideDialog();
-      if (props?.isEditing) {
+      if (!props?.isEditing) {
         await queryClient.invalidateQueries({
           queryKey: ['useGetInfiniteNoticeList'],
           exact: false,
@@ -58,7 +58,7 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
         });
         navigate('/notice');
       } else {
-        navigate(`/notice/${props?.noticeId}`);
+        navigate(`/notice/post/${props?.noticeId}`);
       }
     },
   };
@@ -74,8 +74,10 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     const eventsFromSession: GoogleCalendarApiDto.PostEvent[] = sessions.map(
       (session, index) => ({
         summary: `${title} ${index + 1}회차`,
-        start: { dateTime: session.sessionStartDateTime },
-        end: { dateTime: session.sessionEndDateTime },
+        start: {
+          dateTime: new Date(session.sessionStartDateTime).toISOString(),
+        },
+        end: { dateTime: new Date(session.sessionEndDateTime).toISOString() },
         location: meetingPlace,
       }),
     );
@@ -103,25 +105,15 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
         buttonList: [confirmBtn],
       });
     },
-    onSuccess: async (_, data: NoticeDto.PostNotice) => {
+    onSuccess: async () => {
       // NOTE: 교육과정 캘린더 일정도 수정해야함.
-      const currNotice = findCurrNotice(data.noticeType);
-
-      if (currNotice?.needExtraInfo && data.sessions) {
-        await createEventsForTargetCourse({
-          sessions: data.sessions,
-          title: data.title,
-          targetCourseIdList: data.targetCourseIdList,
-          meetingPlace: data.meetingPlace,
-        });
-        alert({
-          dimClick: false,
-          text: props?.isEditing
-            ? '공지사항을 수정했습니다!'
-            : '공지사항이 성공적으로 등록되었습니다!',
-          buttonList: [confirmBtn],
-        });
-      }
+      alert({
+        dimClick: false,
+        text: props?.isEditing
+          ? '공지사항을 수정했습니다!'
+          : '공지사항이 성공적으로 등록되었습니다!',
+        buttonList: [confirmBtn],
+      });
     },
   });
 

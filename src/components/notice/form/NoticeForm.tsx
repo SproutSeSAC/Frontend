@@ -39,11 +39,16 @@ import { NoticeConditionalFormSchema } from '@/components/notice/form/NoticeForm
 
 export default function NoticeForm() {
   const {
-    state: { targetCourses, title, content, noticeType, id: noticeId, ...rest },
-  }: { state: NoticeDto.GetNoticeDetail } = useLocation();
+    targetCourses,
+    title,
+    content,
+    noticeType,
+    id: editNoticeId,
+    ...rest
+  }: NoticeDto.GetNoticeDetail = useLocation()?.state || { state: null };
 
   const { onSubmit, onError, findCurrNotice, isCreateEventsPending } =
-    useSubmitNotice({ isEditing: !!noticeType, noticeId });
+    useSubmitNotice({ isEditing: !!noticeType, noticeId: editNoticeId });
 
   const NoticeExtraDetailToForm = {
     isPhoneNumberRequired: rest.isPhoneNumberRequired,
@@ -66,14 +71,16 @@ export default function NoticeForm() {
     noticeType,
     title,
     content,
-    targetCourseIdList: targetCourses.map(({ courseId }) => courseId),
+    targetCourseIdList: targetCourses?.map(({ courseId }) => courseId),
     ...(findCurrNotice(noticeType)?.needExtraInfo
       ? NoticeExtraDetailToForm
       : {}),
   };
 
   const methods = useForm<NoticeDto.PostNotice>({
-    defaultValues: editNoticeDetailToForm || defaultNoticeFormValues,
+    defaultValues: editNoticeId
+      ? editNoticeDetailToForm
+      : defaultNoticeFormValues,
     resolver: zodResolver(NoticeConditionalFormSchema),
   });
 

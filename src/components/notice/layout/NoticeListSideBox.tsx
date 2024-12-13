@@ -9,7 +9,7 @@ import Title from '@/components/common/Title';
 import Tag from '@/components/common/tag/Tag';
 
 interface NoticeListSideBoxProps {
-  title: string;
+  title: '공지사항' | '이번주 공지사항';
 }
 
 export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
@@ -19,9 +19,11 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
     <>
       <div className="mb-2 mt-6 flex items-center justify-between">
         <Title title={title} className="!pl-0 text-sm" />
-        <Link to="/notice" className="p-1 text-xs font-semibold text-gray2">
-          더보기
-        </Link>
+        {title !== '이번주 공지사항' && (
+          <Link to="/notice" className="p-1 text-xs font-semibold text-gray2">
+            더보기
+          </Link>
+        )}
       </div>
       <ul className="flex flex-col gap-2">
         {thisWeekNoticeList.length !== 0 ? (

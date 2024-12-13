@@ -1,3 +1,5 @@
+import { dateFormat } from '@/utils/dateFormat';
+
 import { hours, minutes } from '@/constants/optionList';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -28,7 +30,8 @@ export default function ControllerDateTime({
                 currentDate={value ? new Date(value) : undefined}
                 onChange={data => {
                   if (data) {
-                    onChange(data.toISOString());
+                    const dateTime = dateFormat(data, "yyyy-MM-dd'T'HH:mm:ss");
+                    onChange(dateTime);
                   }
                 }}
                 errorMsg={error?.message || ''}
@@ -60,7 +63,11 @@ export default function ControllerDateTime({
                   currentDate={value ? new Date(value) : undefined}
                   onChange={data => {
                     if (data) {
-                      onChange(data.toISOString());
+                      const dateTime = dateFormat(
+                        data,
+                        "yyyy-MM-dd'T'HH:mm:ss",
+                      );
+                      onChange(dateTime);
                     }
                   }}
                   errorMsg={error?.message || ''}
@@ -71,8 +78,12 @@ export default function ControllerDateTime({
                   options={hours}
                   selectedOption={selectedHourOption}
                   onChangeValue={data => {
-                    date.setHours(data[0].id, 0, 0, 0);
-                    return onChange(date.toISOString());
+                    const dateToFormat = date.setHours(data[0].id, 0, 0, 0);
+                    const dateTime = dateFormat(
+                      dateToFormat,
+                      "yyyy-MM-dd'T'HH:mm:ss",
+                    );
+                    return onChange(dateTime);
                   }}
                   errorMsg={error?.message ? ' ' : undefined}
                   selectBoxClassName="min-w-[95px]"
@@ -83,8 +94,12 @@ export default function ControllerDateTime({
                   options={minutes}
                   selectedOption={selectedMinuteOption}
                   onChangeValue={data => {
-                    date.setMinutes(data[0].id, 0, 0);
-                    return onChange(date.toISOString());
+                    const dateToFormat = date.setMinutes(data[0].id, 0, 0);
+                    const dateTime = dateFormat(
+                      dateToFormat,
+                      "yyyy-MM-dd'T'HH:mm:ss",
+                    );
+                    return onChange(dateTime);
                   }}
                   errorMsg={error?.message ? ' ' : undefined}
                   selectBoxClassName="min-w-[95px]"

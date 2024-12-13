@@ -5,4 +5,4 @@ export * from '@/utils/getColorByRole';
 export * from '@/utils/getDateProgress';
 export * from '@/utils/createRrule';
 export * from '@/utils/checkRole';
-export * from '@/utils/date';
+export * from '@/utils/isInThisWeek';

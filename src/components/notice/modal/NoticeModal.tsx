@@ -171,10 +171,10 @@ export default function NoticeModal({
                           </div>
                           <div>{`${dateFormat(
                             item.sessionStartDateTime,
-                            'hh:00',
+                            'HH:mm',
                           )} ~ ${dateFormat(
-                            item.sessionStartDateTime,
-                            'hh:00',
+                            item.sessionEndDateTime,
+                            'HH:mm',
                           )}`}</div>
                         </label>
                       </li>
