@@ -149,8 +149,7 @@ export default function NoticeDetail() {
               />
             )}
 
-            {/* NOTE: nickname 비교로 변경하기 */}
-            {noticeDetail?.writer.userName === userProfile.name && (
+            {noticeDetail?.writer.userId === userProfile.userId && (
               <div className="group relative ml-auto flex items-center justify-center">
                 <button className="px-2">
                   <IoEllipsisHorizontalSharp className="size-7 text-gray1" />
