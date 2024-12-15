@@ -12,7 +12,10 @@ import {
 import { NoticeFormSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
 export namespace NoticeDto {
-  export type GetNoticeList = { notices: NoticeDisplay[] };
+  export type GetNoticeList = {
+    isLastPage: boolean;
+    notices: NoticeDisplay[];
+  };
   export type GetNoticeDetail = NoticeDetail;
   export type GetNoticeComment = { comments: NoticeComment[] };
 

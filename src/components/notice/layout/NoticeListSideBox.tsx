@@ -49,7 +49,7 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
             ),
           )
         ) : (
-          <span className="text-gray1">이번주 공지사항이 없습니다.</span>
+          <span className="text-gray1">{title}이 없습니다.</span>
         )}
       </ul>
     </>

@@ -3,7 +3,7 @@ import { ko } from 'date-fns/locale';
 
 export const dateFormat = (
   date?: string | number | Date,
-  formatStr?:
+  formatStr:
     | 'yyyy.MM.dd'
     | 'yyyy년 MM월 dd일'
     | 'yyyy.MM.dd HH:mm'
@@ -11,11 +11,17 @@ export const dateFormat = (
     | 'yyyy년 M월 d일 EEEE'
     | 'yyyy.MM.dd a h시'
     | 'yyyy-MM-dd HH:mm:ss'
-    | "yyyy-MM-dd'T'HH:mm:ss",
+    | "yyyy-MM-dd'T'HH:mm:ss" = 'yyyy.MM.dd',
 ): string => {
-  const dateToFormat = date ? new Date(date) : new Date();
-  const currFormat = formatStr || 'yyyy.MM.dd';
-  return format(dateToFormat, currFormat, {
-    locale: ko,
-  });
+  try {
+    const dateToFormat = date ? new Date(date) : new Date();
+
+    if (Number.isNaN(dateToFormat.getTime())) {
+      throw new Error('Invalid date');
+    }
+    return format(dateToFormat, formatStr, { locale: ko });
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return '';
+  }
 };

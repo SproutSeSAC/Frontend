@@ -47,14 +47,15 @@ export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
         },
       );
 
-      const nextPage =
-        data.notices.length === filterParams.size ? pageParam + 1 : pageParam;
+      const hasNextPage = !data.isLastPage;
+
+      const nextPage = hasNextPage ? pageParam + 1 : undefined;
 
       return {
         notices: data.notices,
         currentPage: pageParam,
         offset: (pageParam - 1) * filterParams.size,
-        nextPage: pageParam < 2 ? nextPage : undefined, // NOTE: 이 부분 totalCount 속성 서버 변경 요청 예정
+        nextPage,
       };
     },
     getNextPageParam: lastPage => lastPage.nextPage,
