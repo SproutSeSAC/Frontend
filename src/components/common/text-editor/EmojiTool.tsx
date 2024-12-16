@@ -34,7 +34,7 @@ export default function EmojiTool({ onEmojiSelect }: EmojiModuleProps) {
   }, [showPicker]);
 
   return (
-    <div className="relative pb-1.5">
+    <div className="relative pb-1">
       <button
         type="button"
         className="size-6 p-1"

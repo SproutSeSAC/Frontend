@@ -9,6 +9,7 @@ import {
 import {
   useDeleteNotice,
   usePostNoticeComment,
+  usePostNoticeScrap,
 } from '@/services/notice/noticeMutations';
 import {
   useGetNoticeCommentList,
@@ -19,11 +20,12 @@ import { RolesObj, noticeCategoryDisplay } from '@/constants';
 import {
   useDialogContext,
   useHandleComment,
+  useHandleOnScrap,
   useHandlePost,
   useSubmitNotice,
 } from '@/hooks';
 import { NoticeDto } from '@/types';
-import { getColorByRole, isTrainee } from '@/utils';
+import { getColorByRole, isPreTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import BackButton from '@/components/common/button/BackButton';
@@ -58,6 +60,17 @@ export default function NoticeDetail() {
     invalidateQueryKeys: ['useGetNoticeCommentList'],
   });
 
+  const { mutateAsync: postNoticeScrap } = usePostNoticeScrap();
+
+  const getScrapResult = useCallback(async () => {
+    return postNoticeScrap({ noticeId: noticeDetail?.id || noticeId });
+  }, [postNoticeScrap, noticeDetail?.id, noticeId]);
+
+  const { onScrapClick } = useHandleOnScrap({
+    getScrapResult,
+    invalidateQueryKeys: ['useGetNoticeDetail'],
+  });
+
   const { actions: postActions } = useHandlePost<
     { noticeId: number },
     NoticeDto.GetNoticeDetail
@@ -78,36 +91,32 @@ export default function NoticeDetail() {
   const getActions = useCallback(() => {
     const actions = [];
 
-    if (noticeDetail?.meetingType === 'ONLINE') {
-      actions.push({
-        label: 'Zoom',
-        onClick: () => {
-          window.location.href = noticeDetail?.meetingPlace || '';
-        },
-        className: 'bg-gray2',
-      });
-    }
-    if (noticeDetail && !isTrainee(noticeDetail.writer.role)) {
-      actions.push({
-        label: '참여하기',
-        onClick: async () => {
-          await showDialog({
-            key: 'APPLICATION-NOTICE',
-            element: (
-              <NoticeModal
-                sessions={noticeDetail?.sessions || []}
-                isPhoneNumberRequired={
-                  noticeDetail?.isPhoneNumberRequired ?? false
-                }
-              />
-            ),
-          });
-        },
-        className: 'bg-oliveGreen1',
-      });
+    if (noticeDetail && !isPreTrainee(noticeDetail.writer.role)) {
+      const { sessions, noticeType, isPhoneNumberRequired } = noticeDetail;
+
+      if (
+        (sessions?.length || 0) > 0 &&
+        findCurrNotice(noticeType)?.needExtraInfo
+      ) {
+        actions.push({
+          label: '참여하기',
+          onClick: async () => {
+            await showDialog({
+              key: 'APPLICATION-NOTICE',
+              element: (
+                <NoticeModal
+                  sessions={sessions ?? []}
+                  isPhoneNumberRequired={isPhoneNumberRequired ?? false}
+                />
+              ),
+            });
+          },
+          className: 'bg-oliveGreen1',
+        });
+      }
     }
     return actions;
-  }, [noticeDetail, showDialog]);
+  }, [findCurrNotice, noticeDetail, showDialog]);
 
   const navigate = useNavigate();
 
@@ -125,7 +134,7 @@ export default function NoticeDetail() {
             </h1>
             <FavoriteButton
               isFavorite={noticeDetail?.isScraped ?? false}
-              onClick={() => {}}
+              onClick={onScrapClick}
               size={24}
             />
           </header>
@@ -149,6 +158,7 @@ export default function NoticeDetail() {
               />
             )}
 
+            {/* 수정 삭제 버튼 */}
             {noticeDetail?.writer.userId === userProfile.userId && (
               <div className="group relative ml-auto flex items-center justify-center">
                 <button className="px-2">

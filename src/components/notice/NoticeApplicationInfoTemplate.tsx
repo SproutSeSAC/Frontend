@@ -70,15 +70,15 @@ export default function NoticeApplicationInfoTemplate({
     },
     {
       type: '장소',
-      data: meetingPlace || '-',
+      data: meetingType === 'ONLINE' ? '-' : meetingPlace || '-',
     },
   ] as const;
 
   return (
-    <ul className="mt-4 grid list-none grid-cols-2 gap-4 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
+    <ul className="mt-4 grid list-none grid-cols-2 gap-x-6 gap-y-4 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
       {noticeApplicationInfo.map(({ type, data }) => (
         <li key={type} className="flex items-center gap-3 py-1 text-[22px]">
-          <h4 className="border-r-solid border-r border-r-gray2 pr-3 tracking-tighter text-gray2">
+          <h4 className="border-r-solid mr-3 min-w-16 border-r border-r-gray2 pr-3 tracking-tighter text-gray2">
             {type}
           </h4>
           {type === '일시' || type === '시간' ? (

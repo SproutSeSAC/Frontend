@@ -2,9 +2,12 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { usePostNoticeScrap } from '@/services/notice/noticeMutations';
+
 import { dateFormat } from '@/utils/dateFormat';
 
 import { RolesObj, noticeCategoryDisplay } from '@/constants';
+import { useHandleOnScrap } from '@/hooks';
 import { NoticeDisplay } from '@/types';
 import { getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
@@ -22,6 +25,17 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     const doc = parser.parseFromString(htmlString, 'text/html');
     return doc.body.textContent || '-';
   }, []);
+
+  const { mutateAsync: postNoticeScrap } = usePostNoticeScrap();
+
+  const getScrapResult = useCallback(async () => {
+    return postNoticeScrap({ noticeId: notice.noticeId });
+  }, [notice.noticeId, postNoticeScrap]);
+
+  const { onScrapClick } = useHandleOnScrap({
+    getScrapResult,
+    invalidateQueryKeys: ['useGetInfiniteNoticeList'],
+  });
 
   return (
     <Link
@@ -43,7 +57,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
           </div>
           <FavoriteButton
             isFavorite={notice.isScraped}
-            onClick={() => {}}
+            onClick={onScrapClick}
             size={20}
           />
         </div>

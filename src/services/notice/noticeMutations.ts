@@ -83,3 +83,14 @@ export const useDeleteNotice = () => {
     },
   });
 };
+
+export const usePostNoticeScrap = () => {
+  return useMutation<boolean, AxiosError, { noticeId: number }>({
+    mutationFn: async requestBody => {
+      const { data } = await axiosInstance.post(
+        `/notices/${requestBody.noticeId}/scrap`,
+      );
+      return data;
+    },
+  });
+};

@@ -103,7 +103,9 @@ export default function Notice() {
 
       <div className="pt-32">
         {noticeList.length === 0 && (
-          <EmptyContent message="등록된 공지사항이 없습니다." />
+          <EmptyContent
+            message={`${tab === 'BOOKMARK' ? '북마크한' : '등록된'} 공지사항이 없습니다.`}
+          />
         )}
         {isLoading && (
           <div className="flex w-full justify-center py-10">
