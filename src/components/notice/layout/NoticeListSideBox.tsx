@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
 
-import { useGetThisWeekNoticeList } from '@/services/notice/noticeQueries';
+import {
+  useGetInfiniteNoticeList,
+  useGetThisWeekNoticeList,
+} from '@/services/notice/noticeQueries';
 
 import { RolesObj } from '@/constants';
+import { NoticeDisplay } from '@/types';
 import { getColorByRole } from '@/utils';
 
 import Title from '@/components/common/Title';
@@ -15,6 +19,15 @@ interface NoticeListSideBoxProps {
 export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
   const { data: thisWeekNoticeList = [] } = useGetThisWeekNoticeList();
 
+  const {
+    data = {
+      pages: [{ notices: [] }],
+    },
+  } = useGetInfiniteNoticeList({ page: 1, size: 6 });
+
+  const noticeList: NoticeDisplay[] =
+    title === '공지사항' ? data.pages[0].notices : thisWeekNoticeList;
+
   return (
     <>
       <div className="mb-2 mt-6 flex items-center justify-between">
@@ -25,29 +38,28 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
           </Link>
         )}
       </div>
+
       <ul className="flex flex-col gap-2">
-        {thisWeekNoticeList.length !== 0 ? (
-          thisWeekNoticeList.map(
-            ({ roleType, noticeId, title: noticeTitle }) => (
-              <li key={noticeId}>
-                <Link
-                  to={`/notice/post/${noticeId}` || `${noticeId}`}
-                  className="flex h-7 w-full items-center gap-1.5"
-                >
-                  <Tag
-                    size="big"
-                    color={getColorByRole(roleType)}
-                    text={RolesObj[roleType]}
-                    className="!rounded-md !px-2 font-medium"
-                    emphasisText
-                  />
-                  <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[17px]">
-                    {noticeTitle}
-                  </p>
-                </Link>
-              </li>
-            ),
-          )
+        {noticeList?.length !== 0 ? (
+          noticeList?.map(({ roleType, noticeId, title: noticeTitle }) => (
+            <li key={noticeId}>
+              <Link
+                to={`/notice/post/${noticeId}` || `${noticeId}`}
+                className="flex h-7 w-full items-center gap-1.5"
+              >
+                <Tag
+                  size="big"
+                  color={getColorByRole(roleType)}
+                  text={RolesObj[roleType]}
+                  className="!rounded-md !px-2 font-medium"
+                  emphasisText
+                />
+                <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[17px]">
+                  {noticeTitle}
+                </p>
+              </Link>
+            </li>
+          ))
         ) : (
           <span className="text-gray1">{title}이 없습니다.</span>
         )}
