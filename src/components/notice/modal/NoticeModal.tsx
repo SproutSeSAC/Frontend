@@ -25,6 +25,7 @@ import SessionSelectBox from '@/components/notice/modal/SessionSelectBox';
 interface NoticeModalProps {
   sessions: NoticeSession[];
   isPhoneNumberRequired: boolean;
+  participantCapacity: number;
 }
 
 export interface FormValues {
@@ -33,7 +34,7 @@ export interface FormValues {
   sessionIdList: number[];
 }
 
-const initialValue = {
+const initialValue: FormValues = {
   sessionIdList: [],
   phoneNumber: '',
   isPhoneNumberRequired: false,
@@ -42,6 +43,7 @@ const initialValue = {
 export default function NoticeModal({
   sessions,
   isPhoneNumberRequired,
+  participantCapacity,
 }: NoticeModalProps) {
   const { hideDialog, showToast } = useDialogContext();
 
@@ -117,11 +119,15 @@ export default function NoticeModal({
                     {sessions.map(session => {
                       const { sessionId } = session;
                       const hasSessionId = !!selectedIdList.includes(sessionId);
+                      const disabled =
+                        participantCapacity <= session.participantCount;
+
                       return (
                         <li key={sessionId}>
                           <SessionSelectBox
                             session={session}
                             isSelected={hasSessionId}
+                            disabled={disabled}
                             onClick={() => {
                               const idList = hasSessionId
                                 ? selectedIdList.filter(id => id !== sessionId)

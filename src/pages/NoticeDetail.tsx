@@ -89,29 +89,44 @@ export default function NoticeDetail() {
   });
 
   const applySession = useCallback(() => {
-    if (noticeDetail && !isPreTrainee(noticeDetail.writer.role)) {
-      const { sessions, noticeType, isPhoneNumberRequired } = noticeDetail;
+    if (
+      noticeDetail &&
+      !isPreTrainee(noticeDetail.writer.role) &&
+      findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
+    ) {
+      const {
+        sessions,
+        isPhoneNumberRequired,
+        participantCapacity, //
+      } = noticeDetail;
 
-      if (
-        (sessions?.length || 0) > 0 &&
-        findCurrNotice(noticeType)?.needExtraInfo
-      ) {
-        const actionToApply = {
-          label: '참여하기',
-          onClick: () => {
-            showDialog({
-              key: 'APPLICATION-NOTICE',
-              element: (
-                <NoticeModal
-                  sessions={sessions ?? []}
-                  isPhoneNumberRequired={isPhoneNumberRequired ?? false}
-                />
-              ),
-            });
-          },
-          className: 'bg-oliveGreen1',
+      if ((sessions?.length || 0) > 0 && participantCapacity) {
+        if (sessions?.[0]?.currentStatus === null) {
+          const actionToApply = {
+            label: '참여하기',
+            onClick: () => {
+              showDialog({
+                key: 'APPLICATION-NOTICE',
+                element: (
+                  <NoticeModal
+                    participantCapacity={0}
+                    sessions={sessions ?? []}
+                    isPhoneNumberRequired={isPhoneNumberRequired ?? false}
+                  />
+                ),
+              });
+            },
+            className: 'bg-oliveGreen1',
+          };
+          return [actionToApply];
+        }
+        const applicationComplete = {
+          label: '신청 완료',
+          className: 'bg-vividGreen1',
+          disabled: true,
+          onClick: () => {}, // NOTE: 마이페이지 신청내역으로 이동시키기
         };
-        return [actionToApply];
+        return [applicationComplete];
       }
     }
     return undefined;
