@@ -4,12 +4,10 @@ import { Link } from 'react-router-dom';
 
 import { usePostNoticeScrap } from '@/services/notice/noticeMutations';
 
-import { dateFormat } from '@/utils/dateFormat';
-
 import { RolesObj, noticeCategoryDisplay } from '@/constants';
 import { useHandleOnScrap } from '@/hooks';
 import { NoticeDisplay } from '@/types';
-import { getColorByRole } from '@/utils';
+import { formatDate, getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -81,7 +79,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
         </div>
 
         <div className="mt-4 w-full text-right text-gray2">
-          {dateFormat(notice.createdDateTime)}
+          {formatDate(notice.createdDateTime)}
         </div>
       </div>
     </Link>

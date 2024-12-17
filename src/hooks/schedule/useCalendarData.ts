@@ -15,11 +15,9 @@ import {
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { changeFullCalendarEvents } from '@/utils/getFullCalendarEvents';
-
 import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
 import { CalenderEvents, Event, FullCalendarEvent } from '@/types';
-import { getCookie, setCookie } from '@/utils';
+import { changeFullCalendarEvents, getCookie, setCookie } from '@/utils';
 import { useAtom } from 'jotai';
 
 export const useCalendarData = () => {

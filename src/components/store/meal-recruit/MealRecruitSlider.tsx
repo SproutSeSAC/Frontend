@@ -2,14 +2,13 @@ import { useMemo, useRef } from 'react';
 
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
-import MealRecruitCard from './MealRecruitCard';
-import MealRecruitModal from './MealRecruitModal';
-
 import { useDialogContext, useObserver } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
 import { BsPlus } from 'react-icons/bs';
 
 import VerticalSlider from '@/components/common/slider/VerticalSlider';
+import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
+import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
 interface MealRecruitSliderProps {
   sideViewOpen: boolean;

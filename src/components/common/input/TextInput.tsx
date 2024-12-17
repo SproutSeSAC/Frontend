@@ -15,6 +15,8 @@ export interface InputProps extends FormStateProps {
   className?: string;
   value?: string;
   disabled?: boolean;
+  minLength?: number;
+  maxLength?: number;
 }
 
 const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -28,6 +30,8 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
     className,
     errorMsg,
     disabled,
+    minLength,
+    maxLength,
     ...props
   }: InputProps,
   ref: ForwardedRef<HTMLInputElement>,
@@ -46,6 +50,8 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
         onBlur={() => toggleFocus && toggleFocus(false)}
         onKeyDown={onEnter}
         disabled={disabled}
+        minLength={minLength}
+        maxLength={maxLength}
         className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border-red-600' : 'border-gray4'} ${className}`}
         {...props}
       />

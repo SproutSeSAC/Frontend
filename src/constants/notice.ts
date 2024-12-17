@@ -1,5 +1,3 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import {
   MeetingTypeKey,
   MeetingTypeValue,
@@ -8,6 +6,7 @@ import {
   TooltipKeys,
 } from '@/types/notice';
 import { NoticeDto } from '@/types/notice/noticeDto';
+import { formatDate } from '@/utils';
 
 export const noticeTabDisplay = {
   ALL: '전체',
@@ -70,11 +69,11 @@ export const tooltip: Record<TooltipKeys, string> = {
 };
 
 const date = new Date();
-export const defaultStartDateTime = dateFormat(
+export const defaultStartDateTime = formatDate(
   date.setHours(19, 0, 0, 0),
   "yyyy-MM-dd'T'HH:mm:ss",
 );
-export const defaultEndDateTime = dateFormat(
+export const defaultEndDateTime = formatDate(
   date.setHours(20, 0, 0, 0),
   "yyyy-MM-dd'T'HH:mm:ss",
 );

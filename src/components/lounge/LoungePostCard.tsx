@@ -7,12 +7,11 @@ import {
   usePostScrapProject,
 } from '@/services/lounge/loungeMutations';
 
-import { dateFormat } from '@/utils/dateFormat';
-
 import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
 import { useHandleOnScrap } from '@/hooks';
 import { Ptype } from '@/types';
 import { Lounge } from '@/types/lounge/loungeDto';
+import { formatDate } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -94,8 +93,8 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           <span className="lounge-text-divider leading-4 text-gray2">기간</span>
 
           <span>
-            {dateFormat(card.recruitmentStart)} ~{' '}
-            {dateFormat(card.recruitmentEnd)}
+            {formatDate(card.recruitmentStart)} ~{' '}
+            {formatDate(card.recruitmentEnd)}
           </span>
         </div>
 

@@ -5,9 +5,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
-import SingleSelectDropdown from '../common/dropdown/SingleSelectDropdown';
-import StoreReportModal from './modal/StoreReportModal';
-
 import { foodFilterDisplay, storeMainFilterList } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { updateQueryParams } from '@/utils';
@@ -16,6 +13,8 @@ import { MdOutlineRefresh } from 'react-icons/md';
 
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import CheckboxGroup from '@/components/common/checkbox/CheckboxGroup';
+import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import StoreReportModal from '@/components/store/modal/StoreReportModal';
 
 interface StoreFilterFormProps {
   onReset: () => void;

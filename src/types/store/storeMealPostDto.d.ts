@@ -1,4 +1,4 @@
-import { PageableType } from './pageable';
+import { PageableType } from '@/types/pageable';
 
 export interface GetMealPostList extends PageableType {
   mealPosts: MealPosts[];

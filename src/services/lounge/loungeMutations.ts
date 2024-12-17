@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { axiosInstance } from '../axiosInstance';
+import { axiosInstance } from '@/services/axiosInstance';
 
 import { PostLoungeProject, PutLoungeProject } from '@/types/lounge/loungeDto';
 import { AxiosError } from 'axios';

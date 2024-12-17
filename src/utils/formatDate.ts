@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
-export const dateFormat = (
+export const formatDate = (
   date?: string | number | Date,
   formatStr:
     | 'yyyy.MM.dd'

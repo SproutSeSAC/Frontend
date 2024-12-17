@@ -1,9 +1,8 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-import TabNavigation from '../TabNavigation';
-
 import { TechStackTab } from '@/types';
 
+import TabNavigation from '@/components/common/TabNavigation';
 import XButton from '@/components/common/button/XButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import TechStackOption from '@/components/common/dropdown/option/TechStackOption';

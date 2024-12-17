@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UseMutateAsyncFunction, useQueryClient } from '@tanstack/react-query';
 
-import { useDialogContext } from '@/hooks/common/useDialogContext';
-
+import { useDialogContext } from '@/hooks';
 import { AxiosError } from 'axios';
 
 interface UseHandlePostProps<T, K> {
@@ -20,7 +19,7 @@ interface UseHandlePostProps<T, K> {
   invalidateQueryKeys: string[];
 }
 
-export const useHandlePost = <T, K>({
+export const useHandlePost = <T, K = void>({
   postId,
   postType,
   handleDelete,
@@ -72,7 +71,7 @@ export const useHandlePost = <T, K>({
 
   const handleEditPost = () => {
     if (handleEdit?.navigateTo) {
-      navigate(handleEdit.navigateTo, { state: handleEdit.detail });
+      navigate(handleEdit.navigateTo, { state: handleEdit?.detail || null });
     }
   };
 

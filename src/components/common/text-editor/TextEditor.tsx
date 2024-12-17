@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import EmojiTool from './EmojiTool';
-
 import { useDialogContext } from '@/hooks';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import Toolbar from 'quill/modules/toolbar';
 
 import SquareButton from '@/components/common/button/SquareButton';
+import EmojiTool from '@/components/common/text-editor/EmojiTool';
 
 interface TextEditorProps {
   onChange: (value: string) => void;

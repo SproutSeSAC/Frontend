@@ -5,13 +5,13 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
-import TabNavigation from '../../common/TabNavigation';
-
 import { noticeTabList } from '@/constants/notice';
 import { NoticeTabDisplayKey } from '@/types';
 import { isManagerAndAdmin, updateQueryParams } from '@/utils';
 
 import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
+
+import TabNavigation from '@/components/common/TabNavigation';
 
 const EDIT = 'EDIT';
 

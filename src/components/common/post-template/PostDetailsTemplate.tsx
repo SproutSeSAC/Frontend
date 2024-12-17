@@ -1,5 +1,4 @@
-import { dateFormat } from '@/utils/dateFormat';
-
+import { formatDate } from '@/utils';
 import 'quill/dist/quill.snow.css';
 import { BsEye } from 'react-icons/bs';
 
@@ -37,7 +36,7 @@ export default function PostDetailsTemplate({
             <li className="flex items-center gap-3">
               <span>작성일</span>
               <span>
-                {createdAt ? dateFormat(createdAt, 'yyyy.MM.dd HH:mm') : '-'}
+                {createdAt ? formatDate(createdAt, 'yyyy.MM.dd HH:mm') : '-'}
               </span>
             </li>
             <li className="ml-10 flex items-center gap-1">

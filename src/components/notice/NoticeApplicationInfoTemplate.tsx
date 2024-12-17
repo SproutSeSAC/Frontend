@@ -1,7 +1,6 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import { LIMITLESS_CAPACITY_NUM } from '@/constants';
 import { MeetingType, NoticeDetail } from '@/types';
+import { formatDate } from '@/utils';
 
 interface NoticeApplicationInfoTemplateProps {
   notice: NoticeDetail;
@@ -24,7 +23,7 @@ export default function NoticeApplicationInfoTemplate({
   const noticeApplicationInfo = [
     {
       type: '신청기간',
-      data: `${dateFormat(applicationStartDateTime, 'yyyy.MM.dd a h시')} ~ ${dateFormat(applicationEndDateTime, 'yyyy.MM.dd a h시')}`,
+      data: `${formatDate(applicationStartDateTime, 'yyyy.MM.dd a h시')} ~ ${formatDate(applicationEndDateTime, 'yyyy.MM.dd a h시')}`,
     },
     {
       type: '인원',
@@ -39,7 +38,7 @@ export default function NoticeApplicationInfoTemplate({
         ? sessions.map((item, index) => (
             <li key={item.sessionId}>
               <span>
-                {dateFormat(item.sessionStartDateTime)}
+                {formatDate(item.sessionStartDateTime)}
                 <span className="px-2">
                   {index !== sessions.length - 1 && '/ '}
                 </span>
@@ -54,8 +53,8 @@ export default function NoticeApplicationInfoTemplate({
         ? sessions.map((item, index) => (
             <li key={item.sessionId}>
               <span>
-                {dateFormat(item.sessionStartDateTime, 'HH:mm')} ~{' '}
-                {dateFormat(item.sessionEndDateTime, 'HH:mm')}
+                {formatDate(item.sessionStartDateTime, 'HH:mm')} ~{' '}
+                {formatDate(item.sessionEndDateTime, 'HH:mm')}
                 <span className="px-2">
                   {index !== sessions.length - 1 && '/ '}
                 </span>

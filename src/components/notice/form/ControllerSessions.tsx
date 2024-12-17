@@ -1,8 +1,7 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import { defaultEndDateTime, defaultStartDateTime } from '@/constants';
 import { hours, minutes } from '@/constants/optionList';
 import { NoticeCategoryDisplayValue } from '@/types';
+import { formatDate } from '@/utils';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
@@ -54,7 +53,7 @@ export default function ControllerSessions({
             date: number,
             index: number,
           ) => {
-            const dateTime = dateFormat(date, "yyyy-MM-dd'T'HH:mm:ss");
+            const dateTime = formatDate(date, "yyyy-MM-dd'T'HH:mm:ss");
 
             const result = (currSessionList as SessionSchemaType[])?.map(
               (sessionItem, idx) => {
@@ -119,13 +118,13 @@ export default function ControllerSessions({
                             if (data) {
                               const startHours = startDate.getHours();
                               const startMinutes = startDate.getMinutes();
-                              const startDateTime = dateFormat(
+                              const startDateTime = formatDate(
                                 data.setHours(startHours, startMinutes, 0, 0),
                                 "yyyy-MM-dd'T'HH:mm:ss",
                               );
                               const endHours = endDate.getHours();
                               const endMinutes = endDate.getMinutes();
-                              const endDateTime = dateFormat(
+                              const endDateTime = formatDate(
                                 data.setHours(endHours, endMinutes, 0, 0),
                                 "yyyy-MM-dd'T'HH:mm:ss",
                               );

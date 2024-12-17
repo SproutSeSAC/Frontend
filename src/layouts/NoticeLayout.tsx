@@ -1,8 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
-import Header from './Header';
-
 import { useCalendarData } from '@/hooks';
+import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 

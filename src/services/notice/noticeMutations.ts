@@ -1,6 +1,6 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
-import { axiosInstance } from '../axiosInstance';
+import { axiosInstance } from '@/services/axiosInstance';
 
 import { NoticeDto } from '@/types';
 import { AxiosError } from 'axios';
@@ -89,6 +89,24 @@ export const usePostNoticeScrap = () => {
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.post(
         `/notices/${requestBody.noticeId}/scrap`,
+      );
+      return data;
+    },
+  });
+};
+
+export const usePostSessionApply = () => {
+  return useMutation<
+    boolean,
+    AxiosError,
+    { sessionId: number; phoneNumber: string }
+  >({
+    mutationFn: async ({ sessionId, phoneNumber }) => {
+      const { data } = await axiosInstance.post(
+        `/notices/sessions/${sessionId}/application`,
+        {
+          body: { phoneNumber },
+        },
       );
       return data;
     },
