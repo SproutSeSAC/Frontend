@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+// import { useHandleImage } from '@/hooks/common/useHandleImage';
 import {
   useEditNotice,
   usePostNotice,
@@ -163,6 +164,14 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     }
   };
 
+  // const { getPresignedUrl, uploadImageToS3, base64ToFile } = useHandleImage();
+
+  // const handleImagesInContent = async (content: string): Promise<string> => {
+  //   const base64ImageRegex =
+  //     /<img[^>]*src="(data:image\/[^;]+;base64,[^"]+)"[^>]*>/g;
+  // const matches = [...content.matchAll(base64ImageRegex)];
+  // };
+
   const onSubmit = async (submittedValue: NoticeDto.PostNotice) => {
     const {
       noticeType,
@@ -173,6 +182,8 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
       sessions,
     } = submittedValue;
 
+    // const updatedContent = await handleImagesInContent(content);
+
     const sessionsWithNoId = (sessions as Session[])?.map(
       ({ id, ...rest }) => rest,
     );
@@ -180,6 +191,7 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     if (noticeType === 'SPECIAL_LECTURE' || noticeType === 'EVENT') {
       const formValue = {
         ...submittedValue,
+        // content: updatedContent,
         satisfactionSurvey: satisfactionSurvey || '',
         sessions: sessionsWithNoId,
       };

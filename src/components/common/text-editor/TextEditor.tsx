@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useDialogContext } from '@/hooks';
+import { useHandleImage } from '@/hooks/common/useHandleImage';
+
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import Toolbar from 'quill/modules/toolbar';
 
-import SquareButton from '@/components/common/button/SquareButton';
 import EmojiTool from '@/components/common/text-editor/EmojiTool';
 
 interface TextEditorProps {
@@ -21,8 +21,6 @@ export default function TextEditor({
 }: TextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const quillRef = useRef<Quill | null>(null);
-
-  const { alert, hideDialog } = useDialogContext();
 
   const handleChange = useCallback(() => {
     if (quillRef.current) {
@@ -57,6 +55,8 @@ export default function TextEditor({
     ];
   }, []);
 
+  const { alertLimitCapacity } = useHandleImage();
+
   const handleImageUpload = useCallback(() => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -65,32 +65,28 @@ export default function TextEditor({
 
     input.onchange = async () => {
       const file = input.files?.[0];
-      if (file) {
-        if (file.size > 1048576) {
-          alert({
-            text: '이미지 크기는 1MB 이하만 업로드 가능합니다.',
-            children: (
-              <SquareButton name="확인" onClick={hideDialog} type="button" />
-            ),
-          });
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (quillRef.current) {
-            const range = quillRef.current.getSelection();
-            const base64String = reader.result as string;
-            quillRef.current.insertEmbed(
-              range?.index || 0,
-              'image',
-              base64String,
-            );
-          }
-        };
-        reader.readAsDataURL(file);
+      if (!file) return;
+
+      if (file.size > 1048576) {
+        alertLimitCapacity({ limitCapacity: '1MB' });
+        return;
       }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (quillRef.current) {
+          const range = quillRef.current.getSelection();
+          const base64String = reader.result as string;
+
+          quillRef.current.insertEmbed(
+            range?.index || 0,
+            'image',
+            base64String,
+          );
+        }
+      };
+      reader.readAsDataURL(file);
     };
-  }, [alert, hideDialog]);
+  }, [alertLimitCapacity]);
 
   useEffect(() => {
     if (editorRef.current && !quillRef.current) {
