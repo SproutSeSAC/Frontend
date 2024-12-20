@@ -1,6 +1,7 @@
-import { defaultIsoDateTime } from '@/constants';
+import { defaultEndDateTime, defaultStartDateTime } from '@/constants';
 import { hours, minutes } from '@/constants/optionList';
 import { NoticeCategoryDisplayValue } from '@/types';
+import { formatDate } from '@/utils';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa6';
 
@@ -52,6 +53,8 @@ export default function ControllerSessions({
             date: number,
             index: number,
           ) => {
+            const dateTime = formatDate(date, "yyyy-MM-dd'T'HH:mm:ss");
+
             const result = (currSessionList as SessionSchemaType[])?.map(
               (sessionItem, idx) => {
                 if (index === idx) {
@@ -59,12 +62,12 @@ export default function ControllerSessions({
                     case 'start':
                       return {
                         ...sessionItem,
-                        sessionStartDateTime: new Date(date).toISOString(),
+                        sessionStartDateTime: dateTime,
                       };
                     case 'end':
                       return {
                         ...sessionItem,
-                        sessionEndDateTime: new Date(date).toISOString(),
+                        sessionEndDateTime: dateTime,
                       };
                     default:
                       return sessionItem;
@@ -112,20 +115,33 @@ export default function ControllerSessions({
                           id={`${id}`}
                           currentDate={startDate || undefined}
                           onChange={data => {
-                            const sessionDate = data?.toISOString();
+                            if (data) {
+                              const startHours = startDate.getHours();
+                              const startMinutes = startDate.getMinutes();
+                              const startDateTime = formatDate(
+                                data.setHours(startHours, startMinutes, 0, 0),
+                                "yyyy-MM-dd'T'HH:mm:ss",
+                              );
+                              const endHours = endDate.getHours();
+                              const endMinutes = endDate.getMinutes();
+                              const endDateTime = formatDate(
+                                data.setHours(endHours, endMinutes, 0, 0),
+                                "yyyy-MM-dd'T'HH:mm:ss",
+                              );
 
-                            const newValue = (
-                              currSessionList as SessionSchemaType[]
-                            )?.map((sessionItem, idx) =>
-                              index === idx
-                                ? {
-                                    ...sessionItem,
-                                    sessionStartDateTime: sessionDate,
-                                    sessionEndDateTime: sessionDate,
-                                  }
-                                : sessionItem,
-                            );
-                            onChange(newValue);
+                              const newValue = (
+                                currSessionList as SessionSchemaType[]
+                              )?.map((sessionItem, idx) =>
+                                index === idx
+                                  ? {
+                                      ...sessionItem,
+                                      sessionStartDateTime: startDateTime,
+                                      sessionEndDateTime: endDateTime,
+                                    }
+                                  : sessionItem,
+                              );
+                              onChange(newValue);
+                            }
                           }}
                           errorMsg={error?.message}
                         />
@@ -221,8 +237,8 @@ export default function ControllerSessions({
                   );
                   const newSession = {
                     id: maxId + 1,
-                    sessionStartDateTime: defaultIsoDateTime,
-                    sessionEndDateTime: defaultIsoDateTime,
+                    sessionStartDateTime: defaultStartDateTime,
+                    sessionEndDateTime: defaultEndDateTime,
                   };
                   onChange([...currSessionList, newSession]);
                 }}

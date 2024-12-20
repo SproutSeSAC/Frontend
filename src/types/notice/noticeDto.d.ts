@@ -1,6 +1,4 @@
-import { ManagerRole } from '../user';
-
-import { StatusBase } from '@/constants/serviceConstant';
+import { SessionStatus, StatusBase } from '@/constants/serviceConstant';
 import {
   MeetingTypeKey,
   NoticeCategoryDisplayKey,
@@ -8,9 +6,15 @@ import {
   NoticeTargetCourse,
   NoticeWriter,
 } from '@/types/notice';
+import { ManagerRole } from '@/types/user';
+
+import { NoticeFormSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
 export namespace NoticeDto {
-  export type GetNoticeList = { notices: NoticeDisplay[] };
+  export type GetNoticeList = {
+    isLastPage: boolean;
+    notices: NoticeDisplay[];
+  };
   export type GetNoticeDetail = NoticeDetail;
   export type GetNoticeComment = { comments: NoticeComment[] };
 
@@ -42,6 +46,7 @@ interface NoticeDetail extends NoticeCommonFields {
   status: StatusBase;
   writer: NoticeWriter;
   targetCourses: NoticeTargetCourse[];
+  createdAt: string;
   // Optional
   sessions?: NoticeSession[];
   isPhoneNumberRequired?: boolean;
@@ -62,4 +67,45 @@ interface NoticeComment {
   userName: string;
   userProfileUrl: string;
   roleType: keyof Role;
+}
+
+interface NoticeSessionParticipantsStatus {
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+  sort: {
+    empty: boolean;
+    unsorted: boolean;
+    sorted: boolean;
+  };
+
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+
+  numberOfElements: number;
+  pageable: {
+    offset: number;
+    sort: {
+      empty: boolean;
+      unsorted: boolean;
+      sorted: boolean;
+    };
+    unpaged: boolean;
+    paged: boolean;
+    pageNumber: number;
+    pageSize: number;
+  };
+
+  content: [
+    {
+      userId: number;
+      status: SessionStatus;
+      phoneNumber: string;
+      userName: string;
+      nickName: string;
+      profileImageUrl: string;
+    },
+  ];
 }

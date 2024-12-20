@@ -1,15 +1,14 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
-
-import MealRecruitCard from './MealRecruitCard';
-import MealRecruitModal from './MealRecruitModal';
 
 import { useDialogContext, useObserver } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
 import { BsPlus } from 'react-icons/bs';
 
 import VerticalSlider from '@/components/common/slider/VerticalSlider';
+import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
+import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
 interface MealRecruitSliderProps {
   sideViewOpen: boolean;
@@ -40,15 +39,15 @@ export default function MealRecruitSlider({
       }, []);
   }, [data?.pages]);
 
-  const onIntersect = useCallback(
-    (entry: IntersectionObserverEntry) => {
-      if (entry.isIntersecting) {
-        if (hasNextPage) fetchNextPage();
-      }
-    },
-    [fetchNextPage, hasNextPage],
-  );
-  useObserver({ onIntersect, target: mealPostObserveRef, threshold: 0.1 });
+  const runFucAtIntersect = () => {
+    if (hasNextPage) fetchNextPage();
+  };
+
+  useObserver({
+    runFucAtIntersect,
+    target: mealPostObserveRef,
+    threshold: 0.1,
+  });
 
   return (
     <>

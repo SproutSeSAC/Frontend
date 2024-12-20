@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -24,16 +24,11 @@ export default function StoreDetail() {
   const { storeList, fetchNextPage, hasNextPage, isLoading } =
     useGetStoreList();
 
-  const onIntersect = useCallback(
-    (entry: IntersectionObserverEntry) => {
-      if (entry.isIntersecting) {
-        if (hasNextPage) fetchNextPage();
-      }
-    },
-    [fetchNextPage, hasNextPage],
-  );
+  const runFucAtIntersect = () => {
+    if (hasNextPage) fetchNextPage();
+  };
 
-  useObserver({ onIntersect, target: observeRef, threshold: 0.5 });
+  useObserver({ runFucAtIntersect, target: observeRef, threshold: 0.5 });
 
   return (
     <>

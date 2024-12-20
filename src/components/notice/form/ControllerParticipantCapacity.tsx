@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { LIMITLESS_CAPACITY_NUM } from '@/constants';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FiCheckCircle } from 'react-icons/fi';
@@ -9,10 +7,6 @@ import NumberInput from '@/components/common/input/NumberInput';
 const DEFAULT_CAPACITY_NUM = 30;
 
 export default function ControllerParticipantCapacity() {
-  const [isLimited, setIsLimited] = useState(true);
-
-  const toggleLimit = () => setIsLimited(prev => !prev);
-
   const { control } = useFormContext();
 
   return (
@@ -23,6 +17,9 @@ export default function ControllerParticipantCapacity() {
         field: { onChange, value: participantCapacityNum },
         fieldState: { error },
       }) => {
+        /* 10000 이상을 값으로 보내면 '제한 없음' */
+        const isLimited = participantCapacityNum >= 10000;
+
         return (
           <div
             className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-gray4'}`}
@@ -34,7 +31,6 @@ export default function ControllerParticipantCapacity() {
                 onChange(
                   isLimited ? DEFAULT_CAPACITY_NUM : LIMITLESS_CAPACITY_NUM,
                 );
-                toggleLimit();
               }}
             >
               <span className="">제한 없음</span>

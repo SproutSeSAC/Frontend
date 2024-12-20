@@ -165,13 +165,43 @@ export const useCreateEventsForMultipleCalendars = (
       await Promise.all(promises);
     } catch (error) {
       console.error('구글 캘린더에 일정 생성 중 에러 발생:', error);
-      throw error; // 상위로 에러 전달
+      throw error;
     }
   };
 
   return useMutation({
     mutationFn: createEventsForMultipleCalendars,
     mutationKey: ['createEventsForMultipleCalendars'],
+    ...options,
+  });
+};
+
+export const useEditEventsForMultipleCalendars = (
+  options?: UseMutationOptions<
+    unknown,
+    Error,
+    { calendarId: string; events: GoogleCalendarApiDto.PostEvent[] }[]
+  >,
+) => {
+  const editEventsForMultipleCalendars = async (
+    data: { calendarId: string; events: GoogleCalendarApiDto.PostEvent[] }[],
+  ) => {
+    try {
+      const promises = data.flatMap(({ calendarId, events }) =>
+        events.map(event =>
+          axiosCalendarInstance.post(`/calendars/${calendarId}/events`, event),
+        ),
+      );
+      await Promise.all(promises);
+    } catch (error) {
+      console.error('구글 캘린더에 일정 수정 중 에러 발생:', error);
+      throw error;
+    }
+  };
+
+  return useMutation({
+    mutationFn: editEventsForMultipleCalendars,
+    mutationKey: ['editEventsForMultipleCalendars'],
     ...options,
   });
 };

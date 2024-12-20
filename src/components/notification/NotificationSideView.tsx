@@ -4,13 +4,12 @@ import { useLocation } from 'react-router-dom';
 
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
-import NotificationContent from './NotificationContent';
-import NotificationHeader from './NotificationHeader';
-
 import { useAtom } from 'jotai';
 
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
+import NotificationContent from '@/components/notification/NotificationContent';
+import NotificationHeader from '@/components/notification/NotificationHeader';
 
 export default function NotificationSideView() {
   const location = useLocation();

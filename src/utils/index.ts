@@ -5,3 +5,8 @@ export * from '@/utils/getColorByRole';
 export * from '@/utils/getDateProgress';
 export * from '@/utils/createRrule';
 export * from '@/utils/checkRole';
+export * from '@/utils/isInThisWeek';
+export * from '@/utils/formatPhoneNumber';
+export * from '@/utils/formatDate';
+export * from '@/utils/getFullCalendarEvents';
+export * from '@/utils/createRrule';

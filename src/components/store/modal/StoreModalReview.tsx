@@ -4,18 +4,16 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostStoreReview } from '@/services/store/storeMutations';
 
-import { dateFormat } from '@/utils/dateFormat';
-
-import StoreStarRating from './StoreStarRating';
-
 import { useDialogContext } from '@/hooks';
 import { StoreReviewList } from '@/types/store/storeDto';
+import { formatDate } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
+import StoreStarRating from '@/components/store/modal/StoreStarRating';
 import UserImage from '@/components/user/UserImage';
 
 interface StoreModalReviewProps {
@@ -180,7 +178,7 @@ export default function StoreModalReview({
               <div>{commentItem.review}</div>
               <div className="flex gap-10 text-gray1">
                 <div className="flex gap-4">
-                  <div>{`${dateFormat(commentItem.createdAt, 'yyyy-MM-dd HH:mm:ss')}`}</div>
+                  <div>{`${formatDate(commentItem.createdAt, 'yyyy-MM-dd HH:mm:ss')}`}</div>
                 </div>
               </div>
             </div>

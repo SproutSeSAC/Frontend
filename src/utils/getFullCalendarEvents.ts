@@ -1,6 +1,5 @@
-import { createRrule } from '@/utils/createRrule';
-
 import { Event } from '@/types';
+import { createRrule } from '@/utils';
 
 export const changeFullCalendarEvents = (
   eventList: (Event & { backgroundColor: string })[],

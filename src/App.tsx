@@ -4,11 +4,12 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import LoopLoading from './components/common/LoopLoading';
-import DialogProvider from './components/context/DialogContextProvider';
-import MainView from './layouts/MainView';
-import loginRoutes from './route/loginRoutes';
-import mainRoutes from './route/mainRoutes';
+import MainView from '@/layouts/MainView';
+import loginRoutes from '@/route/loginRoutes';
+import mainRoutes from '@/route/mainRoutes';
+
+import LoopLoading from '@/components/common/LoopLoading';
+import DialogContextProvider from '@/components/context/DialogContextProvider';
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <DialogProvider>
+      <DialogContextProvider>
         <Suspense
           fallback={
             // TODO : 수정 필요, 에러바운더리추가
@@ -33,7 +34,7 @@ export default function App() {
         >
           <RouterProvider router={router} />
         </Suspense>
-      </DialogProvider>
+      </DialogContextProvider>
     </QueryClientProvider>
   );
 }

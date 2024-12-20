@@ -6,12 +6,12 @@ import {
   useState,
 } from 'react';
 
-import LoopLoading from '../LoopLoading';
-
 import { IoIosArrowDown } from 'react-icons/io';
 import { Swiper as SwiperType } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+import LoopLoading from '@/components/common/LoopLoading';
 
 interface VerticalSliderProps<T> {
   slideList: T[];

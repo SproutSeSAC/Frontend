@@ -6,8 +6,8 @@ import {
   useState,
 } from 'react';
 
-import Toast from '../common/Toast';
-import Alert, { AlertProps } from '../common/modal/Alert';
+import Toast from '@/components/common/Toast';
+import Alert, { AlertProps } from '@/components/common/modal/Alert';
 
 interface Dialog {
   key: string; // TODO : key 타입 명확하게 수정필요해 보임

@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { axiosInstance } from '../axiosInstance';
+import { axiosInstance } from '@/services/axiosInstance';
 
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
 import { LoungeProjectFilters, Option } from '@/types';

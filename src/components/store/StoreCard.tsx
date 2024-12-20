@@ -4,9 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostStoreScrap } from '@/services/store/storeMutations';
 
-import StoreMenuImage from './StoreMenuImage';
-import StoreProposalEditModal from './modal/StoreProposalEditModal';
-
 import { foodFilterDisplay } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { FoodFilterDisplayKey } from '@/types';
@@ -25,7 +22,9 @@ import { PiArrowSquareInThin } from 'react-icons/pi';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
+import StoreMenuImage from '@/components/store/StoreMenuImage';
 import StoreMenuImageSlider from '@/components/store/StoreMenuImageSlider';
+import StoreProposalEditModal from '@/components/store/modal/StoreProposalEditModal';
 
 interface StoreDataType
   extends Omit<

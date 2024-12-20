@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { axiosInstance } from '../axiosInstance';
+import { axiosInstance } from '@/services/axiosInstance';
 
 import {
   GetFilterCountResponse,

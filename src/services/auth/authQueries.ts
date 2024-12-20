@@ -27,6 +27,7 @@ export const getCalendarToken = () => axiosInstance.get('/user/calendar');
 export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
 
 export const initialUserProfile: UserProfileDto.Get = {
+  userId: 0,
   email: '',
   campusList: [],
   courseList: [

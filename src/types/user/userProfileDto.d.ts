@@ -36,6 +36,7 @@ type UserProfile = {
   nickname: string;
   imgUrl: string;
   role: KeyOfRole;
+  userId: number;
 };
 
 type UpdateableUserProfile = Partial<{

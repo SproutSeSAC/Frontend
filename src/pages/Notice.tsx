@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -47,28 +47,15 @@ export default function Notice() {
     isLoading,
   } = useGetInfiniteNoticeList(currFilter);
 
-  const noticeList = useMemo(() => {
-    return data?.pages
-      .map(item => item.notices)
-      ?.reduce<Array<NoticeDisplay>>((acc, arr) => {
-        arr?.forEach((obj: NoticeDisplay) => {
-          acc.push(obj);
-        });
-
-        return acc;
-      }, []);
+  const noticeList: NoticeDisplay[] = useMemo(() => {
+    return data.pages.map(({ notices }) => notices).flat();
   }, [data?.pages]);
 
-  const onIntersect = useCallback(
-    (entry: IntersectionObserverEntry) => {
-      if (entry.isIntersecting) {
-        if (hasNextPage) fetchNextPage();
-      }
-    },
-    [fetchNextPage, hasNextPage],
-  );
+  const runFucAtIntersect = () => {
+    if (hasNextPage) fetchNextPage();
+  };
 
-  useObserver({ onIntersect, target: observeRef, threshold: 0.1 });
+  useObserver({ runFucAtIntersect, target: observeRef, threshold: 0.1 });
 
   if (tab === 'EDIT') return <NoticeForm />;
 
@@ -116,7 +103,9 @@ export default function Notice() {
 
       <div className="pt-32">
         {noticeList.length === 0 && (
-          <EmptyContent message="등록된 공지사항이 없습니다." />
+          <EmptyContent
+            message={`${tab === 'BOOKMARK' ? '북마크한' : '등록된'} 공지사항이 없습니다.`}
+          />
         )}
         {isLoading && (
           <div className="flex w-full justify-center py-10">

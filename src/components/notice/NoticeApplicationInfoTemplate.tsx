@@ -1,7 +1,6 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import { LIMITLESS_CAPACITY_NUM } from '@/constants';
 import { MeetingType, NoticeDetail } from '@/types';
+import { formatDate } from '@/utils';
 
 interface NoticeApplicationInfoTemplateProps {
   notice: NoticeDetail;
@@ -24,7 +23,7 @@ export default function NoticeApplicationInfoTemplate({
   const noticeApplicationInfo = [
     {
       type: '신청기간',
-      data: `${dateFormat(applicationStartDateTime)} ~ ${dateFormat(applicationEndDateTime)}`,
+      data: `${formatDate(applicationStartDateTime, 'yyyy.MM.dd a h시')} ~ ${formatDate(applicationEndDateTime, 'yyyy.MM.dd a h시')}`,
     },
     {
       type: '인원',
@@ -39,7 +38,7 @@ export default function NoticeApplicationInfoTemplate({
         ? sessions.map((item, index) => (
             <li key={item.sessionId}>
               <span>
-                {dateFormat(item.sessionStartDateTime)}
+                {formatDate(item.sessionStartDateTime)}
                 <span className="px-2">
                   {index !== sessions.length - 1 && '/ '}
                 </span>
@@ -54,8 +53,8 @@ export default function NoticeApplicationInfoTemplate({
         ? sessions.map((item, index) => (
             <li key={item.sessionId}>
               <span>
-                {dateFormat(item.sessionStartDateTime, 'HH:mm')} ~{' '}
-                {dateFormat(item.sessionEndDateTime, 'HH:mm')}
+                {formatDate(item.sessionStartDateTime, 'HH:mm')} ~{' '}
+                {formatDate(item.sessionEndDateTime, 'HH:mm')}
                 <span className="px-2">
                   {index !== sessions.length - 1 && '/ '}
                 </span>
@@ -70,15 +69,15 @@ export default function NoticeApplicationInfoTemplate({
     },
     {
       type: '장소',
-      data: meetingPlace || '-',
+      data: meetingType === 'ONLINE' ? '-' : meetingPlace || '-',
     },
   ] as const;
 
   return (
-    <ul className="mt-4 grid list-none grid-cols-2 gap-4 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
+    <ul className="mt-4 grid list-none grid-cols-2 gap-x-6 gap-y-4 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
       {noticeApplicationInfo.map(({ type, data }) => (
         <li key={type} className="flex items-center gap-3 py-1 text-[22px]">
-          <h4 className="border-r-solid border-r border-r-gray2 pr-3 tracking-tighter text-gray2">
+          <h4 className="border-r-solid mr-3 min-w-16 border-r border-r-gray2 pr-3 tracking-tighter text-gray2">
             {type}
           </h4>
           {type === '일시' || type === '시간' ? (

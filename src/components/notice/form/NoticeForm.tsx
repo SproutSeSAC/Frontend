@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
   initialUserProfile,
@@ -38,8 +38,49 @@ import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
 import { NoticeConditionalFormSchema } from '@/components/notice/form/NoticeFormSchema';
 
 export default function NoticeForm() {
+  const {
+    targetCourses,
+    title,
+    content,
+    noticeType,
+    id: editNoticeId,
+    ...rest
+  }: NoticeDto.GetNoticeDetail = useLocation()?.state || { state: null };
+
+  const { onSubmit, onError, findCurrNotice, isCreateEventsPending } =
+    useSubmitNotice({ isEditing: !!noticeType, noticeId: editNoticeId });
+
+  const NoticeExtraDetailToForm = {
+    isPhoneNumberRequired: rest.isPhoneNumberRequired,
+    applicationStartDateTime: rest.applicationStartDateTime,
+    applicationEndDateTime: rest.applicationEndDateTime,
+    meetingPlace: rest.meetingPlace,
+    meetingType: rest.meetingType,
+    satisfactionSurvey: rest.satisfactionSurvey,
+    participantCapacity: rest.participantCapacity,
+    sessions: rest?.sessions?.map(
+      ({ sessionEndDateTime, sessionStartDateTime }, index) => ({
+        id: index + 1,
+        sessionEndDateTime,
+        sessionStartDateTime,
+      }),
+    ),
+  };
+
+  const editNoticeDetailToForm: NoticeDto.PostNotice = {
+    noticeType,
+    title,
+    content,
+    targetCourseIdList: targetCourses?.map(({ courseId }) => courseId),
+    ...(findCurrNotice(noticeType)?.needExtraInfo
+      ? NoticeExtraDetailToForm
+      : {}),
+  };
+
   const methods = useForm<NoticeDto.PostNotice>({
-    defaultValues: defaultNoticeFormValues,
+    defaultValues: editNoticeId
+      ? editNoticeDetailToForm
+      : defaultNoticeFormValues,
     resolver: zodResolver(NoticeConditionalFormSchema),
   });
 
@@ -57,9 +98,6 @@ export default function NoticeForm() {
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { onSubmit, onError, findCurrNotice, isCreateEventsPending } =
-    useSubmitNotice();
-
   const navigate = useNavigate();
 
   usePageBlocker({
@@ -71,8 +109,18 @@ export default function NoticeForm() {
     if (type === 'SPECIAL_LECTURE' || type === 'EVENT') {
       reset({ ...specialLectureEventFormValues, ...getValues() });
     } else {
-      const { noticeType, title, content, targetCourseIdList } = getValues();
-      reset({ noticeType, title, content, targetCourseIdList });
+      const {
+        noticeType: noticeTypeValue,
+        title: titleValue,
+        content: contentValue,
+        targetCourseIdList: targetCourseValue,
+      } = getValues();
+      reset({
+        noticeType: noticeTypeValue,
+        title: titleValue,
+        content: contentValue,
+        targetCourseIdList: targetCourseValue,
+      });
     }
   };
 
@@ -87,7 +135,7 @@ export default function NoticeForm() {
     const courseIds = data.map(({ id }) => id);
 
     const selectedCourseCalendarList = courseCalendarList.filter(
-      ({ courseId }) => courseIds.includes(courseId),
+      ({ courseId }) => courseIds?.includes(courseId),
     );
 
     // 캘린더 비생성 확인 Alert
@@ -243,7 +291,7 @@ export default function NoticeForm() {
               <Title as="h1" title="공지사항 상세 내용" />
             </header>
 
-            <ControllerContentEditor type="notice" />
+            <ControllerContentEditor type="notice" initialValue={content} />
 
             <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
               <SquareButton
@@ -252,7 +300,10 @@ export default function NoticeForm() {
                 type="button"
                 onClick={() => navigate('/notice')}
               />
-              <SquareButton name="등록하기" type="submit" />
+              <SquareButton
+                name={noticeType ? '수정하기' : '등록하기'}
+                type="submit"
+              />
             </div>
           </section>
         </form>

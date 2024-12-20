@@ -6,6 +6,7 @@ import {
   TooltipKeys,
 } from '@/types/notice';
 import { NoticeDto } from '@/types/notice/noticeDto';
+import { formatDate } from '@/utils';
 
 export const noticeTabDisplay = {
   ALL: '전체',
@@ -68,19 +69,25 @@ export const tooltip: Record<TooltipKeys, string> = {
 };
 
 const date = new Date();
-date.setHours(19, 0, 0, 0);
-export const defaultIsoDateTime = date.toISOString();
+export const defaultStartDateTime = formatDate(
+  date.setHours(19, 0, 0, 0),
+  "yyyy-MM-dd'T'HH:mm:ss",
+);
+export const defaultEndDateTime = formatDate(
+  date.setHours(20, 0, 0, 0),
+  "yyyy-MM-dd'T'HH:mm:ss",
+);
 
 export const LIMITLESS_CAPACITY_NUM = 10000;
 
 export const specialLectureEventFormValues = {
-  applicationStartDateTime: defaultIsoDateTime,
-  applicationEndDateTime: defaultIsoDateTime,
+  applicationStartDateTime: defaultStartDateTime,
+  applicationEndDateTime: defaultEndDateTime,
   sessions: [
     {
       id: 1,
-      sessionStartDateTime: defaultIsoDateTime,
-      sessionEndDateTime: defaultIsoDateTime,
+      sessionStartDateTime: defaultStartDateTime,
+      sessionEndDateTime: defaultEndDateTime,
     },
   ],
   meetingType: 'ONLINE' as MeetingTypeKey,
