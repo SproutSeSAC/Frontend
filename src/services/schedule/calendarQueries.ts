@@ -100,12 +100,99 @@ export const useGetAclListByCalendar = (
 export type UserCalendarInfo = {
   courseTitle: string;
   courseId: number;
-  calendarId?: number;
+  calendarId?: string;
   isCreated: boolean;
 };
 
+export type AllCalendarAclEmail = UserCalendarInfo & {
+  aclEmailList: string[];
+  managerEmailList: string[];
+  hasNotAclEmailList: string[];
+};
+
+// 다중 캘린더별 acl 이메일 리스트 가져오기
+export const useGetAllCalendarAclEmailList = (
+  userCalendarInfos: UserCalendarInfo[],
+  options?: UseQueryOptions<AllCalendarAclEmail[]>,
+) => {
+  const getManagerEmailListByCourse = async (courseId: number) => {
+    const res: AxiosResponse<ManagerEmailListByCourseDto.Get> =
+      await axiosInstance.get(`/user/calendar/${courseId}/email`);
+    return res.data;
+  };
+
+  const getAclEmailList = async (calendarId?: string) => {
+    if (!calendarId) return [];
+
+    try {
+      const aclResponse = await axiosCalendarInstance.get(
+        `/calendars/${calendarId}/acl`,
+      );
+      return aclResponse.data.items
+        .map((item: { scope: { value: string } }) => item.scope.value)
+        .filter(
+          (email: string) =>
+            !email.includes('@public') && !email.includes('@group'),
+        );
+    } catch (error) {
+      throw new Error(
+        `ACL이 있는 이메일 데이터 가져오는 중 에러 발생: ${error}`,
+      );
+    }
+  };
+
+  const getManagerEmailList = async (courseId: number) => {
+    const res = await getManagerEmailListByCourse(courseId);
+    return res.map(manager => manager.email);
+  };
+
+  const getCourseCalendarEmailList = async () => {
+    const requests = userCalendarInfos.map(async calendarInfo => {
+      if (!calendarInfo.isCreated) {
+        return {
+          ...calendarInfo,
+          aclEmailList: [],
+          managerEmailList: [],
+          hasNotAclEmailList: [],
+        };
+      }
+
+      try {
+        const [aclEmailList, managerEmailList] = await Promise.all([
+          getAclEmailList(calendarInfo.calendarId),
+          getManagerEmailList(calendarInfo.courseId),
+        ]);
+
+        const aclEmailSet = new Set(aclEmailList);
+        const hasNotAclEmailList = managerEmailList.filter(
+          email => !aclEmailSet.has(email),
+        );
+
+        return {
+          ...calendarInfo,
+          aclEmailList,
+          managerEmailList,
+          hasNotAclEmailList,
+        };
+      } catch (err) {
+        throw new Error(`캘린더 id ${calendarInfo.courseTitle}: ${err}`);
+      }
+    });
+
+    return Promise.all(requests);
+  };
+
+  return useQuery<AllCalendarAclEmail[]>({
+    queryKey: ['useGetAllCalendarAclEmailList'],
+    queryFn: getCourseCalendarEmailList,
+    enabled: userCalendarInfos.length > 0,
+    retry: false,
+    ...options,
+  });
+};
+
 // 다중 캘린더별 권한 데이터 가져오기
-export const useGetAllCalendarAclList = (
+export const useGetAllUserCalendarAclList = (
   userCalendarInfos: UserCalendarInfo[],
   options?: UseQueryOptions<(UserCalendarInfo & { hasAcl: boolean })[]>,
 ) => {
@@ -116,7 +203,7 @@ export const useGetAllCalendarAclList = (
       }
       return axiosCalendarInstance
         .get(`/calendars/${calendarInfo.calendarId}/acl`)
-        .then(res => ({ ...calendarInfo, hasAcl: !!res.data.items.length }))
+        .then(res => ({ ...calendarInfo, hasAcl: !!res?.data.items.length }))
         .catch(() => ({ ...calendarInfo, hasAcl: false }));
     });
     return Promise.all(requests);
@@ -184,19 +271,20 @@ export const useCourseCalendarList = (
   });
 };
 
-export const useGetAuthorizedEmailsByCourse = (
+// 교육과정별 담당 매니저 이메일 리스트
+export const useGetManagerEmailListByCourse = (
   courseId?: number,
   options?: UseQueryOptions<ManagerEmailListByCourseDto.Get>,
 ) => {
-  const getAdminEmailByCourse = async () => {
+  const getManagerEmailListByCourse = async () => {
     const res: AxiosResponse<ManagerEmailListByCourseDto.Get> =
       await axiosInstance.get(`/user/calendar/${courseId}/email`);
     return res.data;
   };
 
   return useQuery({
-    queryKey: ['adminEmail', courseId],
-    queryFn: getAdminEmailByCourse,
+    queryKey: ['useGetManagerEmailListByCourse', courseId],
+    queryFn: getManagerEmailListByCourse,
     enabled: !!courseId,
     ...options,
   });

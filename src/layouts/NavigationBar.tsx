@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import StoreIcon from '@/assets/icons/store.svg?react';
 import Logo from '@/layouts/Logo';
 import { BsCalendar, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 export default function NavigationBar() {
   const { pathname } = useLocation();
@@ -29,6 +30,11 @@ export default function NavigationBar() {
       title: '라운지 이동',
       to: '/lounge',
       icon: <BsPersonFillAdd className={iconStyle} />,
+    },
+    {
+      title: '관리자 페이지 이동',
+      to: '/admin',
+      icon: <MdOutlineAdminPanelSettings className={`${iconStyle} size-4`} />,
     },
   ];
 

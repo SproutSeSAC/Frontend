@@ -175,3 +175,44 @@ export const useCreateEventsForMultipleCalendars = (
     ...options,
   });
 };
+
+export const useGrantAcl = (
+  options?: UseMutationOptions<
+    unknown,
+    Error,
+    { calendarId: string; hasNotAclEmailList: string[] }
+  >,
+) => {
+  const grantAclByRole = async (params: {
+    calendarId: string;
+    hasNotAclEmailList: string[];
+  }) => {
+    const { calendarId, hasNotAclEmailList } = params;
+
+    try {
+      await Promise.all(
+        hasNotAclEmailList.map(async email => {
+          const managerAclData = {
+            role: 'owner',
+            scope: {
+              type: 'user',
+              value: email,
+            },
+          };
+          return axiosCalendarInstance.post(
+            `/calendars/${calendarId}/acl`,
+            managerAclData,
+          );
+        }),
+      );
+    } catch (error) {
+      console.error('일정관리 권한 부여 중 에러 발생', error);
+    }
+  };
+
+  return useMutation({
+    mutationFn: grantAclByRole,
+    mutationKey: ['useGrantAcl'],
+    ...options,
+  });
+};

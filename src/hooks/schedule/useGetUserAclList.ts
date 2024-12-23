@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 
 import {
   UserCalendarInfo,
-  useGetAllCalendarAclList,
+  useGetAllCalendarAclEmailList,
+  useGetAllUserCalendarAclList,
 } from '@/services/schedule/calendarQueries';
 
 import { useCalendarData } from '@/hooks';
@@ -23,14 +24,24 @@ export const useGetUserAclList = () => {
     return result;
   }, [courseCalendarList]);
 
+  const {
+    data: aclEmailListByCourse,
+    isLoading: isAclEmailListLoading,
+    isPending: isAclEmailListPending,
+  } = useGetAllCalendarAclEmailList(userCourseCalendarList);
+
+  const isCalendarAclLoading = isAclEmailListPending || isAclEmailListLoading;
+
   const { data: userAclList = [], isLoading: isUserAclListLoading } =
-    useGetAllCalendarAclList(userCourseCalendarList);
+    useGetAllUserCalendarAclList(userCourseCalendarList);
 
   const hasNotAclCalendarList = useMemo(() => {
     return userAclList.filter(({ hasAcl }) => !hasAcl);
   }, [userAclList]);
 
   return {
+    aclEmailListByCourse,
+    isCalendarAclLoading,
     userAclList,
     isUserAclListLoading,
     hasNotAclCalendarList,
