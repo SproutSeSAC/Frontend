@@ -1,11 +1,19 @@
 import { Link, useLocation } from 'react-router-dom';
 
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
+
 import StoreIcon from '@/assets/icons/store.svg?react';
 import Logo from '@/layouts/Logo';
+import { isAdmin } from '@/utils';
 import { BsCalendar, BsHouse, BsPersonFillAdd } from 'react-icons/bs';
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 export default function NavigationBar() {
+  const { data: { role } = initialUserProfile } = useGetUserProfile();
+
   const { pathname } = useLocation();
 
   const iconStyle = 'size-6 text-gray3';
@@ -31,11 +39,6 @@ export default function NavigationBar() {
       to: '/lounge',
       icon: <BsPersonFillAdd className={iconStyle} />,
     },
-    {
-      title: '관리자 페이지 이동',
-      to: '/admin',
-      icon: <MdOutlineAdminPanelSettings className={`${iconStyle} size-4`} />,
-    },
   ];
 
   return (
@@ -55,6 +58,20 @@ export default function NavigationBar() {
               </Link>
             </li>
           ))}
+
+          {isAdmin(role) && (
+            <li>
+              <Link
+                to="/admin"
+                title="관리자 페이지 이동"
+                className={`flex h-10 w-10 items-center justify-center ${pathname === '/admin' && 'rounded-xl border shadow-md [&>svg]:text-text'}`}
+              >
+                <MdOutlineAdminPanelSettings
+                  className={`${iconStyle} size-4`}
+                />
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>
