@@ -13,7 +13,7 @@ export default function LoungeTabNavigation() {
 
   const modifyProjectId = searchParams.get('modifyProject');
 
-  const handelChangeValue = useCallback(
+  const handleChangeValue = useCallback(
     (type: string) => {
       updateQueryParams(searchParams, setSearchParams, 'ptype', type);
     },
@@ -30,7 +30,7 @@ export default function LoungeTabNavigation() {
     <TabNavigation
       selectValue={ptype ?? 'ALL'}
       tabList={TAB_LIST}
-      onChangeValue={handelChangeValue}
+      onChangeValue={handleChangeValue}
     >
       <div
         className={`box-border cursor-pointer justify-center whitespace-pre px-4 pb-[19px] ${ptype === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}

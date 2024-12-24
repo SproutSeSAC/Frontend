@@ -4,8 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
 import {
-  useGetAuthorizedEmailsByCourse,
   useGetCreatedCourseCalendar,
+  useGetManagerEmailListByCourse,
 } from '@/services/schedule/calendarQueries';
 
 import { managerAndAdminRolesObj } from '@/constants';
@@ -32,7 +32,7 @@ export default function CreateCalendarButton({
   const { alert, hideDialog } = useDialogContext();
 
   const { data: authorizedEmailList } =
-    useGetAuthorizedEmailsByCourse(courseId);
+    useGetManagerEmailListByCourse(courseId);
 
   const { calendarId: sproutCalendarId = '' } =
     useGetCreatedCourseCalendar(courseId).data || {};

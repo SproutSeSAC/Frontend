@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
@@ -23,6 +27,7 @@ import {
   Option,
   SpecialLectureOrEventValue,
 } from '@/types';
+import { isManagerAndAdmin } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -186,6 +191,14 @@ export default function NoticeForm() {
     }
     return onChange(courseIds);
   };
+
+  const { data: { role } = initialUserProfile } = useGetUserProfile();
+
+  useEffect(() => {
+    if (!isManagerAndAdmin(role)) {
+      navigate(-1);
+    }
+  }, [navigate, role]);
 
   return (
     <>

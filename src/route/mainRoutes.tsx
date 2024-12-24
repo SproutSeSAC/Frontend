@@ -15,6 +15,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'));
 const Schedule = lazy(() => import('@/pages/Schedule'));
 const Store = lazy(() => import('@/pages/Store'));
 const StoreDetail = lazy(() => import('@/pages/StoreDetail'));
+const AdminPage = lazy(() => import('@/pages/AdminPage'));
 
 const mainRoutes: RouteObject[] = [
   {
@@ -38,6 +39,10 @@ const mainRoutes: RouteObject[] = [
             element: <NoticeDetail />,
           },
         ],
+      },
+      {
+        path: 'admin',
+        element: <AdminPage />,
       },
       {
         path: 'mypage',

@@ -176,32 +176,43 @@ export const useCreateEventsForMultipleCalendars = (
   });
 };
 
-export const useEditEventsForMultipleCalendars = (
+export const useGrantAcl = (
   options?: UseMutationOptions<
     unknown,
     Error,
-    { calendarId: string; events: GoogleCalendarApiDto.PostEvent[] }[]
+    { calendarId: string; hasNotAclEmailList: string[] }
   >,
 ) => {
-  const editEventsForMultipleCalendars = async (
-    data: { calendarId: string; events: GoogleCalendarApiDto.PostEvent[] }[],
-  ) => {
+  const grantAclByRole = async (params: {
+    calendarId: string;
+    hasNotAclEmailList: string[];
+  }) => {
+    const { calendarId, hasNotAclEmailList } = params;
+
     try {
-      const promises = data.flatMap(({ calendarId, events }) =>
-        events.map(event =>
-          axiosCalendarInstance.post(`/calendars/${calendarId}/events`, event),
-        ),
+      await Promise.all(
+        hasNotAclEmailList.map(async email => {
+          const managerAclData = {
+            role: 'owner',
+            scope: {
+              type: 'user',
+              value: email,
+            },
+          };
+          return axiosCalendarInstance.post(
+            `/calendars/${calendarId}/acl`,
+            managerAclData,
+          );
+        }),
       );
-      await Promise.all(promises);
     } catch (error) {
-      console.error('구글 캘린더에 일정 수정 중 에러 발생:', error);
-      throw error;
+      console.error('일정관리 권한 부여 중 에러 발생', error);
     }
   };
 
   return useMutation({
-    mutationFn: editEventsForMultipleCalendars,
-    mutationKey: ['editEventsForMultipleCalendars'],
+    mutationFn: grantAclByRole,
+    mutationKey: ['useGrantAcl'],
     ...options,
   });
 };

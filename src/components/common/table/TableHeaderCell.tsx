@@ -23,7 +23,7 @@ export default function TableHeaderCell({
       className={`border-b border-gray3 px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
     >
       {name !== '체크박스' && (
-        <span className="font-normal text-gray1">{name}</span>
+        <span className="font-normal tracking-tighter text-gray1">{name}</span>
       )}
       {Icon && (
         <button onClick={onIconClick}>
