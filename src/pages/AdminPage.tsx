@@ -11,7 +11,7 @@ const ADMIN_TAB = 'adminTab';
 
 type TabType = 'calendar-acl' | 'course-management';
 
-export default function Admin() {
+export default function AdminPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const tabList: { text: string; type: TabType }[] = [
