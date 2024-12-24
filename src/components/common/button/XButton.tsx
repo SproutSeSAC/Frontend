@@ -20,7 +20,7 @@ export default function XButton({
       onClick={onDeleteClick}
       className={className}
     >
-      <BsX className={`size-5 text-white ${iconClassName}`} />
+      <BsX className={`size-5 ${iconClassName}`} />
     </button>
   );
 }

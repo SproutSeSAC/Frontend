@@ -24,7 +24,7 @@ export default function UserNameImageCard() {
   };
 
   return (
-    <div className="relative flex w-[45%] max-w-[305px] items-center gap-8 rounded-xl bg-oliveGreen1 px-6 py-10">
+    <div className="relative flex items-center gap-8 rounded-xl bg-oliveGreen1 px-6 py-10 shadow-card">
       <UserImage imgUrl={imgUrl} className="size-[100px]" />
 
       <div className="flex flex-col gap-2">
