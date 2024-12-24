@@ -1,8 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
-import Header from './Header';
-
 import { useCalendarData } from '@/hooks';
+import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
@@ -31,8 +30,7 @@ export default function NoticeLayout() {
           events={fullCalendarEvents}
           courseEvents={fullCalendarCourseEvents}
         />
-
-        <NoticeListSideBox title="최근 본 공지사항" />
+        <NoticeListSideBox title="이번주 공지사항" />
       </SideView>
     </>
   );

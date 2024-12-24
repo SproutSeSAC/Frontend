@@ -1,10 +1,15 @@
 import { useCallback } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 import {
   useDeleteNotice,
   usePostNoticeComment,
+  usePostNoticeScrap,
 } from '@/services/notice/noticeMutations';
 import {
   useGetNoticeCommentList,
@@ -15,10 +20,12 @@ import { RolesObj, noticeCategoryDisplay } from '@/constants';
 import {
   useDialogContext,
   useHandleComment,
+  useHandleOnScrap,
   useHandlePost,
   useSubmitNotice,
 } from '@/hooks';
-import { getColorByRole, isTrainee } from '@/utils';
+import { NoticeDto } from '@/types';
+import { getColorByRole, isPreTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import BackButton from '@/components/common/button/BackButton';
@@ -36,6 +43,8 @@ export default function NoticeDetail() {
 
   const { showDialog } = useDialogContext();
 
+  const { data: userProfile = initialUserProfile } = useGetUserProfile();
+
   const { data: noticeDetail } = useGetNoticeDetail(noticeId);
 
   const { mutateAsync: postNoticeComment } = usePostNoticeComment(noticeId);
@@ -51,9 +60,21 @@ export default function NoticeDetail() {
     invalidateQueryKeys: ['useGetNoticeCommentList'],
   });
 
-  const { actions: postActions } = useHandlePost<{
-    noticeId: number;
-  }>({
+  const { mutateAsync: postNoticeScrap } = usePostNoticeScrap();
+
+  const getScrapResult = useCallback(async () => {
+    return postNoticeScrap({ noticeId: noticeDetail?.id || noticeId });
+  }, [postNoticeScrap, noticeDetail?.id, noticeId]);
+
+  const { onScrapClick } = useHandleOnScrap({
+    getScrapResult,
+    invalidateQueryKeys: ['useGetNoticeDetail'],
+  });
+
+  const { actions } = useHandlePost<
+    { noticeId: number },
+    NoticeDto.GetNoticeDetail
+  >({
     postId: { noticeId },
     postType: '공지사항을',
     handleDelete: {
@@ -61,58 +82,73 @@ export default function NoticeDetail() {
       navigateTo: '/notice',
     },
     handleEdit: {
-      navigateTo: `/notice?roleType=EDIT&modifyNotice=${noticeId}`,
+      detail: noticeDetail,
+      navigateTo: `/notice?tab=EDIT&modifyNotice=${noticeId}`,
     },
     invalidateQueryKeys: ['useGetInfiniteNoticeList'],
   });
 
-  const getActions = useCallback(() => {
-    const actions = [];
+  const applySession = useCallback(() => {
+    if (
+      noticeDetail &&
+      !isPreTrainee(noticeDetail.writer.role) &&
+      findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
+    ) {
+      const {
+        sessions,
+        isPhoneNumberRequired,
+        participantCapacity, //
+      } = noticeDetail;
 
-    if (noticeDetail?.meetingType === 'ONLINE') {
-      actions.push({
-        label: 'Zoom',
-        onClick: () => {
-          window.location.href = noticeDetail?.meetingPlace || '';
-        },
-        className: 'bg-gray2',
-      });
+      if ((sessions?.length || 0) > 0 && participantCapacity) {
+        if (sessions?.[0]?.currentStatus === null) {
+          const actionToApply = {
+            label: '참여하기',
+            onClick: () => {
+              showDialog({
+                key: 'APPLICATION-NOTICE',
+                element: (
+                  <NoticeModal
+                    participantCapacity={0}
+                    sessions={sessions ?? []}
+                    isPhoneNumberRequired={isPhoneNumberRequired ?? false}
+                  />
+                ),
+              });
+            },
+            className: 'bg-oliveGreen1',
+          };
+          return [actionToApply];
+        }
+        const applicationComplete = {
+          label: '신청 완료',
+          className: 'bg-vividGreen1',
+          disabled: true,
+          onClick: () => {}, // NOTE: 마이페이지 신청내역으로 이동시키기
+        };
+        return [applicationComplete];
+      }
     }
-    if (noticeDetail && !isTrainee(noticeDetail.writer.role)) {
-      actions.push({
-        label: '참여하기',
-        onClick: async () => {
-          await showDialog({
-            key: 'APPLICATION-NOTICE',
-            element: (
-              <NoticeModal
-                sessions={noticeDetail?.sessions || []}
-                isPhoneNumberRequired={
-                  noticeDetail?.isPhoneNumberRequired ?? false
-                }
-              />
-            ),
-          });
-        },
-        className: 'bg-oliveGreen1',
-      });
-    }
-    return actions;
-  }, [noticeDetail, showDialog]);
+    return undefined;
+  }, [findCurrNotice, noticeDetail, showDialog]);
+
+  const navigate = useNavigate();
+
+  const onBackClick = () => navigate('/notice');
 
   return (
-    <div className="w-full">
-      <BackButton />
+    <main className="flex w-full">
+      <BackButton onClick={onBackClick} />
 
       <div className="w-full">
-        <div className="w-full px-6 pb-[45px] pt-5">
+        <section className="w-full px-6 pb-[45px] pt-5">
           <header className="flex items-center justify-between">
             <h1 className="text-[32px] font-semibold">
               {noticeDetail?.title || '-'}
             </h1>
             <FavoriteButton
               isFavorite={noticeDetail?.isScraped ?? false}
-              onClick={() => {}}
+              onClick={onScrapClick}
               size={24}
             />
           </header>
@@ -130,27 +166,32 @@ export default function NoticeDetail() {
             {noticeDetail?.noticeType && (
               <Tag
                 color="gray"
-                size="medium"
+                size="big"
                 text={noticeCategoryDisplay[noticeDetail?.noticeType]}
-                className="w-fit"
+                className="px-[10px] py-[5px]"
               />
             )}
-            <div className="group relative ml-auto flex items-center justify-center">
-              <button className="px-2">
-                <IoEllipsisHorizontalSharp className="size-8 text-oliveGreen1" />
-              </button>
-              <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
-                <ul className="flex w-[90px] flex-col items-center gap-2 rounded-md bg-oliveGreen1 px-2 py-3 shadow-card">
-                  {postActions.map(action => (
-                    <li key={action.label}>
-                      <button onClick={action.onClick}>
-                        <span className="text-white">{action.label}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+            {noticeDetail?.writer.userId === userProfile.userId && (
+              <div className="group relative ml-auto flex items-center justify-center">
+                <button className="px-2">
+                  <IoEllipsisHorizontalSharp className="size-7 text-gray1" />
+                </button>
+                <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
+                  <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
+                    {actions.map(action => (
+                      <li key={action.label}>
+                        <button
+                          onClick={action.onClick}
+                          className={action.className}
+                        >
+                          {action.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {noticeDetail?.noticeType &&
@@ -160,12 +201,12 @@ export default function NoticeDetail() {
 
           <PostDetailsTemplate
             nickname={noticeDetail?.writer.userName || '-'}
-            createdAt={noticeDetail?.applicationStartDateTime}
+            createdAt={noticeDetail?.createdAt}
             viewCount={noticeDetail?.viewCount || 0}
             description={noticeDetail?.content || '-'}
-            actions={getActions()}
+            actions={applySession()}
           />
-        </div>
+        </section>
 
         <CommentTemplate
           commentList={(commentList || []).map(
@@ -180,6 +221,6 @@ export default function NoticeDetail() {
           onSubmit={handleSubmitComment}
         />
       </div>
-    </div>
+    </main>
   );
 }

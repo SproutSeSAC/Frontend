@@ -13,11 +13,6 @@ import {
   useGetLoungeProjectsDetail,
 } from '@/services/lounge/loungeQueries';
 
-import Title from '../../common/Title';
-import SquareButton from '../../common/button/SquareButton';
-import LoungeTextEditor from './LoungeTextEditor';
-import { loungeFormSchema } from './loungeFormSchema';
-
 import { PtypeList, progressList } from '@/constants';
 import { recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext, usePageBlocker, useTechStackList } from '@/hooks';
@@ -34,6 +29,8 @@ import {
 import { BsLink45Deg } from 'react-icons/bs';
 
 import CircleNumber from '@/components/common/CircleNumber';
+import Title from '@/components/common/Title';
+import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
@@ -41,6 +38,8 @@ import ControllerDateTime from '@/components/common/input/ControllerDateTime';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import ContactMethodContainer from '@/components/lounge/form/ContactMethodContainer';
+import LoungeTextEditor from '@/components/lounge/form/LoungeTextEditor';
+import { loungeFormSchema } from '@/components/lounge/form/loungeFormSchema';
 
 const defaultInputStyle =
   'rounded-2xl border border-solid px-[15px] py-4 bg-white';

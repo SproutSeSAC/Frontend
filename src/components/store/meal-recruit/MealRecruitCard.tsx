@@ -1,12 +1,10 @@
 import { useCallback } from 'react';
 
-import { dateFormat } from '@/utils/dateFormat';
-
-import MealRecruitCardModal from './MealRecruitCardModal';
-
 import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
+import { formatDate } from '@/utils';
 
+import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import UserImage from '@/components/user/UserImage';
 
 export default function MealRecruitCard({
@@ -48,7 +46,7 @@ export default function MealRecruitCard({
             </span>
             <span className={`${isDisabled && 'text-gray1'}`}>
               {slideItem
-                ? `${dateFormat(slideItem.appointmentTime, 'yyyy.MM.dd a h시')}`
+                ? `${formatDate(slideItem.appointmentTime, 'yyyy.MM.dd a h시')}`
                 : '-'}
             </span>
           </p>

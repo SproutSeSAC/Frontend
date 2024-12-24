@@ -1,8 +1,7 @@
-import { dateFormat } from '@/utils/dateFormat';
-
 import { progressDisplay } from '@/constants';
 import { ContactMethodDisplayKey, Option, Progress } from '@/types';
 import { DetailPostTechStack } from '@/types/lounge/loungeDto';
+import { formatDate } from '@/utils';
 
 import Tag from '@/components/common/tag/Tag';
 import ContactMethodDetail from '@/components/lounge/detail/ContactMethodDetail';
@@ -33,7 +32,7 @@ export default function LoungeApplicationInfoTemplate({
       type: '기간',
       data:
         startPeriod && endPeriod
-          ? `${dateFormat(startPeriod)} ~ ${dateFormat(endPeriod)}`
+          ? `${formatDate(startPeriod)} ~ ${formatDate(endPeriod)}`
           : '-',
     },
     {

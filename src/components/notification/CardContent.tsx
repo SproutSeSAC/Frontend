@@ -1,6 +1,6 @@
-import UserImage from '../user/UserImage';
-
 import { BsX } from 'react-icons/bs';
+
+import UserImage from '@/components/user/UserImage';
 
 interface CardContentProps {
   item: number;

@@ -2,8 +2,7 @@ import { useCallback } from 'react';
 
 import { UseMutateAsyncFunction, useQueryClient } from '@tanstack/react-query';
 
-import { useDialogContext } from '@/hooks/common/useDialogContext';
-
+import { useDialogContext } from '@/hooks';
 import { AxiosError } from 'axios';
 
 interface UseHandleCommentProps {

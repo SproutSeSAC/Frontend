@@ -1,9 +1,7 @@
-import { dateFormat } from '@/utils/dateFormat';
-
-import SquareButton from '../button/SquareButton';
-
+import { formatDate } from '@/utils';
 import { useForm } from 'react-hook-form';
 
+import SquareButton from '@/components/common/button/SquareButton';
 import UserImage from '@/components/user/UserImage';
 
 export interface CommentItem {
@@ -68,7 +66,7 @@ export default function CommentTemplate({
             <p>{content}</p>
             <footer className="flex gap-10 text-gray1">
               <div className="flex gap-4">
-                <div>{dateFormat(createdAt, 'yyyy.MM.dd HH:mm')}</div>
+                <div>{formatDate(createdAt, 'yyyy.MM.dd HH:mm')}</div>
               </div>
             </footer>
           </li>

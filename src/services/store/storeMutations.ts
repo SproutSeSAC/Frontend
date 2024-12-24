@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { axiosInstance } from '../axiosInstance';
+import { axiosInstance } from '@/services/axiosInstance';
 
 import { PostStoreReviewRequest } from '@/types/store/storeDto';
 import { PostMeal, PutMealPost } from '@/types/store/storeMealPostDto';

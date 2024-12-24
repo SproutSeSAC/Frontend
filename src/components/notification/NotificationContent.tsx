@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import CardContent from './CardContent';
+import CardContent from '@/components/notification/CardContent';
 
 export default function NotificationContent() {
   return (

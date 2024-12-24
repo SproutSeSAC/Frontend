@@ -2,11 +2,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { UseMutateAsyncFunction, useQueryClient } from '@tanstack/react-query';
 
-import { useDialogContext } from '@/hooks/common/useDialogContext';
-
+import { useDialogContext } from '@/hooks';
 import { AxiosError } from 'axios';
 
-interface UseHandlePostProps<T> {
+interface UseHandlePostProps<T, K> {
   postId: T;
   postType: '프로젝트를' | '공지사항을';
   handleDelete?: {
@@ -14,18 +13,19 @@ interface UseHandlePostProps<T> {
     navigateTo: string;
   };
   handleEdit?: {
+    detail?: K;
     navigateTo: string;
   };
   invalidateQueryKeys: string[];
 }
 
-export const useHandlePost = <T>({
+export const useHandlePost = <T, K = void>({
   postId,
   postType,
   handleDelete,
   handleEdit,
   invalidateQueryKeys,
-}: UseHandlePostProps<T>) => {
+}: UseHandlePostProps<T, K>) => {
   const { showToast, hideDialog, alert } = useDialogContext();
 
   const queryClient = useQueryClient();
@@ -71,22 +71,21 @@ export const useHandlePost = <T>({
 
   const handleEditPost = () => {
     if (handleEdit?.navigateTo) {
-      navigate(handleEdit.navigateTo);
+      navigate(handleEdit.navigateTo, { state: handleEdit?.detail || null });
     }
   };
 
+  /* Actions */
   const deleteAction = {
     label: '삭제하기',
     onClick: handleDeletePost,
-    className: 'bg-gray2',
+    className: 'font-semibold text-red-500 text-[15px]',
   };
-
   const editAction = {
     label: '수정하기',
     onClick: handleEditPost,
-    className: 'bg-oliveGreen1',
+    className: 'font-semibold text-[15px]',
   };
-
   const actions = [
     ...(handleDelete ? [deleteAction] : []),
     ...(handleEdit ? [editAction] : []),

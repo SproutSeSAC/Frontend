@@ -1,7 +1,7 @@
-import { RefObject, useEffect } from 'react';
+import { RefObject, useCallback, useEffect } from 'react';
 
 interface UseObserverProps {
-  onIntersect: (entry: IntersectionObserverEntry) => void;
+  runFucAtIntersect: () => void;
   root?: Element | null;
   rootMargin?: string;
   target: RefObject<Element>;
@@ -9,12 +9,21 @@ interface UseObserverProps {
 }
 
 export const useObserver = ({
-  onIntersect,
+  runFucAtIntersect,
   root = null,
   rootMargin = '0px',
   target,
   threshold = 1.0,
 }: UseObserverProps) => {
+  const onIntersect = useCallback(
+    (entry: IntersectionObserverEntry) => {
+      if (entry.isIntersecting) {
+        runFucAtIntersect();
+      }
+    },
+    [runFucAtIntersect],
+  );
+
   useEffect(() => {
     const observedDOM = target.current;
     let observer: IntersectionObserver | undefined;

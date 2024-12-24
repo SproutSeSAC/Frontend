@@ -2,19 +2,16 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import {
   usePostIncrementViewCount,
   usePostScrapProject,
 } from '@/services/lounge/loungeMutations';
 
-import { dateFormat } from '@/utils/dateFormat';
-
 import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
-import { useDialogContext } from '@/hooks';
+import { useHandleOnScrap } from '@/hooks';
 import { Ptype } from '@/types';
 import { Lounge } from '@/types/lounge/loungeDto';
+import { formatDate } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -34,35 +31,17 @@ const getTagColor = (tag: Ptype) => {
 };
 
 export default function LoungePostCard({ card }: LoungePostCardProps) {
-  const queryClient = useQueryClient();
-
-  const { showToast } = useDialogContext();
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
   const { mutateAsync: postScrapProject } = usePostScrapProject();
 
-  const onScrapProject = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.preventDefault();
-      e.stopPropagation();
+  const getScrapResult = useCallback(async () => {
+    return postScrapProject({ projectId: card.id });
+  }, [card.id, postScrapProject]);
 
-      try {
-        const result = await postScrapProject({ projectId: card.id });
-
-        if (result) {
-          showToast('게시물을 찜했어요!', 1000);
-        } else {
-          showToast('게시물 찜하기를 취소 했어요!', 1000);
-        }
-
-        queryClient.invalidateQueries({
-          queryKey: ['useGetLoungeProjects'],
-        });
-      } catch (err) {
-        showToast('게시물 찜하기를 실패했어요');
-      }
-    },
-    [card.id, postScrapProject, queryClient, showToast],
-  );
+  const { onScrapClick } = useHandleOnScrap({
+    getScrapResult,
+    invalidateQueryKeys: ['useGetLoungeProjects'],
+  });
 
   const onViewCount = useCallback(async () => {
     try {
@@ -91,7 +70,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           </div>
           <FavoriteButton
             isFavorite={card.isScraped}
-            onClick={onScrapProject}
+            onClick={onScrapClick}
             size={20}
           />
         </div>
@@ -114,8 +93,8 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           <span className="lounge-text-divider leading-4 text-gray2">기간</span>
 
           <span>
-            {dateFormat(card.recruitmentStart)} ~{' '}
-            {dateFormat(card.recruitmentEnd)}
+            {formatDate(card.recruitmentStart)} ~{' '}
+            {formatDate(card.recruitmentEnd)}
           </span>
         </div>
 

@@ -13,9 +13,9 @@ export const STATUS_PARTICIPANT = 'PARTICIPANT';
 export const STATUS_REJECT = 'REJECT';
 
 export type SessionStatus =
-  | typeof STATUS_ACTIVE
-  | typeof STATUS_INACTIVE
-  | typeof STATUS_END;
+  | typeof STATUS_WAIT
+  | typeof STATUS_PARTICIPANT
+  | typeof STATUS_REJECT;
 
 // 캠퍼스 정보
 export const CAMPUS_SEONGBUK = 'SEONGBUK';

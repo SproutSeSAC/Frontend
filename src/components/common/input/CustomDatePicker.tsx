@@ -1,5 +1,4 @@
-import { dateFormat } from '@/utils/dateFormat';
-
+import { formatDate } from '@/utils';
 import { ko } from 'date-fns/locale';
 import DatePicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -126,7 +125,7 @@ export default function CustomDatePicker({
           dateFormat="YYYY년 MM월 dd일"
           locale={ko}
           placeholderText={
-            placeholder || `${dateFormat('', 'yyyy년 MM월 dd일')}`
+            placeholder || `${formatDate('', 'yyyy년 MM월 dd일')}`
           }
           selected={currentDate}
           onChange={onChange}

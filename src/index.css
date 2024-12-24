@@ -34,22 +34,91 @@
     background-color: #f5f5f7;
     color: #2b2b2b;
 
-    #toolBar {
-      @apply rounded-t-lg border border-b-0 border-solid border-gray4 bg-white py-[15px];
+    /* 이모지 컨테이너 CSS */
+    #quill-editor {
+      @apply flex flex-row-reverse flex-wrap rounded-xl border border-gray4 bg-white pt-2;
     }
-
+    #quill-editor > div:first-child {
+      @apply flex flex-1 items-center justify-start pt-1.5;
+    }
+    #quill-editor > div:nth-child(2) {
+      @apply flex-shrink-0 border-0;
+    }
+    #quill-editor > div:nth-child(3) {
+      flex: 1 0 100%;
+    }
+    /* Quill 에디터 CSS */
     .ql-container.ql-snow {
-      @apply rounded-b-lg border border-solid border-gray4 bg-white;
+      @apply border-0;
     }
     .ql-editor {
-      @apply h-[523px];
-    }
-    .ql-editor.ql-blank::before {
-      @apply text-base not-italic text-gray2;
-    }
-    .ql-container,
-    .ql-editor p[data-value='medium']::before {
-      @apply text-base;
+      @apply mt-2 border-t text-base;
+      .ql-size-small {
+        font-size: 14px;
+      }
+      .ql-size-large {
+        font-size: 24px;
+      }
+      .ql-size-huge {
+        font-size: 32px;
+      }
+      p {
+        line-height: 1.4;
+      }
+      blockquote {
+        line-height: 1.4;
+        margin: 8px 0;
+        padding-left: 30px;
+        text-align: start !important;
+        border-left: 4px solid #cacaca;
+      }
+
+      ol {
+        margin-bottom: 5px;
+      }
+      li {
+        padding: 3px 0;
+        .ql-ui:before {
+          text-align: center;
+        }
+      }
+      li[data-list='checked'] {
+        .ql-ui:before {
+          content: '☑️';
+        }
+      }
+      li[data-list='unchecked'] {
+        .ql-ui:before {
+          font-size: 17px;
+        }
+      }
+      li.ql-indent-1:not(.ql-direction-rtl) {
+        padding-left: 40px;
+      }
+      li.ql-indent-2:not(.ql-direction-rtl) {
+        padding-left: 80px;
+      }
+      li.ql-indent-3:not(.ql-direction-rtl) {
+        padding-left: 120px;
+      }
+      li.ql-indent-4:not(.ql-direction-rtl) {
+        padding-left: 160px;
+      }
+      li.ql-indent-5:not(.ql-direction-rtl) {
+        padding-left: 200px;
+      }
+      li.ql-indent-6:not(.ql-direction-rtl) {
+        padding-left: 240px;
+      }
+      li.ql-indent-7:not(.ql-direction-rtl) {
+        padding-left: 280px;
+      }
+      li.ql-indent-8:not(.ql-direction-rtl) {
+        padding-left: 320px;
+      }
+      a {
+        @apply text-blue-500;
+      }
     }
 
     /* DatePicker CSS */

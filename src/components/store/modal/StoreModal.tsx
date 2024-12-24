@@ -5,11 +5,10 @@ import { createPortal } from 'react-dom';
 import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetStoreDetail } from '@/services/store/storeQueries';
 
-import StoreModalReview from './StoreModalReview';
-
 import StoreCard from '@/components/store/StoreCard';
 import StoreModalHeader from '@/components/store/modal/StoreModalHeader';
 import StoreModalMenuList from '@/components/store/modal/StoreModalMenuList';
+import StoreModalReview from '@/components/store/modal/StoreModalReview';
 import StoreModalTabList from '@/components/store/modal/StoreModalTabList';
 
 interface StoreModalProps {

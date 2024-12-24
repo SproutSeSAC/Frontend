@@ -4,10 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostMeal } from '@/services/store/storeMutations';
 
-import MealRecruitDateSelectBox from './MealRecruitDateSelectBox';
-import { dateOptions } from './mealRecruitDropdownOptions';
-import { mealRecruitSchema } from './mealRecruitSchema';
-
 import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext } from '@/hooks';
 import { PostMeal } from '@/types/store/storeMealPostDto';
@@ -20,6 +16,9 @@ import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
+import MealRecruitDateSelectBox from '@/components/store/meal-recruit/MealRecruitDateSelectBox';
+import { dateOptions } from '@/components/store/meal-recruit/mealRecruitDropdownOptions';
+import { mealRecruitSchema } from '@/components/store/meal-recruit/mealRecruitSchema';
 
 const defaultStyle =
   'rounded-xl border border-solid border-gray2 px-6 py-[13px] text-lg';

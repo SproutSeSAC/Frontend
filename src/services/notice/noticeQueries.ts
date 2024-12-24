@@ -4,7 +4,9 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { SessionStatus } from '@/constants/serviceConstant';
 import { NoticeDto, NoticeFilter } from '@/types';
+import { isInThisWeek } from '@/utils';
 import { AxiosResponse } from 'axios';
 
 import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
@@ -46,14 +48,15 @@ export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
         },
       );
 
-      const nextPage =
-        data.notices.length === filterParams.size ? pageParam + 1 : pageParam;
+      const hasNextPage = !data.isLastPage;
+
+      const nextPage = hasNextPage ? pageParam + 1 : undefined;
 
       return {
         notices: data.notices,
         currentPage: pageParam,
         offset: (pageParam - 1) * filterParams.size,
-        nextPage: pageParam < 2 ? nextPage : undefined, // NOTE: 이 부분 totalCount 속성 서버 변경 요청 예정
+        nextPage,
       };
     },
     getNextPageParam: lastPage => lastPage.nextPage,
@@ -61,25 +64,28 @@ export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
   });
 };
 
-export const useGetLatestNoticeList = () => {
-  const getLatestNotice = async () => {
+export const useGetThisWeekNoticeList = () => {
+  const getThisWeekNotice = async () => {
     const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
       `/notices`,
-      { params: { page: 1, size: 6 } },
+      { params: { page: 1, size: 20 } },
     );
-    return data.notices;
+    const thisWeekNotice = data.notices
+      .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
+      .slice(0, 6);
+    return thisWeekNotice;
   };
 
   return useQuery({
-    queryKey: ['useGetLatestNoticeList'],
-    queryFn: getLatestNotice,
+    queryKey: ['useGetThisWeekNoticeList'],
+    queryFn: getThisWeekNotice,
     retry: false,
   });
 };
 
 export const useGetNoticeDetail = (noticeId: number) => {
   return useQuery({
-    queryKey: ['useGetNoticeDetail'],
+    queryKey: ['useGetNoticeDetail', noticeId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<NoticeDto.GetNoticeDetail>(
         `/notices/${noticeId}`,
@@ -96,7 +102,37 @@ export const useGetNoticeCommentList = (noticeId: number) => {
     return data?.comments;
   };
   return useQuery({
-    queryKey: ['useGetNoticeCommentList'],
+    queryKey: ['useGetNoticeCommentList', noticeId],
     queryFn: getComment,
+  });
+};
+
+export const useGetSessionStatus = ({
+  sessionId,
+  page = 1,
+  size = 10,
+  searchParticipantStatus = 'WAIT',
+}: {
+  sessionId: number;
+  page?: number;
+  size?: number;
+  searchParticipantStatus?: SessionStatus;
+}) => {
+  const getSessionStatus = async () => {
+    const { data } = await axiosInstance.get(`/notices/sessions/${sessionId}`, {
+      params: {
+        sessionId,
+        page,
+        size,
+        searchParticipantStatus,
+      },
+    });
+    return data;
+  };
+  return useQuery({
+    queryKey: ['useGetSessionStatus', sessionId],
+    queryFn: getSessionStatus,
+    enabled: !!Number(sessionId),
+    retry: false,
   });
 };
