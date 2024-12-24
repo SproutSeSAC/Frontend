@@ -1,8 +1,15 @@
-import { useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { updateQueryParams } from '@/utils';
+import { isAdmin, updateQueryParams } from '@/utils';
 
 import CalendarAclTable from '@/components/admin/CalendarAclTable';
 import TabNavigation from '@/components/common/TabNavigation';
@@ -24,6 +31,16 @@ export default function AdminPage() {
   const handleChangeValue = (type: TabType) => {
     updateQueryParams(searchParams, setSearchParams, ADMIN_TAB, type);
   };
+
+  const { data: { role } = initialUserProfile } = useGetUserProfile();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAdmin(role)) {
+      navigate(-1);
+    }
+  }, [navigate, role]);
 
   return (
     <MainView>
