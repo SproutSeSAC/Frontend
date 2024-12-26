@@ -122,8 +122,6 @@ export default function NoticeModal({
                       const disabled =
                         participantCapacity <= session.participantCount;
 
-                      console.log(session, participantCapacity);
-
                       return (
                         <li key={sessionId}>
                           <SessionSelectBox

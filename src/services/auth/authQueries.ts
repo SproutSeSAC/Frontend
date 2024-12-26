@@ -45,6 +45,7 @@ export const initialUserProfile: UserProfileDto.Get = {
   nickname: '',
   imgUrl: '',
   role: 'TRAINEE',
+  profileImageUrl: '',
 };
 
 // 나의 회원 정보 얻기

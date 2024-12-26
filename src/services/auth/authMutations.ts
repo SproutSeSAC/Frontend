@@ -31,6 +31,24 @@ export const useUpdateUserProfile = (
   });
 };
 
+// 나의 프로필 이미지 업데이트하기
+export const useUpdateProfileImage = (
+  options?: UseMutationOptions<
+    unknown,
+    Error,
+    UserProfileDto.UpdateProfileImage
+  >,
+) => {
+  const updateProfileImage = (formData: UserProfileDto.UpdateProfileImage) =>
+    axiosInstance.put('/mypage/updateProfileUrl', formData);
+
+  return useMutation({
+    mutationFn: updateProfileImage,
+    mutationKey: ['useUpdateProfileImage'],
+    ...options,
+  });
+};
+
 export const leaveMemberShip = () => {
   return axiosInstance.put('/login/leave');
 };

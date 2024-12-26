@@ -4,6 +4,7 @@ export namespace UserProfileDto {
   export type Post = SignUpUserProfile;
   export type Get = UserProfile;
   export type Update = UpdateableUserProfile;
+  export type UpdateProfileImage = UpdateableProfileImage;
 }
 
 type SignUpUserProfile = {
@@ -37,12 +38,17 @@ type UserProfile = {
   imgUrl: string;
   role: KeyOfRole;
   userId: number;
+  profileImageUrl: string;
 };
 
 type UpdateableUserProfile = Partial<{
   nickname: string;
-  imgUrl: string;
+  profileImageUrl: string;
   updatedDomainIdList: number[];
   updatedJobIdList: number[];
   updatedTechStackIdList: number[];
 }>;
+
+type UpdateableProfileImage = {
+  profileUrl: string;
+};
