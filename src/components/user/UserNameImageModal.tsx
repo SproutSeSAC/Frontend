@@ -2,8 +2,6 @@ import { useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useHandleImage } from '@/hooks/common/useHandleImage';
-
 import {
   useUpdateProfileImage,
   useUpdateUserProfile,
@@ -13,8 +11,7 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
-import { useDialogContext } from '@/hooks';
-// import { UserProfileDto } from '@/types';
+import { useDialogContext, useHandleImage } from '@/hooks';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';

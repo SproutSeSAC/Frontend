@@ -5,8 +5,8 @@ import { getByteSizeNum } from '@/utils/getByteSizeNum';
 import axios from 'axios';
 
 type PresignedUrlResponse = {
-  presignedUrl: string; // URL입니다.
-  expirationMinutes: number; // 만료 시간입니다.
+  presignedUrl: string;
+  expirationMinutes: number;
 };
 
 export const useHandleImage = () => {

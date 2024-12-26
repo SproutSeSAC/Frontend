@@ -36,13 +36,13 @@
 
     /* 이모지 컨테이너 CSS */
     #quill-editor {
-      @apply flex flex-row-reverse flex-wrap rounded-xl border border-gray4 bg-white pt-2;
+      @apply flex flex-row-reverse flex-wrap rounded-xl border border-gray4 bg-white pt-1;
     }
     #quill-editor > div:first-child {
-      @apply flex flex-1 items-center justify-start pt-1.5;
+      @apply flex flex-1 items-center justify-start border-b border-gray3 pt-1;
     }
     #quill-editor > div:nth-child(2) {
-      @apply flex-shrink-0 border-0;
+      @apply flex-shrink-0 border-b border-l-0 border-r-0 border-t-0 border-gray3;
     }
     #quill-editor > div:nth-child(3) {
       flex: 1 0 100%;
@@ -52,7 +52,10 @@
       @apply border-0;
     }
     .ql-editor {
-      @apply mt-2 border-t text-base;
+      @apply mt-2 text-base;
+      img {
+        @apply w-[75%];
+      }
       .ql-size-small {
         font-size: 14px;
       }

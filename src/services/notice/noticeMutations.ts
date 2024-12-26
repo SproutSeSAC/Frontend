@@ -90,7 +90,8 @@ export const usePostNoticeScrap = () => {
       const { data } = await axiosInstance.post(
         `/notices/${requestBody.noticeId}/scrap`,
       );
-      return data;
+
+      return data.isScraped;
     },
   });
 };

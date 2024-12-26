@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useHandleImage } from '@/hooks/common/useHandleImage';
-
+import { useHandleImage } from '@/hooks';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import Toolbar from 'quill/modules/toolbar';

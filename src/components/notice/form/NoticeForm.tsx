@@ -109,7 +109,7 @@ export default function NoticeForm() {
   });
 
   const setConditionalKey = (type: NoticeCategoryDisplayKey) => {
-    if (type === 'SPECIAL_LECTURE' || type === 'EVENT') {
+    if (findCurrNotice(type)?.needExtraInfo) {
       reset({ ...specialLectureEventFormValues, ...getValues() });
     } else {
       const {

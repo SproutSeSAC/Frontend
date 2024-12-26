@@ -7,6 +7,7 @@ export { useUpdateProfile } from '@/hooks/useUpdateProfile';
 export { useFilterData } from '@/hooks/common/useFilterData';
 export { useTechStackList } from '@/hooks/common/useTechStackList';
 export { useObserver } from '@/hooks/common/useObserver';
+export { useHandleImage } from '@/hooks/common/useHandleImage';
 
 /* signup */
 export { useHandleSignUp } from '@/hooks/signup/useHandleSignUp';

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-// import { useHandleImage } from '@/hooks/common/useHandleImage';
 import {
   useEditNotice,
   usePostNotice,
@@ -12,12 +11,13 @@ import {
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { noticeCategoryList } from '@/constants';
-import { useCalendarData, useDialogContext } from '@/hooks';
+import { useCalendarData, useDialogContext, useHandleImage } from '@/hooks';
 import {
   GoogleCalendarApiDto,
   NoticeCategoryDisplayKey,
   NoticeDto,
 } from '@/types';
+import { base64ToFile } from '@/utils';
 import { SubmitErrorHandler } from 'react-hook-form';
 
 import { Session } from '@/components/notice/form/ControllerSessions';
@@ -164,13 +164,27 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     }
   };
 
-  // const { getPresignedUrl, uploadImageToS3, base64ToFile } = useHandleImage();
+  const { getPresignedUrl, uploadImageToS3 } = useHandleImage();
 
-  // const handleImagesInContent = async (content: string): Promise<string> => {
-  //   const base64ImageRegex =
-  //     /<img[^>]*src="(data:image\/[^;]+;base64,[^"]+)"[^>]*>/g;
-  // const matches = [...content.matchAll(base64ImageRegex)];
-  // };
+  const handleImagesInContent = async (content: string): Promise<string> => {
+    const base64ImageRegex =
+      /<img[^>]*src="(data:image\/[^;]+;base64,[^"]+)"[^>]*>/g;
+    const matches = [...content.matchAll(base64ImageRegex)];
+    const base64Images = matches.map(match => match[1]);
+    const updatedContent = await base64Images.reduce(
+      async (accPromise, base64Image) => {
+        const acc = await accPromise;
+        const fileName = `${Date.now()}.png`;
+        const file = base64ToFile(base64Image, fileName);
+        const presignedUrl = await getPresignedUrl(file);
+        await uploadImageToS3(presignedUrl, file);
+        const s3Url = presignedUrl.split('?')[0];
+        return acc.replace(base64Image, s3Url);
+      },
+      Promise.resolve(content),
+    );
+    return updatedContent;
+  };
 
   const onSubmit = async (submittedValue: NoticeDto.PostNotice) => {
     const {
@@ -182,28 +196,35 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
       sessions,
     } = submittedValue;
 
-    // const updatedContent = await handleImagesInContent(content);
-
     const sessionsWithNoId = (sessions as Session[])?.map(
       ({ id, ...rest }) => rest,
     );
 
-    if (noticeType === 'SPECIAL_LECTURE' || noticeType === 'EVENT') {
+    const updatedContent = await handleImagesInContent(content);
+
+    const needExtraInfoNoticeType = findCurrNotice(noticeType)?.needExtraInfo;
+    if (needExtraInfoNoticeType) {
       const formValue = {
         ...submittedValue,
-        // content: updatedContent,
         satisfactionSurvey: satisfactionSurvey || '',
         sessions: sessionsWithNoId,
+        content: updatedContent,
       };
       if (props && props.isEditing) {
-        const { noticeId } = props;
-        mutateEditedNotice({ ...formValue, noticeId });
+        mutateEditedNotice({ ...formValue, noticeId: props.noticeId });
       } else {
         mutatePostNotice(formValue);
       }
-    } else {
-      const formValue = { noticeType, title, content, targetCourseIdList };
-      if (props?.isEditing) {
+    }
+
+    if (!needExtraInfoNoticeType) {
+      const formValue = {
+        noticeType,
+        title,
+        content: updatedContent,
+        targetCourseIdList,
+      };
+      if (props && props?.isEditing) {
         mutateEditedNotice({ ...formValue, noticeId: props.noticeId });
       } else {
         mutatePostNotice(formValue);
