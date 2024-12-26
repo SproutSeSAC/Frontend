@@ -7,6 +7,7 @@ import imgUrl from '@/assets/images/faq.png';
 import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { FiChevronDown } from 'react-icons/fi';
 
 import Title from '@/components/common/Title';
 import Faq from '@/components/faq/Faq';
@@ -34,16 +35,31 @@ export default function MyPage() {
     {
       label: '소속 교육과정',
       value: (
-        <ul>
-          {courseList.map(({ courseTitle }) => (
-            <li
+        <div className="flex w-full items-center truncate">
+          {courseList.slice(0, 1).map(({ courseTitle }) => (
+            <span
+              className="w-full overflow-hidden truncate text-end"
               key={courseTitle}
-              className="block max-w-60 overflow-hidden truncate"
             >
               {courseTitle}
-            </li>
+            </span>
           ))}
-        </ul>
+          {courseList.length > 1 && (
+            <div className="group relative">
+              <FiChevronDown className="size-5 group-hover:border" />
+              <div className="absolute top-5 hidden rounded-lg bg-white group-hover:block">
+                {courseList.map(({ courseTitle }) => (
+                  <span
+                    className="w-full overflow-hidden truncate text-end"
+                    key={courseTitle}
+                  >
+                    {courseTitle}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       ),
     },
   ];
@@ -54,14 +70,14 @@ export default function MyPage() {
     <MainView>
       <Header title="마이페이지" />
 
-      <section className="mb-16 grid grid-cols-[280px,430px,450px] gap-x-4">
+      <section className="mb-16 flex gap-x-4 [&>*:first-child]:w-[280px] [&>*:last-child]:w-[30vw] [&>*:last-child]:lg:w-[300px]">
         <UserNameImageCard />
 
-        <ul className="flex flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4 shadow-card">
+        <ul className="flex w-[36vw] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4 shadow-card">
           {userInfoList.map(({ value, label }) => (
             <li
               key={label}
-              className="borer-red-500 flex items-start justify-between py-2.5 font-medium text-white"
+              className="flex w-full items-start justify-between py-2.5 font-medium text-white"
             >
               <span className="mr-3 whitespace-nowrap font-medium text-vividGreen3">
                 {label}:

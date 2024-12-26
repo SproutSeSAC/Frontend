@@ -17,7 +17,7 @@ export default function ApplicationListOfSessionsCard() {
       text: '취소하시겠어요?',
       children: (
         <div className="flex flex-col items-center justify-center">
-          <li className="mb-5 flex max-w-[400px] items-start gap-2">
+          <li className="mb-5 flex items-start gap-2">
             <Tag
               size="medium"
               text="캠퍼스매니저"
@@ -25,7 +25,7 @@ export default function ApplicationListOfSessionsCard() {
               color="pink"
               className="!px-1"
             />
-            <span className="">
+            <span className="max-w-[330px]">
               1세대에게 직접 배우는 안드로이드 앱 개발 1세대에게 직접 배우는
               안드로이드 앱 개발
             </span>
@@ -56,12 +56,11 @@ export default function ApplicationListOfSessionsCard() {
         </Link>
       </div>
 
-      <ul className="mt-2.5 space-y-1.5">
+      <ul className="mt-2.5 w-full space-y-1.5">
         {(
           [
             'CAMPUS_MANAGER',
             'EDU_MANAGER',
-            'JOB_COORDINATOR',
             'JOB_COORDINATOR',
           ] as (keyof ManagerAdminRole)[]
         ).map(item => (
@@ -73,7 +72,7 @@ export default function ApplicationListOfSessionsCard() {
               color={getColorByRole(item)}
               className="!px-1"
             />
-            <span className="overflow-hidden truncate">
+            <span className="w-full overflow-hidden truncate">
               1세대에게 직접 배우는 안드로이드 앱 개발 1세대에게 직접 배우는
               안드로이드 앱 개발
             </span>
