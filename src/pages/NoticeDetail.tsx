@@ -109,7 +109,7 @@ export default function NoticeDetail() {
                 key: 'APPLICATION-NOTICE',
                 element: (
                   <NoticeModal
-                    participantCapacity={0}
+                    participantCapacity={participantCapacity}
                     sessions={sessions ?? []}
                     isPhoneNumberRequired={isPhoneNumberRequired ?? false}
                   />
