@@ -178,7 +178,8 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
         const file = base64ToFile(base64Image, fileName);
         const presignedUrl = await getPresignedUrl(file);
         await uploadImageToS3(presignedUrl, file);
-        const s3Url = presignedUrl.split('?')[0];
+        const url = new URL(presignedUrl);
+        const s3Url = url.origin + url.pathname;
         return acc.replace(base64Image, s3Url);
       },
       Promise.resolve(content),

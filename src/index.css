@@ -54,7 +54,7 @@
     .ql-editor {
       @apply mt-2 text-base;
       img {
-        @apply w-[75%];
+        @apply my-2 w-[70%];
       }
       .ql-size-small {
         font-size: 14px;
