@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -21,6 +23,10 @@ export default function MyPage() {
 
   const { name, email, campusList, courseList } = userProfile;
 
+  const sortedCourseList = useMemo(() => {
+    return courseList.sort((a, b) => (a.courseTitle > b.courseTitle ? 1 : -1));
+  }, [courseList]);
+
   const userInfoList = [
     {
       label: 'E-mail',
@@ -35,30 +41,22 @@ export default function MyPage() {
     {
       label: '소속 교육과정',
       value: (
-        <div className="flex w-full items-center truncate">
-          {courseList.slice(0, 1).map(({ courseTitle }) => (
-            <span
-              className="w-full overflow-hidden truncate text-end"
-              key={courseTitle}
-            >
-              {courseTitle}
+        <div className="peer flex w-full items-center truncate">
+          {courseList.length > 1 ? (
+            sortedCourseList.slice(0, 1).map(({ courseTitle }) => (
+              <span
+                className="w-full overflow-hidden truncate text-end"
+                key={courseTitle}
+              >
+                {courseTitle}
+              </span>
+            ))
+          ) : (
+            <span className="w-full overflow-hidden truncate text-end">
+              {courseList[0].courseTitle}
             </span>
-          ))}
-          {courseList.length > 1 && (
-            <div className="group relative">
-              <FiChevronDown className="size-5 group-hover:border" />
-              <div className="absolute top-5 hidden rounded-lg bg-white group-hover:block">
-                {courseList.map(({ courseTitle }) => (
-                  <span
-                    className="w-full overflow-hidden truncate text-end"
-                    key={courseTitle}
-                  >
-                    {courseTitle}
-                  </span>
-                ))}
-              </div>
-            </div>
           )}
+          {courseList.length > 1 && <FiChevronDown className="size-5" />}
         </div>
       ),
     },
@@ -73,19 +71,41 @@ export default function MyPage() {
       <section className="mb-16 flex gap-x-4 [&>*:first-child]:w-[280px] [&>*:last-child]:w-[30vw] [&>*:last-child]:lg:w-[300px]">
         <UserNameImageCard />
 
-        <ul className="flex w-[36vw] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4 shadow-card">
-          {userInfoList.map(({ value, label }) => (
-            <li
-              key={label}
-              className="flex w-full items-start justify-between py-2.5 font-medium text-white"
-            >
-              <span className="mr-3 whitespace-nowrap font-medium text-vividGreen3">
-                {label}:
-              </span>
-              {value}
-            </li>
-          ))}
-        </ul>
+        <div className="relative">
+          <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl border border-red-500 bg-vividGreen1 px-6 py-4 shadow-card peer-hover:cursor-pointer">
+            {userInfoList.map(({ value, label }) => (
+              <li
+                key={label}
+                className={`flex w-full items-start justify-between py-2.5 font-medium text-white ${label === '소속 교육과정' ? 'peer' : ''}`}
+              >
+                <span className="mr-3 whitespace-nowrap font-medium text-vividGreen3">
+                  {label}:
+                </span>
+                {value}
+              </li>
+            ))}
+
+            {courseList.length > 1 && (
+              <div className="absolute right-5 top-40 hidden rounded-xl bg-white p-5 shadow-card hover:block peer-hover:block">
+                <header className="flex items-center justify-between border-b border-gray2 pb-2 text-text">
+                  <h4>교육과정 전체 목록</h4>
+                  <span>총 {courseList.length}개</span>
+                </header>
+
+                <ul className="mt-3 flex flex-col gap-y-3">
+                  {sortedCourseList.map(({ courseTitle }, index) => (
+                    <li
+                      className="w-full overflow-hidden truncate text-text"
+                      key={courseTitle}
+                    >
+                      {index + 1}. {courseTitle}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </ul>
+        </div>
 
         <ApplicationListOfSessionsCard />
       </section>
