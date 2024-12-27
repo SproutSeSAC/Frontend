@@ -2,9 +2,10 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
-import { CALENDAR_TOKEN_KEY } from '@/constants';
+import { ADMIN_EMAIL, CALENDAR_TOKEN_KEY } from '@/constants';
 import {
   GoogleCalendarApiDto,
+  ManagerAdminRole,
   ManagerEmailListByCourseDto,
   SproutCalendarDto,
   UserProfileDto,
@@ -97,22 +98,29 @@ export const useGetAclListByCalendar = (
   });
 };
 
-export type UserCalendarInfo = {
+export type CalendarDetail = {
   courseTitle: string;
   courseId: number;
   calendarId?: string;
   isCreated: boolean;
 };
 
-export type AllCalendarAclEmail = UserCalendarInfo & {
-  aclEmailList: string[];
-  managerEmailList: string[];
-  hasNotAclEmailList: string[];
+export type AllCalendarAclEmail = CalendarDetail & {
+  hasAcl: boolean;
+  aclEmailList: { email: string; roleType?: keyof ManagerAdminRole }[];
+  managerEmailList: {
+    email: string;
+    roleType: keyof ManagerAdminRole;
+  }[];
+  hasNotAclEmailList: {
+    email: string;
+    roleType: keyof ManagerAdminRole;
+  }[];
 };
 
 // 다중 캘린더별 acl 이메일 리스트 가져오기
 export const useGetAllCalendarAclEmailList = (
-  userCalendarInfos: UserCalendarInfo[],
+  calendarList: CalendarDetail[],
   options?: UseQueryOptions<AllCalendarAclEmail[]>,
 ) => {
   const getManagerEmailListByCourse = async (courseId: number) => {
@@ -123,15 +131,16 @@ export const useGetAllCalendarAclEmailList = (
 
   const getAclEmailList = async (calendarId?: string) => {
     if (!calendarId) return [];
-
     try {
       const aclResponse = await axiosCalendarInstance.get(
         `/calendars/${calendarId}/acl`,
       );
       return aclResponse.data.items
-        .map((item: { scope: { value: string } }) => item.scope.value)
+        .map((item: { scope: { value: string } }) => {
+          return { email: item.scope.value };
+        })
         .filter(
-          (email: string) =>
+          ({ email }: { email: string }) =>
             !email.includes('@public') && !email.includes('@group'),
         );
     } catch (error) {
@@ -143,14 +152,38 @@ export const useGetAllCalendarAclEmailList = (
 
   const getManagerEmailList = async (courseId: number) => {
     const res = await getManagerEmailListByCourse(courseId);
-    return res.map(manager => manager.email);
+    return res.map(({ email, roleType }) => ({
+      email,
+      roleType,
+    }));
+  };
+
+  const mergeAclAndManagerEmails = (
+    aclEmailList: { email: string }[],
+    managerEmailList: { email: string; roleType: string }[],
+  ) => {
+    // managerEmailList를 Map으로 변환하여 빠른 조회 가능하도록 구성
+    const managerEmailMap = new Map(
+      managerEmailList.map(({ email, roleType }) => [email, { roleType }]),
+    );
+
+    // aclEmailList의 각 객체에 managerEmailList의 데이터를 추가
+    return aclEmailList.map(acl => {
+      const managerData = managerEmailMap.get(acl.email);
+      const adminData =
+        acl.email === ADMIN_EMAIL ? { ...acl, roleType: 'ADMIN' } : acl;
+      return managerData
+        ? { ...acl, ...managerData } // managerData가 있으면 병합
+        : adminData; // 없으면 원래 데이터 유지
+    });
   };
 
   const getCourseCalendarEmailList = async () => {
-    const requests = userCalendarInfos.map(async calendarInfo => {
-      if (!calendarInfo.isCreated) {
+    const requests = calendarList.map(async calendar => {
+      if (!calendar.isCreated) {
         return {
-          ...calendarInfo,
+          ...calendar,
+          hasAcl: false,
           aclEmailList: [],
           managerEmailList: [],
           hasNotAclEmailList: [],
@@ -159,23 +192,31 @@ export const useGetAllCalendarAclEmailList = (
 
       try {
         const [aclEmailList, managerEmailList] = await Promise.all([
-          getAclEmailList(calendarInfo.calendarId),
-          getManagerEmailList(calendarInfo.courseId),
+          getAclEmailList(calendar.calendarId),
+          getManagerEmailList(calendar.courseId),
         ]);
 
-        const aclEmailSet = new Set(aclEmailList);
+        const aclEmailSet = new Set(
+          aclEmailList.map(({ email }: { email: string }) => email),
+        );
         const hasNotAclEmailList = managerEmailList.filter(
-          email => !aclEmailSet.has(email),
+          ({ email }) => !aclEmailSet.has(email),
+        );
+
+        const updatedAclEmailList = mergeAclAndManagerEmails(
+          aclEmailList,
+          managerEmailList,
         );
 
         return {
-          ...calendarInfo,
-          aclEmailList,
+          ...calendar,
+          hasAcl: !!aclEmailList.length,
+          aclEmailList: updatedAclEmailList,
           managerEmailList,
           hasNotAclEmailList,
         };
       } catch (err) {
-        throw new Error(`캘린더 id ${calendarInfo.courseTitle}: ${err}`);
+        throw new Error(`캘린더 id ${calendar.courseTitle}: ${err}`);
       }
     });
 
@@ -185,34 +226,7 @@ export const useGetAllCalendarAclEmailList = (
   return useQuery<AllCalendarAclEmail[]>({
     queryKey: ['useGetAllCalendarAclEmailList'],
     queryFn: getCourseCalendarEmailList,
-    enabled: userCalendarInfos.length > 0,
-    retry: false,
-    ...options,
-  });
-};
-
-// 다중 캘린더별 권한 데이터 가져오기
-export const useGetAllUserCalendarAclList = (
-  userCalendarInfos: UserCalendarInfo[],
-  options?: UseQueryOptions<(UserCalendarInfo & { hasAcl: boolean })[]>,
-) => {
-  const getCourseCalendarInfoList = async () => {
-    const requests = userCalendarInfos.map(calendarInfo => {
-      if (!calendarInfo.isCreated) {
-        return Promise.resolve({ ...calendarInfo, hasAcl: false });
-      }
-      return axiosCalendarInstance
-        .get(`/calendars/${calendarInfo.calendarId}/acl`)
-        .then(res => ({ ...calendarInfo, hasAcl: !!res?.data.items.length }))
-        .catch(() => ({ ...calendarInfo, hasAcl: false }));
-    });
-    return Promise.all(requests);
-  };
-
-  return useQuery<(UserCalendarInfo & { hasAcl: boolean })[]>({
-    queryKey: ['userAclList'],
-    queryFn: getCourseCalendarInfoList,
-    enabled: userCalendarInfos.length > 0,
+    enabled: calendarList.length > 0,
     retry: false,
     ...options,
   });

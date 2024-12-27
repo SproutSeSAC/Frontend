@@ -19,13 +19,13 @@ import SubscribeCalendarButton from '@/components/schedule/SubscribeCalendarButt
 
 interface CalendarCheckBoxListProps {
   userRole: KeyOfRole;
-  courseCalendarList: Calendar[];
+  allCourseCalendarList: Calendar[];
   personalCalendarList: Calendar[];
 }
 
 export default function CalendarCheckBoxList({
   userRole,
-  courseCalendarList,
+  allCourseCalendarList,
   personalCalendarList,
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
@@ -53,11 +53,11 @@ export default function CalendarCheckBoxList({
     () => [
       {
         category: '교육과정 캘린더',
-        calendarList: courseCalendarList,
+        calendarList: allCourseCalendarList,
       },
       { category: '개인 캘린더', calendarList: personalCalendarList },
     ],
-    [courseCalendarList, personalCalendarList],
+    [allCourseCalendarList, personalCalendarList],
   );
 
   if (isUserProfileLoading) return null;

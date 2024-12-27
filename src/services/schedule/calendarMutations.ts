@@ -3,7 +3,12 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL } from '@/constants';
-import { GoogleCalendarApiDto, KeyOfRole, SproutCalendarDto } from '@/types';
+import {
+  GoogleCalendarApiDto,
+  KeyOfRole,
+  ManagerAdminRole,
+  SproutCalendarDto,
+} from '@/types';
 
 type AuthorizedEmailsByRole = {
   EDU_MANAGER?: string;
@@ -176,17 +181,18 @@ export const useCreateEventsForMultipleCalendars = (
   });
 };
 
+type GrantAclParams = {
+  calendarId: string;
+  hasNotAclEmailList: {
+    email: string;
+    roleType: keyof ManagerAdminRole;
+  }[];
+};
+
 export const useGrantAcl = (
-  options?: UseMutationOptions<
-    unknown,
-    Error,
-    { calendarId: string; hasNotAclEmailList: string[] }
-  >,
+  options?: UseMutationOptions<unknown, Error, GrantAclParams>,
 ) => {
-  const grantAclByRole = async (params: {
-    calendarId: string;
-    hasNotAclEmailList: string[];
-  }) => {
+  const grantAclByRole = async (params: GrantAclParams) => {
     const { calendarId, hasNotAclEmailList } = params;
 
     try {

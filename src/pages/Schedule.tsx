@@ -14,14 +14,14 @@ export default function Schedule() {
     useGetUserProfile();
 
   const {
-    courseCalendarList,
+    allCourseCalendarList,
     personalCalendarList,
     fullCalendarEvents,
     fullCalendarCourseEvents,
-    isCalendarListLoading,
+    isCalendarDataLoading,
   } = useCalendarData();
 
-  if (isCalendarListLoading || isUserProfileLoading) return <LoadingPage />;
+  if (isCalendarDataLoading || isUserProfileLoading) return <LoadingPage />;
 
   return (
     <MainView>
@@ -38,7 +38,7 @@ export default function Schedule() {
           />
 
           <CalendarCheckBoxList
-            courseCalendarList={courseCalendarList}
+            allCourseCalendarList={allCourseCalendarList}
             personalCalendarList={personalCalendarList}
             userRole={userProfile?.role}
           />

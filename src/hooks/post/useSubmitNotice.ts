@@ -37,7 +37,7 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     return noticeCategoryList.find(option => key === option.key);
   }, []);
 
-  const { courseCalendarList } = useCalendarData();
+  const { allCourseCalendarList } = useCalendarData();
 
   const navigate = useNavigate();
 
@@ -83,7 +83,7 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
       }),
     );
 
-    const targetCalendar = courseCalendarList.filter(({ courseId }) =>
+    const targetCalendar = allCourseCalendarList.filter(({ courseId }) =>
       targetCourseIdList.includes(courseId),
     );
 

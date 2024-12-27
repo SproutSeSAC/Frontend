@@ -97,7 +97,7 @@ export default function NoticeForm() {
     getValues,
   } = methods;
 
-  const { courseCalendarList } = useCalendarData();
+  const { allCourseCalendarList } = useCalendarData();
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
@@ -137,7 +137,7 @@ export default function NoticeForm() {
   ) => {
     const courseIds = data.map(({ id }) => id);
 
-    const selectedCourseCalendarList = courseCalendarList.filter(
+    const selectedCourseCalendarList = allCourseCalendarList.filter(
       ({ courseId }) => courseIds?.includes(courseId),
     );
 

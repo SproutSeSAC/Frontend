@@ -26,3 +26,4 @@ export { useHandlePost } from '@/hooks/post/useHandlePost';
 /* schedule */
 export { useGetUserAclList } from '@/hooks/schedule/useGetUserAclList';
 export { useCalendarData } from '@/hooks/schedule/useCalendarData';
+export { useCalendarEvents } from '@/hooks/schedule/useCalendarEvents';
