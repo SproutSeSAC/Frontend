@@ -1,3 +1,5 @@
+import { Event } from '@/types/calendar/googleCalendar';
+
 export * from '@/types/calendar/googleCalendarApiDto';
 export * from '@/types/calendar/googleCalendar';
 export * from '@/types/calendar/sproutCalendarDto';
@@ -19,6 +21,7 @@ export type FullCalendarEvent = {
   id: string;
   rrule?: RruleOptions;
   exdate?: string[];
+  calendarId: string;
 };
 
 export type RruleOptions = {
@@ -35,4 +38,9 @@ export type RruleOptions = {
   byminute?: number[];
   bysecond?: number[];
   wkst?: 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA';
+};
+
+export type EventWithId = Event & {
+  backgroundColor: string;
+  calendarId: string;
 };

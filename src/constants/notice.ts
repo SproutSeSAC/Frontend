@@ -93,7 +93,7 @@ export const specialLectureEventFormValues = {
   meetingType: 'ONLINE' as MeetingTypeKey,
   meetingPlace: undefined,
   participantCapacity: LIMITLESS_CAPACITY_NUM,
-  satisfactionSurvey: undefined,
+  satisfactionSurvey: '',
   isPhoneNumberRequired: false,
 };
 

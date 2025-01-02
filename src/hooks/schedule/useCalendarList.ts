@@ -13,10 +13,11 @@ import {
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
+import { Calendar } from '@/types';
 import { getCookie, setCookie } from '@/utils';
 import { useSetAtom } from 'jotai';
 
-export const useCalendarData = () => {
+export const useCalendarList = () => {
   const setCurrShowingCalendarIds = useSetAtom(calendarIdsAtom);
 
   const {
@@ -38,14 +39,10 @@ export const useCalendarData = () => {
       allCalendarList?.find(({ id }) => id === calendarId);
 
     return allCourseCalendarStatusListData
-      .map(courseCalendar => {
-        const createdCalendarDetails = courseCalendar.isCreated
-          ? findCourseCalendarInMyCalendarList(courseCalendar.calendarId)
-          : {};
-        return {
-          ...courseCalendar,
-          ...createdCalendarDetails,
-        };
+      ?.map(courseCalendar => {
+        const createdCalendarDetails: Calendar =
+          findCourseCalendarInMyCalendarList(courseCalendar.calendarId) ?? {};
+        return { ...courseCalendar, ...createdCalendarDetails };
       })
       ?.sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
   }, [allCalendarList, allCourseCalendarStatusListData]);
@@ -68,14 +65,14 @@ export const useCalendarData = () => {
   }, []);
 
   useEffect(() => {
-    const courseCalendarIdList = allCourseCalendarStatusListData
-      .filter(({ isCreated }) => isCreated)
+    const courseCalendarIdList = allCourseCalendarList
+      .filter(detail => detail?.accessRole === 'owner')
       .map(({ calendarId }) => calendarId);
 
     if (courseCalendarIdList?.length !== 0) {
       setCurrShowingCalendarIds(courseCalendarIdList);
     }
-  }, [setCurrShowingCalendarIds, allCourseCalendarStatusListData]);
+  }, [setCurrShowingCalendarIds, allCourseCalendarList]);
 
   return {
     isCalendarDataLoading,

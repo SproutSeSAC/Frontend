@@ -19,7 +19,7 @@ export const usePostNotice = (
   });
 };
 
-export const useEditNotice = (
+export const usePutEditNotice = (
   options?: UseMutationOptions<
     unknown,
     Error,

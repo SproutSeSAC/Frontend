@@ -19,11 +19,12 @@ export { useGetStoreList } from '@/hooks/store/useGetStoreList';
 /* post */
 export { usePageBlocker } from '@/hooks/post/usePageBlocker';
 export { useSubmitNotice } from '@/hooks/post/useSubmitNotice';
+export { useEditNotice } from '@/hooks/post/useEditNotice';
 export { useHandleOnScrap } from '@/hooks/post/useHandleOnScrap';
 export { useHandleComment } from '@/hooks/post/useHandleComment';
 export { useHandlePost } from '@/hooks/post/useHandlePost';
 
 /* schedule */
 export { useGetUserAclList } from '@/hooks/schedule/useGetUserAclList';
-export { useCalendarData } from '@/hooks/schedule/useCalendarData';
+export { useCalendarList } from '@/hooks/schedule/useCalendarList';
 export { useCalendarEvents } from '@/hooks/schedule/useCalendarEvents';

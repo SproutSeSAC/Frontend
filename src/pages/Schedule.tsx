@@ -1,6 +1,6 @@
 import { useGetUserProfile } from '@/services/auth/authQueries';
 
-import { useCalendarData } from '@/hooks';
+import { useCalendarEvents, useCalendarList } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 
@@ -13,13 +13,11 @@ export default function Schedule() {
   const { data: userProfile, isLoading: isUserProfileLoading } =
     useGetUserProfile();
 
-  const {
-    allCourseCalendarList,
-    personalCalendarList,
-    fullCalendarEvents,
-    fullCalendarCourseEvents,
-    isCalendarDataLoading,
-  } = useCalendarData();
+  const { allCourseCalendarList, personalCalendarList, isCalendarDataLoading } =
+    useCalendarList();
+
+  const { fullCalendarSideViewEvents, fullCalendarEvents } =
+    useCalendarEvents();
 
   if (isCalendarDataLoading || isUserProfileLoading) return <LoadingPage />;
 
@@ -34,7 +32,7 @@ export default function Schedule() {
           <Calendar
             type="small"
             events={fullCalendarEvents}
-            courseEvents={fullCalendarCourseEvents}
+            sideViewEvents={fullCalendarSideViewEvents}
           />
 
           <CalendarCheckBoxList

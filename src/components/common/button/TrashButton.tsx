@@ -3,14 +3,41 @@ import { BsTrash } from 'react-icons/bs';
 
 import SquareButton from '@/components/common/button/SquareButton';
 
-export default function TrashButton() {
+interface TrashButtonProps {
+  disabled?: boolean;
+  className?: string;
+  onConfirmClick?: () => void;
+}
+
+export default function TrashButton({
+  disabled,
+  className,
+  onConfirmClick,
+}: TrashButtonProps) {
   const { hideDialog, alert } = useDialogContext();
 
   const onDeleteClick = () => {
     alert({
       text: '정말로 삭제하시곘습니까?',
       children: (
-        <SquareButton name="나가기" onClick={hideDialog} type="button" />
+        <>
+          <SquareButton
+            name="취소"
+            onClick={hideDialog}
+            color="gray"
+            type="button"
+          />
+          <SquareButton
+            name="확인"
+            onClick={() => {
+              if (onConfirmClick) {
+                onConfirmClick();
+              }
+              hideDialog();
+            }}
+            type="button"
+          />
+        </>
       ),
     });
   };
@@ -19,10 +46,11 @@ export default function TrashButton() {
     <button
       type="button"
       aria-label="삭제"
-      className="cursor-pointer items-end px-1.5 py-2"
+      className={`${disabled ? '' : 'cursor-pointer'} text-gray2 ${className}`}
       onClick={onDeleteClick}
+      disabled={disabled}
     >
-      <BsTrash className="mt-1 size-5 text-gray2" />
+      <BsTrash className="h-full w-full" />
     </button>
   );
 }

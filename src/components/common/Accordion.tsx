@@ -53,7 +53,7 @@ export default function Accordion({
 
       <div
         className={`overflow-hidden transition-[max-height] duration-500 ease-in-out ${
-          isOpen ? 'max-h-[1000px]' : 'max-h-0'
+          isOpen ? 'max-h-full' : 'max-h-0'
         }`}
       >
         {children}

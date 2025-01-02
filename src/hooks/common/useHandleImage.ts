@@ -1,7 +1,7 @@
-import { useDialogContext } from '@/hooks/common/useDialogContext';
-
 import { getByteSizeNum } from '@/utils/getByteSizeNum';
 
+import { useDialogContext } from '@/hooks';
+import { base64ToFile } from '@/utils';
 import axios from 'axios';
 
 type PresignedUrlResponse = {
@@ -86,9 +86,31 @@ export const useHandleImage = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleImagesInContent = async (content: string): Promise<string> => {
+    const base64ImageRegex =
+      /<img[^>]*src="(data:image\/[^;]+;base64,[^"]+)"[^>]*>/g;
+    const matches = [...content.matchAll(base64ImageRegex)];
+    const base64Images = matches.map(match => match[1]);
+    const updatedContent = await base64Images.reduce(
+      async (accPromise, base64Image) => {
+        const acc = await accPromise;
+        const fileName = `${Date.now()}.png`;
+        const file = base64ToFile(base64Image, fileName);
+        const presignedUrl = await getPresignedUrl(file);
+        await uploadImageToS3(presignedUrl, file);
+        const url = new URL(presignedUrl);
+        const s3Url = url.origin + url.pathname;
+        return acc.replace(base64Image, s3Url);
+      },
+      Promise.resolve(content),
+    );
+    return updatedContent;
+  };
+
   return {
     getPresignedUrl,
     uploadImageToS3,
     onImageChange,
+    handleImagesInContent,
   };
 };

@@ -28,6 +28,7 @@ type CalendarList = {
 };
 
 type CalenderEvents = {
+  calendarId?: string;
   accessRole: AccessRole;
   defaultReminders: Reminder;
   description?: string;

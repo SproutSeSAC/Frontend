@@ -95,7 +95,7 @@ export default function MyCollection() {
             </button>
           ))}
         </div>
-        <TrashButton />
+        <TrashButton className="px-1.5 py-2" />
       </header>
 
       {currCollection === '내가 찜한 글' ? (
@@ -159,7 +159,7 @@ export default function MyCollection() {
                 </TableDataCell>
 
                 <TableDataCell className="pr-5 text-end [&>button]:px-2">
-                  <TrashButton />
+                  <TrashButton className="px-1.5 py-2" />
                 </TableDataCell>
               </tr>
             ))}

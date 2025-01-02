@@ -2,67 +2,83 @@ import { useCallback, useMemo } from 'react';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { useCalendarData } from '@/hooks/schedule/useCalendarData';
-
 import { useGetEventsByCalendar } from '@/services/schedule/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { CalenderEvents, Event, FullCalendarEvent } from '@/types';
+import { useCalendarList } from '@/hooks';
+import { EventWithId, FullCalendarEvent, GoogleCalendarApiDto } from '@/types';
 import { changeFullCalendarEvents } from '@/utils';
 import { useAtomValue } from 'jotai';
 
 export const useCalendarEvents = () => {
   const currShowingCalendarIds = useAtomValue(calendarIdsAtom);
 
-  const { allCalendarList, allCourseCalendarList } = useCalendarData();
+  const { allCalendarList, allCourseCalendarList } = useCalendarList();
 
   const getCalendarColor = useMemo(() => {
     return (calendarSummary: string) =>
       allCalendarList?.find(({ summary }) => summary === calendarSummary)
-        .backgroundColor;
+        ?.backgroundColor;
   }, [allCalendarList]);
 
   const getEventList = useCallback(
-    (events: UseQueryResult<CalenderEvents, Error>[]) => {
+    (
+      events: UseQueryResult<GoogleCalendarApiDto.GetCalenderEvents, Error>[],
+    ) => {
       return events
         ?.map(calendar => {
+          const calendarId = calendar.data?.calendarId ?? '';
           const summary = calendar?.data?.summary ?? '';
+
           return calendar?.data?.items.map(item => {
             const backgroundColor = getCalendarColor(summary);
-            return { ...item, backgroundColor };
+            return { ...item, calendarId, backgroundColor };
           });
         })
         ?.flat()
-        ?.filter(item => item?.status === 'confirmed') as (Event & {
-        backgroundColor: string;
-      })[];
+        ?.filter(item => item?.status === 'confirmed') as EventWithId[];
     },
     [getCalendarColor],
   );
 
   const eventsByCalendar = useGetEventsByCalendar(currShowingCalendarIds || []);
 
+  const createdCourseCalendarIdList = useMemo(() => {
+    return allCourseCalendarList
+      .filter(calendar => calendar.accessRole === 'owner')
+      .map(({ calendarId }) => calendarId);
+  }, [allCourseCalendarList]);
+
+  const createdCourseCalendarEventList = useGetEventsByCalendar(
+    createdCourseCalendarIdList,
+  );
+
+  // 현재 선택된 캘린더의 이벤트 목록
   const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
     const eventList = getEventList(eventsByCalendar);
     return changeFullCalendarEvents(eventList);
   }, [eventsByCalendar, getEventList]);
 
-  const createdCourseCalendarIds = allCourseCalendarList
-    .filter(({ calendarId }) => !!calendarId)
-    .map(({ calendarId }) => calendarId);
+  // 사이드뷰의 근시일 이벤트 목록
+  const fullCalendarSideViewEvents: FullCalendarEvent[] = useMemo(() => {
+    const eventList = getEventList(createdCourseCalendarEventList);
 
-  const courseEventsByCalendar = useGetEventsByCalendar(
-    createdCourseCalendarIds,
-  );
+    const today = new Date();
+    today.setDate(today.getDate() - 1);
 
-  const fullCalendarCourseEvents: FullCalendarEvent[] = useMemo(() => {
-    const eventList = getEventList(courseEventsByCalendar);
-    return changeFullCalendarEvents(eventList);
-  }, [courseEventsByCalendar, getEventList]);
+    const sideViewEventList = changeFullCalendarEvents(eventList);
+
+    return sideViewEventList
+      ?.filter(event => {
+        const eventDate = new Date(event.start);
+        return eventDate >= today;
+      })
+      ?.slice(0, 4);
+  }, [createdCourseCalendarEventList, getEventList]);
 
   return {
     fullCalendarEvents,
-    fullCalendarCourseEvents,
+    fullCalendarSideViewEvents,
   };
 };

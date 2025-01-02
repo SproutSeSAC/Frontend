@@ -3,10 +3,7 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
-import {
-  useGetCreatedCourseCalendar,
-  useGetManagerEmailListByCourse,
-} from '@/services/schedule/calendarQueries';
+import { useGetManagerEmailListByCourse } from '@/services/schedule/calendarQueries';
 
 import { managerAndAdminRolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
@@ -20,12 +17,14 @@ interface CreateCalendarButtonProps {
   courseTitle: string;
   courseId: number;
   userRole: KeyOfRole;
+  disabled: boolean;
 }
 
 export default function CreateCalendarButton({
   courseTitle,
   courseId,
   userRole,
+  disabled,
 }: CreateCalendarButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,9 +32,6 @@ export default function CreateCalendarButton({
 
   const { data: authorizedEmailList } =
     useGetManagerEmailListByCourse(courseId);
-
-  const { calendarId: sproutCalendarId = '' } =
-    useGetCreatedCourseCalendar(courseId).data || {};
 
   const authorizedEmailListByCourse = authorizedEmailList
     ?.filter(item => item.roleType !== userRole)
@@ -124,13 +120,14 @@ export default function CreateCalendarButton({
             type="button"
             onClick={onEduManagerCalendarClick}
             className="mt-1 pr-2"
+            disabled={disabled}
           >
             <FaPlus
-              className={`size-4 ${sproutCalendarId ? 'text-gray2' : 'text-oliveGreen1'}`}
+              className={`"size-4 ${disabled ? 'text-gray2' : 'text-oliveGreen1'}`}
             />
           </button>
           <span
-            className={`flex-1 tracking-tight ${sproutCalendarId ? 'text-gray2' : 'text-text'}`}
+            className={`flex-1 tracking-tight ${disabled ? 'text-gray2' : 'text-text'}`}
           >
             {courseTitle} <span className="text-gray2">캘린더 생성하기</span>
           </span>

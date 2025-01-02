@@ -4,10 +4,10 @@ export namespace SproutCalendarDto {
 }
 
 type CalendarIdByCourse = {
-  id: number;
   calendarId: string;
   registerId: number;
   courseId: number;
+  id: number;
 };
 
 type CalendarId = {

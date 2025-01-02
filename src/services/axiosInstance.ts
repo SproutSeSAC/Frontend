@@ -103,21 +103,20 @@ axiosCalendarInstance.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (error.response && !originalRequest.retry) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest.retry
+    ) {
       originalRequest.retry = true;
 
-      if (error.response.status === 401) {
-        try {
-          const response = await getCalendarToken();
-          const newCalendarAccessToken = response.data.access_token;
-          setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
+      const response = await getCalendarToken();
+      const newCalendarAccessToken = response.data.access_token;
+      setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
 
-          return await axiosCalendarInstance(originalRequest);
-        } catch (refreshError) {
-          console.error('refreshError', refreshError);
-        }
-      }
+      return axiosCalendarInstance(originalRequest);
     }
+    // NOTE: 이외 에러 발생시 로그인 페이지로 이동시킬 예정
     return Promise.reject(error);
   },
 );

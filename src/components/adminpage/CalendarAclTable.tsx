@@ -9,7 +9,6 @@ import { FaPlus } from 'react-icons/fa6';
 
 import LoopLoading from '@/components/common/LoopLoading';
 import SquareButton from '@/components/common/button/SquareButton';
-import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
 import TableHeaderCell from '@/components/common/table/TableHeaderCell';
 import Tag from '@/components/common/tag/Tag';
@@ -50,27 +49,21 @@ export default function CalendarAclTable() {
       <colgroup>
         <col width="5%" />
         <col width="9%" />
-        <col width="38%" />
-        <col width="20%" />
-        <col width="20%" />
+        <col width="32%" />
+        <col width="23%" />
+        <col width="23%" />
         <col width="8%" />
       </colgroup>
 
       <thead>
         <tr className="text-left">
-          {headerCellList.map(cell =>
-            cell.name === '체크박스' ? (
-              <TableHeaderCell key={cell.name} name="체크박스">
-                <Checkbox id="체크박스" checked={false} onChange={() => {}} />
-              </TableHeaderCell>
-            ) : (
-              <TableHeaderCell
-                key={cell.name}
-                name={cell.name}
-                className={cell.className}
-              />
-            ),
-          )}
+          {headerCellList.map(cell => (
+            <TableHeaderCell
+              key={cell.name}
+              name={cell.name}
+              className={cell.className}
+            />
+          ))}
         </tr>
       </thead>
 
@@ -105,7 +98,7 @@ export default function CalendarAclTable() {
                   '-'
                 ) : (
                   <ul className="flex flex-col gap-y-1">
-                    {cell.aclEmailList.map(({ email, roleType }) => (
+                    {cell?.aclEmailList?.map(({ email, roleType }) => (
                       <div key={email} className="flex">
                         {roleType && (
                           <Tag
@@ -128,7 +121,7 @@ export default function CalendarAclTable() {
                   '-'
                 ) : (
                   <ul className="flex flex-col gap-y-1">
-                    {cell.hasNotAclEmailList.map(({ email, roleType }) => (
+                    {cell?.hasNotAclEmailList?.map(({ email, roleType }) => (
                       <div key={email} className="flex">
                         <Tag
                           size="small"
@@ -150,14 +143,16 @@ export default function CalendarAclTable() {
                   onClick={() => {
                     if (
                       !cell.calendarId ||
-                      cell.hasNotAclEmailList.length === 0
+                      cell?.hasNotAclEmailList?.length === 0
                     )
                       return;
                     const { calendarId, hasNotAclEmailList } = cell;
-                    mutateAsync({ calendarId, hasNotAclEmailList });
+                    if (hasNotAclEmailList) {
+                      mutateAsync({ calendarId, hasNotAclEmailList });
+                    }
                   }}
                   disabled={
-                    cell.hasNotAclEmailList.length === 0 || !cell.calendarId
+                    !cell.hasAcl || cell?.hasNotAclEmailList?.length === 0
                   }
                   className="disabled:text-gray3"
                 >

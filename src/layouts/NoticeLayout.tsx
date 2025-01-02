@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { useCalendarData } from '@/hooks';
+import { useCalendarEvents } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
@@ -13,7 +13,8 @@ import Calendar from '@/components/schedule/Calendar';
 export default function NoticeLayout() {
   const { pathname } = useLocation();
 
-  const { fullCalendarEvents, fullCalendarCourseEvents } = useCalendarData();
+  const { fullCalendarEvents, fullCalendarSideViewEvents } =
+    useCalendarEvents();
 
   return (
     <>
@@ -28,7 +29,7 @@ export default function NoticeLayout() {
         <Calendar
           type="small"
           events={fullCalendarEvents}
-          courseEvents={fullCalendarCourseEvents}
+          sideViewEvents={fullCalendarSideViewEvents}
         />
         <NoticeListSideBox title="이번주 공지사항" />
       </SideView>

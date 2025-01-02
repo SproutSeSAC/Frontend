@@ -4,6 +4,7 @@ import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL } from '@/constants';
 import {
+  FullCalendarEvent,
   GoogleCalendarApiDto,
   KeyOfRole,
   ManagerAdminRole,
@@ -219,6 +220,55 @@ export const useGrantAcl = (
   return useMutation({
     mutationFn: grantAclByRole,
     mutationKey: ['useGrantAcl'],
+    ...options,
+  });
+};
+
+export const useUpdateEvent = (
+  options?: UseMutationOptions<unknown, Error, FullCalendarEvent[]>,
+) => {
+  const updateEvent = async (updatedEventList: FullCalendarEvent[]) => {
+    try {
+      await Promise.all(
+        updatedEventList.map(async ({ id, calendarId, ...rest }) => {
+          return axiosCalendarInstance.put(
+            `/calendars/${calendarId}/events/${id}`,
+            rest,
+          );
+        }),
+      );
+    } catch (error) {
+      console.error('공지사항 일정 수정 중 에러 발생', error);
+    }
+  };
+
+  return useMutation({
+    mutationFn: updateEvent,
+    mutationKey: ['useUpdateEvent'],
+    ...options,
+  });
+};
+
+export const useDeleteEvent = (
+  options?: UseMutationOptions<unknown, Error, FullCalendarEvent[]>,
+) => {
+  const deleteEvent = async (eventList: FullCalendarEvent[]) => {
+    try {
+      await Promise.all(
+        eventList.map(async ({ id, calendarId }) => {
+          return axiosCalendarInstance.delete(
+            `/calendars/${calendarId}/events/${id}`,
+          );
+        }),
+      );
+    } catch (error) {
+      console.error('공지사항 일정 삭제 중 에러 발생', error);
+    }
+  };
+
+  return useMutation({
+    mutationFn: deleteEvent,
+    mutationKey: ['useDeleteEvent'],
     ...options,
   });
 };

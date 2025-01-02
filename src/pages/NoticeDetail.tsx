@@ -22,10 +22,9 @@ import {
   useHandleComment,
   useHandleOnScrap,
   useHandlePost,
-  useSubmitNotice,
 } from '@/hooks';
 import { NoticeDto } from '@/types';
-import { getColorByRole, isPreTrainee } from '@/utils';
+import { findCurrNotice, getColorByRole, isPreTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import BackButton from '@/components/common/button/BackButton';
@@ -52,8 +51,6 @@ export default function NoticeDetail() {
   const { data: commentList } = useGetNoticeCommentList(noticeId);
 
   const { mutateAsync: deleteNotice } = useDeleteNotice();
-
-  const { findCurrNotice } = useSubmitNotice();
 
   const { handleSubmitComment } = useHandleComment({
     postComment: postNoticeComment,
@@ -130,7 +127,7 @@ export default function NoticeDetail() {
       }
     }
     return undefined;
-  }, [findCurrNotice, noticeDetail, showDialog]);
+  }, [noticeDetail, showDialog]);
 
   const navigate = useNavigate();
 

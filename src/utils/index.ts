@@ -8,6 +8,7 @@ export * from '@/utils/checkRole';
 export * from '@/utils/isInThisWeek';
 export * from '@/utils/formatPhoneNumber';
 export * from '@/utils/formatDate';
+export * from '@/utils/notice';
 
 // 캘린더 관련
 export * from '@/utils/getFullCalendarEvents';

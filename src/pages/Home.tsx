@@ -10,7 +10,7 @@ import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
-import { useCalendarData, useDialogContext } from '@/hooks';
+import { useCalendarEvents, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
@@ -43,7 +43,8 @@ export default function Home() {
 
   const { name } = userProfile;
 
-  const { fullCalendarEvents, fullCalendarCourseEvents } = useCalendarData();
+  const { fullCalendarEvents, fullCalendarSideViewEvents } =
+    useCalendarEvents();
 
   const { showToast } = useDialogContext();
 
@@ -93,12 +94,13 @@ export default function Home() {
           </ScrollContainer>
         </section>
       </MainView>
+
       <SideView>
         <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
         <Calendar
           type="small"
           events={fullCalendarEvents}
-          courseEvents={fullCalendarCourseEvents}
+          sideViewEvents={fullCalendarSideViewEvents}
         />
 
         <NoticeListSideBox title="공지사항" />

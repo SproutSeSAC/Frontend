@@ -4,11 +4,11 @@ import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL, CALENDAR_TOKEN_KEY } from '@/constants';
 import {
+  AccessRole,
   GoogleCalendarApiDto,
   ManagerAdminRole,
   ManagerEmailListByCourseDto,
   SproutCalendarDto,
-  UserProfileDto,
 } from '@/types';
 import { getCookie } from '@/utils';
 import { AxiosError, AxiosResponse } from 'axios';
@@ -55,7 +55,8 @@ export const useGetEventsByCalendar = (
   const getCalendarEvents = async (calendarId: string) => {
     const res: AxiosResponse<GoogleCalendarApiDto.GetCalenderEvents> =
       await axiosCalendarInstance.get(`/calendars/${calendarId}/events`);
-    return res.data;
+
+    return { ...res.data, calendarId };
   };
 
   return useQueries({
@@ -102,23 +103,24 @@ export type CalendarDetail = {
   courseTitle: string;
   courseId: number;
   calendarId?: string;
-  isCreated: boolean;
+  accessRole?: AccessRole;
 };
 
 export type AllCalendarAclEmail = CalendarDetail & {
+  isCreated: boolean;
   hasAcl: boolean;
-  aclEmailList: { email: string; roleType?: keyof ManagerAdminRole }[];
-  managerEmailList: {
+  aclEmailList?: { email: string; roleType?: keyof ManagerAdminRole }[];
+  managerEmailList?: {
     email: string;
     roleType: keyof ManagerAdminRole;
   }[];
-  hasNotAclEmailList: {
+  hasNotAclEmailList?: {
     email: string;
     roleType: keyof ManagerAdminRole;
   }[];
 };
 
-// 다중 캘린더별 acl 이메일 리스트 가져오기
+// 모든 캘린더별 acl 이메일 리스트 가져오기
 export const useGetAllCalendarAclEmailList = (
   calendarList: CalendarDetail[],
   options?: UseQueryOptions<AllCalendarAclEmail[]>,
@@ -162,32 +164,24 @@ export const useGetAllCalendarAclEmailList = (
     aclEmailList: { email: string }[],
     managerEmailList: { email: string; roleType: string }[],
   ) => {
-    // managerEmailList를 Map으로 변환하여 빠른 조회 가능하도록 구성
     const managerEmailMap = new Map(
       managerEmailList.map(({ email, roleType }) => [email, { roleType }]),
     );
 
-    // aclEmailList의 각 객체에 managerEmailList의 데이터를 추가
     return aclEmailList.map(acl => {
       const managerData = managerEmailMap.get(acl.email);
       const adminData =
         acl.email === ADMIN_EMAIL ? { ...acl, roleType: 'ADMIN' } : acl;
-      return managerData
-        ? { ...acl, ...managerData } // managerData가 있으면 병합
-        : adminData; // 없으면 원래 데이터 유지
+      return managerData ? { ...acl, ...managerData } : adminData;
     });
   };
 
   const getCourseCalendarEmailList = async () => {
     const requests = calendarList.map(async calendar => {
-      if (!calendar.isCreated) {
-        return {
-          ...calendar,
-          hasAcl: false,
-          aclEmailList: [],
-          managerEmailList: [],
-          hasNotAclEmailList: [],
-        };
+      const isCreated = calendar?.accessRole === 'owner';
+
+      if (!isCreated) {
+        return { ...calendar, isCreated, hasAcl: false };
       }
 
       try {
@@ -210,6 +204,7 @@ export const useGetAllCalendarAclEmailList = (
 
         return {
           ...calendar,
+          isCreated,
           hasAcl: !!aclEmailList.length,
           aclEmailList: updatedAclEmailList,
           managerEmailList,
@@ -253,31 +248,33 @@ export const useGetCreatedCourseCalendar = (
 };
 
 export const useCourseCalendarList = (
-  courseList: Pick<UserProfileDto.Get, 'courseList'>['courseList'],
+  courseList: {
+    courseId: number;
+    courseTitle: string;
+  }[],
   options?: UseQueryOptions<
-    (SproutCalendarDto.Get & { isCreated: boolean; courseTitle: string })[]
+    (SproutCalendarDto.Get & { courseTitle: string })[]
   >,
 ) => {
   const getCourseCalendarInfoList = async () => {
     const requests = courseList.map(({ courseId, courseTitle }) =>
       axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
+        const baseDetail = { courseId, courseTitle };
+
         return res.data.length === 0
-          ? [{ courseTitle, courseId, isCreated: false }]
-          : res.data.map((item: SproutCalendarDto.Get) => ({
-              ...item,
-              id: item.calendarId,
-              courseTitle,
-              isCreated: true,
-            }));
+          ? [baseDetail]
+          : res.data
+              .slice(0, 1)
+              .map(({ calendarId }: SproutCalendarDto.Get) => {
+                return { ...baseDetail, calendarId };
+              });
       }),
     );
     const responses = await Promise.all(requests);
     return responses.flat();
   };
 
-  return useQuery<
-    (SproutCalendarDto.Get & { isCreated: boolean; courseTitle: string })[]
-  >({
+  return useQuery<(SproutCalendarDto.Get & { courseTitle: string })[]>({
     queryKey: ['courseCalenderList', courseList],
     queryFn: getCourseCalendarInfoList,
     enabled: courseList.length > 0,

@@ -89,11 +89,11 @@ export default function CalendarCheckBoxList({
                   id,
                   backgroundColor,
                   summary,
-                  isCreated,
+                  calendarId,
                 }) =>
-                  isCreated ? (
+                  summary ? (
                     <div
-                      key={courseId}
+                      key={courseTitle}
                       className="flex items-start justify-between [&>label]:items-start"
                     >
                       <Checkbox
@@ -126,6 +126,7 @@ export default function CalendarCheckBoxList({
                           courseTitle={courseTitle}
                           courseId={courseId}
                           userRole={userRole}
+                          disabled={!!calendarId}
                         />
                       )}
                     </Fragment>

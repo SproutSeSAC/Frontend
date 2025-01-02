@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 
 import { useGetAllCalendarAclEmailList } from '@/services/schedule/calendarQueries';
 
-import { useCalendarData } from '@/hooks';
+import { useCalendarList } from '@/hooks';
 
 export const useGetUserAclList = () => {
-  const { allCourseCalendarList } = useCalendarData();
+  const { allCourseCalendarList } = useCalendarList();
 
   const {
     data: aclEmailListByCourse,
