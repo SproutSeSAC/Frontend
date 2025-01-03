@@ -21,7 +21,7 @@ import { dateOptions } from '@/components/store/meal-recruit/mealRecruitDropdown
 import { mealRecruitSchema } from '@/components/store/meal-recruit/mealRecruitSchema';
 
 const defaultStyle =
-  'rounded-xl border border-solid border-gray2 px-6 py-[13px] text-lg';
+  'rounded-xl border border-solid !border-gray2 px-4 py-[13px] text-lg';
 
 interface FormValues extends Omit<PostMeal, 'appointmentTime'> {
   date: Date | null;
@@ -130,7 +130,7 @@ export default function MealRecruitModal() {
                     <TextInput
                       placeholder="한끼팟 제목을 작성해주세요"
                       className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="기술 스택"
+                      name="한끼팟 제목"
                       onChange={onChange}
                     />
 

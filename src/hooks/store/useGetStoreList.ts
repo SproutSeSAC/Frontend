@@ -7,6 +7,7 @@ export const useGetStoreList = () => {
   const { data: campusList } = useGetCampusList();
 
   const campusId = campusList ? campusList[0]?.id : 0;
+
   const {
     data = { pages: [{ stores: [], totalPages: 0 }], pageParams: [] },
     fetchNextPage,
@@ -14,13 +15,13 @@ export const useGetStoreList = () => {
     isFetching,
     isLoading,
   } = useGetInfiniteStoreList(campusId);
+
   const excellentIndex = data?.pages.map(item => item.stores);
 
   const storeList = excellentIndex?.reduce<Store[]>((acc, arr) => {
     arr?.forEach(obj => {
       acc.push(obj);
     });
-
     return acc;
   }, []);
 

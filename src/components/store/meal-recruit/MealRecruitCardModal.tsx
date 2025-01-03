@@ -26,6 +26,7 @@ export default function MealRecruitCardModal({
 
   const queryClient = useQueryClient();
   const { data } = useGetMealPostDetail(id);
+
   const { mutateAsync } = usePutMealPost();
 
   const handleJoinClick = useCallback(async () => {
