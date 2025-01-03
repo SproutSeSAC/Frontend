@@ -26,6 +26,7 @@ export const useGetInfiniteStoreList = (campusId: number) => {
   const [searchParams] = useSearchParams();
   const newSearchParams = extractValidParams(searchParams);
   const pageSize = 10;
+
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteStoreList', newSearchParams],
     queryFn: async ({ pageParam = 1 }) => {

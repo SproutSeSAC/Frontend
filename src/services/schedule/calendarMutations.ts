@@ -3,7 +3,13 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
 import { ADMIN_EMAIL } from '@/constants';
-import { GoogleCalendarApiDto, KeyOfRole, SproutCalendarDto } from '@/types';
+import {
+  FullCalendarEvent,
+  GoogleCalendarApiDto,
+  KeyOfRole,
+  ManagerAdminRole,
+  SproutCalendarDto,
+} from '@/types';
 
 type AuthorizedEmailsByRole = {
   EDU_MANAGER?: string;
@@ -176,17 +182,18 @@ export const useCreateEventsForMultipleCalendars = (
   });
 };
 
+type GrantAclParams = {
+  calendarId: string;
+  hasNotAclEmailList: {
+    email: string;
+    roleType: keyof ManagerAdminRole;
+  }[];
+};
+
 export const useGrantAcl = (
-  options?: UseMutationOptions<
-    unknown,
-    Error,
-    { calendarId: string; hasNotAclEmailList: string[] }
-  >,
+  options?: UseMutationOptions<unknown, Error, GrantAclParams>,
 ) => {
-  const grantAclByRole = async (params: {
-    calendarId: string;
-    hasNotAclEmailList: string[];
-  }) => {
+  const grantAclByRole = async (params: GrantAclParams) => {
     const { calendarId, hasNotAclEmailList } = params;
 
     try {
@@ -213,6 +220,55 @@ export const useGrantAcl = (
   return useMutation({
     mutationFn: grantAclByRole,
     mutationKey: ['useGrantAcl'],
+    ...options,
+  });
+};
+
+export const useUpdateEvent = (
+  options?: UseMutationOptions<unknown, Error, FullCalendarEvent[]>,
+) => {
+  const updateEvent = async (updatedEventList: FullCalendarEvent[]) => {
+    try {
+      await Promise.all(
+        updatedEventList.map(async ({ id, calendarId, ...rest }) => {
+          return axiosCalendarInstance.put(
+            `/calendars/${calendarId}/events/${id}`,
+            rest,
+          );
+        }),
+      );
+    } catch (error) {
+      console.error('공지사항 일정 수정 중 에러 발생', error);
+    }
+  };
+
+  return useMutation({
+    mutationFn: updateEvent,
+    mutationKey: ['useUpdateEvent'],
+    ...options,
+  });
+};
+
+export const useDeleteEvent = (
+  options?: UseMutationOptions<unknown, Error, FullCalendarEvent[]>,
+) => {
+  const deleteEvent = async (eventList: FullCalendarEvent[]) => {
+    try {
+      await Promise.all(
+        eventList.map(async ({ id, calendarId }) => {
+          return axiosCalendarInstance.delete(
+            `/calendars/${calendarId}/events/${id}`,
+          );
+        }),
+      );
+    } catch (error) {
+      console.error('공지사항 일정 삭제 중 에러 발생', error);
+    }
+  };
+
+  return useMutation({
+    mutationFn: deleteEvent,
+    mutationKey: ['useDeleteEvent'],
     ...options,
   });
 };

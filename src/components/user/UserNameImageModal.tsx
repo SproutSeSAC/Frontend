@@ -1,45 +1,64 @@
+import { useState } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateUserProfile } from '@/services/auth/authMutations';
+import {
+  useUpdateProfileImage,
+  useUpdateUserProfile,
+} from '@/services/auth/authMutations';
 import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
-import { useDialogContext } from '@/hooks';
-import { UserProfileDto } from '@/types';
+import { useDialogContext, useHandleImage } from '@/hooks';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import CameraButton from '@/components/common/button/CameraButton';
 import SquareButton from '@/components/common/button/SquareButton';
+import CameraInput from '@/components/common/input/CameraInput';
 import Label from '@/components/common/input/Label';
 import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
 import UserImage from '@/components/user/UserImage';
 
 export default function UserNameImageModal() {
-  const { hideDialog } = useDialogContext();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
-  const { data: userProfile = initialUserProfile } = useGetUserProfile();
+  const { hideDialog } = useDialogContext();
 
-  const { nickname } = userProfile;
+  const { data: { nickname } = initialUserProfile } = useGetUserProfile();
 
-  const { mutateAsync } = useUpdateUserProfile({
+  const { mutateAsync: mutateProfile } = useUpdateUserProfile({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
     },
   });
 
+  const { mutateAsync: mutateProfileImage } = useUpdateProfileImage();
+
   const methods = useForm({
-    defaultValues: { nickname },
+    defaultValues: { nickname, profileImageFiles: null },
   });
 
   const { handleSubmit, register } = methods;
 
-  const onSubmit = (formData: UserProfileDto.Update) => {
-    mutateAsync(formData);
+  const { getPresignedUrl, uploadImageToS3, onImageChange } = useHandleImage();
+
+  const onSubmit = async (formData: {
+    nickname: string;
+    profileImageFiles: File[] | null;
+  }) => {
+    if (nickname !== formData.nickname) {
+      await mutateProfile({ nickname: formData.nickname });
+    }
+    const file = formData.profileImageFiles?.[0];
+    if (file) {
+      const presignedUrl = await getPresignedUrl(file);
+      await uploadImageToS3(presignedUrl, file);
+      await mutateProfileImage({ profileUrl: presignedUrl });
+    }
     hideDialog('USERNAME-IMAGE-CARD-TYPE');
   };
 
@@ -50,9 +69,15 @@ export default function UserNameImageModal() {
           className="flex w-[350px] flex-col"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <UserImage className="mx-auto mb-6 size-[220px]">
-            <CameraButton
-              onClick={() => {}}
+          <UserImage
+            imgUrl={previewUrl || ''}
+            className="mx-auto mb-6 size-[220px]"
+          >
+            <CameraInput
+              onChange={async event => {
+                if (!event?.target?.files?.[0]) return;
+                onImageChange(event?.target?.files?.[0], 5, setPreviewUrl);
+              }}
               className="bottom-5 right-2"
               iconSize={6}
             />

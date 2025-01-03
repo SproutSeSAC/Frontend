@@ -26,7 +26,7 @@ export const useHandleOnScrap = ({
         const result = await getScrapResult();
 
         showToast(
-          result ? '게시물을 찜했어요!' : '게시물 찜하기를 취소 했어요!',
+          result ? '게시물을 찜했어요!' : '게시물 찜을 취소 했어요!',
           1000,
         );
         if (invalidateQueryKeys) {

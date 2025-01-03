@@ -147,6 +147,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
               <XButton
                 className="absolute -right-1 -top-1 rounded-full bg-black opacity-70"
                 onDeleteClick={() => handleSelectOptionChange(option)}
+                iconClassName="text-white"
               />
             </li>
           ))}

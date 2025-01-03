@@ -2,12 +2,13 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
-import { CALENDAR_TOKEN_KEY } from '@/constants';
+import { ADMIN_EMAIL, CALENDAR_TOKEN_KEY } from '@/constants';
 import {
+  AccessRole,
   GoogleCalendarApiDto,
+  ManagerAdminRole,
   ManagerEmailListByCourseDto,
   SproutCalendarDto,
-  UserProfileDto,
 } from '@/types';
 import { getCookie } from '@/utils';
 import { AxiosError, AxiosResponse } from 'axios';
@@ -54,7 +55,8 @@ export const useGetEventsByCalendar = (
   const getCalendarEvents = async (calendarId: string) => {
     const res: AxiosResponse<GoogleCalendarApiDto.GetCalenderEvents> =
       await axiosCalendarInstance.get(`/calendars/${calendarId}/events`);
-    return res.data;
+
+    return { ...res.data, calendarId };
   };
 
   return useQueries({
@@ -97,22 +99,30 @@ export const useGetAclListByCalendar = (
   });
 };
 
-export type UserCalendarInfo = {
+export type CalendarDetail = {
   courseTitle: string;
   courseId: number;
   calendarId?: string;
+  accessRole?: AccessRole;
+};
+
+export type AllCalendarAclEmail = CalendarDetail & {
   isCreated: boolean;
+  hasAcl: boolean;
+  aclEmailList?: { email: string; roleType?: keyof ManagerAdminRole }[];
+  managerEmailList?: {
+    email: string;
+    roleType: keyof ManagerAdminRole;
+  }[];
+  hasNotAclEmailList?: {
+    email: string;
+    roleType: keyof ManagerAdminRole;
+  }[];
 };
 
-export type AllCalendarAclEmail = UserCalendarInfo & {
-  aclEmailList: string[];
-  managerEmailList: string[];
-  hasNotAclEmailList: string[];
-};
-
-// 다중 캘린더별 acl 이메일 리스트 가져오기
+// 모든 캘린더별 acl 이메일 리스트 가져오기
 export const useGetAllCalendarAclEmailList = (
-  userCalendarInfos: UserCalendarInfo[],
+  calendarList: CalendarDetail[],
   options?: UseQueryOptions<AllCalendarAclEmail[]>,
 ) => {
   const getManagerEmailListByCourse = async (courseId: number) => {
@@ -123,15 +133,16 @@ export const useGetAllCalendarAclEmailList = (
 
   const getAclEmailList = async (calendarId?: string) => {
     if (!calendarId) return [];
-
     try {
       const aclResponse = await axiosCalendarInstance.get(
         `/calendars/${calendarId}/acl`,
       );
       return aclResponse.data.items
-        .map((item: { scope: { value: string } }) => item.scope.value)
+        .map((item: { scope: { value: string } }) => {
+          return { email: item.scope.value };
+        })
         .filter(
-          (email: string) =>
+          ({ email }: { email: string }) =>
             !email.includes('@public') && !email.includes('@group'),
         );
     } catch (error) {
@@ -143,39 +154,64 @@ export const useGetAllCalendarAclEmailList = (
 
   const getManagerEmailList = async (courseId: number) => {
     const res = await getManagerEmailListByCourse(courseId);
-    return res.map(manager => manager.email);
+    return res.map(({ email, roleType }) => ({
+      email,
+      roleType,
+    }));
+  };
+
+  const mergeAclAndManagerEmails = (
+    aclEmailList: { email: string }[],
+    managerEmailList: { email: string; roleType: string }[],
+  ) => {
+    const managerEmailMap = new Map(
+      managerEmailList.map(({ email, roleType }) => [email, { roleType }]),
+    );
+
+    return aclEmailList.map(acl => {
+      const managerData = managerEmailMap.get(acl.email);
+      const adminData =
+        acl.email === ADMIN_EMAIL ? { ...acl, roleType: 'ADMIN' } : acl;
+      return managerData ? { ...acl, ...managerData } : adminData;
+    });
   };
 
   const getCourseCalendarEmailList = async () => {
-    const requests = userCalendarInfos.map(async calendarInfo => {
-      if (!calendarInfo.isCreated) {
-        return {
-          ...calendarInfo,
-          aclEmailList: [],
-          managerEmailList: [],
-          hasNotAclEmailList: [],
-        };
+    const requests = calendarList.map(async calendar => {
+      const isCreated = calendar?.accessRole === 'owner';
+
+      if (!isCreated) {
+        return { ...calendar, isCreated, hasAcl: false };
       }
 
       try {
         const [aclEmailList, managerEmailList] = await Promise.all([
-          getAclEmailList(calendarInfo.calendarId),
-          getManagerEmailList(calendarInfo.courseId),
+          getAclEmailList(calendar.calendarId),
+          getManagerEmailList(calendar.courseId),
         ]);
 
-        const aclEmailSet = new Set(aclEmailList);
+        const aclEmailSet = new Set(
+          aclEmailList.map(({ email }: { email: string }) => email),
+        );
         const hasNotAclEmailList = managerEmailList.filter(
-          email => !aclEmailSet.has(email),
+          ({ email }) => !aclEmailSet.has(email),
+        );
+
+        const updatedAclEmailList = mergeAclAndManagerEmails(
+          aclEmailList,
+          managerEmailList,
         );
 
         return {
-          ...calendarInfo,
-          aclEmailList,
+          ...calendar,
+          isCreated,
+          hasAcl: !!aclEmailList.length,
+          aclEmailList: updatedAclEmailList,
           managerEmailList,
           hasNotAclEmailList,
         };
       } catch (err) {
-        throw new Error(`캘린더 id ${calendarInfo.courseTitle}: ${err}`);
+        throw new Error(`캘린더 id ${calendar.courseTitle}: ${err}`);
       }
     });
 
@@ -185,34 +221,7 @@ export const useGetAllCalendarAclEmailList = (
   return useQuery<AllCalendarAclEmail[]>({
     queryKey: ['useGetAllCalendarAclEmailList'],
     queryFn: getCourseCalendarEmailList,
-    enabled: userCalendarInfos.length > 0,
-    retry: false,
-    ...options,
-  });
-};
-
-// 다중 캘린더별 권한 데이터 가져오기
-export const useGetAllUserCalendarAclList = (
-  userCalendarInfos: UserCalendarInfo[],
-  options?: UseQueryOptions<(UserCalendarInfo & { hasAcl: boolean })[]>,
-) => {
-  const getCourseCalendarInfoList = async () => {
-    const requests = userCalendarInfos.map(calendarInfo => {
-      if (!calendarInfo.isCreated) {
-        return Promise.resolve({ ...calendarInfo, hasAcl: false });
-      }
-      return axiosCalendarInstance
-        .get(`/calendars/${calendarInfo.calendarId}/acl`)
-        .then(res => ({ ...calendarInfo, hasAcl: !!res?.data.items.length }))
-        .catch(() => ({ ...calendarInfo, hasAcl: false }));
-    });
-    return Promise.all(requests);
-  };
-
-  return useQuery<(UserCalendarInfo & { hasAcl: boolean })[]>({
-    queryKey: ['userAclList'],
-    queryFn: getCourseCalendarInfoList,
-    enabled: userCalendarInfos.length > 0,
+    enabled: calendarList.length > 0,
     retry: false,
     ...options,
   });
@@ -239,31 +248,33 @@ export const useGetCreatedCourseCalendar = (
 };
 
 export const useCourseCalendarList = (
-  courseList: Pick<UserProfileDto.Get, 'courseList'>['courseList'],
+  courseList: {
+    courseId: number;
+    courseTitle: string;
+  }[],
   options?: UseQueryOptions<
-    (SproutCalendarDto.Get & { isCreated: boolean; courseTitle: string })[]
+    (SproutCalendarDto.Get & { courseTitle: string })[]
   >,
 ) => {
   const getCourseCalendarInfoList = async () => {
     const requests = courseList.map(({ courseId, courseTitle }) =>
       axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
+        const baseDetail = { courseId, courseTitle };
+
         return res.data.length === 0
-          ? [{ courseTitle, courseId, isCreated: false }]
-          : res.data.map((item: SproutCalendarDto.Get) => ({
-              ...item,
-              id: item.calendarId,
-              courseTitle,
-              isCreated: true,
-            }));
+          ? [baseDetail]
+          : res.data
+              .slice(0, 1)
+              .map(({ calendarId }: SproutCalendarDto.Get) => {
+                return { ...baseDetail, calendarId };
+              });
       }),
     );
     const responses = await Promise.all(requests);
     return responses.flat();
   };
 
-  return useQuery<
-    (SproutCalendarDto.Get & { isCreated: boolean; courseTitle: string })[]
-  >({
+  return useQuery<(SproutCalendarDto.Get & { courseTitle: string })[]>({
     queryKey: ['courseCalenderList', courseList],
     queryFn: getCourseCalendarInfoList,
     enabled: courseList.length > 0,

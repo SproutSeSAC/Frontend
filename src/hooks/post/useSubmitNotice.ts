@@ -1,43 +1,24 @@
-import { useCallback } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-// import { useHandleImage } from '@/hooks/common/useHandleImage';
-import {
-  useEditNotice,
-  usePostNotice,
-} from '@/services/notice/noticeMutations';
+import { usePostNotice } from '@/services/notice/noticeMutations';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
-import { noticeCategoryList } from '@/constants';
-import { useCalendarData, useDialogContext } from '@/hooks';
-import {
-  GoogleCalendarApiDto,
-  NoticeCategoryDisplayKey,
-  NoticeDto,
-} from '@/types';
+import { useCalendarList, useDialogContext, useHandleImage } from '@/hooks';
+import { GoogleCalendarApiDto, NoticeDto } from '@/types';
+import { findCurrNotice } from '@/utils';
 import { SubmitErrorHandler } from 'react-hook-form';
 
 import { Session } from '@/components/notice/form/ControllerSessions';
 import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
-interface UseSubmitNotice {
-  isEditing: boolean;
-  noticeId: number;
-}
-
-export const useSubmitNotice = (props?: UseSubmitNotice) => {
+export const useSubmitNotice = () => {
   const { showToast, alert, hideDialog } = useDialogContext();
 
   const queryClient = useQueryClient();
 
-  const findCurrNotice = useCallback((key: NoticeCategoryDisplayKey) => {
-    return noticeCategoryList.find(option => key === option.key);
-  }, []);
-
-  const { courseCalendarList } = useCalendarData();
+  const { allCourseCalendarList } = useCalendarList();
 
   const navigate = useNavigate();
 
@@ -48,19 +29,15 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     name: '확인',
     onClick: async () => {
       hideDialog();
-      if (!props?.isEditing) {
-        await queryClient.invalidateQueries({
-          queryKey: ['useGetInfiniteNoticeList'],
-          exact: false,
-        });
-        await queryClient.invalidateQueries({
-          queryKey: ['useGetThisWeekNoticeList'],
-          exact: false,
-        });
-        navigate('/notice');
-      } else {
-        navigate(`/notice/post/${props?.noticeId}`);
-      }
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetInfiniteNoticeList'],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetThisWeekNoticeList'],
+        exact: false,
+      });
+      navigate('/notice');
     },
   };
 
@@ -73,17 +50,21 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     const { sessions, title, meetingPlace, targetCourseIdList } = data;
 
     const eventsFromSession: GoogleCalendarApiDto.PostEvent[] = sessions.map(
-      (session, index) => ({
+      ({ sessionEndDateTime, sessionStartDateTime }, index) => ({
         summary: `${title} ${index + 1}회차`,
         start: {
-          dateTime: new Date(session.sessionStartDateTime).toISOString(),
+          dateTime: sessionStartDateTime,
+          timeZone: 'Asia/Seoul',
         },
-        end: { dateTime: new Date(session.sessionEndDateTime).toISOString() },
+        end: {
+          dateTime: sessionEndDateTime,
+          timeZone: 'Asia/Seoul',
+        },
         location: meetingPlace,
       }),
     );
 
-    const targetCalendar = courseCalendarList.filter(({ courseId }) =>
+    const targetCalendar = allCourseCalendarList.filter(({ courseId }) =>
       targetCourseIdList.includes(courseId),
     );
 
@@ -98,26 +79,6 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     return mutateCreateEvent(events);
   };
 
-  const { mutateAsync: mutateEditedNotice } = useEditNotice({
-    onError: () => {
-      alert({
-        text: '공지사항 수정 중 오류가 발생했습니다.',
-        subText: '다시 시도해주세요.',
-        buttonList: [confirmBtn],
-      });
-    },
-    onSuccess: async () => {
-      // NOTE: 교육과정 캘린더 일정도 수정해야함.
-      alert({
-        dimClick: false,
-        text: props?.isEditing
-          ? '공지사항을 수정했습니다!'
-          : '공지사항이 성공적으로 등록되었습니다!',
-        buttonList: [confirmBtn],
-      });
-    },
-  });
-
   const { mutateAsync: mutatePostNotice } = usePostNotice({
     onError: () => {
       alert({
@@ -129,25 +90,27 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     onSuccess: async (_, data: NoticeDto.PostNotice) => {
       const currNotice = findCurrNotice(data.noticeType);
 
+      if (!currNotice?.needExtraInfo) {
+        alert({
+          dimClick: false,
+          text: '공지사항이 성공적으로 등록되었습니다!',
+          buttonList: [confirmBtn],
+        });
+        return;
+      }
+
       if (currNotice?.needExtraInfo && data.sessions) {
+        const { sessions, title, targetCourseIdList, meetingPlace } = data;
         await createEventsForTargetCourse({
-          sessions: data.sessions,
-          title: data.title,
-          targetCourseIdList: data.targetCourseIdList,
-          meetingPlace: data.meetingPlace,
+          sessions,
+          title,
+          targetCourseIdList,
+          meetingPlace,
         });
         alert({
           dimClick: false,
           text: '공지사항이 성공적으로 등록되었습니다!',
-          subText: `${currNotice?.name} 일정이 각 교육과정 캘린더에 추가되었습니다!`,
-          buttonList: [confirmBtn],
-        });
-      } else {
-        alert({
-          dimClick: false,
-          text: props?.isEditing
-            ? '공지사항을 수정했습니다!'
-            : '공지사항이 성공적으로 등록되었습니다!',
+          subText: `${currNotice?.name} 일정이 교육과정 캘린더에 추가되었습니다!`,
           buttonList: [confirmBtn],
         });
       }
@@ -164,13 +127,7 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
     }
   };
 
-  // const { getPresignedUrl, uploadImageToS3, base64ToFile } = useHandleImage();
-
-  // const handleImagesInContent = async (content: string): Promise<string> => {
-  //   const base64ImageRegex =
-  //     /<img[^>]*src="(data:image\/[^;]+;base64,[^"]+)"[^>]*>/g;
-  // const matches = [...content.matchAll(base64ImageRegex)];
-  // };
+  const { handleImagesInContent } = useHandleImage();
 
   const onSubmit = async (submittedValue: NoticeDto.PostNotice) => {
     const {
@@ -178,42 +135,38 @@ export const useSubmitNotice = (props?: UseSubmitNotice) => {
       title,
       content,
       targetCourseIdList,
-      satisfactionSurvey,
-      sessions,
+      sessions, //
     } = submittedValue;
 
-    // const updatedContent = await handleImagesInContent(content);
+    const contentWithHandledImage = await handleImagesInContent(content);
 
-    const sessionsWithNoId = (sessions as Session[])?.map(
-      ({ id, ...rest }) => rest,
-    );
+    const needExtraInfoNoticeType = findCurrNotice(noticeType)?.needExtraInfo;
 
-    if (noticeType === 'SPECIAL_LECTURE' || noticeType === 'EVENT') {
-      const formValue = {
+    if (needExtraInfoNoticeType) {
+      const sessionsWithNoId = (sessions as Session[])?.map(
+        ({ id, ...rest }) => rest,
+      );
+      const extraFormValue = {
         ...submittedValue,
-        // content: updatedContent,
-        satisfactionSurvey: satisfactionSurvey || '',
         sessions: sessionsWithNoId,
+        content: contentWithHandledImage,
       };
-      if (props && props.isEditing) {
-        const { noticeId } = props;
-        mutateEditedNotice({ ...formValue, noticeId });
-      } else {
-        mutatePostNotice(formValue);
-      }
-    } else {
-      const formValue = { noticeType, title, content, targetCourseIdList };
-      if (props?.isEditing) {
-        mutateEditedNotice({ ...formValue, noticeId: props.noticeId });
-      } else {
-        mutatePostNotice(formValue);
-      }
+      mutatePostNotice(extraFormValue);
+    }
+
+    if (!needExtraInfoNoticeType) {
+      const formValue = {
+        noticeType,
+        title,
+        content: contentWithHandledImage,
+        targetCourseIdList,
+      };
+      mutatePostNotice(formValue);
     }
   };
 
   return {
     onError,
-    findCurrNotice,
     onSubmit,
     isCreateEventsPending,
   };

@@ -19,7 +19,7 @@ export const usePostNotice = (
   });
 };
 
-export const useEditNotice = (
+export const usePutEditNotice = (
   options?: UseMutationOptions<
     unknown,
     Error,
@@ -90,7 +90,8 @@ export const usePostNoticeScrap = () => {
       const { data } = await axiosInstance.post(
         `/notices/${requestBody.noticeId}/scrap`,
       );
-      return data;
+
+      return data.isScraped;
     },
   });
 };

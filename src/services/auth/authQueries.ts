@@ -45,6 +45,7 @@ export const initialUserProfile: UserProfileDto.Get = {
   nickname: '',
   imgUrl: '',
   role: 'TRAINEE',
+  profileImageUrl: '',
 };
 
 // 나의 회원 정보 얻기
@@ -61,6 +62,23 @@ export const useGetUserProfile = (
     queryKey: ['useGetUserProfile'],
     queryFn: getUserProfile,
     initialData: initialUserProfile,
+    ...options,
+  });
+};
+
+// 나의 카드 정보 얻기
+export const useGetUserProfileCard = (
+  options?: UseQueryOptions<UserProfileDto.GetCard>,
+) => {
+  const getUserProfileCard = async () => {
+    const res: AxiosResponse<UserProfileDto.GetCard> =
+      await axiosInstance.get('/mypage/getCard');
+    return res.data;
+  };
+
+  return useQuery<UserProfileDto.GetCard>({
+    queryKey: ['useGetUserProfileCard'],
+    queryFn: getUserProfileCard,
     ...options,
   });
 };

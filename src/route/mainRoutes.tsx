@@ -2,6 +2,8 @@ import { lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
+import SessionsDetail from '@/pages/SessionsDetail';
+
 const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
 const Notice = lazy(() => import('@/pages/Notice'));
 const NoticeDetail = lazy(() => import('@/pages/NoticeDetail'));
@@ -47,6 +49,10 @@ const mainRoutes: RouteObject[] = [
       {
         path: 'mypage',
         element: <MyPage />,
+      },
+      {
+        path: 'application-status-for-sessions',
+        element: <SessionsDetail />,
       },
       {
         path: 'stores',

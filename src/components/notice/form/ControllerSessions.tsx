@@ -104,7 +104,7 @@ export default function ControllerSessions({
                             });
                             onChange(filteredData);
                           }}
-                          iconClassName="!text-text !size-6"
+                          iconClassName="text-text !size-6"
                           className="flex justify-end pr-2"
                         />
                       )}

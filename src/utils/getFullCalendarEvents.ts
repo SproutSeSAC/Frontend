@@ -1,9 +1,7 @@
-import { Event } from '@/types';
+import { EventWithId } from '@/types';
 import { createRrule } from '@/utils';
 
-export const changeFullCalendarEvents = (
-  eventList: (Event & { backgroundColor: string })[],
-) => {
+export const changeFullCalendarEvents = (eventList: EventWithId[]) => {
   const recurringEvents = eventList
     .filter(event => event?.recurringEventId)
     .map(event => ({
@@ -23,6 +21,7 @@ export const changeFullCalendarEvents = (
         id: event?.id,
         backgroundColor: event?.backgroundColor,
         allDay: !event?.start?.dateTime && !event?.end?.dateTime,
+        calendarId: event?.calendarId,
       };
 
       const exdate = recurringEvents

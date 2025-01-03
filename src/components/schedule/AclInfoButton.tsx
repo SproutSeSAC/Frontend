@@ -9,13 +9,15 @@ import { BiInfoCircle } from 'react-icons/bi';
 
 import SquareButton from '@/components/common/button/SquareButton';
 
+interface AclInfoButtonProps {
+  courseId: number;
+  accessRole: AccessRole;
+}
+
 export default function AclInfoButton({
   courseId,
   accessRole,
-}: {
-  courseId: number;
-  accessRole: AccessRole;
-}) {
+}: AclInfoButtonProps) {
   const { calendarId: sproutCalendarId = '' } =
     useGetCreatedCourseCalendar(courseId).data || {};
 
@@ -27,12 +29,12 @@ export default function AclInfoButton({
     noAcl: {
       text: '아직 일정관리 권한이 부여되지 않은 상태입니다.',
       subText:
-        '잠시만 기다려주시면 관리자가 확인 후 권한을 부여해드리겠습니다. 알림을 확인해주세요.',
+        '잠시만 기다려주시면 관리자가 확인 후 권한을 곧 부여해드리겠습니다.',
     },
     noInMyCalendar: {
-      text: '일정관리 권한이 부여된 상태이지만 나의 캘린더 목록에는 추가되지 않은 상태입니다.',
+      text: '일정관리 권한이 부여되었으나 나의 캘린더 목록에는 추가되지 않은 상태입니다.',
       subText:
-        '현재 구글 계정의 Gmail에 캘린더 추가 링크가 전달되었으니 링크를 통해 내 캘린더 목록에도 추가하세요.',
+        '현재 구글 계정의 Gmail에 캘린더 추가 링크가 전달되었으니 링크를 통해 내 캘린더 목록에도 꼭 추가해주세요. 추가하지 않을시 교육과정 캘린더 목록에서 보이지 않을 수 있습니다.',
     },
   };
 

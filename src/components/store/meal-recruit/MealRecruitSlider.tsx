@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
-import { useDialogContext, useObserver } from '@/hooks';
+import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
 import { BsPlus } from 'react-icons/bs';
 
@@ -22,8 +22,8 @@ export default function MealRecruitSlider({
 
   const {
     data = { pages: [{ mealPosts: [], totalPages: 0 }], pageParams: [] },
-    fetchNextPage,
-    hasNextPage,
+    // fetchNextPage,
+    // hasNextPage,
     isLoading,
   } = useGetInfiniteMealPostList();
 
@@ -38,16 +38,6 @@ export default function MealRecruitSlider({
         return acc;
       }, []);
   }, [data?.pages]);
-
-  const runFucAtIntersect = () => {
-    if (hasNextPage) fetchNextPage();
-  };
-
-  useObserver({
-    runFucAtIntersect,
-    target: mealPostObserveRef,
-    threshold: 0.1,
-  });
 
   return (
     <>

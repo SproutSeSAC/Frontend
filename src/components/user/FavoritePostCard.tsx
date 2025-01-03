@@ -3,7 +3,7 @@ import UserImage from '@/components/user/UserImage';
 
 export default function FavoritePostCard() {
   return (
-    <li className="w-[354px] flex-shrink-0 rounded-3xl bg-white p-8">
+    <li className="w-full rounded-3xl border bg-white p-8">
       <div className="mb-4 flex items-center justify-between">
         <span className="font-semibold tracking-tight opacity-60">
           # 스터디모집

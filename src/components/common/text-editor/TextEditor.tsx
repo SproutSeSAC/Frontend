@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useHandleImage } from '@/hooks/common/useHandleImage';
-
+import { useHandleImage } from '@/hooks';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import Toolbar from 'quill/modules/toolbar';
@@ -55,38 +54,25 @@ export default function TextEditor({
     ];
   }, []);
 
-  const { alertLimitCapacity } = useHandleImage();
+  const { onImageChange } = useHandleImage();
 
   const handleImageUpload = useCallback(() => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
+    input.setAttribute('accept', 'image/png, image/jpeg, image/jpg');
     input.click();
 
     input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-
-      if (file.size > 1048576) {
-        alertLimitCapacity({ limitCapacity: '1MB' });
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = () => {
+      if (!input.files?.[0]) return;
+      const onloadFn = (result: string) => {
         if (quillRef.current) {
           const range = quillRef.current.getSelection();
-          const base64String = reader.result as string;
-
-          quillRef.current.insertEmbed(
-            range?.index || 0,
-            'image',
-            base64String,
-          );
+          quillRef.current.insertEmbed(range?.index || 0, 'image', result);
         }
       };
-      reader.readAsDataURL(file);
+      onImageChange(input.files?.[0], 1, onloadFn);
     };
-  }, [alertLimitCapacity]);
+  }, [onImageChange]);
 
   useEffect(() => {
     if (editorRef.current && !quillRef.current) {

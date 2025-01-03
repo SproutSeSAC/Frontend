@@ -5,7 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import ControllerDateTime from '@/components/common/input/ControllerDateTime';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
-import ControlMeetingType from '@/components/notice/form/ControlMeetingType';
+import ControllerMeetingType from '@/components/notice/form/ControllerMeetingType';
 import ControllerParticipantCapacity from '@/components/notice/form/ControllerParticipantCapacity';
 import ControllerRequiredPhoneNumber from '@/components/notice/form/ControllerRequiredPhoneNumber';
 import ControllerSessions from '@/components/notice/form/ControllerSessions';
@@ -37,7 +37,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
         label={`${noticeType} 장소`}
         tooltip={tooltip.meetingType}
       >
-        <ControlMeetingType />
+        <ControllerMeetingType />
       </LabeledSection>
 
       <LabeledSection label="핸드폰 번호">

@@ -4,7 +4,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TextInput from '@/components/common/input/TextInput';
 
-export default function ControlMeetingType() {
+export default function ControllerMeetingType() {
   const {
     control,
     register,

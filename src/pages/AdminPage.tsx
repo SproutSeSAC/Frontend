@@ -11,7 +11,7 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { isAdmin, updateQueryParams } from '@/utils';
 
-import CalendarAclTable from '@/components/admin/CalendarAclTable';
+import CalendarAclTable from '@/components/adminpage/CalendarAclTable';
 import TabNavigation from '@/components/common/TabNavigation';
 
 const ADMIN_TAB = 'adminTab';

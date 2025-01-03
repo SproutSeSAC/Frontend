@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import '@/calendar.css';
 import { FullCalendarEvent } from '@/types';
@@ -13,13 +13,13 @@ import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomE
 interface CalendarProps {
   type: 'big' | 'small';
   events?: FullCalendarEvent[];
-  courseEvents?: FullCalendarEvent[];
+  sideViewEvents?: FullCalendarEvent[];
 }
 
 export default function Calendar({
   type,
   events,
-  courseEvents,
+  sideViewEvents,
 }: CalendarProps) {
   const renderDayCellContent = useCallback(
     (info: DayCellContentArg, cellEvents?: FullCalendarEvent[]) => {
@@ -60,16 +60,6 @@ export default function Calendar({
     [],
   );
 
-  const futureEvents = useMemo(() => {
-    const today = new Date();
-    today.setDate(today.getDate() - 1);
-
-    return courseEvents?.filter(event => {
-      const eventDate = new Date(event.start);
-      return eventDate >= today;
-    });
-  }, [courseEvents]);
-
   return (
     <div className={`${type}-calendar w-full rounded-xl bg-white shadow-card`}>
       {type === 'big' ? (
@@ -107,9 +97,9 @@ export default function Calendar({
             dayCellContent={info => renderDayCellContent(info, events)}
             eventDisplay="block"
           />
-          {futureEvents && futureEvents.length !== 0 && (
+          {sideViewEvents && sideViewEvents.length !== 0 && (
             <ul className="mb-2 mt-1 flex flex-col gap-2">
-              {futureEvents.slice(0, 4).map(event => (
+              {sideViewEvents.map(event => (
                 <SmallCalendarBottomEvent
                   key={event.id}
                   date={new Date(event.start).toLocaleDateString()}

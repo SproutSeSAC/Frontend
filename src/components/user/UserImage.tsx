@@ -18,7 +18,11 @@ function UserImage(
       className={`group relative flex aspect-square size-8 items-center justify-center rounded-full bg-oliveGreen3 ${className}`}
     >
       {imgUrl ? (
-        <img src={imgUrl} alt="프로필 이미지" className="object-cover" />
+        <img
+          src={imgUrl}
+          alt="프로필 이미지"
+          className="aspect-square overflow-hidden rounded-full object-cover"
+        />
       ) : (
         <BsPerson className="size-[65%] text-oliveGreen1" />
       )}

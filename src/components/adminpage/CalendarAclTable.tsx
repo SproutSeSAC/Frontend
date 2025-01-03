@@ -2,14 +2,16 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useGrantAcl } from '@/services/schedule/calendarMutations';
 
+import { RolesObj } from '@/constants';
 import { useDialogContext, useGetUserAclList } from '@/hooks';
+import { getColorByRole } from '@/utils';
 import { FaPlus } from 'react-icons/fa6';
 
 import LoopLoading from '@/components/common/LoopLoading';
 import SquareButton from '@/components/common/button/SquareButton';
-import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
 import TableHeaderCell from '@/components/common/table/TableHeaderCell';
+import Tag from '@/components/common/tag/Tag';
 
 export default function CalendarAclTable() {
   const { aclEmailListByCourse: bodyCellList = [], isCalendarAclLoading } =
@@ -38,8 +40,8 @@ export default function CalendarAclTable() {
     { name: '캘린더 상태' },
     { name: '교육과정 캘린더' },
     { name: '권한이 부여된 이메일' },
-    { name: '권한이 없는 이메일' },
-    { name: '전체 부여', className: 'text-end pr-4' },
+    { name: '권한이 없는 매니저' },
+    { name: '권한 부여', className: 'text-end pr-4' },
   ];
 
   return (
@@ -47,27 +49,21 @@ export default function CalendarAclTable() {
       <colgroup>
         <col width="5%" />
         <col width="9%" />
-        <col width="40%" />
-        <col width="19%" />
-        <col width="19%" />
+        <col width="32%" />
+        <col width="23%" />
+        <col width="23%" />
         <col width="8%" />
       </colgroup>
 
       <thead>
         <tr className="text-left">
-          {headerCellList.map(cell =>
-            cell.name === '체크박스' ? (
-              <TableHeaderCell key={cell.name} name="체크박스">
-                <Checkbox id="체크박스" checked={false} onChange={() => {}} />
-              </TableHeaderCell>
-            ) : (
-              <TableHeaderCell
-                key={cell.name}
-                name={cell.name}
-                className={cell.className}
-              />
-            ),
-          )}
+          {headerCellList.map(cell => (
+            <TableHeaderCell
+              key={cell.name}
+              name={cell.name}
+              className={cell.className}
+            />
+          ))}
         </tr>
       </thead>
 
@@ -98,23 +94,47 @@ export default function CalendarAclTable() {
               </TableDataCell>
 
               <TableDataCell>
-                {cell?.aclEmailList?.length === 0
-                  ? '-'
-                  : cell.aclEmailList.map(email => (
-                      <span key={email} className="block text-oliveGreen1">
-                        {email}
-                      </span>
+                {cell?.aclEmailList?.length === 0 ? (
+                  '-'
+                ) : (
+                  <ul className="flex flex-col gap-y-1">
+                    {cell?.aclEmailList?.map(({ email, roleType }) => (
+                      <div key={email} className="flex">
+                        {roleType && (
+                          <Tag
+                            size="small"
+                            color={getColorByRole(roleType)}
+                            emphasisText
+                            text={RolesObj[roleType]}
+                            className="mr-0.5 font-medium"
+                          />
+                        )}
+                        <span>{email}</span>
+                      </div>
                     ))}
+                  </ul>
+                )}
               </TableDataCell>
 
               <TableDataCell>
-                {cell?.hasNotAclEmailList?.length === 0
-                  ? '-'
-                  : cell.hasNotAclEmailList.map(email => (
-                      <span key={email} className="block">
-                        {email}
-                      </span>
+                {cell?.hasNotAclEmailList?.length === 0 ? (
+                  '-'
+                ) : (
+                  <ul className="flex flex-col gap-y-1">
+                    {cell?.hasNotAclEmailList?.map(({ email, roleType }) => (
+                      <div key={email} className="flex">
+                        <Tag
+                          size="small"
+                          color={getColorByRole(roleType)}
+                          emphasisText
+                          text={RolesObj[roleType]}
+                          className="mr-0.5 font-medium"
+                        />
+                        <span>{email}</span>
+                      </div>
                     ))}
+                  </ul>
+                )}
               </TableDataCell>
 
               <TableDataCell className="pr-5 text-end [&>button]:px-4">
@@ -123,14 +143,16 @@ export default function CalendarAclTable() {
                   onClick={() => {
                     if (
                       !cell.calendarId ||
-                      cell.hasNotAclEmailList.length === 0
+                      cell?.hasNotAclEmailList?.length === 0
                     )
                       return;
                     const { calendarId, hasNotAclEmailList } = cell;
-                    mutateAsync({ calendarId, hasNotAclEmailList });
+                    if (hasNotAclEmailList) {
+                      mutateAsync({ calendarId, hasNotAclEmailList });
+                    }
                   }}
                   disabled={
-                    cell.hasNotAclEmailList.length === 0 || !cell.calendarId
+                    !cell.hasAcl || cell?.hasNotAclEmailList?.length === 0
                   }
                   className="disabled:text-gray3"
                 >

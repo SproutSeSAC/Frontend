@@ -49,6 +49,14 @@ export type Event = {
   backgroundColor?: string;
 };
 
+export type UpdateEvent = {
+  summary: string;
+  start: EventDateTime;
+  end: EventDateTime;
+  description: string;
+  location: string;
+};
+
 type AccessRole = 'freeBusyReader' | 'reader' | 'writer' | 'owner';
 
 type AllowedConferenceSolutions = {
