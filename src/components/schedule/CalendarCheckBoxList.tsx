@@ -1,9 +1,4 @@
-import { Fragment, useMemo } from 'react';
-
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
+import { useMemo } from 'react';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
@@ -30,11 +25,6 @@ export default function CalendarCheckBoxList({
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
-  const {
-    data: userProfile = initialUserProfile,
-    isLoading: isUserProfileLoading,
-  } = useGetUserProfile();
-
   const onCheckBoxChange = (id: string) => {
     if (currentCalendarIds?.includes(id)) {
       const filteredIds = currentCalendarIds.filter(
@@ -55,12 +45,13 @@ export default function CalendarCheckBoxList({
         category: '교육과정 캘린더',
         calendarList: allCourseCalendarList,
       },
-      { category: '개인 캘린더', calendarList: personalCalendarList },
+      {
+        category: '개인 캘린더',
+        calendarList: personalCalendarList, //
+      },
     ],
     [allCourseCalendarList, personalCalendarList],
   );
-
-  if (isUserProfileLoading) return null;
 
   return (
     <ul className="h-full overflow-auto rounded-xl bg-white px-5 pt-5 shadow-card scrollbar-hide">
@@ -72,9 +63,9 @@ export default function CalendarCheckBoxList({
           titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
           initialOpen
           tooltip={
-            (isTrainee(userRole) || isPreTrainee(userRole)) &&
             category === '교육과정 캘린더' &&
-            calendarList.length === 0
+            calendarList.length === 0 &&
+            isPreTrainee(userRole)
               ? '훈련생이 되면 교육과정과 관련된 일정을 볼 수 있어요.'
               : undefined
           }
@@ -90,47 +81,50 @@ export default function CalendarCheckBoxList({
                   backgroundColor,
                   summary,
                   calendarId,
-                }) =>
-                  summary ? (
-                    <div
-                      key={courseTitle}
-                      className="flex items-start justify-between [&>label]:items-start"
-                    >
-                      <Checkbox
-                        id={courseId}
-                        text={summary || courseTitle}
-                        checked={!!currentCalendarIds?.includes(id)}
-                        onChange={() => onCheckBoxChange(id)}
-                        textClassName="!text-text"
-                        checkBoxColor={backgroundColor}
-                      />
-
-                      {isManagerAndAdmin(userRole) && (
-                        <AclInfoButton
-                          courseId={courseId}
-                          accessRole={accessRole}
+                }) => (
+                  <div
+                    key={courseId}
+                    className="flex items-start justify-between [&>label]:items-start"
+                  >
+                    {/* 캘린더가 생성된 경우 */}
+                    {summary ? (
+                      <>
+                        <Checkbox
+                          id={courseId}
+                          text={summary || courseTitle}
+                          checked={!!currentCalendarIds?.includes(id)}
+                          onChange={() => onCheckBoxChange(id)}
+                          textClassName="!text-text"
+                          checkBoxColor={backgroundColor}
                         />
-                      )}
-                    </div>
-                  ) : (
-                    <Fragment key={courseId}>
-                      {isTrainee(userRole) && (
-                        <SubscribeCalendarButton
-                          courseTitle={userProfile?.courseList[0]?.courseTitle}
-                          courseId={userProfile?.courseList[0].courseId}
-                        />
-                      )}
-
-                      {isManagerAndAdmin(userRole) && (
-                        <CreateCalendarButton
-                          courseTitle={courseTitle}
-                          courseId={courseId}
-                          userRole={userRole}
-                          disabled={!!calendarId}
-                        />
-                      )}
-                    </Fragment>
-                  ),
+                        {isManagerAndAdmin(userRole) && (
+                          <AclInfoButton
+                            courseId={courseId}
+                            accessRole={accessRole}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {isTrainee(userRole) && (
+                          <SubscribeCalendarButton
+                            courseTitle={courseTitle}
+                            courseId={courseId}
+                            disabled={!!calendarId}
+                          />
+                        )}
+                        {isManagerAndAdmin(userRole) && (
+                          <CreateCalendarButton
+                            courseTitle={courseTitle}
+                            courseId={courseId}
+                            userRole={userRole}
+                            disabled={!!calendarId}
+                          />
+                        )}
+                      </>
+                    )}
+                  </div>
+                ),
               )}
 
             {category === '개인 캘린더' &&

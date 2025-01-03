@@ -9,11 +9,13 @@ import SquareButton from '@/components/common/button/SquareButton';
 interface AddSubscribeCalenderButtonProps {
   courseTitle: string;
   courseId: number;
+  disabled: boolean;
 }
 
 export default function SubscribeCalenderButton({
   courseTitle,
   courseId,
+  disabled,
 }: AddSubscribeCalenderButtonProps) {
   const { alert, hideDialog } = useDialogContext();
 
@@ -35,6 +37,7 @@ export default function SubscribeCalenderButton({
       alert({
         text: `${courseTitle} 캘린더가 곧 생성될 예정입니다.`,
         subText: `조금만 기다려주세요!`,
+        className: 'max-w-[600px]',
         children: (
           <SquareButton
             name="확인"
@@ -48,12 +51,14 @@ export default function SubscribeCalenderButton({
       alert({
         text: `${courseTitle} 캘린더`,
         subText: `위 캘린더를 구독하시겠어요? `,
+        subTextColor: 'green',
+        className: 'max-w-[600px]',
         children: (
-          <div className="flex max-w-80 flex-col">
+          <div className="flex flex-col">
             <Title
               as="p"
               highlight={courseTitle}
-              title={`${courseTitle}에 관련된 일정들을 확인할 수 있습니다.`}
+              title="위 교육과정과 관련된 일정들을 확인할 수 있습니다."
               className="mt-2 px-2 text-center leading-6"
             />
             <div className="flex justify-center gap-2">
@@ -81,8 +86,15 @@ export default function SubscribeCalenderButton({
 
   return (
     <div className="flex items-center justify-between">
-      <button type="button" onClick={onTraineeCalendarClick} className="pr-2">
-        <FaPlus className="size-4 text-oliveGreen1" />
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={onTraineeCalendarClick}
+        className="pr-2"
+      >
+        <FaPlus
+          className={`size-4 ${disabled ? 'text-gray2' : 'text-oliveGreen1'}`}
+        />
       </button>
       <span className="flex-1 tracking-tight text-gray2">
         {courseTitle} 캘린더 구독하기
