@@ -18,11 +18,13 @@ const Schedule = lazy(() => import('@/pages/Schedule'));
 const Store = lazy(() => import('@/pages/Store'));
 const StoreDetail = lazy(() => import('@/pages/StoreDetail'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
 
 const mainRoutes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
+    ErrorBoundary: ErrorPage, // TODO: 에러바운더리 상위에서 관리하기
     children: [
       {
         index: true,
@@ -45,30 +47,37 @@ const mainRoutes: RouteObject[] = [
       {
         path: 'admin',
         element: <AdminPage />,
+        ErrorBoundary: ErrorPage,
       },
       {
         path: 'mypage',
         element: <MyPage />,
+        ErrorBoundary: ErrorPage,
       },
       {
         path: 'application-status-for-sessions',
         element: <SessionsDetail />,
+        ErrorBoundary: ErrorPage,
       },
       {
         path: 'stores',
         element: <Store />,
+        ErrorBoundary: ErrorPage,
       },
       {
         path: 'stores/detail-location',
         element: <StoreDetail />,
+        ErrorBoundary: ErrorPage,
       },
       {
         path: 'schedule',
         element: <Schedule />,
+        ErrorBoundary: ErrorPage,
       },
       {
         path: 'lounge',
         element: <LoungeLayout />,
+        ErrorBoundary: ErrorPage,
         children: [
           {
             index: true,
