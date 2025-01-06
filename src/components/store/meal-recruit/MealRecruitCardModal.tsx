@@ -5,6 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePutMealPost } from '@/services/store/storeMutations';
 import { useGetMealPostDetail } from '@/services/store/storeQueries';
 
+import { convertUtcToLocal } from '@/utils/convertUtcToLocal';
+
 import { useDialogContext } from '@/hooks';
 import { formatDate } from '@/utils';
 import { FaCrown } from 'react-icons/fa';
@@ -59,7 +61,7 @@ export default function MealRecruitCardModal({
 
           <span className="flex flex-1 gap-1 overflow-hidden">
             {data
-              ? `${formatDate(data.appointmentTime, 'yyyy.MM.dd a h시')}`
+              ? `${formatDate(convertUtcToLocal(data.appointmentTime), 'yyyy.MM.dd a h시 mm분')}`
               : '-'}
           </span>
         </div>
