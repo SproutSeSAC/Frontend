@@ -102,7 +102,7 @@ export default function MealRecruitModal() {
 
   return (
     <Modal
-      className="p-[50px]"
+      className="w-full max-w-[716px] p-[50px]"
       onToggleClick={hideDialog}
       title={
         <>
