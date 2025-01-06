@@ -18,11 +18,13 @@ const Schedule = lazy(() => import('@/pages/Schedule'));
 const Store = lazy(() => import('@/pages/Store'));
 const StoreDetail = lazy(() => import('@/pages/StoreDetail'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
 
 const mainRoutes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
+    ErrorBoundary: ErrorPage,
     children: [
       {
         index: true,
