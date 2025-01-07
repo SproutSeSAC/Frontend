@@ -5,10 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePutMealPost } from '@/services/store/storeMutations';
 import { useGetMealPostDetail } from '@/services/store/storeQueries';
 
-import { convertUtcToLocal } from '@/utils/convertUtcToLocal';
-
 import { useDialogContext } from '@/hooks';
-import { formatDate } from '@/utils';
+import { convertUtcToLocal, formatDate } from '@/utils';
 import { FaCrown } from 'react-icons/fa';
 
 import SquareButton from '@/components/common/button/SquareButton';

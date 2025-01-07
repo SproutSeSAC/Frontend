@@ -9,6 +9,7 @@ export * from '@/utils/isInThisWeek';
 export * from '@/utils/formatPhoneNumber';
 export * from '@/utils/formatDate';
 export * from '@/utils/notice';
+export * from '@/utils/convertUtcToLocal';
 
 // 캘린더 관련
 export * from '@/utils/getFullCalendarEvents';

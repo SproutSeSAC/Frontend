@@ -1,10 +1,8 @@
 import { useCallback } from 'react';
 
-import { convertUtcToLocal } from '@/utils/convertUtcToLocal';
-
 import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
-import { formatDate } from '@/utils';
+import { convertUtcToLocal, formatDate } from '@/utils';
 
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import UserImage from '@/components/user/UserImage';
