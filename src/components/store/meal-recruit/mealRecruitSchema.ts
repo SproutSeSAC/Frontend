@@ -17,7 +17,7 @@ export const mealRecruitSchema = z.object({
     z.undefined().refine(() => false, '시간 단위를 선택해 주세요.'),
   ]),
   minuteTime: z.union([
-    z.number().min(1, '분단위를 선택해 주세요.'),
+    z.number().min(0, '분단위를 선택해 주세요.'),
     z
       .undefined()
       .nullable()

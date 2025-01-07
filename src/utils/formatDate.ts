@@ -10,6 +10,7 @@ export const formatDate = (
     | 'HH:mm'
     | 'yyyy년 M월 d일 EEEE'
     | 'yyyy.MM.dd a h시'
+    | 'yyyy.MM.dd a h시 mm분'
     | 'yyyy-MM-dd HH:mm:ss'
     | "yyyy-MM-dd'T'HH:mm:ss" = 'yyyy.MM.dd',
 ): string => {

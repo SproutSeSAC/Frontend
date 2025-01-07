@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
-import { formatDate } from '@/utils';
+import { convertUtcToLocal, formatDate } from '@/utils';
 
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import UserImage from '@/components/user/UserImage';
@@ -46,7 +46,7 @@ export default function MealRecruitCard({
             </span>
             <span className={`${isDisabled && 'text-gray1'}`}>
               {slideItem
-                ? `${formatDate(slideItem.appointmentTime, 'yyyy.MM.dd a h시')}`
+                ? `${formatDate(convertUtcToLocal(slideItem.appointmentTime), 'yyyy.MM.dd a h시 mm분')}`
                 : '-'}
             </span>
           </p>

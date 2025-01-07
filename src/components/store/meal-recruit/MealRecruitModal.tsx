@@ -60,14 +60,9 @@ export default function MealRecruitModal() {
 
       date.setHours(data.hourTime, data?.minuteTime || 0, 0, 0);
 
-      const localDate = new Date(
-        date.getTime() + date.getTimezoneOffset() * 60000,
-      );
-      const formattedDate = localDate.toISOString().replace('Z', '');
-
       const params = {
         title: data.title,
-        appointmentTime: formattedDate,
+        appointmentTime: date,
         meetingPlace: data.meetingPlace,
         memberCount: data.memberCount,
         storeName: data.storeName,
@@ -107,7 +102,7 @@ export default function MealRecruitModal() {
 
   return (
     <Modal
-      className="p-[50px]"
+      className="w-full max-w-[716px] p-[50px]"
       onToggleClick={hideDialog}
       title={
         <>
