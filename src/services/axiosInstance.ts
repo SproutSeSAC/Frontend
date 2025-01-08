@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
 
       return axiosInstance(originalRequest);
     }
-    // NOTE: 이외 에러 발생시 로그인 페이지로 이동시킬 예정
+    // NOTE: 이외 에러 발생시 로그인 페이지로 이동시킬 예정 특히 404
     return Promise.reject(error);
   },
 );

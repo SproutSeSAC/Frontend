@@ -156,7 +156,10 @@ export default function NoticeForm() {
               <Title as="h1" title="공지사항 상세 내용" />
             </header>
 
-            <ControllerContentEditor type="notice" initialValue={content} />
+            <ControllerContentEditor
+              type="공지사항"
+              controlNames={{ title: 'title', content: 'content' }}
+            />
 
             <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
               <SquareButton

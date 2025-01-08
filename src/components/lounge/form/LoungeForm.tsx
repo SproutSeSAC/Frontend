@@ -15,7 +15,12 @@ import {
 
 import { PtypeList, progressList } from '@/constants';
 import { recruitmentCountList } from '@/constants/optionList';
-import { useDialogContext, usePageBlocker, useTechStackList } from '@/hooks';
+import {
+  useDialogContext,
+  useHandleImage,
+  usePageBlocker,
+  useTechStackList,
+} from '@/hooks';
 import { Progress } from '@/types';
 import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,10 +40,9 @@ import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdow
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import ControllerDateTime from '@/components/common/input/ControllerDateTime';
-import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
+import ControllerContentEditor from '@/components/common/text-editor/ControllerContentEditor';
 import ContactMethodContainer from '@/components/lounge/form/ContactMethodContainer';
-import LoungeTextEditor from '@/components/lounge/form/LoungeTextEditor';
 import { loungeFormSchema } from '@/components/lounge/form/loungeFormSchema';
 
 const defaultInputStyle =
@@ -117,11 +121,19 @@ export default function LoungeForm() {
     },
   });
 
+  const { handleImagesInContent } = useHandleImage();
+
   const onSubmit: SubmitHandler<FormValues> = async data => {
+    const descriptionWithHandledImage = await handleImagesInContent(
+      data.projectDescription,
+    );
+
     const params = {
       ...data,
       recruitmentCount: Number(data.recruitmentCount),
+      projectDescription: descriptionWithHandledImage,
     };
+
     if (modifyProjectId) {
       try {
         await putProject({ projectId: Number(modifyProjectId), params });
@@ -161,206 +173,189 @@ export default function LoungeForm() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-[26px]">
-        <div className="flex items-center gap-1.5">
-          <CircleNumber number={1} />
-          <Title as="h1" title="프로젝트 필수 정보" />
-        </div>
-        <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
-          <LabeledSection
-            label="모집 구분"
-            className="col-span-2 [&>div]:w-1/2"
-          >
-            <Controller
-              control={control}
-              name="recruitmentType"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                const selectedOption = PtypeList.find(
-                  ({ key }) => key === value,
-                );
-                return (
-                  <SingleSelectDropdown
-                    defaultLabel="모집 구분"
-                    options={PtypeList}
-                    selectedOption={selectedOption}
-                    onChangeValue={data => onChange(data[0].key)}
-                    errorMsg={error?.message}
-                  />
-                );
-              }}
-            />
-          </LabeledSection>
-
-          <LabeledSection label="모집 기간">
-            <div className="flex w-full items-center gap-2">
-              <ControllerDateTime type="date" name="startDate" />
-              <span className="text-xl">~</span>
-              <ControllerDateTime type="date" name="endDate" />
-            </div>
-          </LabeledSection>
-
-          <LabeledSection label="모집 인원">
-            <Controller
-              control={control}
-              name="recruitmentCount"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                const selectedOption = recruitmentCountList.find(
-                  ({ id }) => id === value,
-                );
-
-                return (
-                  <SingleSelectDropdown
-                    defaultLabel="모집 인원"
-                    options={recruitmentCountList}
-                    selectedOption={selectedOption}
-                    onChangeValue={data => onChange(data[0].id)}
-                    errorMsg={error?.message}
-                  />
-                );
-              }}
-            />
-          </LabeledSection>
-
-          <LabeledSection label="모집 직무">
-            <Controller
-              control={control}
-              name="positions"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                return (
-                  <MultiSelectDropdown
-                    defaultLabel="모집 직무"
-                    value={value}
-                    options={positionsList || []}
-                    onChangeValue={data => {
-                      const ids = data.map(item => item.id);
-                      onChange(ids);
-                    }}
-                    errorMsg={error?.message}
-                  />
-                );
-              }}
-            />
-          </LabeledSection>
-          <LabeledSection label="모집 유형">
-            <Controller
-              control={control}
-              name="meetingType"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                const selectedOption = progressList.find(
-                  ({ key }) => key === value,
-                );
-                return (
-                  <SingleSelectDropdown
-                    defaultLabel="모집 유형"
-                    options={progressList}
-                    selectedOption={selectedOption}
-                    onChangeValue={data => onChange(data[0].key)}
-                    errorMsg={error?.message}
-                  />
-                );
-              }}
-            />
-          </LabeledSection>
-
-          <LabeledSection label="필요 스택">
-            <Controller
-              control={control}
-              name="requiredStacks"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                const selectedOption = techStackList?.filter(position =>
-                  value.includes(position.id),
-                );
-
-                return (
-                  <TechStackDropdown
-                    defaultLabel="기술스택"
-                    defaultTabValue="백엔드"
-                    errorMsg={error?.message}
-                    initialSelectedOptions={selectedOption}
-                    options={techStackList}
-                    onChangeValue={data => {
-                      const ids = data.map(item => item.id);
-                      onChange(ids);
-                    }}
-                  />
-                );
-              }}
-            />
-          </LabeledSection>
-
-          <LabeledSection
-            label={
-              <div className="flex items-center gap-1.5">
-                <div>연락 방법</div>
-                <BsLink45Deg size={22} />
-              </div>
-            }
-          >
-            <ContactMethodContainer control={control} />
-          </LabeledSection>
-        </div>
-
-        <div className="mt-16 flex items-center gap-1.5">
-          <CircleNumber number={2} />
-          <Title as="h1" title="프로젝트 상세 정보" />
-        </div>
-        <div className="w-full">
-          <LabeledSection label="제목" className="mt-8">
-            <Controller
-              control={control}
-              name="projectTitle"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                return (
-                  <div className="flex flex-col">
-                    <input
-                      type="text"
-                      className={`${error ? inputStyle.error : inputStyle.default} w-full`}
-                      onChange={onChange}
-                      value={value}
-                      placeholder="제목을 입력해 주세요"
+        <section>
+          <header className="flex items-center gap-1.5">
+            <CircleNumber number={1} />
+            <Title as="h1" title="프로젝트 필수 정보" />
+          </header>
+          <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
+            <LabeledSection
+              label="모집 구분"
+              className="col-span-2 [&>div]:w-1/2"
+            >
+              <Controller
+                control={control}
+                name="recruitmentType"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => {
+                  const selectedOption = PtypeList.find(
+                    ({ key }) => key === value,
+                  );
+                  return (
+                    <SingleSelectDropdown
+                      defaultLabel="모집 구분"
+                      options={PtypeList}
+                      selectedOption={selectedOption}
+                      onChangeValue={data => onChange(data[0].key)}
+                      errorMsg={error?.message}
                     />
-                    {error && (
-                      <ErrorMsg msg={error?.message || ''} className="ml-2" />
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </LabeledSection>
-          <LabeledSection label="모집기간" className="mt-6">
-            <LoungeTextEditor />
-          </LabeledSection>
-        </div>
-        <div className="flax mt-8 w-full items-center justify-end gap-4 text-end">
-          <button
-            type="button"
-            className="mr-2 rounded-lg bg-gray2 px-4 py-2 tracking-tight text-white"
-            onClick={() => navigate('/lounge')}
-          >
-            취소
-          </button>
-          <SquareButton
-            name={modifyProjectId ? '수정하기' : '등록하기'}
-            type="submit"
+                  );
+                }}
+              />
+            </LabeledSection>
+
+            <LabeledSection label="모집 기간">
+              <div className="flex w-full items-center gap-2">
+                <ControllerDateTime type="date" name="startDate" />
+                <span className="text-xl">~</span>
+                <ControllerDateTime type="date" name="endDate" />
+              </div>
+            </LabeledSection>
+
+            <LabeledSection label="모집 인원">
+              <Controller
+                control={control}
+                name="recruitmentCount"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => {
+                  const selectedOption = recruitmentCountList.find(
+                    ({ id }) => id === value,
+                  );
+
+                  return (
+                    <SingleSelectDropdown
+                      defaultLabel="모집 인원"
+                      options={recruitmentCountList}
+                      selectedOption={selectedOption}
+                      onChangeValue={data => onChange(data[0].id)}
+                      errorMsg={error?.message}
+                    />
+                  );
+                }}
+              />
+            </LabeledSection>
+
+            <LabeledSection label="모집 직무">
+              <Controller
+                control={control}
+                name="positions"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => {
+                  return (
+                    <MultiSelectDropdown
+                      defaultLabel="모집 직무"
+                      value={value}
+                      options={positionsList || []}
+                      onChangeValue={data => {
+                        const ids = data.map(item => item.id);
+                        onChange(ids);
+                      }}
+                      errorMsg={error?.message}
+                    />
+                  );
+                }}
+              />
+            </LabeledSection>
+
+            <LabeledSection label="모집 유형">
+              <Controller
+                control={control}
+                name="meetingType"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => {
+                  const selectedOption = progressList.find(
+                    ({ key }) => key === value,
+                  );
+                  return (
+                    <SingleSelectDropdown
+                      defaultLabel="모집 유형"
+                      options={progressList}
+                      selectedOption={selectedOption}
+                      onChangeValue={data => onChange(data[0].key)}
+                      errorMsg={error?.message}
+                    />
+                  );
+                }}
+              />
+            </LabeledSection>
+
+            <LabeledSection label="필요 스택">
+              <Controller
+                control={control}
+                name="requiredStacks"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => {
+                  const selectedOption = techStackList?.filter(position =>
+                    value.includes(position.id),
+                  );
+
+                  return (
+                    <TechStackDropdown
+                      defaultLabel="기술스택"
+                      defaultTabValue="백엔드"
+                      errorMsg={error?.message}
+                      initialSelectedOptions={selectedOption}
+                      options={techStackList}
+                      onChangeValue={data => {
+                        const ids = data.map(item => item.id);
+                        onChange(ids);
+                      }}
+                    />
+                  );
+                }}
+              />
+            </LabeledSection>
+
+            <LabeledSection
+              label={
+                <div className="flex items-center gap-1.5">
+                  <div>연락 방법</div>
+                  <BsLink45Deg size={22} />
+                </div>
+              }
+            >
+              <ContactMethodContainer control={control} />
+            </LabeledSection>
+          </div>
+        </section>
+
+        <section>
+          <header className="mt-16 flex items-center gap-1.5">
+            <CircleNumber number={2} />
+            <Title as="h1" title="프로젝트 상세 정보" />
+          </header>
+
+          <ControllerContentEditor
+            type="프로젝트"
+            controlNames={{
+              title: 'projectTitle',
+              content: 'projectDescription',
+            }}
           />
-        </div>
+
+          <div className="mt-8 flex w-full items-center justify-end gap-4 text-end">
+            <SquareButton
+              type="button"
+              name="취소"
+              color="gray"
+              onClick={() => navigate('/lounge')}
+            />
+            <SquareButton
+              name={modifyProjectId ? '수정하기' : '등록하기'}
+              type="submit"
+            />
+          </div>
+        </section>
       </form>
     </FormProvider>
   );
