@@ -52,7 +52,7 @@ export default function PostDetailsTemplate({
               key={item.label}
               type="button"
               disabled={item.disabled}
-              className={`rounded-lg px-4 py-2 tracking-tight text-white ${item.className}`}
+              className={`rounded-lg px-4 py-2 tracking-tight ${item.className}`}
               onClick={item.onClick}
             >
               {item.label}

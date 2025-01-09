@@ -40,8 +40,8 @@ export const useHandleImage = () => {
     const folderPath = 'profile';
     const objectKey = `${folderPath}/${file?.name}`;
 
-    const data = await axios.post<PresignedUrlResponse>(
-      import.meta.env.VITE_API_PRESIGNED_URL,
+    const { data } = await axios.post<PresignedUrlResponse>(
+      `${import.meta.env.VITE_API_PRESIGNED_URL}/aws/uploadurl`,
       {
         bucketName: 'sprout-public-asset',
         objectKey,
@@ -50,7 +50,7 @@ export const useHandleImage = () => {
         ACL: 'bucket-owner-full-control',
       },
     );
-    return data.data.presignedUrl;
+    return data.presignedUrl;
   };
 
   const uploadImageToS3 = async (presignedUrl: string, file: File) => {
@@ -107,9 +107,46 @@ export const useHandleImage = () => {
     return updatedContent;
   };
 
+  const extractImageNameList = (htmlString: string) => {
+    const regex = /<img\s[^>]*src=["'](?:[^"']*\/)?profile\/([^"']+)["']/g;
+    const matches = htmlString ? [...htmlString.matchAll(regex)] : [];
+    const matchedImageNames = matches.map(match => match[1]);
+    return matchedImageNames;
+  };
+
+  const deleteImagesFromS3 = async (fileNameList: string[]) => {
+    Promise.all(
+      fileNameList.map(fileName =>
+        axios.delete(
+          `${import.meta.env.VITE_API_PRESIGNED_URL}/aws/deletefile`,
+          {
+            headers: {
+              accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            data: {
+              bucketName: 'sprout-public-asset',
+              objectKey: `profile/${fileName}`,
+            },
+          },
+        ),
+      ),
+    );
+  };
+
+  const deletePostImageListFromS3 = (htmlString?: string) => {
+    if (htmlString) {
+      const imageNameList = extractImageNameList(htmlString);
+      deleteImagesFromS3(imageNameList);
+    }
+  };
+
   return {
     getPresignedUrl,
     uploadImageToS3,
+    deleteImagesFromS3,
+    deletePostImageListFromS3,
+    extractImageNameList,
     onImageChange,
     handleImagesInContent,
   };

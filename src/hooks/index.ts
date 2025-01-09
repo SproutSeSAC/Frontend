@@ -22,7 +22,7 @@ export { useSubmitNotice } from '@/hooks/post/useSubmitNotice';
 export { useEditNotice } from '@/hooks/post/useEditNotice';
 export { useHandleOnScrap } from '@/hooks/post/useHandleOnScrap';
 export { useHandleComment } from '@/hooks/post/useHandleComment';
-export { useHandlePost } from '@/hooks/post/useHandlePost';
+export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
 
 /* schedule */
 export { useGetUserAclList } from '@/hooks/schedule/useGetUserAclList';
