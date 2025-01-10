@@ -20,10 +20,10 @@ import { RolesObj, noticeCategoryDisplay } from '@/constants';
 import {
   useDialogContext,
   useHandleComment,
+  useHandleImage,
   useHandleOnScrap,
-  useHandlePost,
+  useHandlePostActions,
 } from '@/hooks';
-import { NoticeDto } from '@/types';
 import { findCurrNotice, getColorByRole, isPreTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
@@ -50,7 +50,15 @@ export default function NoticeDetail() {
 
   const { data: commentList } = useGetNoticeCommentList(noticeId);
 
-  const { mutateAsync: deleteNotice } = useDeleteNotice();
+  const { deletePostImages } = useHandleImage();
+
+  const { mutateAsync: deleteNotice } = useDeleteNotice({
+    onSuccess: () => {
+      if (noticeDetail?.content) {
+        deletePostImages(noticeDetail.content);
+      }
+    },
+  });
 
   const { handleSubmitComment } = useHandleComment({
     postComment: postNoticeComment,
@@ -68,19 +76,23 @@ export default function NoticeDetail() {
     invalidateQueryKeys: ['useGetNoticeDetail'],
   });
 
-  const { actions } = useHandlePost<
-    { noticeId: number },
-    NoticeDto.GetNoticeDetail
-  >({
-    postId: { noticeId },
+  const navigate = useNavigate();
+
+  const { actions } = useHandlePostActions({
     postType: '공지사항을',
-    handleDelete: {
-      deletePost: deleteNotice,
-      navigateTo: '/notice',
-    },
-    handleEdit: {
-      detail: noticeDetail,
-      navigateTo: `/notice?tab=EDIT&modifyNotice=${noticeId}`,
+    requiredActions: {
+      delete: {
+        action: () => {
+          deleteNotice({ noticeId });
+          navigate('/notice');
+        },
+      },
+      edit: {
+        action: () => {
+          const state = noticeDetail;
+          navigate(`/notice?tab=EDIT&modifyNotice=${noticeId}`, { state });
+        },
+      },
     },
     invalidateQueryKeys: ['useGetInfiniteNoticeList'],
   });
@@ -128,8 +140,6 @@ export default function NoticeDetail() {
     }
     return undefined;
   }, [noticeDetail, showDialog]);
-
-  const navigate = useNavigate();
 
   const onBackClick = () => navigate('/notice');
 

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   initialUserProfile,
@@ -17,7 +17,12 @@ import {
 } from '@/services/lounge/loungeQueries';
 
 import { ptypeDisplay } from '@/constants';
-import { useHandleComment, useHandleOnScrap, useHandlePost } from '@/hooks';
+import {
+  useHandleComment,
+  useHandleImage,
+  useHandleOnScrap,
+  useHandlePostActions,
+} from '@/hooks';
 
 import BackButton from '@/components/common/button/BackButton';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -30,6 +35,8 @@ export default function LoungeDetail() {
   const params = useParams();
   const projectId = +params.postId!;
 
+  const { deletePostImages } = useHandleImage();
+
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
   const { data: projectsDetail } = useGetLoungeProjectsDetail(projectId);
@@ -40,7 +47,13 @@ export default function LoungeDetail() {
 
   const { mutateAsync: postComment } = usePostProjectComment(projectId);
 
-  const { mutateAsync: deleteProject } = useDeleteLoungeProject();
+  const { mutateAsync: deletePost } = useDeleteLoungeProject({
+    onSuccess: () => {
+      if (projectsDetail?.description) {
+        deletePostImages(projectsDetail?.description);
+      }
+    },
+  });
 
   const getScrapResult = useCallback(async () => {
     return postScrapProject({ projectId });
@@ -56,17 +69,23 @@ export default function LoungeDetail() {
     invalidateQueryKeys: ['useGetLoungeProjectsComment'],
   });
 
-  const { actions } = useHandlePost<{
-    projectId: number;
-  }>({
-    postId: { projectId },
+  const navigate = useNavigate();
+
+  const { actions } = useHandlePostActions({
     postType: '프로젝트를',
-    handleDelete: {
-      deletePost: deleteProject,
-      navigateTo: '/lounge',
-    },
-    handleEdit: {
-      navigateTo: `/lounge?ptype=EDIT&modifyProject=${projectId}`,
+    requiredActions: {
+      delete: {
+        action: () => {
+          deletePost({ projectId });
+          navigate('/lounge');
+        },
+      },
+      edit: {
+        action: () => {
+          const state = projectsDetail;
+          navigate(`/lounge?ptype=EDIT&modifyProject=${projectId}`, { state });
+        },
+      },
     },
     invalidateQueryKeys: ['useGetLoungeProjects'],
   });

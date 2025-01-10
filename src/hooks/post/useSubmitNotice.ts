@@ -127,7 +127,7 @@ export const useSubmitNotice = () => {
     }
   };
 
-  const { handleImagesInContent } = useHandleImage();
+  const { handleImagesInHtmlContent } = useHandleImage();
 
   const onSubmit = async (submittedValue: NoticeDto.PostNotice) => {
     const {
@@ -138,7 +138,7 @@ export const useSubmitNotice = () => {
       sessions, //
     } = submittedValue;
 
-    const contentWithHandledImage = await handleImagesInContent(content);
+    const contentWithHandledImage = await handleImagesInHtmlContent(content);
 
     const needExtraInfoNoticeType = findCurrNotice(noticeType)?.needExtraInfo;
 

@@ -121,11 +121,12 @@ export default function LoungeForm() {
     },
   });
 
-  const { handleImagesInContent } = useHandleImage();
+  const { handleImagesInHtmlContent } = useHandleImage();
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
-    const descriptionWithHandledImage = await handleImagesInContent(
+    const descriptionWithHandledImage = await handleImagesInHtmlContent(
       data.projectDescription,
+      modifyProjectId ? projectsDetail?.description : undefined,
     );
 
     const params = {

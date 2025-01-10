@@ -44,7 +44,7 @@ export default function UserNameImageModal() {
 
   const { handleSubmit, register } = methods;
 
-  const { getPresignedUrl, uploadImageToS3, onImageChange } = useHandleImage();
+  const { uploadImageToS3, onImageChange } = useHandleImage();
 
   const onSubmit = async (formData: {
     nickname: string;
@@ -55,9 +55,8 @@ export default function UserNameImageModal() {
     }
     const file = formData.profileImageFiles?.[0];
     if (file) {
-      const presignedUrl = await getPresignedUrl(file);
-      await uploadImageToS3(presignedUrl, file);
-      await mutateProfileImage({ profileUrl: presignedUrl });
+      const s3url = await uploadImageToS3(file);
+      await mutateProfileImage({ profileUrl: s3url });
     }
     hideDialog('USERNAME-IMAGE-CARD-TYPE');
   };

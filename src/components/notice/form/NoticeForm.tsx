@@ -37,7 +37,7 @@ export default function NoticeForm() {
 
   const { onSubmit, onError, isCreateEventsPending } = useSubmitNotice();
 
-  const { onEditSubmit } = useEditNotice({ noticeId: editNoticeId });
+  const { onEditSubmit } = useEditNotice({ noticeId: editNoticeId, content });
 
   const NoticeExtraDetailToForm = {
     isPhoneNumberRequired: rest.isPhoneNumberRequired,
