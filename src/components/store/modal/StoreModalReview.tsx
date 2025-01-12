@@ -2,6 +2,10 @@ import { useCallback } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 import { usePostStoreReview } from '@/services/store/storeMutations';
 
 import { useDialogContext } from '@/hooks';
@@ -46,6 +50,9 @@ export default function StoreModalReview({
 }: StoreModalReviewProps) {
   const queryClient = useQueryClient();
   const { mutateAsync } = usePostStoreReview();
+
+  const { data: { profileImageUrl } = initialUserProfile } =
+    useGetUserProfile();
 
   const { control, handleSubmit, reset, getValues } = useForm<FormValues>({
     defaultValues: {
@@ -98,7 +105,10 @@ export default function StoreModalReview({
     <section className="pb-14">
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="flex items-center gap-2">
-          <UserImage className="size-[30px]" />
+          <UserImage
+            className="size-[30px]"
+            imageNameSegment={profileImageUrl}
+          />
           <div className="relative">
             <div>{nickname}</div>
             <Controller
@@ -166,7 +176,7 @@ export default function StoreModalReview({
               <div className="flex items-center gap-2">
                 <UserImage
                   className="size-[30px]"
-                  // imgUrl={commentItem.imgUrl} //TODO: 이미지url 정상적으로 들어오면 노출
+                  imageNameSegment={commentItem.profileImageUrl}
                 />
 
                 <div>

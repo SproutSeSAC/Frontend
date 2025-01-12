@@ -2,7 +2,7 @@ import { formatDate } from '@/utils';
 import 'quill/dist/quill.snow.css';
 import { BsEye } from 'react-icons/bs';
 
-import UserNicknameImageBox from '@/components/user/UserNicknameImageBox';
+import UserImage from '@/components/user/UserImage';
 
 interface PostDetailsTemplateProps {
   actions?: Array<{
@@ -11,7 +11,7 @@ interface PostDetailsTemplateProps {
     className?: string;
     disabled?: boolean;
   }>;
-  // imgUrl?: string;
+  imageNameSegment?: string | null;
   nickname: string;
   createdAt?: string;
   viewCount?: number;
@@ -20,7 +20,7 @@ interface PostDetailsTemplateProps {
 
 export default function PostDetailsTemplate({
   actions,
-  // imgUrl,
+  imageNameSegment,
   nickname,
   createdAt,
   viewCount,
@@ -30,7 +30,10 @@ export default function PostDetailsTemplate({
     <>
       <header className="mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
         <div>
-          <UserNicknameImageBox imgUrl="" nickname={nickname} />
+          <div className="flex items-center gap-2">
+            <UserImage imageNameSegment={imageNameSegment} />
+            <span className="text-[22px]">{nickname}</span>
+          </div>
 
           <ul className="mt-3 flex items-center gap-10 text-lg text-gray1">
             <li className="flex items-center gap-3">

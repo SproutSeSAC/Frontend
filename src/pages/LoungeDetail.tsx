@@ -126,7 +126,7 @@ export default function LoungeDetail() {
           />
           <PostDetailsTemplate
             actions={postWriter ? actions : []}
-            // imgUrl={projectsDetail?.imgUrl}
+            imageNameSegment={projectsDetail?.imgUrl}
             nickname={projectsDetail?.writerNickName || '-'}
             createdAt={projectsDetail?.createdAt}
             viewCount={projectsDetail?.viewCount}

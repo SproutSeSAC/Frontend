@@ -79,7 +79,7 @@ export default function MealRecruitCard({
         <footer className="flex items-center justify-between">
           <UserImage
             className="size-10"
-            // imgUrl={slideItem.ownerProfileImageUrl} // TODO: img url 수정되면 노출
+            imageNameSegment={slideItem.ownerProfileImageUrl}
           />
           <div className="ml-2.5 flex-1">
             <p className={`${isDisabled && 'text-gray1'}`}>

@@ -212,6 +212,7 @@ export default function NoticeDetail() {
             viewCount={noticeDetail?.viewCount || 0}
             description={noticeDetail?.content || '-'}
             actions={applySession()}
+            imageNameSegment={noticeDetail?.writer.profileUrl}
           />
         </section>
 

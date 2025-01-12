@@ -54,12 +54,12 @@ export default function CommentTemplate({
       </form>
 
       <ul className="mt-8 flex flex-col gap-8">
-        {commentList.map(({ id, writer, content, createdAt }) => (
+        {commentList.map(({ id, writer, content, createdAt, imgUrl }) => (
           <li key={id} className="flex w-full flex-col gap-4 text-lg">
             <header className="flex items-center gap-2">
               <UserImage
                 className="size-[30px]"
-                imgUrl="" // TODO: commentItem.imgUrl ||
+                imageNameSegment={imgUrl ?? ''}
               />
               <div>{writer ? `@${writer}` : '-'}</div>
             </header>

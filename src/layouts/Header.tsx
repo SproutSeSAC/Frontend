@@ -2,6 +2,11 @@ import { ReactNode } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
+
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
 import HeaderMenu from '@/layouts/HeaderMenu';
@@ -22,6 +27,9 @@ export default function Header({ title, highlight, children }: Props) {
   const [, setIsNotificationOpenOpen] = useAtom(notificationOpenAtom);
 
   const homePathname = pathname === '/';
+
+  const { data: { profileImageUrl } = initialUserProfile } =
+    useGetUserProfile();
 
   return (
     <header className="mb-6 flex h-[52px] items-center justify-between">
@@ -47,7 +55,7 @@ export default function Header({ title, highlight, children }: Props) {
             <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
           </button>
 
-          <UserImage className="size-[50px]">
+          <UserImage className="size-[50px]" imageNameSegment={profileImageUrl}>
             <HeaderMenu />
           </UserImage>
         </aside>

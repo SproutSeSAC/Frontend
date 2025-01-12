@@ -104,7 +104,7 @@ export const useHandleImage = () => {
       },
     });
     const url = new URL(presignedUrl);
-    return url.origin + url.pathname;
+    return decodeURI(url.origin + url.pathname);
   };
 
   const deleteImageFromS3 = async (fileName: string) => {
@@ -168,14 +168,10 @@ export const useHandleImage = () => {
         : await currBase64DataList.reduce(async (accPromise, base64Data) => {
             const acc = await accPromise;
             try {
-              const file = base64ToFile(base64Data, `${Date.now()}.png`); // NOTE: 업로드시 이미지 이름 설정 더 고민하기
+              const file = base64ToFile(base64Data, `${Date.now()}`);
               const s3Url = await uploadImageToS3(file);
               return acc.replace(base64Data, s3Url);
             } catch (error) {
-              alert({
-                text: '이미지 업로드 중 오류가 발생했습니다.',
-                buttonList: [{ name: '나가기', onClick: hideDialog }],
-              });
               return acc;
             }
           }, Promise.resolve(currContent));
@@ -184,6 +180,7 @@ export const useHandleImage = () => {
   };
 
   return {
+    extractImageNameFromUrl,
     getPresignedUrl,
     uploadImageToS3,
     deleteImageFromS3,

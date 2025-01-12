@@ -36,7 +36,6 @@ type UserProfile = {
   jobList: Job[];
   techStackList: TechStack[];
   nickname: string;
-  imgUrl: string;
   role: KeyOfRole;
   userId: number;
   profileImageUrl: string;
