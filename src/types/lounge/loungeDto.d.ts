@@ -64,7 +64,7 @@ export interface GetLoungeProjectDetail {
   contactMethod: ContactMethodType;
   contactDetail: string;
   recruitmentStart: string;
-  imgUrl: string | null;
+  imgUrl: string;
   isScraped: boolean;
   recruitmentEnd: string;
   viewCount: number;

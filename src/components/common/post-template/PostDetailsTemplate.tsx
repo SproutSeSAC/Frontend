@@ -11,7 +11,7 @@ interface PostDetailsTemplateProps {
     className?: string;
     disabled?: boolean;
   }>;
-  imageNameSegment?: string | null;
+  imageNameSegment?: string;
   nickname: string;
   createdAt?: string;
   viewCount?: number;
