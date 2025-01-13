@@ -1,11 +1,13 @@
-import { useMutation } from '@tanstack/react-query';
+import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { PostLoungeProject, PutLoungeProject } from '@/types/lounge/loungeDto';
 import { AxiosError } from 'axios';
 
-export const useDeleteLoungeProject = () => {
+export const useDeleteLoungeProject = (
+  options?: UseMutationOptions<unknown, Error, { projectId: number }>,
+) => {
   return useMutation<boolean, AxiosError, { projectId: number }>({
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.delete(
@@ -13,10 +15,13 @@ export const useDeleteLoungeProject = () => {
       );
       return data;
     },
+    ...options,
   });
 };
 
-export const usePutLoungeProject = () => {
+export const usePutLoungeProject = (
+  options?: UseMutationOptions<unknown, Error, { projectId: number }>,
+) => {
   return useMutation<boolean, AxiosError, PutLoungeProject>({
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.put(
@@ -25,6 +30,7 @@ export const usePutLoungeProject = () => {
       );
       return data;
     },
+    ...options,
   });
 };
 

@@ -22,13 +22,14 @@ import Modal from '@/components/common/modal/Modal';
 import UserImage from '@/components/user/UserImage';
 
 export default function UserNameImageModal() {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>();
 
   const queryClient = useQueryClient();
 
   const { hideDialog } = useDialogContext();
 
-  const { data: { nickname } = initialUserProfile } = useGetUserProfile();
+  const { data: { nickname, profileImageUrl } = initialUserProfile } =
+    useGetUserProfile();
 
   const { mutateAsync: mutateProfile } = useUpdateUserProfile({
     onSuccess: () => {
@@ -36,7 +37,11 @@ export default function UserNameImageModal() {
     },
   });
 
-  const { mutateAsync: mutateProfileImage } = useUpdateProfileImage();
+  const { mutateAsync: mutateProfileImage } = useUpdateProfileImage({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+    },
+  });
 
   const methods = useForm({
     defaultValues: { nickname, profileImageFiles: null },
@@ -44,7 +49,12 @@ export default function UserNameImageModal() {
 
   const { handleSubmit, register } = methods;
 
-  const { getPresignedUrl, uploadImageToS3, onImageChange } = useHandleImage();
+  const {
+    onImageChange,
+    uploadImageToS3,
+    extractImageNameFromUrl,
+    deleteImageFromS3,
+  } = useHandleImage();
 
   const onSubmit = async (formData: {
     nickname: string;
@@ -53,11 +63,17 @@ export default function UserNameImageModal() {
     if (nickname !== formData.nickname) {
       await mutateProfile({ nickname: formData.nickname });
     }
+    if (profileImageUrl && profileImageUrl !== 'https://aaa.com') {
+      // NOTE: DB에서 기본값('https://aaa.com') 정리하면 수정.
+      deleteImageFromS3(profileImageUrl);
+    }
     const file = formData.profileImageFiles?.[0];
     if (file) {
-      const presignedUrl = await getPresignedUrl(file);
-      await uploadImageToS3(presignedUrl, file);
-      await mutateProfileImage({ profileUrl: presignedUrl });
+      const fileName = `${Date.now()}.${file.type.split('/')[1]}`;
+      const fileWithNewName = new File([file], fileName, { type: file.type });
+      const s3Url = await uploadImageToS3(fileWithNewName);
+      const imageName = extractImageNameFromUrl(s3Url);
+      await mutateProfileImage({ profileUrl: imageName });
     }
     hideDialog('USERNAME-IMAGE-CARD-TYPE');
   };
@@ -70,8 +86,9 @@ export default function UserNameImageModal() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <UserImage
-            imgUrl={previewUrl || ''}
-            className="mx-auto mb-6 size-[220px]"
+            previewUrl={previewUrl}
+            imageNameSegment={previewUrl ? undefined : profileImageUrl}
+            className="mx-auto mb-6 size-[220px] border shadow-card"
           >
             <CameraInput
               onChange={async event => {

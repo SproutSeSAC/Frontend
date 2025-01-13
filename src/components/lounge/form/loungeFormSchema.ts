@@ -47,7 +47,7 @@ export const loungeFormSchema = z.object({
   ]),
 
   projectDescription: z.union([
-    z.string().min(1, '모집기간을 입력해 주세요.'),
-    z.undefined().refine(() => false, '모집기간을 입력해 주세요.'),
+    z.string().min(1, '상세내용을 입력해 주세요.'),
+    z.undefined().refine(() => false, '상세내용을 입력해 주세요.'),
   ]),
 });

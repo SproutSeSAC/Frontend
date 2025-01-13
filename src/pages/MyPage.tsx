@@ -72,7 +72,7 @@ export default function MyPage() {
         <UserNameImageCard />
 
         <div className="relative">
-          <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl border border-red-500 bg-vividGreen1 px-6 py-4 shadow-card peer-hover:cursor-pointer">
+          <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4 shadow-card peer-hover:cursor-pointer">
             {userInfoList.map(({ value, label }) => (
               <li
                 key={label}

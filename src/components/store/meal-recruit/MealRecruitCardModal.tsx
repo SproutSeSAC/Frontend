@@ -90,7 +90,7 @@ export default function MealRecruitCardModal({
               <li key={member.userId} className="flex gap-2.5">
                 <UserImage
                   className="size-10"
-                  // imgUrl={member.imgUrl} //TODO: img url 수정되면 노출
+                  imageNameSegment={member.imgUrl}
                 />
                 <div className="w-full">
                   <div className="flex items-center justify-between gap-9">

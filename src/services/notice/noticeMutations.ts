@@ -73,7 +73,9 @@ export const usePostNoticeComment = (noticeId: number) => {
   });
 };
 
-export const useDeleteNotice = () => {
+export const useDeleteNotice = (
+  options?: UseMutationOptions<unknown, Error, { noticeId: number }>,
+) => {
   return useMutation<boolean, AxiosError, { noticeId: number }>({
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.delete(
@@ -81,6 +83,7 @@ export const useDeleteNotice = () => {
       );
       return data;
     },
+    ...options,
   });
 };
 

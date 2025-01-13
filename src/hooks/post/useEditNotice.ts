@@ -10,9 +10,13 @@ import { Session } from '@/components/notice/form/ControllerSessions';
 
 interface UseEditNoticeProps {
   noticeId: number;
+  content?: string;
 }
 
-export const useEditNotice = ({ noticeId }: UseEditNoticeProps) => {
+export const useEditNotice = ({
+  noticeId,
+  content: prevContent,
+}: UseEditNoticeProps) => {
   const { alert, hideDialog } = useDialogContext();
 
   const navigate = useNavigate();
@@ -42,18 +46,21 @@ export const useEditNotice = ({ noticeId }: UseEditNoticeProps) => {
     },
   });
 
-  const { handleImagesInContent } = useHandleImage();
+  const { handleImagesInHtmlContent } = useHandleImage();
 
   const onEditSubmit = async (submittedValue: NoticeDto.PostNotice) => {
     const {
       noticeType,
       title,
-      content,
+      content: newContent,
       targetCourseIdList,
       sessions, //
     } = submittedValue;
 
-    const contentWithHandledImage = await handleImagesInContent(content);
+    const contentWithHandledImage = await handleImagesInHtmlContent(
+      newContent,
+      prevContent,
+    );
 
     const needExtraInfoNoticeType = findCurrNotice(noticeType)?.needExtraInfo;
 

@@ -40,7 +40,7 @@ export const useUpdateProfileImage = (
   >,
 ) => {
   const updateProfileImage = (formData: UserProfileDto.UpdateProfileImage) =>
-    axiosInstance.put('/mypage/updateProfileUrl', formData);
+    axiosInstance.patch('/mypage/updateProfileUrl', formData);
 
   return useMutation({
     mutationFn: updateProfileImage,

@@ -27,7 +27,7 @@ export default function LoungeSideView() {
               <div className="mt-2 flex items-center gap-2">
                 <UserImage
                   className="size-[22px]"
-                  // imgUrl={project.imgUrl}
+                  imageNameSegment={project.imgUrl}
                 />
                 <div>{project.userNickname}</div>
               </div>

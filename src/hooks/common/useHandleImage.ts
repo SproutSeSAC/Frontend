@@ -40,8 +40,8 @@ export const useHandleImage = () => {
     const folderPath = 'profile';
     const objectKey = `${folderPath}/${file?.name}`;
 
-    const data = await axios.post<PresignedUrlResponse>(
-      import.meta.env.VITE_API_PRESIGNED_URL,
+    const { data } = await axios.post<PresignedUrlResponse>(
+      `${import.meta.env.VITE_API_PRESIGNED_URL}/aws/uploadurl`,
       {
         bucketName: 'sprout-public-asset',
         objectKey,
@@ -50,16 +50,7 @@ export const useHandleImage = () => {
         ACL: 'bucket-owner-full-control',
       },
     );
-    return data.data.presignedUrl;
-  };
-
-  const uploadImageToS3 = async (presignedUrl: string, file: File) => {
-    await axios.put(presignedUrl, file, {
-      headers: {
-        'Content-Type': file.type || 'application/octet-stream',
-        'x-amz-acl': 'bucket-owner-full-control',
-      },
-    });
+    return data.presignedUrl;
   };
 
   const onImageChange = (
@@ -86,31 +77,115 @@ export const useHandleImage = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleImagesInContent = async (content: string): Promise<string> => {
+  const extractImageSrcDataList = (
+    htmlContent: string,
+    dataType: 'base64' | 's3url',
+  ) => {
     const base64ImageRegex =
       /<img[^>]*src="(data:image\/[^;]+;base64,[^"]+)"[^>]*>/g;
-    const matches = [...content.matchAll(base64ImageRegex)];
-    const base64Images = matches.map(match => match[1]);
-    const updatedContent = await base64Images.reduce(
-      async (accPromise, base64Image) => {
-        const acc = await accPromise;
-        const fileName = `${Date.now()}.png`;
-        const file = base64ToFile(base64Image, fileName);
-        const presignedUrl = await getPresignedUrl(file);
-        await uploadImageToS3(presignedUrl, file);
-        const url = new URL(presignedUrl);
-        const s3Url = url.origin + url.pathname;
-        return acc.replace(base64Image, s3Url);
+    const urlImageRegex = /<img[^>]*src="(https?:\/\/[^"]+)"[^>]*>/g;
+    const regex = dataType === 'base64' ? base64ImageRegex : urlImageRegex;
+    const matches = htmlContent ? [...htmlContent.matchAll(regex)] : [];
+    const matchedImages = matches.map(match => match[1]);
+    return matchedImages;
+  };
+
+  const extractImageNameFromUrl = (url: string): string => {
+    const pathSegments = new URL(url).pathname.split('/');
+    return pathSegments[pathSegments.length - 1];
+  };
+
+  const uploadImageToS3 = async (file: File) => {
+    const presignedUrl = await getPresignedUrl(file);
+    await axios.put(presignedUrl, file, {
+      headers: {
+        'Content-Type': file.type || 'application/octet-stream',
+        'x-amz-acl': 'bucket-owner-full-control',
       },
-      Promise.resolve(content),
+    });
+    const url = new URL(presignedUrl);
+    return decodeURI(url.origin + url.pathname);
+  };
+
+  const deleteImageFromS3 = async (fileName: string) => {
+    axios.delete(`${import.meta.env.VITE_API_PRESIGNED_URL}/aws/deletefile`, {
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      data: {
+        bucketName: 'sprout-public-asset',
+        objectKey: `profile/${fileName}`,
+      },
+    });
+  };
+
+  const deletePostImages = async (
+    currContent: string,
+    prevContent?: string,
+  ) => {
+    const currS3UrlList = extractImageSrcDataList(currContent, 's3url');
+    const currImageNameFromS3UrlList = currS3UrlList.map(url =>
+      extractImageNameFromUrl(url),
     );
-    return updatedContent;
+    if (prevContent) {
+      const prevS3UrlImages = extractImageSrcDataList(prevContent, 's3url');
+      const prevS3UrlImageNameList = prevS3UrlImages.map(url =>
+        extractImageNameFromUrl(url),
+      );
+      const imageNameToDeleteList = prevS3UrlImageNameList.filter(
+        name => !currImageNameFromS3UrlList.includes(name),
+      );
+      if (imageNameToDeleteList.length > 0) {
+        await Promise.all(
+          imageNameToDeleteList.map(async imageName => {
+            deleteImageFromS3(imageName);
+          }),
+        );
+      }
+      return;
+    }
+    await Promise.all(
+      currImageNameFromS3UrlList.map(async imageName => {
+        deleteImageFromS3(imageName);
+      }),
+    );
+  };
+
+  const handleImagesInHtmlContent = async (
+    currContent: string,
+    prevContent?: string,
+  ): Promise<string> => {
+    const currBase64DataList = extractImageSrcDataList(currContent, 'base64');
+
+    if (prevContent) {
+      deletePostImages(currContent, prevContent);
+    }
+
+    const contentReplacedWithS3Url =
+      currBase64DataList.length === 0
+        ? currContent
+        : await currBase64DataList.reduce(async (accPromise, base64Data) => {
+            const acc = await accPromise;
+            try {
+              const file = base64ToFile(base64Data, `${Date.now()}`);
+              const s3Url = await uploadImageToS3(file);
+              return acc.replace(base64Data, s3Url);
+            } catch (error) {
+              return acc;
+            }
+          }, Promise.resolve(currContent));
+
+    return contentReplacedWithS3Url;
   };
 
   return {
+    extractImageNameFromUrl,
     getPresignedUrl,
     uploadImageToS3,
+    deleteImageFromS3,
     onImageChange,
-    handleImagesInContent,
+    deletePostImages,
+    handleImagesInHtmlContent,
   };
 };
