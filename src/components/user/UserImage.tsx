@@ -26,16 +26,17 @@ function UserImage(
         />
       )}
 
-      {imageNameSegment && imageNameSegment !== 'https://aaa.com' ? (
-        // NOTE: DB에서 기본값('https://aaa.com') 정리하면 수정.
-        <img
-          src={`${import.meta.env.VITE_SPROUT_PUBLIC_ASSET_URL}/${imageNameSegment}`}
-          alt="프로필 이미지"
-          className="aspect-square overflow-hidden rounded-full object-cover"
-        />
-      ) : (
-        <BsPerson className="size-[65%] text-oliveGreen1" />
-      )}
+      {!previewUrl &&
+        (imageNameSegment && imageNameSegment !== 'https://aaa.com' ? (
+          // NOTE: DB에서 기본값('https://aaa.com') 정리하면 수정.
+          <img
+            src={`${import.meta.env.VITE_SPROUT_PUBLIC_ASSET_URL}/${imageNameSegment}`}
+            alt="프로필 이미지"
+            className="aspect-square overflow-hidden rounded-full object-cover"
+          />
+        ) : (
+          <BsPerson className="size-[65%] text-oliveGreen1" />
+        ))}
 
       {children}
     </div>
