@@ -8,10 +8,8 @@ import {
   usePostLoungeProject,
   usePutLoungeProject,
 } from '@/services/lounge/loungeMutations';
-import {
-  useGetLoungePositionsFilterList,
-  useGetLoungeProjectsDetail,
-} from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjectsDetail } from '@/services/lounge/loungeQueries';
+import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { PtypeList, progressList } from '@/constants';
 import { recruitmentCountList } from '@/constants/optionList';
@@ -92,7 +90,7 @@ export default function LoungeForm() {
   const { showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
-  const { data: positionsList } = useGetLoungePositionsFilterList();
+  const { data: jobList } = useGetJobList();
   const { data: projectsDetail } = useGetLoungeProjectsDetail(
     Number(modifyProjectId || 0),
   );
@@ -252,7 +250,9 @@ export default function LoungeForm() {
                     <MultiSelectDropdown
                       defaultLabel="모집 직무"
                       value={value}
-                      options={positionsList || []}
+                      options={
+                        jobList?.map(({ id, job }) => ({ id, name: job })) || []
+                      }
                       onChangeValue={data => {
                         const ids = data.map(item => item.id);
                         onChange(ids);

@@ -56,6 +56,10 @@ export default function SingleSelectDropdown({
     [onChangeValue],
   );
 
+  const onResetClick = useCallback(() => {
+    onChangeValue([]);
+  }, [onChangeValue]);
+
   const isSelected = ({ name }: Option) => {
     return selectedOptions?.length !== 0
       ? !!selectedOptions?.some(option => name === option.name)
@@ -84,6 +88,7 @@ export default function SingleSelectDropdown({
       selectedOptionLabel={selectedOption?.name}
       boxShape={boxShape}
       className={selectBoxClassName}
+      onResetClick={onResetClick}
     >
       {options.map(option => (
         <SelectOption
