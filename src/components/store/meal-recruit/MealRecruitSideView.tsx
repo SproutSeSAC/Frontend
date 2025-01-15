@@ -11,10 +11,10 @@ export default function MealRecruitSideView({
   onClose,
 }: MealRecruitSideViewProps) {
   const headerContent = (
-    <span className="mb-10 text-[27px]">
+    <h2 className="text-[27px]">
       <span>오늘의 </span>
       <span className="text-vividGreen1">한끼팟!</span>
-    </span>
+    </h2>
   );
 
   const mainContent = <MealRecruitSlider sideViewOpen={sideViewOpen} />;
@@ -24,7 +24,7 @@ export default function MealRecruitSideView({
       sideViewOpen={sideViewOpen}
       onClose={onClose}
       headerContent={headerContent}
-      className="sticky top-0 mr-5 max-w-[284px] py-11"
+      className="mr-5 flex h-dvh max-w-72 flex-col gap-10 py-11"
       mainContent={mainContent}
     />
   );

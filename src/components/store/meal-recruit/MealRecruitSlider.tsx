@@ -39,10 +39,10 @@ export default function MealRecruitSlider({
   });
 
   return (
-    <section className="flex min-h-dvh flex-col gap-7">
+    <section className="flex h-full flex-col gap-7">
       {sideViewOpen && (
         <button
-          className={`mb-7 flex w-full min-w-56 flex-col items-center rounded-lg bg-gray5 px-5 shadow-card ${mealPosts.length > 0 ? 'h-[105px] py-6' : 'h-full py-8'}`}
+          className="flex w-72 flex-col items-center justify-center gap-4 rounded-lg bg-gray5 px-5 py-8 shadow-card"
           onClick={async () => {
             await showDialog({
               key: 'MEAL-RECRUIT-TYPE',
@@ -54,21 +54,19 @@ export default function MealRecruitSlider({
             <BsPlus size={30} />
           </div>
 
-          <p
-            className={`text-base font-semibold ${mealPosts.length > 0 ? 'mt-2' : 'mb-2 mt-4'}`}
-          >
-            한끼팟 만들기
-          </p>
-          {mealPosts.length === 0 && (
-            <p className="text-xs">
-              다른 사람들의 이야기가 궁금한가요?
-              <br />
-              함께 식사할 사람을 찾아봐요!
-            </p>
-          )}
+          <div className="flex flex-col items-center justify-center gap-2">
+            <h3 className="text-base font-semibold">한끼팟 만들기</h3>
+            {mealPosts.length !== 0 && (
+              <p className="text-xs text-gray1">
+                다른 사람들의 이야기가 궁금한가요?
+                <br />
+                함께 식사할 사람을 찾아봐요!
+              </p>
+            )}
+          </div>
         </button>
       )}
-      <div className="flex grow flex-col gap-8 overflow-scroll">
+      <div className="flex max-h-[520px] flex-col gap-8 overflow-scroll">
         {mealPosts.map(post => (
           <MealRecruitCard key={post.id} slideItem={post} />
         ))}
