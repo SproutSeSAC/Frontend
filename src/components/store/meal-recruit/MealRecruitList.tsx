@@ -5,6 +5,7 @@ import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 import { useDialogContext, useObserver } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
 
+import LoopLoading from '@/components/common/LoopLoading';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
 import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
@@ -18,14 +19,12 @@ export default function MealRecruitList({
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
 
-  // TODO 로딩시 UI
-  const { data, fetchNextPage, hasNextPage } = useGetInfiniteMealPostList();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetInfiniteMealPostList();
 
   const mealPosts = useMemo(() => {
     return data ? data.pages.flatMap(({ mealPostList }) => mealPostList) : [];
   }, [data]);
-
-  // console.log('mealPosts: ', mealPosts);
 
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
@@ -69,6 +68,11 @@ export default function MealRecruitList({
         {mealPosts.map(post => (
           <MealRecruitCard key={post.id} post={post} />
         ))}
+        {isFetchingNextPage && (
+          <div className="m-auto">
+            <LoopLoading size={40} />
+          </div>
+        )}
         <div ref={mealPostObserveRef} />
       </div>
     </section>
