@@ -4,6 +4,7 @@ import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
 import { useDialogContext, useObserver } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
+import { IoIosArrowUp } from 'react-icons/io';
 
 import LoopLoading from '@/components/common/LoopLoading';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
@@ -18,6 +19,7 @@ export default function MealRecruitList({
 }: MealRecruitListProps) {
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfiniteMealPostList();
@@ -43,6 +45,12 @@ export default function MealRecruitList({
     });
   };
 
+  const handleScrollToTop = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="flex flex-col gap-7 overflow-y-auto">
       {sideViewOpen && (
@@ -66,7 +74,10 @@ export default function MealRecruitList({
           </div>
         </button>
       )}
-      <div className="flex max-h-[520px] flex-col gap-8 overflow-y-auto">
+      <div
+        ref={scrollContainerRef}
+        className="flex max-h-[520px] flex-col gap-8 overflow-y-auto"
+      >
         {mealPosts.map(post => (
           <MealRecruitCard key={post.id} post={post} />
         ))}
@@ -76,6 +87,14 @@ export default function MealRecruitList({
           </div>
         )}
         <div ref={mealPostObserveRef} />
+        <button
+          type="button"
+          aria-label="스크롤 업"
+          onClick={handleScrollToTop}
+          className="m-auto h-10 w-10 rounded-full bg-vividGreen1 p-3 text-white opacity-50 shadow-md"
+        >
+          <IoIosArrowUp />
+        </button>
       </div>
     </section>
   );
