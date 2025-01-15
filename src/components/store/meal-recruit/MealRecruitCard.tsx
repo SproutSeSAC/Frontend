@@ -25,7 +25,6 @@ const getButtonStyle = (
   return { text: '자세히', style: 'bg-vividGreen1' };
 };
 
-// TODO 한끼팟 참여 기능
 export default function MealRecruitCard({ post }: MealRecruitCardProps) {
   const { id, isParticipant, targetMemberCount, currentMemberCount } = post;
   const { title, appointmentTime, storeName, meetingPlace } = post;
