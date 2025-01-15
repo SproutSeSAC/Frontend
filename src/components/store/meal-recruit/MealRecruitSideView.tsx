@@ -1,5 +1,5 @@
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
-import MealRecruitSlider from '@/components/store/meal-recruit/MealRecruitSlider';
+import MealRecruitList from '@/components/store/meal-recruit/MealRecruitList';
 
 interface MealRecruitSideViewProps {
   sideViewOpen: boolean;
@@ -17,7 +17,7 @@ export default function MealRecruitSideView({
     </h2>
   );
 
-  const mainContent = <MealRecruitSlider sideViewOpen={sideViewOpen} />;
+  const mainContent = <MealRecruitList sideViewOpen={sideViewOpen} />;
 
   return (
     <CollapsibleSideView

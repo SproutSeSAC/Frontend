@@ -8,14 +8,13 @@ import { BsPlus } from 'react-icons/bs';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
 import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
-interface MealRecruitSliderProps {
+interface MealRecruitListProps {
   sideViewOpen: boolean;
 }
 
-// TODO 변수명, 컴포넌트 이름 등 확인
-export default function MealRecruitSlider({
+export default function MealRecruitList({
   sideViewOpen,
-}: MealRecruitSliderProps) {
+}: MealRecruitListProps) {
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
 
