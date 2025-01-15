@@ -2,11 +2,9 @@ import { useMemo, useRef } from 'react';
 
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
-import { useDialogContext } from '@/hooks';
-import { MealPosts } from '@/types/store/storeMealPostDto';
+import { useDialogContext, useObserver } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
 
-import VerticalSlider from '@/components/common/slider/VerticalSlider';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
 import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
@@ -14,36 +12,37 @@ interface MealRecruitSliderProps {
   sideViewOpen: boolean;
 }
 
+// TODO 변수명, 컴포넌트 이름 등 확인
 export default function MealRecruitSlider({
   sideViewOpen,
 }: MealRecruitSliderProps) {
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
 
-  const {
-    data = { pages: [{ mealPosts: [], totalPages: 0 }], pageParams: [] },
-    // fetchNextPage,
-    // hasNextPage,
-    isLoading,
-  } = useGetInfiniteMealPostList();
+  // TODO 로딩시 UI
+  const { data, fetchNextPage, hasNextPage } = useGetInfiniteMealPostList();
 
-  const mealPostList = useMemo(() => {
-    return data?.pages
-      .map(item => item.mealPosts)
-      .reduce<MealPosts[]>((acc, arr) => {
-        arr?.forEach(obj => {
-          acc.push(obj);
-        });
+  const mealPosts = useMemo(() => {
+    return data ? data.pages.flatMap(({ mealPostList }) => mealPostList) : [];
+  }, [data]);
 
-        return acc;
-      }, []);
-  }, [data?.pages]);
+  // console.log('mealPosts: ', mealPosts);
+
+  const runFucAtIntersect = () => {
+    if (hasNextPage) fetchNextPage();
+  };
+
+  useObserver({
+    runFucAtIntersect,
+    target: mealPostObserveRef,
+    threshold: 0.1,
+  });
 
   return (
-    <>
+    <section className="flex min-h-dvh flex-col gap-7">
       {sideViewOpen && (
         <button
-          className={`mb-7 flex w-full min-w-56 flex-col items-center rounded-lg bg-gray5 px-5 shadow-card ${mealPostList.length > 0 ? 'h-[105px] py-6' : 'h-full py-8'}`}
+          className={`mb-7 flex w-full min-w-56 flex-col items-center rounded-lg bg-gray5 px-5 shadow-card ${mealPosts.length > 0 ? 'h-[105px] py-6' : 'h-full py-8'}`}
           onClick={async () => {
             await showDialog({
               key: 'MEAL-RECRUIT-TYPE',
@@ -56,11 +55,11 @@ export default function MealRecruitSlider({
           </div>
 
           <p
-            className={`text-base font-semibold ${mealPostList.length > 0 ? 'mt-2' : 'mb-2 mt-4'}`}
+            className={`text-base font-semibold ${mealPosts.length > 0 ? 'mt-2' : 'mb-2 mt-4'}`}
           >
             한끼팟 만들기
           </p>
-          {mealPostList.length === 0 && (
+          {mealPosts.length === 0 && (
             <p className="text-xs">
               다른 사람들의 이야기가 궁금한가요?
               <br />
@@ -69,20 +68,12 @@ export default function MealRecruitSlider({
           )}
         </button>
       )}
-      <div className="mb-10">
-        <VerticalSlider
-          slideList={mealPostList}
-          spaceBetween={24}
-          slideItemHeight={224}
-          isLoading={isLoading}
-          ref={mealPostObserveRef}
-          containerHeightOffset={360}
-          paginationHeightOffset={380}
-          hideNextButton={!sideViewOpen}
-        >
-          {item => <MealRecruitCard slideItem={item as MealPosts} />}
-        </VerticalSlider>
+      <div className="flex grow flex-col gap-8 overflow-scroll">
+        {mealPosts.map(post => (
+          <MealRecruitCard key={post.id} slideItem={post} />
+        ))}
+        <div ref={mealPostObserveRef} />
       </div>
-    </>
+    </section>
   );
 }
