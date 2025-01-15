@@ -24,7 +24,7 @@ export default function MealRecruitSideView({
       sideViewOpen={sideViewOpen}
       onClose={onClose}
       headerContent={headerContent}
-      className="mr-5 flex h-dvh max-w-72 flex-col gap-10 py-11"
+      className="mr-5 flex h-[calc(100vh-1px)] max-w-72 flex-col gap-10 pb-5 pt-11"
       mainContent={mainContent}
     />
   );

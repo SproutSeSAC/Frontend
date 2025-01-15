@@ -36,17 +36,19 @@ export default function MealRecruitList({
     threshold: 0.1,
   });
 
+  const handleShowDialog = async () => {
+    await showDialog({
+      key: 'MEAL-RECRUIT-CARD-TYPE',
+      element: <MealRecruitModal />,
+    });
+  };
+
   return (
-    <section className="flex h-full flex-col gap-7">
+    <section className="flex flex-col gap-7 overflow-y-auto">
       {sideViewOpen && (
         <button
           className="flex w-72 flex-col items-center justify-center gap-4 rounded-lg bg-gray5 px-5 py-8 shadow-card"
-          onClick={async () => {
-            await showDialog({
-              key: 'MEAL-RECRUIT-TYPE',
-              element: <MealRecruitModal />,
-            });
-          }}
+          onClick={handleShowDialog}
         >
           <div className="w-fit rounded-full bg-vividGreen1 text-white">
             <BsPlus size={30} />
@@ -64,7 +66,7 @@ export default function MealRecruitList({
           </div>
         </button>
       )}
-      <div className="flex max-h-[520px] flex-col gap-8 overflow-scroll">
+      <div className="flex max-h-[520px] flex-col gap-8 overflow-y-auto">
         {mealPosts.map(post => (
           <MealRecruitCard key={post.id} post={post} />
         ))}
