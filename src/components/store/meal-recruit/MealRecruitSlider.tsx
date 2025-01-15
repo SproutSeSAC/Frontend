@@ -68,7 +68,7 @@ export default function MealRecruitSlider({
       )}
       <div className="flex max-h-[520px] flex-col gap-8 overflow-scroll">
         {mealPosts.map(post => (
-          <MealRecruitCard key={post.id} slideItem={post} />
+          <MealRecruitCard key={post.id} post={post} />
         ))}
         <div ref={mealPostObserveRef} />
       </div>
