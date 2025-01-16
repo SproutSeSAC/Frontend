@@ -85,7 +85,7 @@ export const useGetInfiniteMealPostList = () => {
       const { data } = await axiosInstance.get<GetMealPostList>(`/mealPost`, {
         params: {
           page: pageParam,
-          size: 10,
+          size: 5,
           sort: [],
         },
       });
