@@ -42,7 +42,7 @@ export interface Members {
 
 export interface PostMeal {
   title: string;
-  appointmentTime: Date;
+  appointmentTime: string;
   meetingPlace: string;
   memberCount: number;
   storeName: string;
