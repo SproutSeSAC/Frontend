@@ -70,7 +70,7 @@ export default function NavigationBar() {
   ];
 
   return (
-    <nav className="sticky top-[60px] flex h-[100vh] w-[130px] flex-col items-center justify-between px-5 pb-[4%]">
+    <nav className="sticky top-[60px] flex h-[100vh] min-w-[130px] flex-col items-center justify-between px-5 pb-[4%]">
       <ul className="flex w-[62px] flex-col items-center justify-center gap-y-[5vh] rounded-[20px] bg-white px-4 pb-28 pt-5 shadow-lg">
         <Logo />
         {menuList.map(menu => (
@@ -78,7 +78,7 @@ export default function NavigationBar() {
             <Link
               to={menu.to}
               title={menu.title}
-              className="flex h-10 w-10 items-center justify-center"
+              className="flex size-10 items-center justify-center"
             >
               {menu.icon}
             </Link>
@@ -90,7 +90,7 @@ export default function NavigationBar() {
             <Link
               to="/admin"
               title="관리자 페이지 이동"
-              className="flex h-10 w-10 items-center justify-center"
+              className="flex size-10 items-center justify-center"
             >
               <MdOutlineAdminPanelSettings className={`${iconStyle} size-4`} />
             </Link>

@@ -61,7 +61,7 @@ export default function Home() {
 
   return (
     <>
-      <MainView className="!spr-10">
+      <MainView className="">
         <Header title={`${name} 스프님, 환영합니다!`} />
 
         <section>

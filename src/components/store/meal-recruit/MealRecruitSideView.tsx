@@ -1,5 +1,5 @@
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
-import MealRecruitSlider from '@/components/store/meal-recruit/MealRecruitSlider';
+import MealRecruitList from '@/components/store/meal-recruit/MealRecruitList';
 
 interface MealRecruitSideViewProps {
   sideViewOpen: boolean;
@@ -11,20 +11,20 @@ export default function MealRecruitSideView({
   onClose,
 }: MealRecruitSideViewProps) {
   const headerContent = (
-    <span className="mb-10 text-[27px]">
+    <h2 className="text-[27px]">
       <span>오늘의 </span>
-      <span className="text-darkGreen">한끼팟!</span>
-    </span>
+      <span className="text-vividGreen1">한끼팟!</span>
+    </h2>
   );
 
-  const mainContent = <MealRecruitSlider sideViewOpen={sideViewOpen} />;
+  const mainContent = <MealRecruitList sideViewOpen={sideViewOpen} />;
 
   return (
     <CollapsibleSideView
       sideViewOpen={sideViewOpen}
       onClose={onClose}
       headerContent={headerContent}
-      className="sticky top-[60px] mr-5 max-w-[284px] pb-8"
+      className="mr-5 flex h-[calc(100vh-1px)] max-w-72 flex-col gap-10 pb-5 pt-11"
       mainContent={mainContent}
     />
   );

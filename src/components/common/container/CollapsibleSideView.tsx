@@ -19,7 +19,7 @@ export default function CollapsibleSideView({
 }: CollapsibleSideViewProps) {
   return (
     <section
-      className={`z-10 h-full transition-all duration-200 ease-in-out ${sideViewOpen ? 'w-full translate-x-0' : 'w-0 translate-x-full'} ${className}`}
+      className={`z-10 transition-all duration-200 ease-in-out ${sideViewOpen ? 'w-full translate-x-0' : 'w-0 translate-x-full'} ${className}`}
     >
       {sideViewOpen && (
         <header className="flex justify-between font-semibold text-mainGray">

@@ -7,6 +7,7 @@ import { usePostMeal } from '@/services/store/storeMutations';
 import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext } from '@/hooks';
 import { PostMeal } from '@/types/store/storeMealPostDto';
+import { formatDate } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 
@@ -62,7 +63,7 @@ export default function MealRecruitModal() {
 
       const params = {
         title: data.title,
-        appointmentTime: date,
+        appointmentTime: formatDate(date, "yyyy-MM-dd'T'HH:mm:ss"),
         meetingPlace: data.meetingPlace,
         memberCount: data.memberCount,
         storeName: data.storeName,

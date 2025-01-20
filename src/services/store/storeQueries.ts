@@ -85,17 +85,21 @@ export const useGetInfiniteMealPostList = () => {
       const { data } = await axiosInstance.get<GetMealPostList>(`/mealPost`, {
         params: {
           page: pageParam,
-          size: 10,
+          size: 5,
           sort: [],
         },
       });
-      return data;
+
+      const hasNextPage = data.mealPosts.length !== 0;
+      const nextPage = hasNextPage ? pageParam + 1 : null;
+
+      return {
+        mealPostList: data.mealPosts,
+        currentPage: pageParam,
+        nextPage,
+      };
     },
-    getNextPageParam: (data, pages) => {
-      if (data.totalPages === 0 || data.totalPages === pages.length)
-        return undefined;
-      return pages.length;
-    },
+    getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 0,
   });
 };
