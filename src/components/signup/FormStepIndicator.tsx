@@ -94,9 +94,9 @@ export default function FormStepIndicator({
           {currentStep !== 1 && (
             <button
               onClick={goPrevStep}
-              className="group flex size-10 items-center justify-center self-end rounded-md border border-gray2 bg-white hover:border-gray1"
+              className="group flex size-10 items-center justify-center self-end rounded-md border border-mainGray bg-white hover:border-darkGray-active"
             >
-              <BiChevronLeft className="size-8 text-gray2 group-hover:text-gray1" />
+              <BiChevronLeft className="size-8 text-mainGray group-hover:text-darkGray-active" />
             </button>
           )}
         </div>
@@ -105,7 +105,7 @@ export default function FormStepIndicator({
           {steps.map(step => (
             <div
               key={step}
-              className={`${step <= resolvedUnMatchCurrentStep ? 'bg-skyBlue1' : 'bg-[#C7D3EB]'} h-[10px] w-full rounded-full`}
+              className={`${step <= resolvedUnMatchCurrentStep ? 'bg-mainBlue' : 'bg-[#C7D3EB]'} h-[10px] w-full rounded-full`}
             />
           ))}
         </div>

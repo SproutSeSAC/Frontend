@@ -26,7 +26,7 @@ export default function CameraInput({
       <label
         htmlFor="avatar"
         aria-label="프로필 이미지 수정하기"
-        className={`absolute bottom-0 right-0 flex cursor-pointer items-center justify-center rounded-full bg-vividGreen1 p-2.5 ${className}`}
+        className={`absolute bottom-0 right-0 flex cursor-pointer items-center justify-center rounded-full bg-darkGreen p-2.5 ${className}`}
       >
         <BsCameraFill className={`text-white size-${iconSize}`} />
       </label>

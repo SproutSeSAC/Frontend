@@ -39,12 +39,7 @@ export default function SubscribeCalenderButton({
         subText: `조금만 기다려주세요!`,
         className: 'max-w-[600px]',
         children: (
-          <SquareButton
-            name="확인"
-            onClick={hideDialog}
-            type="button"
-            color="oliveGreen"
-          />
+          <SquareButton name="확인" onClick={hideDialog} type="button" />
         ),
       });
     } else {
@@ -93,10 +88,10 @@ export default function SubscribeCalenderButton({
         className="pr-2"
       >
         <FaPlus
-          className={`size-4 ${disabled ? 'text-gray2' : 'text-oliveGreen1'}`}
+          className={`size-4 ${disabled ? 'text-mainGray' : 'text-mainGreen'}`}
         />
       </button>
-      <span className="flex-1 tracking-tight text-gray2">
+      <span className="flex-1 tracking-tight text-mainGray">
         {courseTitle} 캘린더 구독하기
       </span>
     </div>

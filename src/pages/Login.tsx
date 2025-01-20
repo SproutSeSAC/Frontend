@@ -46,13 +46,13 @@ export default function Login() {
       <img src="/sprout_logo.png" alt="sprout 로고" className="size-10" />
       <div className="mt-[20%]">
         <h1 className="text-lg font-medium">
-          <span className="mr-0.5 text-2xl font-medium text-oliveGreen1">
+          <span className="mr-0.5 text-2xl font-medium text-mainGreen">
             SPROUT
           </span>
           에 오신 것을 환영합니다
         </h1>
 
-        <p className="mt-[4%] tracking-tight text-gray1">
+        <p className="mt-[4%] tracking-tight text-darkGray-active">
           편리한 일정 관리를 위해 <br />
           구글 아이디를 사용하여 구글 캘린더를 연동합니다.
         </p>
@@ -67,7 +67,7 @@ export default function Login() {
         구글 계정으로 시작하기
       </button>
 
-      <p className="mb-4 text-gray1">
+      <p className="mb-4 text-darkGray-active">
         서비스 가입 시{' '}
         <button
           type="button"
@@ -87,7 +87,7 @@ export default function Login() {
         의 내용을 확인한 것으로 간주합니다
       </p>
 
-      <span className="mt-[55%] self-end text-sm text-gray1">
+      <span className="mt-[55%] self-end text-sm text-darkGray-active">
         © Team Sprout 2024
       </span>
     </AuthPageLayout>

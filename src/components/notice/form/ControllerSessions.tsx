@@ -94,7 +94,7 @@ export default function ControllerSessions({
                     <LabeledSection
                       key={id}
                       label={`${noticeType} ${sessionList.length === 1 ? '' : `${index + 1}회차`} 일시`}
-                      className="col-span-2 mb-2 grid grid-cols-2 gap-x-8 gap-y-2 rounded-lg p-2.5 hover:bg-gray3"
+                      className="col-span-2 mb-2 grid grid-cols-2 gap-x-8 gap-y-2 rounded-lg p-2.5 hover:bg-mainGray"
                     >
                       {sessionList.length > 1 && (
                         <XButton
@@ -104,7 +104,7 @@ export default function ControllerSessions({
                             });
                             onChange(filteredData);
                           }}
-                          iconClassName="text-text !size-6"
+                          iconClassName="text-black !size-6"
                           className="flex justify-end pr-2"
                         />
                       )}
@@ -163,7 +163,7 @@ export default function ControllerSessions({
                               onChange(newValue);
                             }}
                             errorMsg={errorMsg || undefined}
-                            optionClassName="hover:bg-vividGreen3 text-gray1"
+                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                           />
                           <SingleSelectDropdown
                             defaultLabel="분"
@@ -180,7 +180,7 @@ export default function ControllerSessions({
                               onChange(newValue);
                             }}
                             errorMsg={errorMsg ? ' ' : undefined}
-                            optionClassName="hover:bg-vividGreen3 text-gray1"
+                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                           />
                           <span className="text-xl">~</span>
 
@@ -200,7 +200,7 @@ export default function ControllerSessions({
                               onChange(newValue);
                             }}
                             errorMsg={errorMsg ? ' ' : undefined}
-                            optionClassName="hover:bg-vividGreen3 text-gray1"
+                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                           />
                           <SingleSelectDropdown
                             defaultLabel="분"
@@ -217,7 +217,7 @@ export default function ControllerSessions({
                               onChange(newValue);
                             }}
                             errorMsg={errorMsg ? ' ' : undefined}
-                            optionClassName="hover:bg-vividGreen3 text-gray1"
+                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                           />
                         </div>
                       </div>
@@ -245,10 +245,10 @@ export default function ControllerSessions({
                 disabled={sessionList.length >= 4}
               >
                 <FaPlus
-                  className={`text-base ${sessionList.length >= 4 ? 'text-gray2' : 'text-oliveGreen1'}`}
+                  className={`text-base ${sessionList.length >= 4 ? 'text-mainGray' : 'text-mainGreen'}`}
                 />
                 <span
-                  className={`text-base font-semibold ${sessionList.length >= 4 ? 'text-gray2' : 'text-oliveGreen1'}`}
+                  className={`text-base font-semibold ${sessionList.length >= 4 ? 'text-mainGray' : 'text-mainGreen'}`}
                 >
                   회차 정보 추가하기
                 </span>

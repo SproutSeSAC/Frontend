@@ -19,9 +19,9 @@ export default function FavoriteButton({
   return (
     <button type="button" onClick={onClick}>
       {isFavorite ? (
-        <BsHeartFill size={size} className="cursor-pointer text-oliveGreen1" />
+        <BsHeartFill size={size} className="cursor-pointer text-mainGreen" />
       ) : (
-        <BsHeart size={size} className="cursor-pointer text-oliveGreen1" />
+        <BsHeart size={size} className="cursor-pointer text-mainGreen" />
       )}
     </button>
   );

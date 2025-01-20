@@ -5,9 +5,9 @@ export default function Logo() {
     <Link
       to="/"
       title="홈 이동"
-      className="mb-20 flex aspect-square w-12 items-center justify-center rounded-lg"
+      className="flex size-[57px] items-center justify-center rounded-full"
     >
-      <img src="/sprout_logo.png" alt="Sprout Logo" className="size-12" />
+      <img src="/sprout_logo.png" alt="Sprout Logo" className="size-10" />
     </Link>
   );
 }

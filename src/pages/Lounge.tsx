@@ -82,7 +82,7 @@ export default function Lounge() {
           />
           <button
             onClick={handleResetFilter}
-            className="w-20 whitespace-nowrap rounded-lg bg-gray2 px-3.5 py-3 text-white"
+            className="w-20 whitespace-nowrap rounded-lg bg-mainGray px-3.5 py-3 text-white"
           >
             초기화
           </button>

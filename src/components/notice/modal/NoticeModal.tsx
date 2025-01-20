@@ -159,7 +159,7 @@ export default function NoticeModal({
               name="신청하기"
               type="submit"
               disabled={isNotValid}
-              color={isNotValid ? 'gray' : 'oliveGreen'}
+              color={isNotValid ? 'gray' : 'mainGreen'}
               className="h-full self-end whitespace-nowrap px-3 py-[12px] text-xl"
             />
           </div>

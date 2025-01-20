@@ -61,7 +61,7 @@ export default function Home() {
 
   return (
     <>
-      <MainView>
+      <MainView className="">
         <Header title={`${name} 스프님, 환영합니다!`} />
 
         <section>
@@ -81,7 +81,7 @@ export default function Home() {
               title="나에게 딱 맞는 프로젝트를 만나보세요!"
               highlight="프로젝트"
             />
-            <Link to="/lounge" className="tracking-tight text-gray2">
+            <Link to="/lounge" className="tracking-tight text-mainGray">
               라운지 바로가기
             </Link>
           </div>

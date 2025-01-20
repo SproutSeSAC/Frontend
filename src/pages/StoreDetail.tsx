@@ -77,7 +77,7 @@ export default function StoreDetail() {
         <button
           type="button"
           aria-label="사이드뷰 펼치기"
-          className="mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
+          className="mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-mainGray"
           onClick={openSideView}
         >
           <FaChevronLeft />

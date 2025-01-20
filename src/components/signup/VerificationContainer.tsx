@@ -17,17 +17,17 @@ export default function VerificationContainer({
 }: VerificationContainerProps) {
   return (
     <div
-      className={`relative pb-10 ${isVerified && '[&>div>input]:border-vividGreen1 [&>div>input]:text-vividGreen2'}`}
+      className={`relative pb-10 ${isVerified && '[&>div>input]:border-darkGreen [&>div>input]:text-darkGreen-hover'}`}
     >
       {children}
 
       {isVerified && (
-        <BsCheckCircle className="absolute right-4 top-4 text-lg text-vividGreen1" />
+        <BsCheckCircle className="absolute right-4 top-4 text-lg text-darkGreen" />
       )}
 
       <button
         type="button"
-        className={`absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 ${isVerified ? 'text-gray2' : 'text-gray1'}`}
+        className={`absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 ${isVerified ? 'text-mainGray' : 'text-darkGray-active'}`}
         onClick={onVerifyClick}
         disabled={isVerified}
       >

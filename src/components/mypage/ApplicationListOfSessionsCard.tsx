@@ -50,7 +50,7 @@ export default function ApplicationListOfSessionsCard() {
         <h4 className="font-medium">내가 신청한 특강</h4>
         <Link
           to="/application-status-for-sessions"
-          className="text-sm font-medium text-gray2"
+          className="text-sm font-medium text-mainGray"
         >
           더보기
         </Link>
@@ -78,7 +78,7 @@ export default function ApplicationListOfSessionsCard() {
             </span>
             <XButton
               onDeleteClick={onCancelClick}
-              iconClassName="text-gray2 !size-6"
+              iconClassName="text-mainGray !size-6"
             />
           </li>
         ))}

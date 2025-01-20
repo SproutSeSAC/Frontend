@@ -111,7 +111,7 @@ export default function CreateCalendarButton({
   return (
     <div className="relative flex items-start justify-between">
       {isLoading ? (
-        <span className="flex-1 tracking-tight text-gray2">
+        <span className="flex-1 tracking-tight text-mainGray">
           {courseTitle} 캘린더 생성 중...
         </span>
       ) : (
@@ -123,13 +123,13 @@ export default function CreateCalendarButton({
             disabled={disabled}
           >
             <FaPlus
-              className={`"size-4 ${disabled ? 'text-gray2' : 'text-oliveGreen1'}`}
+              className={`"size-4 ${disabled ? 'text-mainGray' : 'text-mainGreen'}`}
             />
           </button>
           <span
-            className={`flex-1 tracking-tight ${disabled ? 'text-gray2' : 'text-text'}`}
+            className={`flex-1 tracking-tight ${disabled ? 'text-mainGray' : 'text-black'}`}
           >
-            {courseTitle} <span className="text-gray2">캘린더 생성하기</span>
+            {courseTitle} <span className="text-mainGray">캘린더 생성하기</span>
           </span>
         </>
       )}

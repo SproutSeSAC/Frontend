@@ -7,7 +7,7 @@ export interface ToastProps {
 
 export default function Toast({ message, onClose }: ToastProps) {
   return (
-    <div className="w-full max-w-80 rounded bg-text p-4 text-white opacity-90 shadow-lg">
+    <div className="w-full max-w-80 rounded bg-black p-4 text-white opacity-90 shadow-lg">
       <div className="flex items-center justify-between">
         <span>{message}</span>
         <button className="ml-4 text-sm underline" onClick={onClose}>

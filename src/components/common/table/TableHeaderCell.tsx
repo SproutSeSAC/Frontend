@@ -20,14 +20,16 @@ export default function TableHeaderCell({
 
   return (
     <th
-      className={`border-b border-gray3 px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
+      className={`border-b border-mainGray px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
     >
       {name !== '체크박스' && (
-        <span className="font-normal tracking-tighter text-gray1">{name}</span>
+        <span className="font-normal tracking-tighter text-darkGray-active">
+          {name}
+        </span>
       )}
       {Icon && (
         <button onClick={onIconClick}>
-          <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-gray3" />
+          <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
         </button>
       )}
       {children}

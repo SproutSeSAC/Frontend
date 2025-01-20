@@ -33,7 +33,7 @@ export default function ControllerPhoneNumber({
             placeholder="연락처를 적어주세요 (숫자만 적어주세요)"
             value={value}
             onChange={handleChange}
-            className="h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2 focus:border-oliveGreen1"
+            className="h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-mainGray focus:border-mainGreen"
             errorMsg={error?.message}
             maxLength={13}
           />

@@ -73,7 +73,7 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
           />
           <div className="flex grow flex-col">
             <span className="whitespace-nowrap">{ownerNickname}</span>
-            <span className="text-sm text-gray1">
+            <span className="text-gray1 text-sm">
               {currentMemberCount}/{targetMemberCount}명
             </span>
           </div>

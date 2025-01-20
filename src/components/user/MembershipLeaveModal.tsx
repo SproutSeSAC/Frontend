@@ -36,7 +36,7 @@ export default function MembershipLeaveModal() {
       text: '탈퇴 이메일이 발송되었습니다!',
       children: (
         <div className="mt-4 flex w-60 flex-col items-center">
-          <p className="text-center text-sm text-gray1">
+          <p className="text-center text-sm text-darkGray-active">
             {userProfile?.email}로 발송된 탈퇴 확인 메일을 확인해주세요
           </p>
           <SquareButton name="나가기" onClick={hideDialog} type="button" />
@@ -59,24 +59,24 @@ export default function MembershipLeaveModal() {
         <br />
         이별인가요? 너무 아쉬워요.
       </p>
-      <p className="mt-7 text-gray1">
+      <p className="mt-7 text-darkGray-active">
         계정을 탈퇴하시면 회원님의 모든 정보와 활동 기록이 삭제되며 복구할 수
         없어요!
       </p>
-      <p className="mt-4 text-gray1">
+      <p className="mt-4 text-darkGray-active">
         새싹에서 제공하는 취업정보와 다른 사람들과의 네트워킹도 더 이상 이용하실
         수 없게 돼요!
       </p>
-      <p className="mt-4 text-gray1">정말 탈퇴하시겠어요?</p>
+      <p className="mt-4 text-darkGray-active">정말 탈퇴하시겠어요?</p>
 
       <button
         className="mt-4 flex items-center gap-1"
         onClick={onToggleActiveClick}
       >
         <BsCheckCircle
-          className={`size-5 ${isActive ? 'text-vividGreen1' : 'text-gray3'}`}
+          className={`size-5 ${isActive ? 'text-darkGreen' : 'text-mainGray'}`}
         />
-        <p className={`${isActive ? 'text-text' : 'text-gray3'}`}>
+        <p className={`${isActive ? 'text-black' : 'text-mainGray'}`}>
           회원탈퇴 유의사항을 확인하였으며 이에 동의합니다.
         </p>
       </button>
@@ -88,20 +88,20 @@ export default function MembershipLeaveModal() {
         <textarea
           value={textForLeave}
           onChange={onTextChange}
-          className="min-h-48 w-full resize-none rounded-lg border bg-gray5 p-4 outline-none placeholder:text-gray1"
+          className="bg-lightGrey min-h-48 w-full resize-none rounded-lg border p-4 outline-none placeholder:text-darkGray-active"
           placeholder="서비스 탈퇴 사유에 대해 알려주세요. 소중한 피드백을 담아 더 나은 서비스로 보답 드리도록 하겠습니다."
         />
         <div className="mb-4 mt-16 flex gap-[10px]">
           <SquareButton
             type="button"
             name="취소"
-            className="w-full !bg-gray3 py-3 text-lg font-semibold"
+            className="w-full !bg-mainGray py-3 text-lg font-semibold"
             onClick={hideDialog}
           />
           <SquareButton
             type="submit"
             name="탈퇴하기"
-            className={`w-full py-3 text-lg font-semibold ${isActive ? '!bg-oliveGreen1' : '!bg-gray1'}`}
+            className={`w-full py-3 text-lg font-semibold ${isActive ? '!bg-mainGreen' : '!bg-darkGray-active'}`}
             disabled={!isActive}
           />
         </div>

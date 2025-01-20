@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 
-const previousNextButtonStyle = 'rounded-full bg-gray4 p-1.5';
-const previousNextButtonIconStyle = 'size-2 stroke-1 text-gray2';
+const previousNextButtonStyle = 'rounded-full bg-lightGrey p-1.5';
+const previousNextButtonIconStyle = 'size-2 stroke-1 text-mainGray';
 interface Props {
   totalPages: number;
   currentPage: number;
@@ -68,7 +68,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`text-gray2 ${currentPage === page && 'text-text'}`}
+          className={`text-mainGray ${currentPage === page && 'text-black'}`}
         >
           {page}
         </button>
@@ -80,7 +80,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
             <span>...</span>
           )}
           <button
-            className="text-gray2"
+            className="text-mainGray"
             onClick={() => onPageChange(totalPages)}
           >
             {totalPages}

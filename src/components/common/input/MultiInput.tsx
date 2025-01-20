@@ -61,7 +61,7 @@ function MultiInput({
           {tagList.map(tag => (
             <li
               key={tag}
-              className="flex w-fit items-center gap-2 rounded-md bg-gray4 px-2 py-1"
+              className="bg-lightGrey flex w-fit items-center gap-2 rounded-md px-2 py-1"
             >
               {tag}
               <button

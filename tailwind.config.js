@@ -3,36 +3,44 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      screens: {
-        lg: { max: '1280px' },
-        md: { max: '1023px' },
-        sm: { max: '767px' },
-      },
       fontFamily: {
         pretendard: ['Pretendard', 'sans-serif'],
       },
       colors: {
-        bg: '#F5F5F7',
-        text: '#2b2b2b', //black 900
+        bg: '#f5f5f7',
+        black: '#4c4c4c', // +텍스트 기본값
 
-        gray1: '#6d6d6d', //black 700
-        gray2: '#b5b5b5', //black 400
-        gray3: '#dedede', //white 300
-        gray4: '#e9e9e9', //black 100
-        gray5: '#d9d9d9', //black 300
+        //white 회색조 컬러
+        mainGray: '#d9d9d9',
+        'mainGray-hover': '#c3c3c3',
+        'mainGray-active': '#aeaeae',
+        lightGray: '#fbfbfb',
+        'lightGray-hover': '#f9f9f9',
+        'lightGray-active': '#f3f3f3',
+        darkGray: '#a3a3a3',
+        'darkGray-hover': '#828282',
+        'darkGray-active': '#626262',
+        darkerGray: '#4c4c4c',
 
-        white: '#fff', //white 50
+        //green
+        mainGreen: '#6fa235',
+        'mainGreen-hover': '#649230',
+        'mainGreen-active': '#59822a',
+        lightGreen: '#f1f6eb',
+        'lightGreen-hover': '#e9f1e1',
+        'lightGreen-active': '#d2e2c0',
+        darkGreen: '#537a28',
+        'darkGreen-hover': '#436120',
+        'darkGreen-active': '#324918',
+        darkerGreen: '#273913',
 
-        oliveGreen1: '#6fa235', //primary 700
-        oliveGreen2: '#b4d780', //primary 400
-        oliveGreen3: '#cae3a5', //primary 200
-
-        vividGreen1: '#00ac49', //secondary 500
-        vividGreen2: '#69c57e', //secondary 300
-        vividGreen3: '#c0e5c7', //secondary 100
-
-        skyBlue1: '#00b2e3', //point 400
-        skyBlue2: '#7bd2ec', //point 200
+        //blue
+        mainBlue: '#81e2ff',
+        'mainBlue-hover': '#74cbe6',
+        'mainBlue-active': '#67b5cc',
+        lightBlue: '#f2fcff',
+        'lightBlue-hover': '#ecfbff',
+        'lightBlue-active': '#d8f6ff',
       },
       boxShadow: {
         card: '2px 4px 12px 0px rgba(0, 0, 0, 0.08)',
@@ -80,8 +88,3 @@ export default {
     require('@tailwindcss/typography'),
   ],
 };
-
-// regular : 400
-// medium : 500
-// semiBold : 600
-// bold : 700

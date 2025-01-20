@@ -55,17 +55,17 @@ export default function MealRecruitList({
     <section className="flex flex-col gap-7 overflow-y-auto">
       {sideViewOpen && (
         <button
-          className="flex w-72 flex-col items-center justify-center gap-4 rounded-lg bg-gray5 px-5 py-8 shadow-card"
+          className="bg-gray5 flex w-72 flex-col items-center justify-center gap-4 rounded-lg px-5 py-8 shadow-card"
           onClick={handleShowDialog}
         >
-          <div className="w-fit rounded-full bg-vividGreen1 text-white">
+          <div className="bg-vividGreen1 w-fit rounded-full text-white">
             <BsPlus size={30} />
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2">
             <h3 className="text-base font-semibold">한끼팟 만들기</h3>
             {mealPosts.length !== 0 && (
-              <p className="text-xs text-gray1">
+              <p className="text-gray1 text-xs">
                 다른 사람들의 이야기가 궁금한가요?
                 <br />
                 함께 식사할 사람을 찾아봐요!
@@ -91,7 +91,7 @@ export default function MealRecruitList({
           type="button"
           aria-label="스크롤 업"
           onClick={handleScrollToTop}
-          className="m-auto h-10 w-10 rounded-full bg-vividGreen1 p-3 text-white opacity-50 shadow-md"
+          className="bg-vividGreen1 m-auto h-10 w-10 rounded-full p-3 text-white opacity-50 shadow-md"
         >
           <IoIosArrowUp />
         </button>

@@ -6,8 +6,8 @@ export default function ControllerRequiredPhoneNumber() {
 
   const isRequired = useWatch({ control, name: 'isPhoneNumberRequired' });
 
-  const activeClassName = 'font-medium text-oliveGreen1';
-  const inActiveClassName = 'bg-gray4 text-gray2';
+  const activeClassName = 'font-medium text-mainGreen';
+  const inActiveClassName = 'bg-lightGrey text-mainGray';
 
   return (
     <Controller

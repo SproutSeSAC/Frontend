@@ -40,7 +40,7 @@ function CustomDatePickerHeader({
   return (
     <div className="text-md flex justify-between gap-2 px-3 pb-1.5">
       <button
-        className="px-1.5 disabled:text-oliveGreen3"
+        className="px-1.5 disabled:text-lightGreen-active"
         type="button"
         onClick={decreaseMonth}
         disabled={prevMonthButtonDisabled}
@@ -50,7 +50,7 @@ function CustomDatePickerHeader({
 
       <div className="flex items-center justify-center">
         <select
-          className="mr-0.5 rounded p-0.5 text-[14px] text-text outline-none"
+          className="mr-0.5 rounded p-0.5 text-[14px] text-black outline-none"
           value={date.getFullYear()}
           onChange={({ target: { value } }) => changeYear(Number(value))}
         >
@@ -63,7 +63,7 @@ function CustomDatePickerHeader({
         <span className="font-mono text-[15px]">년</span>
 
         <select
-          className="ml-2 mr-0.5 rounded p-0.5 text-[14px] text-text outline-none"
+          className="ml-2 mr-0.5 rounded p-0.5 text-[14px] text-black outline-none"
           value={months[date.getMonth()]}
           onChange={({ target: { value } }) =>
             changeMonth(months.indexOf(value))
@@ -79,7 +79,7 @@ function CustomDatePickerHeader({
       </div>
 
       <button
-        className="p-1.5 disabled:text-oliveGreen3"
+        className="p-1.5 disabled:text-lightGreen-active"
         type="button"
         onClick={increaseMonth}
         disabled={nextMonthButtonDisabled}
@@ -112,12 +112,12 @@ export default function CustomDatePicker({
       <label htmlFor="date-picker" className="relative flex h-full w-full">
         <BsCalendar
           size={20}
-          className="absolute left-4 top-5 z-10 size-[18px] cursor-pointer text-gray2"
+          className="absolute left-4 top-5 z-10 size-[18px] cursor-pointer text-mainGray"
         />
         <DatePicker
           id={`date-picker-${id}`}
           autoComplete="off"
-          className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-gray2 focus:outline-none ${errorMsg ? 'border-red-500' : 'border-gray4'} ${className}`}
+          className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-mainGray focus:outline-none ${errorMsg ? 'border-red-500' : 'border-lightGrey'} ${className}`}
           renderCustomHeader={CustomDatePickerHeader}
           preventOpenOnFocus
           closeOnScroll
