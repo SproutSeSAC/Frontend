@@ -114,16 +114,18 @@ export default function LoungeDetail() {
             text={projectsDetail ? ptypeDisplay[projectsDetail.ptype] : ''}
             className="mt-12 w-fit py-1"
           />
-          <LoungeApplicationInfoTemplate
-            startPeriod={projectsDetail?.recruitmentStart}
-            endPeriod={projectsDetail?.recruitmentEnd}
-            personRecruited={projectsDetail?.recruitmentCount || 0}
-            position={projectsDetail?.position || []}
-            contactMethod={projectsDetail?.contactMethod || '-'}
-            contactDetail={projectsDetail?.contactDetail || '-'}
-            meetingType={projectsDetail?.meetingType}
-            techStack={projectsDetail?.techStack || []}
-          />
+          {projectsDetail && (
+            <LoungeApplicationInfoTemplate
+              recruitmentStart={projectsDetail.recruitmentStart}
+              recruitmentEnd={projectsDetail.recruitmentEnd}
+              recruitmentCount={projectsDetail?.recruitmentCount || 0}
+              position={projectsDetail?.position || []}
+              contactMethod={projectsDetail.contactMethod}
+              contactDetail={projectsDetail.contactDetail}
+              meetingType={projectsDetail.meetingType}
+              techStack={projectsDetail?.techStack || []}
+            />
+          )}
           <PostDetailsTemplate
             actions={postWriter ? actions : []}
             imageNameSegment={projectsDetail?.imgUrl}
@@ -136,7 +138,7 @@ export default function LoungeDetail() {
 
         <CommentTemplate
           onSubmit={handleSubmitComment}
-          commentList={commentList || []}
+          commentList={commentList}
         />
       </div>
     </div>

@@ -10,7 +10,7 @@ import {
 import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
 import { useHandleOnScrap } from '@/hooks';
 import { Ptype } from '@/types';
-import { Lounge } from '@/types/lounge/loungeDto';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { formatDate } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
@@ -18,7 +18,7 @@ import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
 
 interface LoungePostCardProps {
-  card: Lounge;
+  card: LoungeDto.GetProjectList['projects'][0];
 }
 
 const getTagColor = (tag: Ptype) => {
@@ -84,8 +84,14 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
       </h4>
 
       <ul className="my-4 flex gap-2">
-        <li className="size-5 rounded bg-vividGreen2" />
-        <li className="size-5 rounded bg-vividGreen2" />
+        {card.techStacks?.map(techStack => (
+          <img
+            key={techStack.name}
+            src={techStack.imageUrl}
+            alt={techStack.name}
+            className="size-5"
+          />
+        ))}
       </ul>
 
       <div className="flex flex-col gap-2 text-xs">
@@ -101,7 +107,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         <div className="flex">
           <span className="lounge-text-divider leading-4 text-gray2">모집</span>
 
-          <span>3/{card.recruitmentCount}</span>
+          <span>{card.recruitmentCount}</span>
         </div>
 
         <div className="flex">

@@ -9,31 +9,31 @@ import TabNavigation from '@/components/common/TabNavigation';
 
 export default function LoungeTabNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const ptype = searchParams.get('ptype');
+  const pType = searchParams.get('pType');
 
   const modifyProjectId = searchParams.get('modifyProject');
 
   const handleChangeValue = useCallback(
     (type: string) => {
-      updateQueryParams(searchParams, setSearchParams, 'ptype', type);
+      updateQueryParams(searchParams, setSearchParams, 'pType', type);
     },
     [searchParams, setSearchParams],
   );
 
   const handleChange = () => {
     if (!modifyProjectId) {
-      updateQueryParams(searchParams, setSearchParams, 'ptype', 'EDIT');
+      updateQueryParams(searchParams, setSearchParams, 'pType', 'EDIT');
     }
   };
 
   return (
     <TabNavigation
-      selectValue={ptype ?? 'ALL'}
+      selectValue={pType ?? 'ALL'}
       tabList={TAB_LIST}
       onChangeValue={handleChangeValue}
     >
       <div
-        className={`box-border cursor-pointer justify-center whitespace-pre px-4 pb-[19px] ${ptype === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
+        className={`box-border cursor-pointer justify-center whitespace-pre px-4 pb-[19px] ${pType === 'EDIT' ? 'border-b-2 border-text' : 'text-gray2'}`}
       >
         <button type="button" onClick={handleChange}>
           {modifyProjectId ? '모집수정' : '모집하기'}

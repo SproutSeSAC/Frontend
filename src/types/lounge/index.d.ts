@@ -9,6 +9,7 @@ import {
   ptypeDisplay,
   sortDisplay,
 } from '@/constants';
+import { PaginationFilter } from '@/types/filter';
 
 export type ProgressDisplay = typeof progressDisplay;
 export type Progress = keyof ProgressDisplay;
@@ -30,3 +31,21 @@ export type StoreMainFilterType =
   | typeof STORE_MAIN_FILTER_UNDER_PRICE
   | typeof STORE_MAIN_FILTER_OVER_FIVE_PERSON
   | typeof STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES;
+
+export type DetailPostTechStack = {
+  id: number;
+  name: string;
+  isActive: boolean;
+  path: string;
+  jobName: string;
+};
+
+/** Lounge 프로젝트 필터 */
+export type LoungeProjectFilter = PaginationFilter & {
+  pType?: Ptype;
+  onlyScraped?: boolean;
+  techStack?: number[];
+  position?: number[];
+  meetingType?: Progress;
+  keyWord?: string;
+};

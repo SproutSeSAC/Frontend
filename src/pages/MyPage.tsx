@@ -24,7 +24,9 @@ export default function MyPage() {
   const { name, email, campusList, courseList } = userProfile;
 
   const sortedCourseList = useMemo(() => {
-    return courseList.sort((a, b) => (a.courseTitle > b.courseTitle ? 1 : -1));
+    return courseList.length === 1
+      ? courseList
+      : courseList.sort((a, b) => (a.courseTitle > b.courseTitle ? 1 : -1));
   }, [courseList]);
 
   const userInfoList = [
@@ -42,21 +44,10 @@ export default function MyPage() {
       label: '소속 교육과정',
       value: (
         <div className="peer flex w-full items-center truncate">
-          {courseList.length > 1 ? (
-            sortedCourseList.slice(0, 1).map(({ courseTitle }) => (
-              <span
-                className="w-full overflow-hidden truncate text-end"
-                key={courseTitle}
-              >
-                {courseTitle}
-              </span>
-            ))
-          ) : (
-            <span className="w-full overflow-hidden truncate text-end">
-              {courseList[0].courseTitle}
-            </span>
-          )}
-          {courseList.length > 1 && <FiChevronDown className="size-5" />}
+          <span className="w-full overflow-hidden truncate text-end">
+            {sortedCourseList[0].courseTitle}
+          </span>
+          {sortedCourseList.length > 1 && <FiChevronDown className="size-5" />}
         </div>
       ),
     },
@@ -81,15 +72,16 @@ export default function MyPage() {
                 <span className="mr-3 whitespace-nowrap font-medium text-vividGreen3">
                   {label}:
                 </span>
+
                 {value}
               </li>
             ))}
 
-            {courseList.length > 1 && (
+            {sortedCourseList.length > 1 && (
               <div className="absolute right-5 top-40 hidden rounded-xl bg-white p-5 shadow-card hover:block peer-hover:block">
                 <header className="flex items-center justify-between border-b border-gray2 pb-2 text-text">
                   <h4>교육과정 전체 목록</h4>
-                  <span>총 {courseList.length}개</span>
+                  <span>총 {sortedCourseList.length}개</span>
                 </header>
 
                 <ul className="mt-3 flex flex-col gap-y-3">
@@ -130,7 +122,7 @@ export default function MyPage() {
           <img
             src={imgUrl}
             className="mb-auto w-2/5 object-contain"
-            alt="faq 관련 이미지"
+            alt="FAQ"
           />
         </div>
       </section>

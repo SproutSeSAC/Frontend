@@ -1,43 +1,41 @@
 import { progressDisplay } from '@/constants';
-import { ContactMethodDisplayKey, Option, Progress } from '@/types';
-import { DetailPostTechStack } from '@/types/lounge/loungeDto';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { formatDate } from '@/utils';
 
 import Tag from '@/components/common/tag/Tag';
 import ContactMethodDetail from '@/components/lounge/detail/ContactMethodDetail';
 
-interface LoungeApplicationInfoProps {
-  startPeriod?: string;
-  endPeriod?: string;
-  personRecruited?: number;
-  position?: Option[];
-  contactMethod?: ContactMethodDisplayKey;
-  contactDetail?: string;
-  meetingType?: Progress;
-  techStack?: DetailPostTechStack[];
-}
-
 export default function LoungeApplicationInfoTemplate({
-  startPeriod,
-  endPeriod,
-  personRecruited,
+  recruitmentStart,
+  recruitmentEnd,
+  recruitmentCount,
   position,
   contactMethod,
   contactDetail,
   meetingType,
   techStack,
-}: LoungeApplicationInfoProps) {
+}: Pick<
+  LoungeDto.GetProjectDetail,
+  | 'recruitmentStart'
+  | 'recruitmentEnd'
+  | 'recruitmentCount'
+  | 'position'
+  | 'contactMethod'
+  | 'contactDetail'
+  | 'meetingType'
+  | 'techStack'
+>) {
   const loungeApplicationInfo = [
     {
       type: '기간',
       data:
-        startPeriod && endPeriod
-          ? `${formatDate(startPeriod)} ~ ${formatDate(endPeriod)}`
+        recruitmentStart && recruitmentEnd
+          ? `${formatDate(recruitmentStart)} ~ ${formatDate(recruitmentEnd)}`
           : '-',
     },
     {
       type: '모집',
-      data: personRecruited,
+      data: recruitmentCount,
     },
     {
       type: '직무',

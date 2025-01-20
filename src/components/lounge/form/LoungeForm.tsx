@@ -19,8 +19,8 @@ import {
   usePageBlocker,
   useTechStackList,
 } from '@/hooks';
-import { Progress } from '@/types';
-import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
+import { ContactMethodDisplayKey, Progress } from '@/types';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -50,13 +50,12 @@ export const inputStyle = {
   error: `${defaultInputStyle} border-[#FF3939]`,
 };
 
-// TODO: api type 수정 필요
 export interface FormValues {
   recruitmentCount: number;
-  meetingType: Progress;
-  contactMethod: string;
+  meetingType: Progress | '';
+  contactMethod: ContactMethodDisplayKey | '';
   contactDetail: string;
-  recruitmentType: string;
+  recruitmentType: string | '';
   startDate: string;
   endDate: string;
   positions: number[];
@@ -65,10 +64,12 @@ export interface FormValues {
   projectDescription: string;
 }
 
-const changeDataToFieldValues = (data?: GetLoungeProjectDetail) => {
+const changeDataToFieldValues = (
+  data?: LoungeDto.GetProjectDetail,
+): FormValues => {
   return {
     recruitmentCount: data?.recruitmentCount || 0,
-    meetingType: data?.meetingType || 'ALL',
+    meetingType: data?.meetingType || '',
     contactMethod: data?.contactMethod || '',
     contactDetail: data?.contactDetail || '',
     recruitmentType: data?.ptype || '',
@@ -131,7 +132,7 @@ export default function LoungeForm() {
       ...data,
       recruitmentCount: Number(data.recruitmentCount),
       projectDescription: descriptionWithHandledImage,
-    };
+    } as LoungeDto.PostProjectParams;
 
     if (modifyProjectId) {
       try {

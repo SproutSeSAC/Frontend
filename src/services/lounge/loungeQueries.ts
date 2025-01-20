@@ -5,13 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
-import { LoungeProjectFilters } from '@/types';
-import {
-  GetEndingTomorrowProjects,
-  GetLoungeProject,
-  GetLoungeProjectComment,
-  GetLoungeProjectDetail,
-} from '@/types/lounge/loungeDto';
+import { LoungeProjectFilter } from '@/types';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 
 export const extractValidParams = (searchParams: URLSearchParams) => {
   return Object.fromEntries(
@@ -24,34 +19,47 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
   );
 };
 
-export const useGetLoungeProjects = (params: LoungeProjectFilters) => {
+export const useGetLoungeProjects = (params: LoungeProjectFilter) => {
   const [searchParams] = useSearchParams();
+
+  const { page, size, position, techStack, meetingType, sort } = params;
+
   const newSearchParams =
     extractValidParams(searchParams).pType === 'onlyScraped'
-      ? { onlyScraped: 'true' }
+      ? { onlyScraped: true }
       : extractValidParams(searchParams);
 
-  const { modify, ...rest } = params;
+  const positionParams =
+    position && position.length > 0 ? { position: position.join(',') } : {};
+
+  const techStackParams =
+    techStack && techStack?.length > 0
+      ? { techStack: techStack.join(',') }
+      : {};
+
+  const meetingTypeParams = meetingType ? { meetingType } : {};
+
+  const sortParams = sort ? { sort } : {};
 
   const newParams = {
-    ...rest,
+    page,
+    size,
+    ...sortParams,
     ...newSearchParams,
-    position:
-      rest.position && rest.position.length > 0
-        ? rest.position.join(',')
-        : undefined,
-    techStack:
-      rest.techStack && rest.techStack?.length > 0
-        ? rest.techStack.join(',')
-        : undefined,
+    ...positionParams,
+    ...techStackParams,
+    ...meetingTypeParams,
   };
 
   return useQuery({
     queryKey: ['useGetLoungeProjects', newParams],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<GetLoungeProject>('/project', {
-        params: newParams,
-      });
+      const { data } = await axiosInstance.get<LoungeDto.GetProjectList>(
+        '/project',
+        {
+          params: newParams,
+        },
+      );
       return data;
     },
   });
@@ -61,7 +69,7 @@ export const useGetLoungeProjectsDetail = (projectId: number | null) => {
   return useQuery({
     queryKey: ['useGetLoungeProjectsDetail', projectId],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<GetLoungeProjectDetail>(
+      const { data } = await axiosInstance.get<LoungeDto.GetProjectDetail>(
         `/project/${projectId}`,
       );
       return data;
@@ -74,7 +82,7 @@ export const useGetLoungeProjectsComment = (projectId: number) => {
   return useQuery({
     queryKey: ['useGetLoungeProjectsComment'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<GetLoungeProjectComment[]>(
+      const { data } = await axiosInstance.get<LoungeDto.GetProjectComment>(
         `/project/${projectId}/comment`,
       );
       return data;
@@ -86,7 +94,7 @@ export const useGetEndingTomorrowProjects = () => {
   return useQuery({
     queryKey: ['useGetEndingTomorrowProjects'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<GetEndingTomorrowProjects[]>(
+      const { data } = await axiosInstance.get<LoungeDto.GetEndingTomorrowList>(
         `/project/ending-tomorrow`,
       );
       return data;

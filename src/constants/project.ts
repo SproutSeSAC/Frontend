@@ -9,7 +9,6 @@ import { StoreOptionCount } from '@/types/store/storeDto';
 
 // 진행방식
 export const progressDisplay = {
-  ALL: '',
   HYBRID: '전체',
   ONLINE: '온라인',
   OFFLINE: '오프라인',

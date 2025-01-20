@@ -2,7 +2,7 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { PostLoungeProject, PutLoungeProject } from '@/types/lounge/loungeDto';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { AxiosError } from 'axios';
 
 export const useDeleteLoungeProject = (
@@ -20,9 +20,9 @@ export const useDeleteLoungeProject = (
 };
 
 export const usePutLoungeProject = (
-  options?: UseMutationOptions<unknown, Error, { projectId: number }>,
+  options?: UseMutationOptions<unknown, Error, LoungeDto.PutProjectParams>,
 ) => {
-  return useMutation<boolean, AxiosError, PutLoungeProject>({
+  return useMutation<unknown, AxiosError, LoungeDto.PutProjectParams>({
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.put(
         `/project/${requestBody.projectId}`,
@@ -35,7 +35,7 @@ export const usePutLoungeProject = (
 };
 
 export const usePostLoungeProject = () => {
-  return useMutation<boolean, AxiosError, PostLoungeProject>({
+  return useMutation<boolean, AxiosError, LoungeDto.PostProjectParams>({
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.post(`/project`, requestBody);
       return data;

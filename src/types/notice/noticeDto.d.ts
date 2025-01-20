@@ -17,7 +17,6 @@ export namespace NoticeDto {
   };
   export type GetNoticeDetail = NoticeDetail;
   export type GetNoticeComment = { comments: NoticeComment[] };
-
   export type PostNotice = NoticeFormSchemaType;
 }
 
