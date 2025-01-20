@@ -48,7 +48,7 @@ import { loungeFormSchema } from '@/components/lounge/form/loungeFormSchema';
 const defaultInputStyle =
   'rounded-2xl border border-solid px-[15px] py-4 bg-white';
 export const inputStyle = {
-  default: `${defaultInputStyle} border-gray4`,
+  default: `${defaultInputStyle} border-lightGrey`,
   error: `${defaultInputStyle} border-[#FF3939]`,
 };
 

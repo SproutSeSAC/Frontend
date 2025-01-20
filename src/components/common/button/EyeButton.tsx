@@ -7,7 +7,7 @@ export default function EyeButton() {
 
   const toggleVisible = () => setIsVisible(prev => !prev);
 
-  const iconStyle = 'size-6 pt-0.5 text-gray2';
+  const iconStyle = 'size-6 pt-0.5 text-mainGray';
 
   return (
     <button
@@ -19,7 +19,7 @@ export default function EyeButton() {
       {isVisible ? (
         <BsEye className={iconStyle} />
       ) : (
-        <BsEyeSlash className={`${iconStyle} text-text`} />
+        <BsEyeSlash className={`${iconStyle} text-black`} />
       )}
     </button>
   );

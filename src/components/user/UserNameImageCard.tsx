@@ -24,12 +24,12 @@ export default function UserNameImageCard() {
   };
 
   return (
-    <div className="relative flex items-center gap-7 rounded-xl bg-oliveGreen1 px-6 py-10 shadow-card">
+    <div className="relative flex items-center gap-7 rounded-xl bg-mainGreen px-6 py-10 shadow-card">
       <UserImage imageNameSegment={profileImageUrl} className="size-[100px]" />
 
       <div className="flex flex-col gap-2">
         <span className="text-2xl font-medium text-white">{name}</span>
-        <span className="text-oliveGreen3">{nickname}</span>
+        <span className="text-lightGreen-active">{nickname}</span>
       </div>
 
       <EditButton

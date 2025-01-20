@@ -60,7 +60,7 @@ export default function CalendarCheckBoxList({
           key={category}
           title={category}
           className="mb-6"
-          titleClassName="text-oliveGreen1 text-sm text-gray1 mb-3 [&>button>svg]:text-xs [&>button>svg]:text-gray1"
+          titleClassName="text-mainGreen text-sm text-darkGray-active mb-3 [&>button>svg]:text-xs [&>button>svg]:text-darkGray-active"
           initialOpen
           tooltip={
             category === '교육과정 캘린더' &&
@@ -94,7 +94,7 @@ export default function CalendarCheckBoxList({
                           text={summary || courseTitle}
                           checked={!!currentCalendarIds?.includes(id)}
                           onChange={() => onCheckBoxChange(id)}
-                          textClassName="!text-text"
+                          textClassName="!text-black"
                           checkBoxColor={backgroundColor}
                         />
                         {isManagerAndAdmin(userRole) && (
@@ -135,7 +135,7 @@ export default function CalendarCheckBoxList({
                   text={primary ? '기본 캘린더' : summary}
                   checked={!!currentCalendarIds?.includes(id)}
                   onChange={() => onCheckBoxChange(id)}
-                  textClassName="!text-text"
+                  textClassName="!text-black"
                   checkBoxColor={backgroundColor}
                 />
               ))}

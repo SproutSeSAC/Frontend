@@ -81,7 +81,7 @@ export default function Notice() {
         {noticeCategoryList.map(({ key, name }) => (
           <li
             key={key}
-            className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-oliveGreen1 text-white' : 'border border-solid border-gray4 text-gray1'}`}
+            className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-mainGreen text-white' : 'border border-solid border-lightGray text-darkGray-active'}`}
           >
             <button
               type="button"

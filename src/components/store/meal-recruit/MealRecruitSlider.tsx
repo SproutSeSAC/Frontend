@@ -43,7 +43,7 @@ export default function MealRecruitSlider({
     <>
       {sideViewOpen && (
         <button
-          className={`mb-7 flex w-full min-w-56 flex-col items-center rounded-lg bg-gray5 px-5 shadow-card ${mealPostList.length > 0 ? 'h-[105px] py-6' : 'h-full py-8'}`}
+          className={`mb-7 flex w-full min-w-56 flex-col items-center rounded-lg bg-lightGray px-5 shadow-card ${mealPostList.length > 0 ? 'h-[105px] py-6' : 'h-full py-8'}`}
           onClick={async () => {
             await showDialog({
               key: 'MEAL-RECRUIT-TYPE',
@@ -51,7 +51,7 @@ export default function MealRecruitSlider({
             });
           }}
         >
-          <div className="w-fit rounded-full bg-vividGreen1 text-white">
+          <div className="w-fit rounded-full bg-darkGreen text-white">
             <BsPlus size={30} />
           </div>
 

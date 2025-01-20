@@ -94,7 +94,7 @@ export default function Store() {
                 aria-label="식당 상세보기로 이동"
                 onClick={() => navigate('/stores/detail-location')}
               >
-                <BsMap className="text-gray2" />
+                <BsMap className="text-mainGray" />
               </button>
             </div>
 
@@ -150,7 +150,7 @@ export default function Store() {
         <button
           type="button"
           aria-label="사이드뷰 펼치기"
-          className="fixed right-0 mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-gray2"
+          className="fixed right-0 mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-mainGray"
           onClick={openSideView}
         >
           <FaChevronLeft />

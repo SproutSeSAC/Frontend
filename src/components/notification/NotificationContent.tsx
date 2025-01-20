@@ -11,13 +11,13 @@ export default function NotificationContent() {
             {item < 3 ? (
               <Link
                 to="/lounge/post/1"
-                className={`block rounded-lg border border-solid border-gray4 p-4 text-sm text-gray1 ${item === 5 ? 'mb-10' : ''}`}
+                className={`border-lightGrey block rounded-lg border border-solid p-4 text-sm text-darkGray-active ${item === 5 ? 'mb-10' : ''}`}
               >
                 <CardContent item={item} />
               </Link>
             ) : (
               <div
-                className={`rounded-lg border border-solid border-gray4 bg-gray3 p-4 text-sm text-gray1 ${item === 5 ? 'mb-10' : ''}`}
+                className={`border-lightGrey rounded-lg border border-solid bg-mainGray p-4 text-sm text-darkGray-active ${item === 5 ? 'mb-10' : ''}`}
               >
                 <CardContent item={item} disabled />
               </div>

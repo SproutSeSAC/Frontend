@@ -9,7 +9,7 @@ function ToggleButton() {
     <button
       aria-label="토글 버튼"
       className={`flex h-[26px] w-11 cursor-pointer items-center rounded-full p-1 transition-colors duration-300 ${
-        isOn ? 'bg-oliveGreen1' : 'bg-gray-300'
+        isOn ? 'bg-mainGreen' : 'bg-gray-300'
       }`}
       onClick={toggleSwitch}
     >

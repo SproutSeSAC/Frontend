@@ -21,7 +21,7 @@ const TitleWithHighlight = ({ text, highlight }: HighlightProps) => {
 
   return parts.map((part: string) =>
     part.toLowerCase() === highlight?.toLowerCase() ? (
-      <span key={part} className="text-oliveGreen1">
+      <span key={part} className="text-mainGreen">
         {part}
       </span>
     ) : (

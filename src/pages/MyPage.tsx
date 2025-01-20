@@ -72,13 +72,13 @@ export default function MyPage() {
         <UserNameImageCard />
 
         <div className="relative">
-          <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl bg-vividGreen1 px-6 py-4 shadow-card peer-hover:cursor-pointer">
+          <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl bg-darkGreen px-6 py-4 shadow-card peer-hover:cursor-pointer">
             {userInfoList.map(({ value, label }) => (
               <li
                 key={label}
                 className={`flex w-full items-start justify-between py-2.5 font-medium text-white ${label === '소속 교육과정' ? 'peer' : ''}`}
               >
-                <span className="mr-3 whitespace-nowrap font-medium text-vividGreen3">
+                <span className="mr-3 whitespace-nowrap font-medium text-darkGreen-active">
                   {label}:
                 </span>
                 {value}
@@ -87,7 +87,7 @@ export default function MyPage() {
 
             {courseList.length > 1 && (
               <div className="absolute right-5 top-40 hidden rounded-xl bg-white p-5 shadow-card hover:block peer-hover:block">
-                <header className="flex items-center justify-between border-b border-gray2 pb-2 text-text">
+                <header className="flex items-center justify-between border-b border-mainGray pb-2 text-black">
                   <h4>교육과정 전체 목록</h4>
                   <span>총 {courseList.length}개</span>
                 </header>
@@ -95,7 +95,7 @@ export default function MyPage() {
                 <ul className="mt-3 flex flex-col gap-y-3">
                   {sortedCourseList.map(({ courseTitle }, index) => (
                     <li
-                      className="w-full overflow-hidden truncate text-text"
+                      className="w-full overflow-hidden truncate text-black"
                       key={courseTitle}
                     >
                       {index + 1}. {courseTitle}
@@ -116,7 +116,7 @@ export default function MyPage() {
       </section>
 
       <section>
-        <h2 className="mb-[10px] bg-vividGreen1 px-2 py-[14px] text-lg font-semibold text-white">
+        <h2 className="mb-[10px] bg-darkGreen px-2 py-[14px] text-lg font-semibold text-white">
           서비스가 궁금할 땐 FAQ
         </h2>
 

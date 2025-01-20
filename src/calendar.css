@@ -8,14 +8,14 @@
       @apply mb-0;
     }
     .fc-button {
-      @apply border-0 bg-transparent text-gray1 !shadow-none;
+      @apply border-0 bg-transparent text-darkGray-active !shadow-none;
     }
     .fc-button-primary:disabled {
-      @apply border border-gray2 bg-white text-sm text-text;
+      @apply border border-mainGray bg-white text-sm text-black;
     }
   }
   .fc-col-header-cell-cushion {
-    @apply p-0 text-[11px] font-normal text-[#70757a];
+    @apply p-0 text-[11px] font-normal text-lightGray;
   }
   .fc-daygrid-day-top {
     @apply flex min-h-7 items-center justify-center p-0 text-xs;
@@ -39,32 +39,32 @@
         @apply mb-0 px-8 py-4;
       }
       .fc-toolbar-title {
-        @apply text-2xl font-medium tracking-wide text-text;
+        @apply text-2xl font-medium tracking-wide text-black;
       }
       .fc-button {
-        @apply h-10 rounded-lg bg-inherit text-text !shadow-none;
+        @apply h-10 rounded-lg bg-inherit text-black !shadow-none;
       }
       .fc-prev-button,
       .fc-next-button {
-        @apply w-10 bg-oliveGreen1 text-xs text-white;
+        @apply w-10 bg-mainGreen text-xs text-white;
       }
       .fc-today-button {
-        @apply border border-gray2 text-base font-medium !shadow-none;
+        @apply border border-mainGray text-base font-medium !shadow-none;
       }
       .fc-button-primary:disabled {
-        @apply h-10 border border-gray2 text-gray2 !shadow-none;
+        @apply h-10 border border-mainGray text-mainGray !shadow-none;
       }
     }
     /* 요일 표시 */
     .fc-col-header-cell-cushion {
-      @apply border-0 p-0 text-[11px] font-normal text-text;
+      @apply border-0 p-0 text-[11px] font-normal text-black;
     }
     /* 날짜 박스 */
     .fc-daygrid-day-top {
       @apply flex items-center justify-center p-0 text-xs;
     }
     .fc-daygrid-day.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
-      @apply size-6 items-center justify-center rounded-full bg-oliveGreen1 text-white;
+      @apply size-6 items-center justify-center rounded-full bg-mainGreen text-white;
     }
     .fc-daygrid-day-frame {
       @apply h-full min-h-28;
@@ -103,7 +103,7 @@
     }
     td,
     th {
-      @apply border-0 border-l border-t border-gray4 first:border-l-0;
+      @apply border-0 border-l border-t border-lightGray first:border-l-0;
     }
     th {
       @apply border-b-0;
@@ -130,7 +130,7 @@
       @apply border-0;
     }
     .fc-day {
-      @apply h-fit font-medium text-gray1;
+      @apply h-fit font-medium text-darkGray-active;
     }
     .fc-daygrid-body-unbalanced {
       @apply pb-2;
@@ -148,7 +148,7 @@
       @apply border-0;
       /* 요일 표시 */
       .fc-col-header-cell-cushion {
-        @apply pb-2 text-[11px] font-medium tracking-wider text-text;
+        @apply pb-2 text-[11px] font-medium tracking-wider text-black;
       }
     }
     td,
@@ -157,7 +157,7 @@
     }
   }
   .fc-daygrid-day.fc-day-today .fc-daygrid-day-number div span {
-    @apply flex size-5 items-center justify-center rounded-full bg-oliveGreen1 text-white;
+    @apply flex size-5 items-center justify-center rounded-full bg-mainGreen text-white;
   }
   .fc-daygrid-body-natural .fc-daygrid-day-events {
     @apply mb-0;

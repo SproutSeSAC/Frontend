@@ -13,7 +13,7 @@ export default function MealRecruitSideView({
   const headerContent = (
     <span className="mb-10 text-[27px]">
       <span>오늘의 </span>
-      <span className="text-vividGreen1">한끼팟!</span>
+      <span className="text-darkGreen">한끼팟!</span>
     </span>
   );
 
@@ -24,7 +24,7 @@ export default function MealRecruitSideView({
       sideViewOpen={sideViewOpen}
       onClose={onClose}
       headerContent={headerContent}
-      className="sticky top-0 mr-5 max-w-[284px] py-11"
+      className="sticky top-[60px] mr-5 max-w-[284px] pb-8"
       mainContent={mainContent}
     />
   );

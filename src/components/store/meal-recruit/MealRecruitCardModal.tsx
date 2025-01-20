@@ -53,9 +53,11 @@ export default function MealRecruitCardModal({
         <div className="text-base font-semibold">{data?.title || '-'}</div>
       }
     >
-      <div className="mt-1 flex flex-col gap-2 rounded-lg bg-gray5 px-3 py-[17px] text-sm">
+      <div className="mt-1 flex flex-col gap-2 rounded-lg bg-lightGray px-3 py-[17px] text-sm">
         <div className="flex items-center">
-          <span className="meal-recruit-text-divider text-gray1">일정</span>
+          <span className="meal-recruit-text-divider text-darkGray-active">
+            일정
+          </span>
 
           <span className="flex flex-1 gap-1 overflow-hidden">
             {data
@@ -65,7 +67,9 @@ export default function MealRecruitCardModal({
         </div>
 
         <div className="flex items-center">
-          <span className="meal-recruit-text-divider text-gray1">식당</span>
+          <span className="meal-recruit-text-divider text-darkGray-active">
+            식당
+          </span>
 
           <span className="flex flex-1 gap-1 overflow-hidden">
             {data?.storeName || '-'}
@@ -73,7 +77,9 @@ export default function MealRecruitCardModal({
         </div>
 
         <div className="flex items-center">
-          <span className="meal-recruit-text-divider text-gray1">위치</span>
+          <span className="meal-recruit-text-divider text-darkGray-active">
+            위치
+          </span>
 
           <span className="flex flex-1 gap-1 overflow-hidden">
             {data?.meetingPlace || '-'}
@@ -82,7 +88,7 @@ export default function MealRecruitCardModal({
       </div>
 
       <div className="mt-6">
-        <div className="text-sm text-gray1">{`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}</div>
+        <div className="text-sm text-darkGray-active">{`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}</div>
 
         <ul className="mt-3 flex flex-col gap-3">
           {(data?.members || []).map(member => {
@@ -102,7 +108,7 @@ export default function MealRecruitCardModal({
                       </div>
                     )}
                   </div>
-                  <div className="text-xs text-gray2">디자인</div>
+                  <div className="text-xs text-mainGray">디자인</div>
                 </div>
               </li>
             );
@@ -120,7 +126,6 @@ export default function MealRecruitCardModal({
         />
         {!isParticipant && (
           <SquareButton
-            color="vividGreen"
             type="button"
             name="참여하기"
             className="w-full flex-1"

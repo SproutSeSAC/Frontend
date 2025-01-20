@@ -101,7 +101,7 @@ export default function NoticeForm() {
       {isCreateEventsPending && (
         <div className="fixed inset-0 bottom-0 top-0 z-[1000] flex flex-col items-center justify-center gap-10 bg-gray-500 bg-opacity-10">
           <LoopLoading />
-          <span className="text-lg font-medium text-gray1">
+          <span className="text-lg font-medium text-darkGray-active">
             캘린더에 일정을 생성중입니다...
           </span>
         </div>

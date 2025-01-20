@@ -43,7 +43,7 @@ export default function NoticeTabNavigation() {
         <button
           type="button"
           onClick={() => handleChangeValue(EDIT)}
-          className={`cursor-pointer whitespace-pre px-4 pb-[19px] text-center ${tabName === EDIT ? 'border-b-2 border-text' : 'text-gray2'}`}
+          className={`cursor-pointer whitespace-pre px-4 pb-[19px] text-center ${tabName === EDIT ? 'border-b-2 border-black' : 'text-mainGray'}`}
         >
           공지사항 {!modifyNoticeId ? '등록' : '수정'}
         </button>

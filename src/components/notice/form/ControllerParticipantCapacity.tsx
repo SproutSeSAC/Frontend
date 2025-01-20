@@ -22,11 +22,11 @@ export default function ControllerParticipantCapacity() {
 
         return (
           <div
-            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-gray4'}`}
+            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-lightGrey'}`}
           >
             <button
               type="button"
-              className={`flex h-full min-w-[125px] items-center gap-2 rounded-l-2xl px-4 py-1.5 ${isLimited ? 'bg-[#fafafa] font-medium text-oliveGreen1' : 'text-gray2'}`}
+              className={`flex h-full min-w-[125px] items-center gap-2 rounded-l-2xl px-4 py-1.5 ${isLimited ? 'bg-[#fafafa] font-medium text-mainGreen' : 'text-mainGray'}`}
               onClick={() => {
                 onChange(
                   isLimited ? DEFAULT_CAPACITY_NUM : LIMITLESS_CAPACITY_NUM,
@@ -44,7 +44,7 @@ export default function ControllerParticipantCapacity() {
                 const { valueAsNumber } = e.target;
                 onChange(Number.isNaN(valueAsNumber) ? '' : valueAsNumber);
               }}
-              className={`border-y-0 border-r-0 ${error?.message ? '' : 'border-l text-gray2'} mr-0 !h-full !rounded-l-none rounded-r-2xl px-4 py-[18px] text-lg text-text placeholder:text-gray2`}
+              className={`border-y-0 border-r-0 ${error?.message ? '' : 'border-l text-mainGray'} mr-0 !h-full !rounded-l-none rounded-r-2xl px-4 py-[18px] text-lg text-black placeholder:text-mainGray`}
               errorMsg={error?.message}
               value={participantCapacityNum}
               disabled={isLimited}

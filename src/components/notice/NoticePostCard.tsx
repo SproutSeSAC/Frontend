@@ -49,7 +49,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
           className="px-[10px] py-[5px]"
         />
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 text-sm text-gray2">
+          <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />
             <span>{notice.viewCount || 0}</span>
           </div>
@@ -63,22 +63,22 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
 
       <div className="mt-6">
         <h4 className="text-xl font-semibold">{notice.title || '-'}</h4>
-        <p className="mt-3 max-w-[960px] break-words text-lg text-gray1">
+        <p className="mt-3 max-w-[960px] break-words text-lg text-darkGray-active">
           {stripHTML(notice.content)}
         </p>
 
-        <div className="mt-6 border-b border-solid border-gray4 pb-[18px]">
-          <span className="notice-text-divider leading-4 text-text">
+        <div className="border-lightGrey mt-6 border-b border-solid pb-[18px]">
+          <span className="notice-text-divider leading-4 text-black">
             {noticeCategoryDisplay[notice.noticeType]}
           </span>
-          <span className="leading-4 text-gray2">
+          <span className="leading-4 text-mainGray">
             {(notice?.targetCourse || []).map(target => {
               return <span key={target}>{target}</span>;
             })}
           </span>
         </div>
 
-        <div className="mt-4 w-full text-right text-gray2">
+        <div className="mt-4 w-full text-right text-mainGray">
           {formatDate(notice.createdDateTime)}
         </div>
       </div>

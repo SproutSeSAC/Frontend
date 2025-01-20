@@ -28,14 +28,14 @@ export default function PostDetailsTemplate({
 }: PostDetailsTemplateProps) {
   return (
     <>
-      <header className="mt-12 flex items-center justify-between border-b border-b-gray5 pb-6">
+      <header className="border-b-lightGrey mt-12 flex items-center justify-between border-b pb-6">
         <div>
           <div className="flex items-center gap-2">
             <UserImage imageNameSegment={imageNameSegment} />
             <span className="text-[22px]">{nickname}</span>
           </div>
 
-          <ul className="mt-3 flex items-center gap-10 text-lg text-gray1">
+          <ul className="mt-3 flex items-center gap-10 text-lg text-darkGray-active">
             <li className="flex items-center gap-3">
               <span>작성일</span>
               <span>

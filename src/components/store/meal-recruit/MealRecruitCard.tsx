@@ -16,12 +16,12 @@ export default function MealRecruitCard({
 
   const getButtonState = useCallback(() => {
     if (slideItem.targetMemberCount === slideItem.currentMemberCount) {
-      return { text: '모집완료', style: 'bg-vividGreen3' };
+      return { text: '모집완료', style: 'bg-lightGreen' };
     }
     if (slideItem.isParticipant) {
-      return { text: '참여중', style: 'bg-gray2' };
+      return { text: '참여중', style: 'bg-mainGray' };
     }
-    return { text: '자세히', style: 'bg-vividGreen1' };
+    return { text: '자세히', style: 'bg-mainGreen' };
   }, [slideItem]);
 
   const isDisabled = false;
@@ -29,48 +29,62 @@ export default function MealRecruitCard({
   return (
     <div className="h-full w-full text-start">
       <div
-        className={`rounded-lg px-5 py-4 shadow-card ${isDisabled ? 'bg-gray4' : 'bg-white'}`}
+        className={`rounded-lg px-5 py-4 shadow-card ${isDisabled ? 'bg-lightGray' : 'bg-white'}`}
       >
-        <header className={`mb-4 font-semibold ${isDisabled && 'text-gray1'}`}>
+        <header
+          className={`mb-4 font-semibold ${isDisabled && 'text-darkGray-active'}`}
+        >
           {slideItem.title}
         </header>
 
         <div className="mb-8 flex flex-col gap-2 text-sm">
           <p>
-            <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
+            <span
+              className={`${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
+            >
               일정
             </span>
-            <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
+            <span
+              className={`${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
+            >
               {' '}
               |{' '}
             </span>
-            <span className={`${isDisabled && 'text-gray1'}`}>
+            <span className={`${isDisabled && 'text-darkGray-active'}`}>
               {slideItem
                 ? `${formatDate(convertUtcToLocal(slideItem.appointmentTime), 'yyyy.MM.dd a h시 mm분')}`
                 : '-'}
             </span>
           </p>
           <p>
-            <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
+            <span
+              className={`${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
+            >
               식당
             </span>
-            <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
+            <span
+              className={`${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
+            >
               {' '}
               |{' '}
             </span>
-            <span className={`${isDisabled && 'text-gray1'}`}>
+            <span className={`${isDisabled && 'text-darkGray-active'}`}>
               {slideItem.storeName}
             </span>
           </p>
           <p>
-            <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
+            <span
+              className={`${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
+            >
               위치
             </span>
-            <span className={`${isDisabled ? 'text-gray2' : 'text-gray1'}`}>
+            <span
+              className={`${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
+            >
               {' '}
               |{' '}
             </span>
-            <span className={`${isDisabled && 'text-gray1'}`}>
+            <span className={`${isDisabled && 'text-darkGray-active'}`}>
               {slideItem.meetingPlace}
             </span>
           </p>
@@ -82,11 +96,11 @@ export default function MealRecruitCard({
             imageNameSegment={slideItem.ownerProfileImageUrl}
           />
           <div className="ml-2.5 flex-1">
-            <p className={`${isDisabled && 'text-gray1'}`}>
+            <p className={`${isDisabled && 'text-darkGray-active'}`}>
               {slideItem.ownerNickname}
             </p>
             <p
-              className={`text-sm ${isDisabled ? 'text-gray2' : 'text-gray1'}`}
+              className={`text-sm ${isDisabled ? 'text-mainGray' : 'text-darkGray-active'}`}
             >
               {slideItem.currentMemberCount}/{slideItem.targetMemberCount}명
             </p>

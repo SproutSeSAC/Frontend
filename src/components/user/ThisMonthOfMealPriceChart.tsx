@@ -11,7 +11,7 @@ function ChartDataControlButton({
   direction: 'left' | 'right';
   onClick: () => void;
 }) {
-  const chevronIconStyle = 'size-5 stroke-2 text-gray3';
+  const chevronIconStyle = 'size-5 stroke-2 text-mainGray';
 
   return (
     <button
@@ -233,13 +233,13 @@ export default function ThisMonthOfMealPriceChart() {
       <header className="mb-2 flex justify-between">
         <h2 className="font-semibold">이번달 식대 금액</h2>
         <div className="flex items-center">
-          <span className="pr-1.5 text-xs font-semibold tracking-tight text-gray1">
+          <span className="pr-1.5 text-xs font-semibold tracking-tight text-darkGray-active">
             {new Date().getMonth() + 1}월
           </span>
-          <span className="pr-0.5 text-sm font-semibold tracking-tight text-oliveGreen1">
+          <span className="pr-0.5 text-sm font-semibold tracking-tight text-mainGreen">
             {totalAmountOfMeal.toLocaleString('ko')}
           </span>
-          <span className="text-xs font-semibold text-oliveGreen1">원</span>
+          <span className="text-xs font-semibold text-mainGreen">원</span>
         </div>
       </header>
 
@@ -253,7 +253,7 @@ export default function ThisMonthOfMealPriceChart() {
           {dateNums.map(num => (
             <li
               key={num}
-              className="w-6 text-center text-xs font-semibold text-gray1"
+              className="w-6 text-center text-xs font-semibold text-darkGray-active"
             >
               {num}
             </li>

@@ -36,7 +36,7 @@ export default function Header({ title, highlight, children }: Props) {
       <section>
         <Title as="h1" title={title} highlight={highlight} />
         {homePathname && (
-          <h2 className="font-semibold text-oliveGreen2">
+          <h2 className="mt-2 font-semibold text-lightGreen-active">
             Seoul Software Academy
           </h2>
         )}
@@ -50,7 +50,7 @@ export default function Header({ title, highlight, children }: Props) {
             className="relative mr-6 p-1"
             onClick={() => setIsNotificationOpenOpen(prev => !prev)}
           >
-            <BsBell className="size-6 stroke-[0.2] font-bold text-gray1" />
+            <BsBell className="size-6 stroke-[0.2] font-bold text-darkGray-active" />
             {/* 새로운 알림 시 표시 */}
             <div className="absolute right-0 top-0 size-2 rounded-full border bg-red-500" />
           </button>

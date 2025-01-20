@@ -23,7 +23,7 @@ export default function LoungeSideView() {
               key={project.projectId}
               to={`/lounge/post/${project.projectId}`}
             >
-              <div className="text-gray1">{project.title}</div>
+              <div className="text-darkGray-active">{project.title}</div>
               <div className="mt-2 flex items-center gap-2">
                 <UserImage
                   className="size-[22px]"

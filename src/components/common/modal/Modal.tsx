@@ -56,7 +56,7 @@ export default function Modal({
             <button
               type="button"
               aria-label="접어두기"
-              className="flex aspect-square h-10 items-center justify-center rounded-lg border border-gray2 bg-white text-sm text-gray1"
+              className="flex aspect-square h-10 items-center justify-center rounded-lg border border-mainGray bg-white text-sm text-darkGray-active"
               onClick={onToggleClick}
             >
               <FaChevronLeft />

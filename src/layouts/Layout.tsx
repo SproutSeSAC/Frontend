@@ -12,7 +12,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex min-h-[100vh] min-w-[1200px] bg-bg">
+    <div className="flex min-h-[100vh] min-w-[1200px] bg-bg py-[60px]">
       <NavigationBar />
       {children || <Outlet />}
       <NotificationSideView />
