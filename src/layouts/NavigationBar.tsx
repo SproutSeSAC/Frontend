@@ -5,6 +5,7 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
+import NoticeIcon from '@/assets/icons/notice.svg?react';
 import StoreIcon from '@/assets/icons/store.svg?react';
 import Logo from '@/layouts/Logo';
 import { isAdmin } from '@/utils';
@@ -38,6 +39,11 @@ export default function NavigationBar() {
       title: '라운지 이동',
       to: '/lounge',
       icon: <BsPersonFillAdd className={iconStyle} />,
+    },
+    {
+      title: '공지사항 이동',
+      to: '/notice',
+      icon: <NoticeIcon className={`${iconStyle} `} />,
     },
   ];
 
