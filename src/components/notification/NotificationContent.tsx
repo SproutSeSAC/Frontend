@@ -1,25 +1,48 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-import { useGetNotifications } from '@/services/notification/notificationQueries';
+import { useNavigate } from 'react-router-dom';
+
+import { useUpdateNotificationStatus } from '@/services/notification/notificationMutations';
+
+// import { useGetNotifications } from '@/services/notification/notificationQueries';
+import { notificationsData } from './notifications';
 
 import CardContent from '@/components/notification/CardContent';
 
 export default function NotificationContent() {
-  const { data: notifications } = useGetNotifications();
+  const navigate = useNavigate();
+  const [data, setData] = useState(notificationsData); // mock data
+
+  // const { data: notifications } = useGetNotifications();
+  const { mutateAsync: updateNotificationStatus } = useUpdateNotificationStatus(
+    {
+      onSuccess: () => {
+        navigate('/lounge/post/39'); // TODO 알림에 맞는 게시물로 이동
+      },
+    },
+  );
+
+  const setNotificationAsRead = (id: number) => () => {
+    // mock data로 작업
+    const updatedData = data.map(item =>
+      item.id === id ? { ...item, isRead: true } : item,
+    );
+    setData(updatedData);
+
+    updateNotificationStatus(id);
+  };
 
   return (
     <div className="flex h-full flex-col gap-6 overflow-y-auto">
-      {notifications?.map(item => {
+      {data?.map(item => {
         return (
-          <div key={item.id} className="w-full">
-            <Link
-              // TODO 알림에 맞는 게시물로 이동
-              to="/lounge/post/1"
-              className={`border-lightGrey block rounded-lg border border-solid p-4 text-sm text-darkGray-active ${item.isRead && 'bg-mainGray'}`}
-            >
-              <CardContent notification={item} />
-            </Link>
-          </div>
+          <button
+            onClick={setNotificationAsRead(item.id)}
+            key={item.id}
+            className={`border-lightGrey block w-full rounded-lg border border-solid p-4 text-sm text-darkGray-active ${item.isRead && 'bg-mainGray'} cursor-pointer`}
+          >
+            <CardContent notification={item} />
+          </button>
         );
       })}
     </div>
