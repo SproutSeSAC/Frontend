@@ -75,9 +75,9 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    loginCheck().then(data => {
-      if (data.status === 304) return;
-      if (data.status === 200) {
+    loginCheck().then(({ status }) => {
+      if (status === 304) return;
+      if (status === 200) {
         navigate(-1);
       } else {
         navigate('/login', { replace: true });
