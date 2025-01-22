@@ -5,8 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { usePostStoreScrap } from '@/services/store/storeMutations';
 
 import { useDialogContext } from '@/hooks';
-import { BsChevronLeft } from 'react-icons/bs';
 
+import Icon from '@/components/common/Icon';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 
 interface StoreModalHeaderProps {
@@ -57,7 +57,7 @@ export default function StoreModalHeader({
         onClick={onClose}
         className="text-[#d9d9d9]"
       >
-        <BsChevronLeft />
+        <Icon name="ChevronLeft" />
       </button>
 
       <FavoriteButton size={20} isFavorite={false} onClick={onStoreScrap} />

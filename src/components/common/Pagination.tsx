@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import Icon from '@/components/common/Icon';
 
 const previousNextButtonStyle = 'rounded-full bg-lightGrey p-1.5';
 const previousNextButtonIconStyle = 'size-2 stroke-1 text-mainGray';
@@ -54,7 +54,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
-        <BsChevronLeft className={previousNextButtonIconStyle} />
+        <Icon name="ChevronLeft" className={previousNextButtonIconStyle} />
       </button>
 
       {pageNumbers[0] > 1 && (
@@ -95,7 +95,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
-        <BsChevronRight className={previousNextButtonIconStyle} />
+        <Icon name="ChevronRight" className={previousNextButtonIconStyle} />
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { FaChevronRight } from 'react-icons/fa';
+import Icon from '@/components/common/Icon';
 
 interface CollapsibleSideViewProps {
   sideViewOpen: boolean;
@@ -30,7 +30,7 @@ export default function CollapsibleSideView({
               className="mb-10 mt-auto flex size-10 items-center justify-center rounded-lg bg-white text-sm text-mainGray"
               onClick={onClose}
             >
-              <FaChevronRight />
+              <Icon name="ChevronRight" className="size-6 fill-darkerGray" />
             </button>
           )}
 
