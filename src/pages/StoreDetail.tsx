@@ -6,8 +6,8 @@ import { useCollapsibleSideView, useGetStoreList, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { updateQueryParams } from '@/utils';
-import { FaChevronLeft } from 'react-icons/fa';
 
+import Icon from '@/components/common/Icon';
 import SearchInput from '@/components/common/input/SearchInput';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
 import StoreListSideView from '@/components/store/detail/StoreListSideView';
@@ -80,7 +80,7 @@ export default function StoreDetail() {
           className="mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-mainGray"
           onClick={openSideView}
         >
-          <FaChevronLeft />
+          <Icon name="ChevronLeft" />
         </button>
       )}
     </>

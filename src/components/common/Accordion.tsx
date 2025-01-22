@@ -1,7 +1,8 @@
 import { ReactNode, useState } from 'react';
 
-import { FaChevronDown } from 'react-icons/fa6';
 import { FiInfo } from 'react-icons/fi';
+
+import Icon from '@/components/common/Icon';
 
 interface AccordionProps {
   title: string;
@@ -42,7 +43,8 @@ export default function Accordion({
               </span>
             </p>
           ) : (
-            <FaChevronDown
+            <Icon
+              name="ChevronDown"
               className={`text-lg text-black transition-transform duration-300 ${
                 isOpen ? 'rotate-180' : ''
               }`}

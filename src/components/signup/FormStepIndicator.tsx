@@ -10,8 +10,8 @@ import {
 } from '@/types';
 import { useAtom, useAtomValue } from 'jotai';
 import { useFormContext } from 'react-hook-form';
-import { BiChevronLeft } from 'react-icons/bi';
 
+import Icon from '@/components/common/Icon';
 import SquareButton from '@/components/common/button/SquareButton';
 
 interface FormStepIndicatorProps {
@@ -96,7 +96,10 @@ export default function FormStepIndicator({
               onClick={goPrevStep}
               className="group flex size-10 items-center justify-center self-end rounded-md border border-mainGray bg-white hover:border-darkGray-active"
             >
-              <BiChevronLeft className="size-8 text-mainGray group-hover:text-darkGray-active" />
+              <Icon
+                name="ChevronLeft"
+                className="size-8 text-mainGray group-hover:text-darkGray-active"
+              />
             </button>
           )}
         </div>

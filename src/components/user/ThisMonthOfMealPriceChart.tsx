@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 
 import { ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
-import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+
+import Icon from '@/components/common/Icon';
 
 function ChartDataControlButton({
   direction,
@@ -21,9 +22,9 @@ function ChartDataControlButton({
       onClick={onClick}
     >
       {direction === 'right' ? (
-        <BsChevronRight className={chevronIconStyle} />
+        <Icon name="ChevronRight" className={chevronIconStyle} />
       ) : (
-        <BsChevronLeft className={chevronIconStyle} />
+        <Icon name="ChevronLeft" className={chevronIconStyle} />
       )}
     </button>
   );
