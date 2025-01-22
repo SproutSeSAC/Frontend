@@ -25,3 +25,16 @@ export const useUpdateNotificationStatus = (
     ...mutationOptions,
   });
 };
+
+export const useDeleteNotification = (
+  mutationOptions?: UseMutationOptionsType,
+) => {
+  const deleteNotification = async (notificationId: number) => {
+    await axiosInstance.delete(`/noti/${notificationId}`);
+  };
+
+  return useMutation<unknown, AxiosError, number>({
+    mutationFn: deleteNotification,
+    ...mutationOptions,
+  });
+};

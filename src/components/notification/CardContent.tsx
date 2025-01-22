@@ -1,3 +1,7 @@
+import { MouseEvent } from 'react';
+
+import { useHandleNotification } from '@/hooks/notification/useHandleNotification';
+
 import { Notification } from '@/types/notification';
 import { BsX } from 'react-icons/bs';
 
@@ -9,6 +13,12 @@ interface CardContentProps {
 
 export default function CardContent({ notification }: CardContentProps) {
   const { content, isRead } = notification;
+  const { deleteNotification } = useHandleNotification();
+
+  const handleDeleteNotification = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    deleteNotification(notification.id);
+  };
 
   return (
     <>
@@ -17,11 +27,7 @@ export default function CardContent({ notification }: CardContentProps) {
           {/* TODO type에 따른 알림 타이틀 구분 */}
           <div className="text-sm text-darkGray-active">공지사항</div>
         </div>
-        <button
-          onClick={() => {
-            // TODO: 삭제로직 추가예정
-          }}
-        >
+        <button onClick={handleDeleteNotification}>
           <BsX
             className={`size-5 ${isRead ? 'text-lightGrey opacity-[0.3]' : 'text-mainGray'}`}
           />
@@ -34,6 +40,7 @@ export default function CardContent({ notification }: CardContentProps) {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <UserImage className="size-6" imageNameSegment="" />
+          {/* TODO 알림 보낸 유저 정보 추가 */}
           <div className="text-black">박민석 매니저</div>
         </div>
 
