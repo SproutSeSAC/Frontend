@@ -1,5 +1,11 @@
 import { useState } from 'react';
 
+import {
+  useGetMyPostDetail,
+  useGetMyPostList,
+  useGetPostComments,
+} from '@/services/post/postQueries';
+
 import { BiChevronDown, BiExpandVertical } from 'react-icons/bi';
 
 import Pagination from '@/components/common/Pagination';
@@ -11,38 +17,51 @@ import FavoritePostCard from '@/components/user/FavoritePostCard';
 
 type Collection = '내가 쓴 게시글' | '내가 쓴 댓글' | '내가 찜한 글';
 
+const collectionList: Collection[] = [
+  '내가 쓴 게시글',
+  '내가 쓴 댓글',
+  '내가 찜한 글',
+];
+
 export const ITEMS_PER_PAGE = 6;
 
 export default function MyCollection() {
   const [currCollection, setCurrCollection] =
     useState<Collection>('내가 쓴 게시글');
 
-  const changeCollection = (contentType: Collection) =>
+  const changeCollection = (contentType: Collection) => {
     setCurrCollection(contentType);
+  };
 
-  const collectionList: Collection[] = [
-    '내가 쓴 게시글',
-    '내가 쓴 댓글',
-    '내가 찜한 글',
-  ];
+  const { data } = useGetMyPostDetail(38);
+
+  const { data: postList } = useGetMyPostList('project');
+  const { data: commentList } = useGetPostComments(38);
+
+  console.log(data, postList, commentList);
 
   const headerCellList = [
-    { name: '체크박스' },
+    {
+      name: '체크박스',
+      onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
+        console.log('체크박스 전체 클릭', event), //
+    },
     {
       name: '작성일',
       icon: BiExpandVertical,
-      onIconClick: () => console.log('최신순 오래된순'),
+      onClick: () => console.log('최신순 오래된순'),
     },
     { name: '번호', className: 'text-center' },
     {
       name: '분류',
       icon: BiChevronDown,
-      onIconClick: () => console.log('카테고리 분류'),
+      onClick: () => console.log('카테고리 분류'),
     },
     { name: '글제목' },
     {
       name: '삭제',
       className: 'text-end pr-7',
+      onClick: () => console.log('삭제'),
     },
   ];
 
@@ -67,7 +86,6 @@ export default function MyCollection() {
       type: '프로젝트 모집',
       title: '을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다!',
     },
-
     {
       createdAt: '2024.08.13',
       number: 12104,
@@ -75,9 +93,6 @@ export default function MyCollection() {
       title: '을지로 3가역에서 함께 저녁 먹을 한끼팟 모집합니다!',
     },
   ];
-
-  const commonCheckboxStyle =
-    '[&>label>input]:mr-0 [&>label>input]:size-5 pl-6';
 
   return (
     <div className="rounded-lg bg-white py-5 shadow-card">
@@ -117,32 +132,23 @@ export default function MyCollection() {
 
           <thead>
             <tr className="text-left">
-              {headerCellList.map(cell =>
-                cell.name === '체크박스' ? (
-                  <TableHeaderCell key={cell.name} name="체크박스">
-                    <Checkbox
-                      id="체크박스"
-                      checked={false}
-                      onChange={() => {}}
-                    />
-                  </TableHeaderCell>
-                ) : (
-                  <TableHeaderCell
-                    key={cell.name}
-                    name={cell.name}
-                    className={cell.className}
-                    icon={cell.icon}
-                    onIconClick={cell.onIconClick}
-                  />
-                ),
-              )}
+              {headerCellList.map(cell => (
+                <TableHeaderCell
+                  key={cell.name}
+                  name={cell.name}
+                  className={cell.className}
+                  icon={cell.icon}
+                  onClick={cell.onClick}
+                  onChange={cell.onChange}
+                />
+              ))}
             </tr>
           </thead>
 
           <tbody>
             {bodyCellList.map(cell => (
               <tr key={cell.number} className="group hover:bg-gray4">
-                <TableDataCell className={commonCheckboxStyle}>
+                <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
                   <Checkbox id="체크박스" checked={false} onChange={() => {}} />
                 </TableDataCell>
 

@@ -26,7 +26,7 @@ interface SelectBoxPropsBase {
   errorMsg?: string;
   className?: string;
   boxShape?: SelectBoxShape;
-  onResetClick: () => void;
+  onResetClick?: () => void;
 }
 
 type SelectBoxProps<T> = SelectBoxPropsBase & T;
@@ -129,18 +129,22 @@ export default function SelectBox<
           )}
         </button>
 
-        {isSingleSelect(rest) && rest.selectedOptionLabel && (
-          <ResetButton
-            onResetClick={rest.onResetClick}
-            className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
-          />
-        )}
-        {isMultiSelect(rest) && rest.selectedOptions?.length >= 1 && (
-          <ResetButton
-            onResetClick={rest.onResetClick}
-            className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
-          />
-        )}
+        {isSingleSelect(rest) &&
+          rest.selectedOptionLabel &&
+          rest.onResetClick && (
+            <ResetButton
+              onResetClick={rest.onResetClick}
+              className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
+            />
+          )}
+        {isMultiSelect(rest) &&
+          rest.selectedOptions?.length >= 1 &&
+          rest.onResetClick && (
+            <ResetButton
+              onResetClick={rest.onResetClick}
+              className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
+            />
+          )}
       </div>
 
       <article className={defaultLabel !== '기술스택' ? 'relative' : ''}>
