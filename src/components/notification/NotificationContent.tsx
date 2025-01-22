@@ -2,6 +2,8 @@ import { useNotification } from '@/hooks/notification/useNotification';
 
 import { useGetNotifications } from '@/services/notification/notificationQueries';
 
+import { FaRegTrashAlt } from 'react-icons/fa';
+
 import CardContent from '@/components/notification/CardContent';
 
 export default function NotificationContent() {
@@ -10,6 +12,11 @@ export default function NotificationContent() {
 
   return (
     <div className="flex h-full flex-col gap-6 overflow-y-auto">
+      <button className="flex items-center justify-end gap-1 text-end text-base text-[#6D6D6D]">
+        <FaRegTrashAlt />
+        모두 삭제
+      </button>
+
       {notifications && notifications.length !== 0
         ? notifications.map(item => {
             return (
