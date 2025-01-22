@@ -8,11 +8,15 @@ import CardContent from '@/components/notification/CardContent';
 
 export default function NotificationContent() {
   const { data: notifications } = useGetNotifications();
-  const { data, setNotificationAsRead } = useNotification();
+  const { data, setNotificationAsRead, deleteAllNotification } =
+    useNotification();
 
   return (
     <div className="flex h-full flex-col gap-6 overflow-y-auto">
-      <button className="flex items-center justify-end gap-1 text-end text-base text-[#6D6D6D]">
+      <button
+        onClick={() => deleteAllNotification()}
+        className="flex items-center justify-end gap-1 text-end text-base text-[#6D6D6D]"
+      >
         <FaRegTrashAlt />
         모두 삭제
       </button>

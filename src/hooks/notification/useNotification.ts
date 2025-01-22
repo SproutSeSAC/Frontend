@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
+  useDeleteAllNotification,
   useDeleteNotification,
   useUpdateNotificationStatus,
 } from '@/services/notification/notificationMutations';
@@ -31,6 +32,16 @@ export const useNotification = () => {
     },
   });
 
+  const { mutateAsync: deleteAllNotificationMutate } = useDeleteAllNotification(
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ['useGetNotifications'],
+        });
+      },
+    },
+  );
+
   const setNotificationAsRead = (id: number) => {
     const updatedData = data.map(item =>
       item.id === id ? { ...item, isRead: true } : item,
@@ -39,9 +50,15 @@ export const useNotification = () => {
     updateNotification(id);
   };
 
+  const deleteAllNotification = () => {
+    setData([]);
+    deleteAllNotificationMutate();
+  };
+
   return {
     data,
     setNotificationAsRead,
     deleteNotification,
+    deleteAllNotification,
   };
 };

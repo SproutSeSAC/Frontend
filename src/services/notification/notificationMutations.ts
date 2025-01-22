@@ -38,3 +38,16 @@ export const useDeleteNotification = (
     ...mutationOptions,
   });
 };
+
+export const useDeleteAllNotification = (
+  mutationOptions?: UseMutationOptionsType,
+) => {
+  const deleteNotifications = async () => {
+    await axiosInstance.delete('/noti/all');
+  };
+
+  return useMutation<unknown, AxiosError>({
+    mutationFn: deleteNotifications,
+    ...mutationOptions,
+  });
+};
