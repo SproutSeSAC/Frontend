@@ -1,4 +1,4 @@
-import { FaChevronRight } from 'react-icons/fa';
+import Icon from '@/components/common/Icon';
 
 interface NotificationHeaderProps {
   handleClose: () => void;
@@ -12,12 +12,12 @@ export default function NotificationHeader({
       <button
         type="button"
         aria-label="접어두기"
-        className="flex size-12 items-center justify-center rounded-lg border border-solid border-gray4 bg-white text-gray2"
+        className="border-lightGrey flex size-12 items-center justify-center rounded-lg border border-solid bg-white text-mainGray"
         onClick={handleClose}
       >
-        <FaChevronRight />
+        <Icon name="ChevronRight" />
       </button>
-      <div className="ml-3 w-full flex-1 py-3 text-center text-lg font-semibold text-text">
+      <div className="ml-3 w-full flex-1 py-3 text-center text-lg font-semibold text-black">
         알림
       </div>
     </div>

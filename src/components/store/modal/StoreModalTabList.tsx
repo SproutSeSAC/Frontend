@@ -21,7 +21,7 @@ export default function StoreModalTabList({
         {TAB_LIST.map(({ text, type }) => (
           <li
             key={type}
-            className={`box-border flex w-full cursor-pointer justify-center ${tab === type && 'border-b-2 border-gray2'}`}
+            className={`box-border flex w-full cursor-pointer justify-center ${tab === type && 'border-b-2 border-mainGray'}`}
           >
             <button type="button" onClick={() => setTab(type as TabType)}>
               {text}

@@ -70,25 +70,25 @@ export default function CalendarAclTable() {
       <tbody>
         {!isCalendarAclLoading ? (
           bodyCellList.map((cell, index) => (
-            <tr key={cell.courseTitle} className="group hover:bg-gray4">
+            <tr key={cell.courseTitle} className="group hover:bg-lightGray">
               <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
-                <span className="text-gray1">{index + 1}</span>
+                <span className="text-darkGray-active">{index + 1}</span>
               </TableDataCell>
 
               <TableDataCell className="max-w-[0px] overflow-hidden truncate">
                 {cell.isCreated ? (
-                  <div className="w-fit rounded-md bg-oliveGreen1 p-1 px-2 text-sm text-white">
+                  <div className="w-fit rounded-md bg-mainGreen p-1 px-2 text-sm text-white">
                     생성 완료
                   </div>
                 ) : (
-                  <div className="w-fit rounded-md bg-gray3 p-1 px-2 text-sm font-medium text-gray1">
+                  <div className="w-fit rounded-md bg-mainGray p-1 px-2 text-sm font-medium text-darkGray-active">
                     생성 전
                   </div>
                 )}
               </TableDataCell>
 
               <TableDataCell
-                className={`${cell.isCreated ? '' : 'text-gray2'} max-w-[0px] overflow-hidden truncate pr-8`}
+                className={`${cell.isCreated ? '' : 'text-mainGray'} max-w-[0px] overflow-hidden truncate pr-8`}
               >
                 {cell.courseTitle}
               </TableDataCell>
@@ -154,7 +154,7 @@ export default function CalendarAclTable() {
                   disabled={
                     !cell.hasAcl || cell?.hasNotAclEmailList?.length === 0
                   }
-                  className="disabled:text-gray3"
+                  className="disabled:text-mainGray"
                 >
                   <FaPlus />
                 </button>

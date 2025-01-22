@@ -3,7 +3,8 @@ import { ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import { BsX } from 'react-icons/bs';
-import { FaChevronLeft } from 'react-icons/fa6';
+
+import Icon from '@/components/common/Icon';
 
 interface Props {
   onToggleClick: () => void;
@@ -56,10 +57,10 @@ export default function Modal({
             <button
               type="button"
               aria-label="접어두기"
-              className="flex aspect-square h-10 items-center justify-center rounded-lg border border-gray2 bg-white text-sm text-gray1"
+              className="flex aspect-square h-10 items-center justify-center rounded-lg border border-mainGray bg-white text-sm text-darkGray-active"
               onClick={onToggleClick}
             >
-              <FaChevronLeft />
+              <Icon name="ChevronLeft" />
             </button>
             <h2 className="mr-10 w-full text-center text-lg font-semibold">
               {title}

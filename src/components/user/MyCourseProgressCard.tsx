@@ -40,20 +40,20 @@ export default function MyCourseProgressCard() {
   return (
     <div className="flex h-[396px] min-w-[380px] flex-col items-center justify-between gap-4 rounded-3xl bg-white p-10 shadow-card">
       <div className="flex w-full items-center justify-center gap-[10px]">
-        <span className="rounded-lg bg-oliveGreen1 px-3 py-1 text-xl font-bold text-white">
+        <span className="rounded-lg bg-mainGreen px-3 py-1 text-xl font-bold text-white">
           D{DDay}
         </span>
 
         <p className="text-sm font-semibold">
           {name} 스프님은
-          <span className="mx-1 inline-block border-b border-b-oliveGreen1 px-1 text-oliveGreen1">
+          <span className="border-b-mainGreenx-1 mx-1 inline-block border-b text-mainGreen">
             {progress}%
           </span>
           달성했어요!
         </p>
       </div>
 
-      <div className="relative flex h-40 w-full flex-col items-center justify-end rounded-xl bg-gray4 px-4 py-4">
+      <div className="relative flex h-40 w-full flex-col items-center justify-end rounded-xl bg-lightGray px-4 py-4">
         <div className="absolute -top-24 flex items-center justify-center">
           <img
             src={`src/assets/images/growth-character/${courseGrowthLevel.image}`}
@@ -62,7 +62,7 @@ export default function MyCourseProgressCard() {
           />
           <CircularGauge gauge={progress} />
 
-          <div className="absolute -bottom-2 rounded-lg bg-oliveGreen1 px-4 py-2 font-semibold text-white">
+          <div className="absolute -bottom-2 rounded-lg bg-mainGreen px-4 py-2 font-semibold text-white">
             Lv{courseGrowthLevel.level}. {courseGrowthLevel.label}
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function MyCourseProgressCard() {
           <span className="mr-2 text-sm font-bold">
             {campusList[0]?.campusName}
           </span>
-          <span className="text-sm font-medium text-gray1">
+          <span className="text-sm font-medium text-darkGray-active">
             {courseList?.[0]?.courseStartDate?.replaceAll('-', '.')} ~{' '}
             {courseList?.[0]?.courseEndDate?.replaceAll('-', '.')}
           </span>

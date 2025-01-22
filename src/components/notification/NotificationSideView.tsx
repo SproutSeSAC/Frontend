@@ -36,7 +36,7 @@ export default function NotificationSideView() {
         onClose={handleClose}
         headerContent={<NotificationHeader handleClose={handleClose} />}
         mainContent={<NotificationContent />}
-        className="fixed right-0 max-w-[412px] bg-white px-5 pt-10 shadow-card"
+        className="fixed right-0 max-w-[412px] bg-white px-5 shadow-card"
         hideButton
       />
     </OutsideClickContainer>

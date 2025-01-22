@@ -98,12 +98,12 @@ export default function StoreListSliderCard({
                   isFavorite={slideItem.isScrap}
                   onClick={onStoreScrap}
                 />
-                <span className="text-sm text-gray2">
+                <span className="text-sm text-mainGray">
                   {slideItem.scrapCount || 0}
                 </span>
               </div>
             </div>
-            <p className="text-xs text-gray1">
+            <p className="text-xs text-darkGray-active">
               {slideItem.foodType ? foodFilterDisplay[slideItem.foodType] : '-'}
             </p>
           </header>

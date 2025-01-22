@@ -13,13 +13,10 @@ import {
   BsFillGeoAltFill,
   BsFillTelephoneFill,
 } from 'react-icons/bs';
-import {
-  IoIosArrowDown,
-  IoIosArrowForward,
-  IoIosArrowUp,
-} from 'react-icons/io';
+import { IoIosArrowForward } from 'react-icons/io';
 import { PiArrowSquareInThin } from 'react-icons/pi';
 
+import Icon from '@/components/common/Icon';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
@@ -153,7 +150,7 @@ export default function StoreCard({
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-[10px]">
               <h2 className="text-lg">{storeData.name || ''}</h2>
-              <span className="text-gray2">
+              <span className="text-mainGray">
                 {storeData.foodType
                   ? foodFilterDisplay[storeData.foodType]
                   : '-'}
@@ -167,7 +164,7 @@ export default function StoreCard({
                     element: <StoreProposalEditModal />,
                   });
                 }}
-                className="flex items-center justify-center text-base font-semibold text-gray2"
+                className="flex items-center justify-center text-base font-semibold text-mainGray"
               >
                 정보 수정 제안하기
                 <IoIosArrowForward size={18} />
@@ -185,15 +182,15 @@ export default function StoreCard({
 
         <div className="flex flex-col gap-4">
           <section className="flex items-center gap-2.5">
-            <BsFillGeoAltFill className="text-gray2" size={15} />
+            <BsFillGeoAltFill className="text-mainGray" size={15} />
             <div className="relative flex items-center gap-2.5">
-              <span className="text-gray1">
+              <span className="text-darkGray-active">
                 {storeData ? `${storeData.campusName}캠퍼스` : '-'}
               </span>
-              <div className="flex gap-1 text-gray1">
+              <div className="flex gap-1 text-darkGray-active">
                 <span>도보</span>
                 <span>
-                  <span className="text-skyBlue1">
+                  <span className="text-mainBlue">
                     {storeData.walkTime || 0}
                   </span>
                   <span>분</span>
@@ -207,7 +204,7 @@ export default function StoreCard({
                   <PiArrowSquareInThin size={18} />
                 </button>
                 {test && (
-                  <div className="absolute -right-[88px] -top-10 whitespace-normal rounded-md rounded-bl-none bg-oliveGreen1 bg-opacity-90 p-2 text-white">
+                  <div className="absolute -right-[88px] -top-10 whitespace-normal rounded-md rounded-bl-none bg-mainGreen bg-opacity-90 p-2 text-white">
                     빠른 길찾기
                   </div>
                 )}
@@ -216,13 +213,16 @@ export default function StoreCard({
           </section>
 
           <section className="flex items-center">
-            <BsClockFill className="mr-[10px] min-w-3.5 text-gray2" size={15} />
-            <span className="min-w-[60px] text-gray1">
+            <BsClockFill
+              className="mr-[10px] min-w-3.5 text-mainGray"
+              size={15}
+            />
+            <span className="min-w-[60px] text-darkGray-active">
               {isOpen() ? '영업 중' : '영업 종료'}
             </span>
-            <span className="mx-1 text-gray3">|</span>
+            <span className="mx-1 text-mainGray">|</span>
             <div
-              className="relative text-gray1"
+              className="relative text-darkGray-active"
               onMouseEnter={() => setIsPopoverVisible(true)}
               onMouseLeave={() => setIsPopoverVisible(false)}
             >
@@ -240,7 +240,11 @@ export default function StoreCard({
                 </div>
 
                 {storeData.breakTime &&
-                  (openHoursModal ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                  (openHoursModal ? (
+                    <Icon name="ChevronUp" />
+                  ) : (
+                    <Icon name="ChevronDown" />
+                  ))}
               </button>
               {storeData.breakTime && openHoursModal && (
                 <div className="absolute right-0 top-6 z-10 flex w-full min-w-[166px] flex-col justify-center gap-2 rounded-lg bg-white px-2.5 py-3 text-sm shadow-card">
@@ -248,9 +252,9 @@ export default function StoreCard({
                 </div>
               )}
               {isPopoverVisible && (
-                <div className="absolute bottom-8 w-full whitespace-normal rounded-md bg-oliveGreen1 bg-opacity-90 p-2 text-white">
+                <div className="absolute bottom-8 w-full whitespace-normal rounded-md bg-mainGreen bg-opacity-90 p-2 text-white">
                   {/* 삼각형 */}
-                  <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent border-t-oliveGreen1 opacity-90" />
+                  <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent border-t-mainGreen opacity-90" />
                   {storeData.workingDay}
                 </div>
               )}
@@ -259,8 +263,13 @@ export default function StoreCard({
 
           {storeData.phoneNumber && (
             <section className="flex items-center">
-              <BsFillTelephoneFill className="mr-[10px] text-gray2" size={15} />
-              <span className="text-gray1">{storeData.phoneNumber}</span>
+              <BsFillTelephoneFill
+                className="mr-[10px] text-mainGray"
+                size={15}
+              />
+              <span className="text-darkGray-active">
+                {storeData.phoneNumber}
+              </span>
             </section>
           )}
         </div>

@@ -144,7 +144,7 @@ export default function StoreModalReview({
             return (
               <div className="mb-4 flex flex-col">
                 <textarea
-                  className={`mt-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg ${error ? 'border-[#FF3939]' : 'border-gray5'}`}
+                  className={`mt-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg ${error ? 'border-[#FF3939]' : 'border-lightGray'}`}
                   placeholder="댓글을 작성해 주세요."
                   rows={5}
                   value={value}
@@ -161,7 +161,7 @@ export default function StoreModalReview({
           <button
             onClick={() => {}}
             type="button"
-            className="rounded-lg bg-gray5 px-4 py-2 tracking-tight text-white"
+            className="rounded-lg bg-lightGray px-4 py-2 tracking-tight text-white"
           >
             취소하기
           </button>
@@ -186,7 +186,7 @@ export default function StoreModalReview({
               </div>
 
               <div>{commentItem.review}</div>
-              <div className="flex gap-10 text-gray1">
+              <div className="flex gap-10 text-darkGray-active">
                 <div className="flex gap-4">
                   <div>{`${formatDate(commentItem.createdAt, 'yyyy-MM-dd HH:mm:ss')}`}</div>
                 </div>

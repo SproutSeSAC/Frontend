@@ -21,13 +21,13 @@ export default function TabNavigation<T>({
   tabClassName,
 }: TabNavigationProps<T>) {
   return (
-    <nav className="flex justify-between border-b border-solid border-b-gray4 pt-4 text-lg font-semibold">
+    <nav className="border-b-lightGrey flex justify-between border-b border-solid pt-4 text-lg font-semibold">
       <ul className="flex flex-wrap justify-start gap-4">
         {tabList.map(({ text, type }) => (
           <li
             role="presentation"
             key={text}
-            className={`box-border flex cursor-pointer justify-center whitespace-nowrap px-5 pb-[19px] ${selectValue === type ? 'border-b-2 border-text' : 'text-gray2'} ${tabClassName}`}
+            className={`box-border flex cursor-pointer justify-center whitespace-nowrap px-5 pb-[19px] ${selectValue === type ? 'border-b-2 border-black' : 'text-mainGray'} ${tabClassName}`}
             onClick={e => onChangeValue(type, e)}
             onKeyDown={e => {
               if (e.key === 'Escape' || e.key === ' ') {

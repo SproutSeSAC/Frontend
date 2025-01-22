@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
 import { Option } from '@/types';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
+import Icon from '@/components/common/Icon';
 import ResetButton from '@/components/common/button/ResetButton';
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
@@ -91,7 +91,7 @@ export default function SelectBox<
   const styleByBoxShape = {
     inputShape: `w-full gap-4 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg`,
     buttonShape:
-      'rounded-2xl border border-gray2 bg-bg px-3 py-1 gap-4 text-gray1',
+      'rounded-2xl border border-mainGray bg-bg px-3 py-1 gap-4 text-darkGray-active',
   };
 
   const selectBoxStyle = styleByBoxShape[boxShape];
@@ -102,29 +102,32 @@ export default function SelectBox<
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:min-w-[18px] [&>svg]:text-gray1 ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:min-w-[18px] [&>svg]:text-darkGray-active ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
         >
           {isSingleSelect(rest) && (
             <>
               <span
-                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-gray2'} ${rest.selectedOptionLabel && 'pr-7'}`}
+                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-mainGray'}`}
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>
-              {!rest.selectedOptionLabel &&
-                (open ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+              {open ? <Icon name="ChevronUp" /> : <Icon name="ChevronDown" />}
             </>
           )}
 
           {isMultiSelect(rest) && (
             <>
               <span
-                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-gray2'} ${rest.selectedOptions?.length >= 1 && 'pr-7'}`}
+                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-7'}`}
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
               {rest.selectedOptions?.length === 0 &&
-                (open ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                (open ? (
+                  <Icon name="ChevronUp" />
+                ) : (
+                  <Icon name="ChevronDown" />
+                ))}
             </>
           )}
         </button>
@@ -149,7 +152,7 @@ export default function SelectBox<
 
       <article className={defaultLabel !== '기술스택' ? 'relative' : ''}>
         <ul
-          className={`${open ? 'max-h-64 border border-gray4' : 'max-h-0'} w-full ${defaultLabel !== '기술스택' ? 'min-w-max' : ''} absolute z-40 mt-1 overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
+          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} w-full ${defaultLabel !== '기술스택' ? 'min-w-max' : ''} absolute z-40 mt-1 overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>

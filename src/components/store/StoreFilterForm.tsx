@@ -123,7 +123,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
           onClick={handleReset}
         >
           <MdOutlineRefresh className="text-gray-400" />
-          <span className="text-xs text-gray1">Clear filters</span>
+          <span className="text-xs text-darkGray-active">Clear filters</span>
         </button>
       </div>
 
@@ -150,7 +150,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
                 }}
                 errorMsg={error?.message}
                 selectBoxClassName="py-[7px] px-3 bg-white rounded w-[120px] h-7 text-xs"
-                optionClassName="text-sm hover:rounded-sm hover:bg-gray3 pl-1"
+                optionClassName="text-sm hover:rounded-sm hover:bg-mainGray pl-1"
               />
             );
           }}
@@ -219,7 +219,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
       </CheckboxGroup>
       <button
         type="button"
-        className="w-full rounded-lg bg-oliveGreen1 py-[14px] text-center text-lg font-bold text-white"
+        className="w-full rounded-lg bg-mainGreen py-[14px] text-center text-lg font-bold text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',

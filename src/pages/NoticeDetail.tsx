@@ -125,13 +125,13 @@ export default function NoticeDetail() {
                 ),
               });
             },
-            className: 'bg-oliveGreen1',
+            className: 'bg-mainGreen',
           };
           return [actionToApply];
         }
         const applicationComplete = {
           label: '신청 완료',
-          className: 'bg-vividGreen1',
+          className: 'bg-darkGreen',
           disabled: true,
           onClick: () => {}, // NOTE: 마이페이지 신청내역으로 이동시키기
         };
@@ -181,7 +181,7 @@ export default function NoticeDetail() {
             {noticeDetail?.writer.userId === userProfile.userId && (
               <div className="group relative ml-auto flex items-center justify-center">
                 <button className="px-2">
-                  <IoEllipsisHorizontalSharp className="size-7 text-gray1" />
+                  <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
                 </button>
                 <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
                   <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">

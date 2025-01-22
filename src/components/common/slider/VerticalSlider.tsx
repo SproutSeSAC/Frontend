@@ -6,11 +6,11 @@ import {
   useState,
 } from 'react';
 
-import { IoIosArrowDown } from 'react-icons/io';
 import { Swiper as SwiperType } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import Icon from '@/components/common/Icon';
 import LoopLoading from '@/components/common/LoopLoading';
 
 interface VerticalSliderProps<T> {
@@ -32,7 +32,7 @@ function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
       className="z-10 pb-5"
       onClick={() => swiper?.slideNext()}
     >
-      <IoIosArrowDown size={40} opacity={0.4} />
+      <Icon name="ChevronDown" opacity={0.4} />
     </button>
   );
 }

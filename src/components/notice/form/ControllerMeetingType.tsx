@@ -16,7 +16,7 @@ export default function ControllerMeetingType() {
 
   return (
     <div
-      className={`relative flex items-center rounded-2xl border ${errors?.meetingPlace?.message ? 'border-red-600' : 'border-gray4'} bg-white [&>div:first-child]:w-44`}
+      className={`relative flex items-center rounded-2xl border ${errors?.meetingPlace?.message ? 'border-red-600' : 'border-lightGrey'} bg-white [&>div:first-child]:w-44`}
     >
       <Controller
         control={control}
@@ -48,7 +48,7 @@ export default function ControllerMeetingType() {
             ? 'Zoom 링크를 적어주세요.'
             : '장소 위치를 적어주세요.'
         }
-        className="!mr-0 h-full !w-full !rounded-2xl border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-gray2"
+        className="!mr-0 h-full !w-full !rounded-2xl border-none py-[18px] pl-3 pr-4 text-lg placeholder:text-mainGray"
         errorMsg={errors?.meetingPlace?.message as string}
       />
     </div>

@@ -54,7 +54,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
   return (
     <Link
       to={`/lounge/post/${card.id}`}
-      className="flex w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-gray5 bg-white p-4"
+      className="flex w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-lightGray bg-white p-4"
       onClick={onViewCount}
     >
       <div className="flex w-full items-center justify-between">
@@ -64,7 +64,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           text={ptypeDisplay[card.ptype]}
         />
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 text-sm text-gray2">
+          <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />
             <span>{card.viewCount}</span>
           </div>
@@ -96,7 +96,9 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
 
       <div className="flex flex-col gap-2 text-xs">
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-gray2">기간</span>
+          <span className="lounge-text-divider leading-4 text-mainGray">
+            기간
+          </span>
 
           <span>
             {formatDate(card.recruitmentStart)} ~{' '}
@@ -105,13 +107,17 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         </div>
 
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-gray2">모집</span>
+          <span className="lounge-text-divider leading-4 text-mainGray">
+            모집
+          </span>
 
           <span>{card.recruitmentCount}</span>
         </div>
 
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-gray2">직무</span>
+          <span className="lounge-text-divider leading-4 text-mainGray">
+            직무
+          </span>
 
           <ul className="flex flex-1 flex-wrap gap-1 overflow-hidden">
             {card.positionNames.map(tag => (
@@ -127,7 +133,9 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         </div>
 
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-gray2">유형</span>
+          <span className="lounge-text-divider leading-4 text-mainGray">
+            유형
+          </span>
 
           <span>{progressDisplay[card.meetingType]}</span>
         </div>

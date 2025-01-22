@@ -54,7 +54,7 @@ export default function HeaderMenu() {
           <li key={menu.title}>
             <Link
               to={menu.to}
-              className="block w-full rounded-md px-3 py-1.5 text-sm font-semibold tracking-tight hover:bg-gray4"
+              className="block w-full rounded-md px-3 py-1.5 text-sm font-semibold tracking-tight hover:bg-lightGray"
             >
               {menu.title}
             </Link>
@@ -64,7 +64,7 @@ export default function HeaderMenu() {
         <li>
           <button
             type="button"
-            className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-gray3"
+            className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-mainGray"
             onClick={onLogOutClick}
           >
             로그아웃

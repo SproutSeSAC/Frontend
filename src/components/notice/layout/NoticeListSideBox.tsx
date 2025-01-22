@@ -33,7 +33,10 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
       <div className="mb-2 mt-6 flex items-center justify-between">
         <Title title={title} className="!pl-0 text-sm" />
         {title !== '이번주 공지사항' && (
-          <Link to="/notice" className="p-1 text-xs font-semibold text-gray2">
+          <Link
+            to="/notice"
+            className="p-1 text-xs font-semibold text-mainGray"
+          >
             더보기
           </Link>
         )}
@@ -61,7 +64,7 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
             </li>
           ))
         ) : (
-          <span className="text-gray1">{title}이 없습니다.</span>
+          <span className="text-darkGray-active">{title}이 없습니다.</span>
         )}
       </ul>
     </>

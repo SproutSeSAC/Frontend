@@ -8,9 +8,9 @@ export default function SmallCalendarBottomEvent({
   title,
 }: SmallCalendarBottomEventProps) {
   return (
-    <li key={title} className="text-gray1">
+    <li key={title} className="text-darkGray-active">
       <span className="text-[13px] font-medium">{title}</span>
-      <span className="block text-xs text-gray2">{date}</span>
+      <span className="block text-xs text-mainGray">{date}</span>
     </li>
   );
 }

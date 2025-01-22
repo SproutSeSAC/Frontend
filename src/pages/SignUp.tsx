@@ -75,9 +75,9 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    loginCheck().then(data => {
-      if (data.status === 304) return;
-      if (data.status === 200) {
+    loginCheck().then(({ status }) => {
+      if (status === 304) return;
+      if (status === 200) {
         navigate(-1);
       } else {
         navigate('/login', { replace: true });
@@ -140,7 +140,7 @@ export default function SignUp() {
                                     type="radio"
                                     id={role}
                                     value={role}
-                                    className="h-4 w-4 appearance-none rounded-full border border-text bg-white checked:border-gray2 checked:bg-vividGreen1"
+                                    className="h-4 w-4 appearance-none rounded-full border border-black bg-white checked:border-mainGray checked:bg-darkGreen"
                                     {...register('role', {
                                       onChange: () => {
                                         setValue('campusIdList', []);
@@ -343,7 +343,7 @@ export default function SignUp() {
                                             onChange={() =>
                                               onChange(label === '동의')
                                             }
-                                            className="h-4 w-4 appearance-none rounded-full border border-text bg-white checked:border-gray2 checked:bg-vividGreen1"
+                                            className="h-4 w-4 appearance-none rounded-full border border-black bg-white checked:border-mainGray checked:bg-darkGreen"
                                           />
                                           <span>{label}</span>
                                         </label>
@@ -362,7 +362,7 @@ export default function SignUp() {
 
               {isPreTrainee(currRole) &&
                 currentStep === questionListByRole.length && (
-                  <span className="mb-14 mt-auto inline-block w-full text-center text-gray1">
+                  <span className="mb-14 mt-auto inline-block w-full text-center text-darkGray-active">
                     예비 수강생은 제한된 서비스만 이용 가능합니다.
                   </span>
                 )}
@@ -373,7 +373,7 @@ export default function SignUp() {
                 color={
                   !isAuthenticationCode && currRole !== 'PRE_TRAINEE'
                     ? 'gray'
-                    : 'oliveGreen'
+                    : 'mainGreen'
                 }
                 type="submit"
                 name="시작하기"

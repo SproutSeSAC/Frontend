@@ -24,17 +24,17 @@ export default function TableHeaderCell({
 
   return (
     <th
-      className={`border-b border-gray3 px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
+      className={`border-b border-mainGray px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
     >
       {name === '체크박스' && onChange ? (
         <Checkbox id={name} checked={false} onChange={onChange} />
       ) : (
-        <span className="font-normal tracking-tighter text-gray1">{name}</span>
+        <span className="text-gray1 font-normal tracking-tighter">{name}</span>
       )}
 
       {Icon && (
         <button onClick={onClick}>
-          <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-gray3" />
+          <Icon className="text-gray3 ml-1 inline size-6 cursor-pointer stroke-2 px-1" />
         </button>
       )}
 

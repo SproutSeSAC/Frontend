@@ -29,15 +29,17 @@ export default function SessionSelectBox({
   )} ~ ${formatDate(session.sessionEndDateTime, 'HH:mm')}`;
 
   const initialStyle =
-    initialSessionStatus || !isSelected ? 'bg-white [&>h4]:text-gray1' : '';
+    initialSessionStatus || !isSelected
+      ? 'bg-white [&>h4]:text-darkGray-active'
+      : '';
   const isSelectedStyle = isSelected
-    ? 'bg-oliveGreen1 text-white [&>h4]:text-gray4'
+    ? 'bg-mainGreen text-white [&>h4]:text-lightGrey'
     : '';
 
   const boxStyle = isSelected ? isSelectedStyle : initialStyle;
 
   const disabledStyle = disabled
-    ? '!bg-gray3 !text-gray1 !cursor-not-allowed'
+    ? '!bg-mainGray !text-darkGray-active !cursor-not-allowed'
     : '';
 
   return (

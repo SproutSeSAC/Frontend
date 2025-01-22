@@ -201,7 +201,6 @@ export default function DomainJobTechStackModal() {
                           <li key={id}>
                             <Tag
                               text={job}
-                              color="olivegreen"
                               size="medium"
                               onDeleteClick={() => {
                                 const filteredData = value.filter(

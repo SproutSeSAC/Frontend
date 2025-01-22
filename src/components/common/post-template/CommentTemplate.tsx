@@ -40,13 +40,13 @@ export default function CommentTemplate({
     <section className="mb-24 mt-10">
       <header className="flex gap-2 text-2xl font-semibold">
         <div className="">댓글</div>
-        <div className="text-oliveGreen1">{commentList.length}</div>
+        <div className="text-mainGreen">{commentList.length}</div>
       </header>
 
       <form onSubmit={handleSubmit(handleSearch)} className="flex flex-col">
         <textarea
           {...register('content')}
-          className="my-2.5 w-full resize-none rounded border border-solid border-gray5 p-[15px] text-lg"
+          className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg"
           placeholder="댓글을 작성해 주세요."
           rows={5}
         />
@@ -64,7 +64,7 @@ export default function CommentTemplate({
               <div>{writer ? `@${writer}` : '-'}</div>
             </header>
             <p>{content}</p>
-            <footer className="flex gap-10 text-gray1">
+            <footer className="flex gap-10 text-darkGray-active">
               <div className="flex gap-4">
                 <div>{formatDate(createdAt, 'yyyy.MM.dd HH:mm')}</div>
               </div>

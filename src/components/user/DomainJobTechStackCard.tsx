@@ -33,7 +33,7 @@ export default function DomainJobTechStackCard() {
     <>
       <EditButton
         label="나의 새싹 정보 수정하기"
-        className="absolute -top-[38px] right-2 text-gray2"
+        className="absolute -top-[38px] right-2 text-mainGray"
         onClick={openModalClick}
       />
 

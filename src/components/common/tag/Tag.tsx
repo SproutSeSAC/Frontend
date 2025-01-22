@@ -2,15 +2,7 @@ import { BsX } from 'react-icons/bs';
 
 interface TagProps {
   text: string;
-  color?:
-    | 'black'
-    | 'green'
-    | 'gray'
-    | 'olivegreen'
-    | 'blue'
-    | 'yellow'
-    | 'purple'
-    | 'pink';
+  color?: 'black' | 'green' | 'gray' | 'blue' | 'yellow' | 'purple' | 'pink';
   size?: 'small' | 'medium' | 'big';
   onDeleteClick?: () => void;
   className?: string;
@@ -32,13 +24,12 @@ export default function Tag({
   };
 
   const styleByColor = {
-    green: 'bg-vividGreen1 text-gray4 ',
-    olivegreen: 'bg-oliveGreen1 text-white',
-    black: 'bg-text text-gray3',
-    gray: 'bg-gray4 text-text',
+    green: 'bg-mainGreen text-white ',
+    black: 'bg-black text-mainGray',
+    gray: 'bg-lightGrey-hover text-black',
     blue: emphasisText
       ? 'bg-[#E8EFFE] text-[#332FD0]'
-      : 'bg-skyBlue1 text-white',
+      : 'bg-mainBlue text-white',
     yellow: emphasisText
       ? 'bg-[#FEFAE0] text-[#FF6D28]'
       : 'bg-[#FFE450] text-white',

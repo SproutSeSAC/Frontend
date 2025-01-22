@@ -86,10 +86,13 @@ export const useHandleSignUp = ({
           ...rest,
           ...initializeValue,
         };
-
         if (isCampusManager(formData.role)) {
           const courseIdList = courseList.map(({ id }) => id);
-          const campusManangerData = { ...managerData, courseIdList };
+          const campusManangerData = {
+            ...managerData,
+            courseIdList,
+            campusIdList,
+          };
           mutate(campusManangerData);
         } else {
           mutate(managerData);

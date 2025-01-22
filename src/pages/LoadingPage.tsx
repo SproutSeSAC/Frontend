@@ -9,7 +9,7 @@ export default function LoadingPage() {
       <span className="mb-4 mt-10 text-[40px] font-semibold">
         잠시만 기다려주세요
       </span>
-      <span className="text-lg font-medium text-gray1">
+      <span className="text-lg font-medium text-darkGray-active">
         해당 페이지로 이동중입니다!
       </span>
     </MainView>

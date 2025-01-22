@@ -13,16 +13,18 @@ export default function CardContent({ item, disabled }: CardContentProps) {
       <div className="mb-3.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           {item < 3 && (
-            <div className="h-3.5 w-3.5 rounded-full bg-vividGreen1" />
+            <div className="h-3.5 w-3.5 rounded-full bg-darkGreen" />
           )}
-          <div className="text-sm text-gray1">공지사항</div>
+          <div className="text-sm text-darkGray-active">공지사항</div>
         </div>
         <button
           onClick={() => {
             // TODO: 삭제로직 추가예정
           }}
         >
-          <BsX className={`size-5 ${disabled ? 'text-gray2' : 'text-gray5'}`} />
+          <BsX
+            className={`size-5 ${disabled ? 'text-mainGray' : 'text-lightGrey'}`}
+          />
         </button>
       </div>
       <div className="mb-6 line-clamp-2 w-full overflow-hidden text-ellipsis">
@@ -53,10 +55,10 @@ export default function CardContent({ item, disabled }: CardContentProps) {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <UserImage className="size-6" imageNameSegment="" />
-          <div className="text-text">박민석 매니저</div>
+          <div className="text-black">박민석 매니저</div>
         </div>
 
-        <div className="text-xs text-gray2">
+        <div className="text-xs text-mainGray">
           {item < 3 ? '2024.10.24' : '7시간전'}
         </div>
       </div>

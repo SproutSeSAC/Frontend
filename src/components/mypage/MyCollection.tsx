@@ -104,7 +104,7 @@ export default function MyCollection() {
               type="button"
               aria-label={collection}
               onClick={() => changeCollection(collection)}
-              className={`${currCollection === collection && 'rounded-lg bg-oliveGreen1 font-semibold text-white underline'} cursor-pointer px-4 py-2`}
+              className={`${currCollection === collection && 'rounded-lg bg-mainGreen font-semibold text-white underline'} cursor-pointer px-4 py-2`}
             >
               {collection}
             </button>
@@ -147,7 +147,7 @@ export default function MyCollection() {
 
           <tbody>
             {bodyCellList.map(cell => (
-              <tr key={cell.number} className="group hover:bg-gray4">
+              <tr key={cell.number} className="hover:bg-gray4 group">
                 <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
                   <Checkbox id="체크박스" checked={false} onChange={() => {}} />
                 </TableDataCell>

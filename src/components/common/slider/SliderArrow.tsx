@@ -1,4 +1,4 @@
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Icon from '@/components/common/Icon';
 
 export default function SliderArrow({
   direction,
@@ -17,9 +17,9 @@ export default function SliderArrow({
       aria-label={direction === 'left' ? '이전 슬라이드' : '다음 슬라이드'}
     >
       {direction === 'left' ? (
-        <FaChevronLeft size={24} />
+        <Icon name="ChevronLeft" width={24} height={24} />
       ) : (
-        <FaChevronRight size={24} />
+        <Icon name="ChevronRight" width={24} height={24} />
       )}
     </button>
   );

@@ -16,7 +16,7 @@ export default function StoreModalMenu({ menu }: StoreModalMenuProps) {
           src={menu.imageUrl}
         />
       ) : (
-        <div className="h-[100px] w-[100px] rounded-lg bg-gray5" />
+        <div className="h-[100px] w-[100px] rounded-lg bg-lightGray" />
       )}
 
       <h3 className="mt-2">{menu.name}</h3>

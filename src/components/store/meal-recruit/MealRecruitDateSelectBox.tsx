@@ -44,12 +44,12 @@ export default function MealRecruitDateSelectBox({
         errorMsg={errorMas}
         selectedOptionLabel={selectedOptions?.id}
         boxShape="buttonShape"
-        className={`${errorMas && 'border-red-500'} ${!selectedOptions?.id && 'text-gray2'} relative flex w-full items-center gap-5 text-start ${selectedOptions ? 'text-text' : 'text-[#9ca3af]'} rounded-xl border border-solid border-gray2 bg-white px-4 py-[9px] text-lg`}
+        className={`${errorMas && 'border-red-500'} ${!selectedOptions?.id && 'text-mainGray'} relative flex w-full items-center gap-5 text-start ${selectedOptions ? 'text-black' : 'text-[#9ca3af]'} rounded-xl border border-solid border-mainGray bg-white px-4 py-[9px] text-lg`}
       >
         {dateOptions.map((option, idx) => (
           <li
             key={option.id}
-            className={`mx-1 cursor-pointer px-4 py-[5px] hover:rounded-lg hover:bg-vividGreen3 ${idx === 0 && 'mt-4'} ${idx + 1 === dateOptions.length ? 'mb-4' : 'mb-[9px]'}`}
+            className={`mx-1 cursor-pointer px-4 py-[5px] hover:rounded-lg hover:bg-darkGreen-active ${idx === 0 && 'mt-4'} ${idx + 1 === dateOptions.length ? 'mb-4' : 'mb-[9px]'}`}
           >
             <button
               type="button"

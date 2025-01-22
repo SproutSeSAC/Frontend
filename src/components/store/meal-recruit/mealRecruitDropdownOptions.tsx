@@ -1,8 +1,8 @@
 function DateOption({ name, date }: { name: string; date: string }) {
   return (
     <div className="flex items-center justify-between text-lg">
-      <div className="font-semibold text-vividGreen1">{name}</div>
-      <div className="text-gray1">{date}</div>
+      <div className="font-semibold text-darkGreen">{name}</div>
+      <div className="text-darkGray-active">{date}</div>
     </div>
   );
 }

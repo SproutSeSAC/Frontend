@@ -48,7 +48,7 @@ export default function AclInfoButton({
   return (
     (aclList?.length === 0 || !accessRole) && (
       <button type="button" onClick={onInfoClick} className="group text-[15px]">
-        <BiInfoCircle className="inline size-[22px] text-oliveGreen1" />
+        <BiInfoCircle className="inline size-[22px] text-mainGreen" />
       </button>
     )
   );

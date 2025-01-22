@@ -22,7 +22,7 @@ import { dateOptions } from '@/components/store/meal-recruit/mealRecruitDropdown
 import { mealRecruitSchema } from '@/components/store/meal-recruit/mealRecruitSchema';
 
 const defaultStyle =
-  'rounded-xl border border-solid !border-gray2 px-4 py-[13px] text-lg';
+  'rounded-xl border border-solid !border-mainGray px-4 py-[13px] text-lg';
 
 interface FormValues extends Omit<PostMeal, 'appointmentTime'> {
   date: Date | null;
@@ -108,7 +108,7 @@ export default function MealRecruitModal() {
       title={
         <>
           <div className="mb-4 text-2xl">한끼팟 만들기</div>
-          <div className="mt-3 text-base font-normal text-gray2">
+          <div className="mt-3 text-base font-normal text-mainGray">
             다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
           </div>
         </>
@@ -173,8 +173,8 @@ export default function MealRecruitModal() {
                         selectedOption={selectedOption}
                         onChangeValue={data => onChange(data[0].id)}
                         errorMsg={error?.message}
-                        selectBoxClassName="h-[50px] border-gray2 rounded-xl"
-                        optionClassName="hover:bg-vividGreen3 text-gray1"
+                        selectBoxClassName="h-[50px] border-mainGray rounded-xl"
+                        optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                       />
                     </div>
                   );
@@ -197,8 +197,8 @@ export default function MealRecruitModal() {
                         selectedOption={selectedOption}
                         onChangeValue={data => onChange(data[0].id)}
                         errorMsg={error?.message}
-                        selectBoxClassName="h-[50px] border-gray2 rounded-xl"
-                        optionClassName="hover:bg-vividGreen3 text-gray1"
+                        selectBoxClassName="h-[50px] border-mainGray rounded-xl"
+                        optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                       />
                     </div>
                   );
@@ -247,8 +247,8 @@ export default function MealRecruitModal() {
                     selectedOption={selectedOption}
                     onChangeValue={data => onChange(data[0].id)}
                     errorMsg={error?.message}
-                    selectBoxClassName="h-[50px] border-gray2 rounded-xl"
-                    optionClassName="hover:bg-vividGreen3 justify-center text-gray1"
+                    selectBoxClassName="h-[50px] border-mainGray rounded-xl"
+                    optionClassName="hover:bg-darkGreen-active justify-center text-darkGray-active"
                   />
                 );
               }}
@@ -279,12 +279,7 @@ export default function MealRecruitModal() {
         </div>
 
         <div className="flex justify-end">
-          <SquareButton
-            color="vividGreen"
-            name="저장하기"
-            type="submit"
-            className="self-end"
-          />
+          <SquareButton name="저장하기" type="submit" className="self-end" />
         </div>
       </form>
     </Modal>

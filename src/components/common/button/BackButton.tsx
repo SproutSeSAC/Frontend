@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { FaChevronLeft } from 'react-icons/fa6';
+import Icon from '@/components/common/Icon';
 
 interface BackButtonProps {
   onClick?: () => void;
@@ -17,9 +17,9 @@ export default function BackButton({ onClick }: BackButtonProps) {
     <button
       type="button"
       onClick={onBackClick}
-      className="flex size-10 h-[38px] w-[38px] items-center justify-center rounded bg-vividGreen2 text-white"
+      className="flex size-10 h-[38px] w-[38px] items-center justify-center rounded bg-darkGreen-hover text-white"
     >
-      <FaChevronLeft />
+      <Icon name="ChevronLeft" />
     </button>
   );
 }

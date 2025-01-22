@@ -30,19 +30,17 @@
 
 @layer base {
   body {
-    font-family: 'Pretendard', sans-serif;
-    background-color: #f5f5f7;
-    color: #2b2b2b;
+    @apply bg-bg font-pretendard text-black;
 
     /* 이모지 컨테이너 CSS */
     #quill-editor {
-      @apply flex flex-row-reverse flex-wrap rounded-xl border border-gray4 bg-white pt-1;
+      @apply border-lightGray flex flex-row-reverse flex-wrap rounded-xl border bg-white pt-1;
     }
     #quill-editor > div:first-child {
-      @apply flex flex-1 items-center justify-start border-b border-gray3 pt-1;
+      @apply border-mainGray flex flex-1 items-center justify-start border-b pt-1;
     }
     #quill-editor > div:nth-child(2) {
-      @apply flex-shrink-0 border-b border-l-0 border-r-0 border-t-0 border-gray3;
+      @apply border-mainGray flex-shrink-0 border-b border-l-0 border-r-0 border-t-0;
     }
     #quill-editor > div:nth-child(3) {
       flex: 1 0 100%;
@@ -120,7 +118,7 @@
         padding-left: 320px;
       }
       a {
-        @apply text-blue-500;
+        @apply text-mainBlue;
       }
     }
 
@@ -144,19 +142,19 @@
       @apply text-white;
     }
     .react-datepicker__header {
-      @apply rounded-t-xl border-none bg-oliveGreen1 py-2.5 text-white;
+      @apply bg-mainGreen rounded-t-xl border-none py-2.5 text-white;
     }
     .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
       @apply rounded-tr-xl;
     }
     .react-datepicker__day--selected {
-      @apply rounded-lg !bg-oliveGreen1 text-white;
+      @apply !bg-mainGreen rounded-lg text-white;
     }
     .react-datepicker__day--keyboard-selected,
     .react-datepicker__month-text--keyboard-selected,
     .react-datepicker__quarter-text--keyboard-selected,
     .react-datepicker__year-text--keyboard-selected {
-      @apply bg-oliveGreen1 text-white;
+      @apply bg-mainGreen text-white;
     }
   }
 

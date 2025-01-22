@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 
-import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import Icon from '@/components/common/Icon';
 
-const previousNextButtonStyle = 'rounded-full bg-gray4 p-1.5';
-const previousNextButtonIconStyle = 'size-2 stroke-1 text-gray2';
+const previousNextButtonStyle = 'rounded-full bg-lightGrey p-1.5';
+const previousNextButtonIconStyle = 'size-2 stroke-1 text-mainGray';
 interface Props {
   totalPages: number;
   currentPage: number;
@@ -54,7 +54,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
-        <BsChevronLeft className={previousNextButtonIconStyle} />
+        <Icon name="ChevronLeft" className={previousNextButtonIconStyle} />
       </button>
 
       {pageNumbers[0] > 1 && (
@@ -68,7 +68,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`text-gray2 ${currentPage === page && 'text-text'}`}
+          className={`text-mainGray ${currentPage === page && 'text-black'}`}
         >
           {page}
         </button>
@@ -80,7 +80,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
             <span>...</span>
           )}
           <button
-            className="text-gray2"
+            className="text-mainGray"
             onClick={() => onPageChange(totalPages)}
           >
             {totalPages}
@@ -95,7 +95,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
-        <BsChevronRight className={previousNextButtonIconStyle} />
+        <Icon name="ChevronRight" className={previousNextButtonIconStyle} />
       </button>
     </div>
   );

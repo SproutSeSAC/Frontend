@@ -54,7 +54,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
                 name="만족도 조사"
                 placeholder="만족도 조사 링크를 적어주세요."
                 onChange={onChange}
-                className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-gray2"
+                className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-mainGray"
                 errorMsg={error?.message}
               />
             );
@@ -62,7 +62,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
         />
       </LabeledSection>
 
-      <p className="self-end text-end text-gray2">
+      <p className="self-end text-end text-mainGray">
         Zoom, 만족도 조사 링크는 추후에 등록해 주셔도 됩니다.
       </p>
     </>

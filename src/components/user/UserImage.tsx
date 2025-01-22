@@ -35,7 +35,7 @@ function UserImage(
             className="aspect-square size-full overflow-hidden rounded-full object-cover"
           />
         ) : (
-          <BsPerson className="size-[65%] text-oliveGreen1" />
+          <BsPerson className="size-[65%] text-mainGreen" />
         ))}
 
       {children}

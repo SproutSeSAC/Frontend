@@ -61,7 +61,7 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
       <button
         type="button"
         aria-label="리스트로 돌아가기"
-        className="absolute right-3 top-0 rounded-lg bg-white p-2 text-gray2"
+        className="absolute right-3 top-0 rounded-lg bg-white p-2 text-mainGray"
         onClick={() => navigate('/stores')}
       >
         <BsList size={16} />

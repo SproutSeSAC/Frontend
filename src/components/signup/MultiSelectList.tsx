@@ -50,7 +50,7 @@ export default function MultiSelectList({
         {list.map(({ id, iconImageUrl, ...rest }) => (
           <li
             key={id}
-            className={`${watchedValue.includes(id) ? 'bg-vividGreen1 text-white' : 'bg-white text-text'} cursor-pointer rounded border`}
+            className={`${watchedValue.includes(id) ? 'bg-darkGreen text-white' : 'bg-white text-black'} cursor-pointer rounded border`}
           >
             <button
               type="button"

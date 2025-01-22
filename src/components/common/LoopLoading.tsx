@@ -20,7 +20,7 @@ export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
           r="45"
           strokeWidth="11"
           fill="none"
-          className="stroke-gray5"
+          className="stroke-lightGrey"
         />
         <circle
           cx="50"
@@ -31,7 +31,7 @@ export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
           strokeLinecap="round"
           strokeDasharray="45 240"
           strokeDashoffset="100"
-          className="origin-center animate-spin border stroke-oliveGreen1"
+          className="origin-center animate-spin border stroke-mainGreen"
         />
       </svg>
       <img

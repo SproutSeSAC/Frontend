@@ -17,8 +17,8 @@ export default function FormQuestionItem({
         <span className="ml-2 text-base font-normal text-red-500">
           {condition?.includes('최대') ? (
             <>
-              <span className="text-gray2">*최대</span>
-              <span className="text-vividGreen2">
+              <span className="text-mainGray">*최대</span>
+              <span className="text-darkGreen-hover">
                 {condition.split('최대')[1]}
               </span>
             </>

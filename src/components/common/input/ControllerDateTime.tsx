@@ -86,7 +86,7 @@ export default function ControllerDateTime({
                   }}
                   errorMsg={error?.message ? ' ' : undefined}
                   selectBoxClassName="min-w-[95px]"
-                  optionClassName="hover:bg-vividGreen3 text-gray1"
+                  optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                 />
                 <SingleSelectDropdown
                   defaultLabel="분"
@@ -102,7 +102,7 @@ export default function ControllerDateTime({
                   }}
                   errorMsg={error?.message ? ' ' : undefined}
                   selectBoxClassName="min-w-[95px]"
-                  optionClassName="hover:bg-vividGreen3 text-gray1"
+                  optionClassName="hover:bg-darkGreen-active darkGray-activedarkGray-active"
                 />
               </div>
             );

@@ -46,7 +46,7 @@ export default function LoungeApplicationInfoTemplate({
               key={id}
               text={name}
               size="big"
-              className="whitespace-nowrap rounded bg-text !px-2 !font-normal text-white"
+              className="whitespace-nowrap rounded bg-black !px-2 !font-normal text-white"
             />
           ))}
         </ul>
@@ -81,7 +81,7 @@ export default function LoungeApplicationInfoTemplate({
     <ul className="mt-4 grid list-none grid-cols-2 gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
       {loungeApplicationInfo.map(({ type, data }) => (
         <li key={type} className="flex items-center gap-3 text-[22px]">
-          <h4 className="border-r-solid border-r border-r-gray2 pr-3 text-gray2">
+          <h4 className="border-r-solid border-r border-r-mainGray pr-3 text-mainGray">
             {type}
           </h4>
           {data}
