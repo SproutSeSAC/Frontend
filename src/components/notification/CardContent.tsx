@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 
-import { useHandleNotification } from '@/hooks/notification/useHandleNotification';
+import { useNotification } from '@/hooks/notification/useNotification';
 
 import { Notification } from '@/types/notification';
 import { BsX } from 'react-icons/bs';
@@ -13,7 +13,7 @@ interface CardContentProps {
 
 export default function CardContent({ notification }: CardContentProps) {
   const { content, isRead } = notification;
-  const { deleteNotification } = useHandleNotification();
+  const { deleteNotification } = useNotification();
 
   const handleDeleteNotification = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
