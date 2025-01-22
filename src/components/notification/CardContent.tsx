@@ -15,7 +15,6 @@ export default function CardContent({ notification }: CardContentProps) {
       <div className="mb-3.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           {/* TODO type에 따른 알림 타이틀 구분 */}
-          <div className="bg-darkGree h-3.5 w-3.5 rounded-full" />
           <div className="text-sm text-darkGray-active">공지사항</div>
         </div>
         <button
@@ -24,7 +23,7 @@ export default function CardContent({ notification }: CardContentProps) {
           }}
         >
           <BsX
-            className={`size-5 ${isRead ? 'text-mainGray' : 'text-lightGrey'}`}
+            className={`size-5 ${isRead ? 'text-lightGrey opacity-[0.3]' : 'text-mainGray'}`}
           />
         </button>
       </div>
@@ -38,8 +37,11 @@ export default function CardContent({ notification }: CardContentProps) {
           <div className="text-black">박민석 매니저</div>
         </div>
 
-        <div className="text-xs text-mainGray">
+        <div
+          className={`text-xs ${isRead ? 'text-lightGrey opacity-[0.3]' : 'text-mainGray'}`}
+        >
           {/* TODO 알림 발송 시간 추가 */}
+          2024. 10. 04
         </div>
       </div>
     </>
