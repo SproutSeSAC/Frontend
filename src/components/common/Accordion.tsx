@@ -45,7 +45,7 @@ export default function Accordion({
           ) : (
             <Icon
               name="ChevronDown"
-              className={`text-lg text-black transition-transform duration-300 ${
+              className={`size-5 text-lg text-black transition-transform duration-300 ${
                 isOpen ? 'rotate-180' : ''
               }`}
             />

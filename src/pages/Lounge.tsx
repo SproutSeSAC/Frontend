@@ -35,7 +35,7 @@ export default function Lounge() {
   } = useFilterData({ initialState });
 
   const [searchParams] = useSearchParams();
-  const ptype = searchParams.get('pType');
+  const pType = searchParams.get('pType');
 
   const { data, isLoading } = useGetLoungeProjects(currFilter);
   const { data: jobList } = useGetJobList();
@@ -63,7 +63,7 @@ export default function Lounge() {
     return sortList?.filter(({ key }) => sort?.includes(key))?.[0];
   }, [currFilter]);
 
-  if (ptype === 'EDIT') return <LoungeForm />;
+  if (pType === 'EDIT') return <LoungeForm />;
 
   return (
     <>

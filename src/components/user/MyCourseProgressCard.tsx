@@ -5,6 +5,7 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
+import sproutLogo from '@/assets/images/sprout-logo2.png';
 import { courseGrowthLevelList } from '@/constants';
 import { getDDay, getDateProgress } from '@/utils';
 
@@ -37,6 +38,8 @@ export default function MyCourseProgressCard() {
 
   if (isLoading) return null;
 
+  console.log(courseGrowthLevel);
+
   return (
     <div className="flex h-[396px] min-w-[380px] flex-col items-center justify-between gap-4 rounded-3xl bg-white p-10 shadow-card">
       <div className="flex w-full items-center justify-center gap-[10px]">
@@ -56,7 +59,7 @@ export default function MyCourseProgressCard() {
       <div className="relative flex h-40 w-full flex-col items-center justify-end rounded-xl bg-lightGray px-4 py-4">
         <div className="absolute -top-24 flex items-center justify-center">
           <img
-            src={`src/assets/images/growth-character/${courseGrowthLevel.image}`}
+            src={courseGrowthLevel.image}
             alt="성장캐릭터"
             className="absolute rounded-full bg-white object-contain p-10"
           />
@@ -68,11 +71,7 @@ export default function MyCourseProgressCard() {
         </div>
 
         <div className="flex items-center">
-          <img
-            src="src/assets/images/sprout-logo2.png"
-            alt="새싹 로고"
-            className="size-5 p-1"
-          />
+          <img src={sproutLogo} alt="새싹 로고" className="size-5 p-1" />
           <span className="mr-2 text-sm font-bold">
             {campusList[0]?.campusName}
           </span>
