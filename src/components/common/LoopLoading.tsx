@@ -1,3 +1,5 @@
+import sproutLogo from '@/assets/images/sprout-logo2.png';
+
 interface LoopLoadingProps {
   size?: number;
 }
@@ -34,11 +36,7 @@ export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
           className="origin-center animate-spin border stroke-mainGreen"
         />
       </svg>
-      <img
-        src="src/assets/images/sprout-logo2.png"
-        className="absolute w-[40%]"
-        alt="새싹 로고"
-      />
+      <img src={sproutLogo} className="absolute w-[40%]" alt="새싹 로고" />
     </div>
   );
 }

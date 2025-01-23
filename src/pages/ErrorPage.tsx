@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import Warning from '@/assets/icons/warning.svg?react';
 import Layout from '@/layouts/Layout';
 import MainView from '@/layouts/MainView';
 
@@ -13,11 +14,7 @@ export default function ErrorPage() {
   return (
     <Layout>
       <MainView isEmpty>
-        <img
-          src="src/assets/icons/warning.svg"
-          alt="에러 페이지"
-          className="mb-[1%] h-[50%] max-h-[117px] max-w-[131px] object-cover"
-        />
+        <Warning className="mb-[1%] h-[50%] max-h-[117px] max-w-[131px] object-cover" />
 
         <h2 className="mb-[1%] text-[40px] font-semibold">
           일시적인 오류입니다.
