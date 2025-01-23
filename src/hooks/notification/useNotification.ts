@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,11 +8,7 @@ import {
   useUpdateNotificationStatus,
 } from '@/services/notification/notificationMutations';
 
-import { notificationsData } from '@/components/notification/notifications';
-
 export const useNotification = () => {
-  const [data, setData] = useState(notificationsData); // mock data
-
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -43,20 +37,14 @@ export const useNotification = () => {
   );
 
   const setNotificationAsRead = (id: number) => {
-    const updatedData = data.map(item =>
-      item.id === id ? { ...item, isRead: true } : item,
-    );
-    setData(updatedData);
     updateNotification(id);
   };
 
   const deleteAllNotification = () => {
-    setData([]);
     deleteAllNotificationMutate();
   };
 
   return {
-    data,
     setNotificationAsRead,
     deleteNotification,
     deleteAllNotification,
