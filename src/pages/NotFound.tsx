@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import notfound from '@/assets/images/404.png';
 import MainView from '@/layouts/MainView';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -12,7 +13,7 @@ export default function NotFound() {
   return (
     <MainView isEmpty>
       <img
-        src="src/assets/images/404.png"
+        src={notfound}
         alt="존재하지 않는 페이지"
         className="mb-[1%] h-[50%] max-h-[290px] object-cover"
       />
