@@ -83,7 +83,7 @@ export default function LoungeDetail() {
       edit: {
         action: () => {
           const state = projectsDetail;
-          navigate(`/lounge?ptype=EDIT&modifyProject=${projectId}`, { state });
+          navigate(`/lounge?pType=EDIT&modifyProject=${projectId}`, { state });
         },
       },
     },
