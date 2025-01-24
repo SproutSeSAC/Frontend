@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
@@ -28,7 +28,7 @@ const getButtonStyle = (
 export default function MealRecruitCard({ post }: MealRecruitCardProps) {
   const { id, isParticipant, targetMemberCount, currentMemberCount } = post;
   const { title, appointmentTime, storeName, meetingPlace } = post;
-  const { ownerProfileImageUrl, ownerNickname } = post;
+  const { ownerProfileImageUrl } = post;
 
   const { showDialog } = useDialogContext();
 
@@ -44,49 +44,67 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
     });
   };
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  // 버튼 스타일 상태 타입 정의
+  type ButtonStateText = '모집완료' | '참여중' | '자세히';
+
+  const buttonStyleByState: Record<ButtonStateText, string> = {
+    모집완료: 'bg-[#f3f3f3] text-[#626262]', // 모집 완료 시 색상
+    참여중: 'bg-[#e9f1e1] text-darkGray-active', // 참여 중 시 색상
+    자세히: 'bg-[#f1f6eb] text-darkGray-active', // 기본 상태
+  };
+
+  const buttonStyle = buttonStyleByState[buttonState.text as ButtonStateText];
+
   return (
-    <article className="flex flex-col justify-between gap-8 rounded-lg bg-white px-5 py-[15px] shadow-card">
-      <div className="flex flex-col gap-4">
-        <h3 className="font-semibold">{title}</h3>
-
-        <div className="flex flex-col gap-2 text-sm">
-          <p className="flex items-center gap-2">
-            <span className="text-gray1">일정 | </span>
-            <span>{formatDate(appointmentTime, 'yyyy.MM.dd a h시 mm분')}</span>
-          </p>
-          <p className="flex items-center gap-2">
-            <span className="text-gray1">식당 | </span>
-            <span>{storeName}</span>
-          </p>
-          <p className="flex items-center gap-2">
-            <span className="text-gray1">위치 | </span>
-            <span>{meetingPlace}</span>
-          </p>
-        </div>
-      </div>
-
-      <footer className="flex items-center justify-between gap-4">
-        <div className="flex items-center justify-center gap-[10px]">
-          <UserImage
-            className="h-10 w-10"
-            imageNameSegment={ownerProfileImageUrl}
-          />
-          <div className="flex grow flex-col">
-            <span className="whitespace-nowrap">{ownerNickname}</span>
-            <span className="text-gray1 text-sm">
-              {currentMemberCount}/{targetMemberCount}명
-            </span>
+    <div
+      className="relative z-10 flex h-[74px] w-[346px] items-center justify-between rounded-xl border border-[#f2f2f7] bg-white px-5 py-[15px] shadow-[2px_4px_12px_0px_rgba(0,0,0,0.0)]"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="flex items-center gap-2.5">
+        <UserImage
+          className="h-10 w-10"
+          imageNameSegment={ownerProfileImageUrl}
+        />
+        <div className="flex flex-col items-start justify-start">
+          <div className="max-w-[137px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">
+            {title}
+          </div>
+          <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
+            {currentMemberCount}/{targetMemberCount}명
           </div>
         </div>
-
-        <button
-          className={`rounded-3xl px-5 py-2 text-sm text-white ${buttonState.style}`}
-          type="button"
-          onClick={handleShowDialog}
-        >
-          {buttonState.text}
-        </button>
-      </footer>
-    </article>
+      </div>
+      <button
+        className={`inline-flex h-[35px] w-[92px] cursor-pointer flex-col items-center justify-center rounded-lg ${buttonStyle}`}
+        onClick={handleShowDialog}
+      >
+        <div className="text-sm font-medium">{buttonState.text}</div>
+      </button>
+      {isHovered && (
+        <div className="absolute left-0 top-[80px] z-10 w-full rounded-2xl border border-[#f2f2f7] bg-white px-4 py-6 shadow-md">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2 text-sm">
+              <p className="flex items-center gap-2">
+                <span className="text-gray1">일정 | </span>
+                <span>
+                  {formatDate(appointmentTime, 'yyyy.MM.dd a h시 mm분')}
+                </span>
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-gray1">식당 | </span>
+                <span>{storeName}</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-gray1">위치 | </span>
+                <span>{meetingPlace}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

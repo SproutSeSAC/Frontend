@@ -55,7 +55,7 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
   }, [blocker, resetStoreDetails]);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full pl-5">
       <div ref={storeMapRef} className="h-full w-full" />
 
       <button

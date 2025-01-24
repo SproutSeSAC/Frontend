@@ -114,47 +114,52 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   }, []);
 
   return (
-    <form action="" className="flex w-[200px] flex-shrink-0 flex-col gap-8">
-      <div className="flex w-full justify-between">
-        <h3 className="text-[#545B61]">Filter</h3>
-        <button
-          type="button"
-          className="flex items-center gap-2"
-          onClick={handleReset}
-        >
-          <MdOutlineRefresh className="text-gray-400" />
-          <span className="text-xs text-darkGray-active">Clear filters</span>
-        </button>
-      </div>
-
+    <form
+      action=""
+      className="flex w-[200px] flex-shrink-0 flex-col gap-8 pl-4"
+    >
       <div>
-        <h3 className="mb-[6px] text-sm font-semibold">나의 위치 찾기</h3>
-        <Controller
-          control={control}
-          name="campusId"
-          render={({ field: { onChange, value }, fieldState: { error } }) => {
-            const selectedOption = campusList?.find(({ id }) => id === value);
-            return (
-              <SingleSelectDropdown
-                defaultLabel={campusList ? campusList[0].name : '선택'}
-                options={campusList || []}
-                selectedOption={selectedOption}
-                onChangeValue={data => {
-                  onChange(data[0].id);
-                  updateQueryParams(
-                    searchParams,
-                    setSearchParams,
-                    'campusId',
-                    data[0].id.toString(),
-                  );
-                }}
-                errorMsg={error?.message}
-                selectBoxClassName="py-[7px] px-3 bg-white rounded w-[120px] h-7 text-xs"
-                optionClassName="text-sm hover:rounded-sm hover:bg-mainGray pl-1"
-              />
-            );
-          }}
-        />
+        <div className="mb-[23px] flex w-full items-center justify-between">
+          <h3 className="ml-1 text-xl font-semibold text-[#2a2a2a] text-[#545B61]">
+            나의 위치 찾기
+          </h3>
+          <button
+            type="button"
+            className="flex h-[42px] w-[42px] items-center justify-center gap-2"
+            onClick={handleReset}
+          >
+            <MdOutlineRefresh className="h-6 w-6 text-gray-400" />
+          </button>
+        </div>
+        <div>
+          <Controller
+            control={control}
+            name="campusId"
+            render={({ field: { onChange, value }, fieldState: { error } }) => {
+              const selectedOption = campusList?.find(({ id }) => id === value);
+
+              return (
+                <SingleSelectDropdown
+                  defaultLabel={campusList ? campusList[0].name : '선택'}
+                  options={campusList || []}
+                  selectedOption={selectedOption}
+                  onChangeValue={data => {
+                    onChange(data[0].id);
+                    updateQueryParams(
+                      searchParams,
+                      setSearchParams,
+                      'campusId',
+                      data[0].id.toString(),
+                    );
+                  }}
+                  errorMsg={error?.message}
+                  selectBoxClassName="w-[218px] h-[46px] p-5 bg-[#f9f9f9] rounded-lg border border-[#aeaeae] justify-between items-center inline-flex"
+                  optionClassName="text-sm hover:rounded-sm hover:bg-gray3 pl-1"
+                />
+              );
+            }}
+          />
+        </div>
       </div>
 
       <CheckboxGroup title="새싹" className="text-sm font-semibold">
@@ -219,7 +224,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
       </CheckboxGroup>
       <button
         type="button"
-        className="w-full rounded-lg bg-mainGreen py-[14px] text-center text-lg font-bold text-white"
+        className="inline-flex h-[46px] w-[218px] items-center justify-center gap-2.5 rounded-lg bg-[#e9f1e1] px-3.5 py-2.5 text-lg font-semibold text-[#626262] hover:bg-[#d2e2c0] active:bg-[#6fa235] active:text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',

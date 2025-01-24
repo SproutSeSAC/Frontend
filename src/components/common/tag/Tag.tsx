@@ -7,6 +7,7 @@ interface TagProps {
   onDeleteClick?: () => void;
   className?: string;
   emphasisText?: boolean;
+  storeTag?: boolean;
 }
 
 export default function Tag({
@@ -16,6 +17,7 @@ export default function Tag({
   onDeleteClick,
   className,
   emphasisText,
+  storeTag = false,
 }: TagProps) {
   const styleBySize = {
     small: 'text-xs px-1.5 rounded',
@@ -41,22 +43,26 @@ export default function Tag({
       : 'bg-[#6B5FFD] text-white',
   };
 
-  const tagStyle = styleBySize[size];
+  const storeTagStyle = `whitespace-nowrap h-[29px] justify-start items-center gap-[11px] inline-flex px-3.5 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center gap-2.5 text-[#2a2a2a] text-sm font-normal font-['Pretendard Variable']`;
 
+  const tagStyle = styleBySize[size];
   const colorStyle = styleByColor[color];
 
   return (
     <div
-      className={`flex min-w-fit items-center py-0.5 ${tagStyle} ${colorStyle} ${className}`}
+      className={`${
+        storeTag
+          ? storeTagStyle
+          : `flex min-w-fit items-center py-0.5 ${tagStyle} ${colorStyle}`
+      } ${className}`}
     >
       <span>{text}</span>
-
       {onDeleteClick && (
         <button
           type="button"
           onClick={onDeleteClick}
           aria-label={`${text} 태그 삭제하기`}
-          className="-mr-1 ml-1"
+          className={storeTag ? 'text-[#2a2a2a]' : '-mr-1 ml-1'}
         >
           <BsX size={22} className={`text-${styleByColor[color]}`} />
         </button>
