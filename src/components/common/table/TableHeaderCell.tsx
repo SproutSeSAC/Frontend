@@ -34,7 +34,7 @@ export default function TableHeaderCell({
 
       {Icon && (
         <button onClick={onClick}>
-          <Icon className="text-gray3 ml-1 inline size-6 cursor-pointer stroke-2 px-1" />
+          <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
         </button>
       )}
 

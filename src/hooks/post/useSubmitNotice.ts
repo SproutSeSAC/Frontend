@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { usePostNotice } from '@/services/notice/noticeMutations';
+// import { usePostNotice } from '@/services/notice/noticeMutations';
+import { usePostMyPost } from '@/services/post/postMutation';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { useCalendarList, useDialogContext, useHandleImage } from '@/hooks';
@@ -79,7 +80,8 @@ export const useSubmitNotice = () => {
     return mutateCreateEvent(events);
   };
 
-  const { mutateAsync: mutatePostNotice } = usePostNotice({
+  const { mutateAsync: postNotice } = usePostMyPost<NoticeDto.PostNotice>({
+    // Note: 이 부분에서 호출
     onError: () => {
       alert({
         text: '공지사항 등록 중 오류가 발생했습니다.',
@@ -151,7 +153,7 @@ export const useSubmitNotice = () => {
         sessions: sessionsWithNoId,
         content: contentWithHandledImage,
       };
-      mutatePostNotice(extraFormValue);
+      postNotice(extraFormValue);
     }
 
     if (!needExtraInfoNoticeType) {
@@ -161,7 +163,7 @@ export const useSubmitNotice = () => {
         content: contentWithHandledImage,
         targetCourseIdList,
       };
-      mutatePostNotice(formValue);
+      postNotice(formValue);
     }
   };
 

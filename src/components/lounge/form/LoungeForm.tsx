@@ -5,10 +5,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
-  usePostLoungeProject,
+  // usePostLoungeProject,
   usePutLoungeProject,
 } from '@/services/lounge/loungeMutations';
 import { useGetLoungeProjectsDetail } from '@/services/lounge/loungeQueries';
+import { usePostMyPost } from '@/services/post/postMutation';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { PtypeList, progressList } from '@/constants';
@@ -95,7 +96,8 @@ export default function LoungeForm() {
   const { data: projectsDetail } = useGetLoungeProjectsDetail(
     Number(modifyProjectId || 0),
   );
-  const { mutateAsync: postProject } = usePostLoungeProject();
+  const { mutateAsync: postProject } =
+    usePostMyPost<LoungeDto.PostProjectParams>(); // NOTE: 이 부분에서 호출 /posts
   const { mutateAsync: putProject } = usePutLoungeProject();
 
   const { techStackList } = useTechStackList();

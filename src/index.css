@@ -34,13 +34,13 @@
 
     /* 이모지 컨테이너 CSS */
     #quill-editor {
-      @apply border-lightGray flex flex-row-reverse flex-wrap rounded-xl border bg-white pt-1;
+      @apply flex flex-row-reverse flex-wrap rounded-xl border border-lightGray bg-white pt-1;
     }
     #quill-editor > div:first-child {
-      @apply border-mainGray flex flex-1 items-center justify-start border-b pt-1;
+      @apply flex flex-1 items-center justify-start border-b border-mainGray pt-1;
     }
     #quill-editor > div:nth-child(2) {
-      @apply border-mainGray flex-shrink-0 border-b border-l-0 border-r-0 border-t-0;
+      @apply flex-shrink-0 border-b border-l-0 border-r-0 border-t-0 border-mainGray;
     }
     #quill-editor > div:nth-child(3) {
       flex: 1 0 100%;
@@ -142,13 +142,13 @@
       @apply text-white;
     }
     .react-datepicker__header {
-      @apply bg-mainGreen rounded-t-xl border-none py-2.5 text-white;
+      @apply rounded-t-xl border-none bg-mainGreen py-2.5 text-white;
     }
     .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
       @apply rounded-tr-xl;
     }
     .react-datepicker__day--selected {
-      @apply !bg-mainGreen rounded-lg text-white;
+      @apply rounded-lg !bg-mainGreen text-white;
     }
     .react-datepicker__day--keyboard-selected,
     .react-datepicker__month-text--keyboard-selected,

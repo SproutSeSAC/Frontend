@@ -1,11 +1,5 @@
 import { useState } from 'react';
 
-import {
-  useGetMyPostDetail,
-  useGetMyPostList,
-  useGetPostComments,
-} from '@/services/post/postQueries';
-
 import { BiChevronDown, BiExpandVertical } from 'react-icons/bi';
 
 import Pagination from '@/components/common/Pagination';
@@ -32,13 +26,6 @@ export default function MyCollection() {
   const changeCollection = (contentType: Collection) => {
     setCurrCollection(contentType);
   };
-
-  const { data } = useGetMyPostDetail(38);
-
-  const { data: postList } = useGetMyPostList('project');
-  const { data: commentList } = useGetPostComments(38);
-
-  console.log(data, postList, commentList);
 
   const headerCellList = [
     {

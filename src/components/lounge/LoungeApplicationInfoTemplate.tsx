@@ -56,9 +56,12 @@ export default function LoungeApplicationInfoTemplate({
       type: '스택',
       data: techStack && (
         <ul className="flex w-full flex-1 flex-wrap gap-1">
-          {techStack.map(({ id, path, name }) => (
-            <img key={id} src={path} alt={name} className="size-10" />
-          ))}
+          {techStack
+            ?.sort((a, b) => a.jobName.localeCompare(b.jobName))
+            ?.sort((a, b) => a.name.localeCompare(b.name))
+            .map(({ id, path, name }) => (
+              <img key={id} src={path} alt={name} className="size-10" />
+            ))}
         </ul>
       ),
     },
