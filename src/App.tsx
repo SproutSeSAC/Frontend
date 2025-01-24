@@ -1,8 +1,10 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { useSSE } from './hooks/common/useSSE';
 
 import MainView from '@/layouts/MainView';
 import loginRoutes from '@/route/loginRoutes';
@@ -21,6 +23,16 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
+  const { subscribe, unsubscribe, publishMessage } = useSSE(); // TODO test
+
+  useEffect(() => {
+    subscribe();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [subscribe, unsubscribe]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <DialogContextProvider>
@@ -32,6 +44,8 @@ export default function App() {
             </MainView>
           }
         >
+          {/* TODO 버튼 제거 */}
+          <button onClick={() => publishMessage(8)}>버튼</button>
           <RouterProvider router={router} />
         </Suspense>
       </DialogContextProvider>
