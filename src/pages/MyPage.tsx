@@ -9,8 +9,8 @@ import imgUrl from '@/assets/images/faq.png';
 import { faqList } from '@/constants/faq';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { FiChevronDown } from 'react-icons/fi';
 
+import Icon from '@/components/common/Icon';
 import Title from '@/components/common/Title';
 import Faq from '@/components/faq/Faq';
 import ApplicationListOfSessionsCard from '@/components/mypage/ApplicationListOfSessionsCard';
@@ -56,7 +56,9 @@ export default function MyPage() {
               {courseList[0].courseTitle}
             </span>
           )}
-          {courseList.length > 1 && <FiChevronDown className="size-5" />}
+          {courseList.length > 1 && (
+            <Icon name="ChevronDown" className="size-5" />
+          )}
         </div>
       ),
     },

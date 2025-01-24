@@ -13,13 +13,10 @@ import {
   BsFillGeoAltFill,
   BsFillTelephoneFill,
 } from 'react-icons/bs';
-import {
-  IoIosArrowDown,
-  IoIosArrowForward,
-  IoIosArrowUp,
-} from 'react-icons/io';
+import { IoIosArrowForward } from 'react-icons/io';
 import { PiArrowSquareInThin } from 'react-icons/pi';
 
+import Icon from '@/components/common/Icon';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
@@ -243,7 +240,11 @@ export default function StoreCard({
                 </div>
 
                 {storeData.breakTime &&
-                  (openHoursModal ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                  (openHoursModal ? (
+                    <Icon name="ChevronUp" />
+                  ) : (
+                    <Icon name="ChevronDown" />
+                  ))}
               </button>
               {storeData.breakTime && openHoursModal && (
                 <div className="absolute right-0 top-6 z-10 flex w-full min-w-[166px] flex-col justify-center gap-2 rounded-lg bg-white px-2.5 py-3 text-sm shadow-card">

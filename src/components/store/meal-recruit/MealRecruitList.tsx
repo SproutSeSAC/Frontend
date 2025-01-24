@@ -4,8 +4,8 @@ import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
 import { useDialogContext, useObserver } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
-import { IoIosArrowUp } from 'react-icons/io';
 
+import Icon from '@/components/common/Icon';
 import LoopLoading from '@/components/common/LoopLoading';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
 import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
@@ -93,7 +93,7 @@ export default function MealRecruitList({
           onClick={handleScrollToTop}
           className="bg-vividGreen1 m-auto h-10 w-10 rounded-full p-3 text-white opacity-50 shadow-md"
         >
-          <IoIosArrowUp />
+          <Icon name="ChevronUp" className="text-darkerGray" />
         </button>
       </div>
     </section>

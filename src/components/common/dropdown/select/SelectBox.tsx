@@ -1,9 +1,8 @@
 import { useCallback } from 'react';
 
-import ChevronDownIcon from '@/assets/icons/arrow-down.svg?react';
 import { Option } from '@/types';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
+import Icon from '@/components/common/Icon';
 import ResetButton from '@/components/common/button/ResetButton';
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
@@ -112,7 +111,7 @@ export default function SelectBox<
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>
-              {open ? <IoIosArrowUp /> : <ChevronDownIcon />}
+              {open ? <Icon name="ChevronUp" /> : <Icon name="ChevronDown" />}
             </>
           )}
 
@@ -124,7 +123,11 @@ export default function SelectBox<
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
               {rest.selectedOptions?.length === 0 &&
-                (open ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                (open ? (
+                  <Icon name="ChevronUp" />
+                ) : (
+                  <Icon name="ChevronDown" />
+                ))}
             </>
           )}
         </button>
