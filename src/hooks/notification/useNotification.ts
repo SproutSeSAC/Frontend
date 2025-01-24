@@ -18,7 +18,7 @@ export const useNotification = () => {
     },
   });
 
-  const { mutateAsync: deleteNotification } = useDeleteNotification({
+  const { mutate: deleteNotification } = useDeleteNotification({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['useGetNotifications'],
@@ -26,15 +26,13 @@ export const useNotification = () => {
     },
   });
 
-  const { mutateAsync: deleteAllNotificationMutate } = useDeleteAllNotification(
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ['useGetNotifications'],
-        });
-      },
+  const { mutate: deleteAllNotificationMutate } = useDeleteAllNotification({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['useGetNotifications'],
+      });
     },
-  );
+  });
 
   const setNotificationAsRead = (id: number) => {
     updateNotification(id);
