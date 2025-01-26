@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// import { useGetMyPostList } from '@/services/mypage/myPostQueries';
 import { BiChevronDown, BiExpandVertical } from 'react-icons/bi';
 
 import Pagination from '@/components/common/Pagination';
@@ -22,6 +23,8 @@ export const ITEMS_PER_PAGE = 6;
 export default function MyCollection() {
   const [currCollection, setCurrCollection] =
     useState<Collection>('내가 쓴 게시글');
+
+  // const { data: myPostList } = useGetMyPostList();
 
   const changeCollection = (contentType: Collection) => {
     setCurrCollection(contentType);

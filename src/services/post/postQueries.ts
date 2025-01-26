@@ -5,7 +5,7 @@ import { axiosInstance } from '@/services/axiosInstance';
 type PostType = 'notice' | 'project';
 
 // 게시글 목록 조회 API
-export const useGetMyPostList = (postType: PostType) => {
+export const useGetPostList = (postType: PostType) => {
   return useQuery({
     queryKey: ['useGetMyPostList', postType],
     queryFn: async () => {
@@ -16,7 +16,7 @@ export const useGetMyPostList = (postType: PostType) => {
 };
 
 // 특정 게시글 상세 조회 API
-export const useGetMyPostDetail = (postId: number) => {
+export const useGetPostDetail = (postId: number) => {
   return useQuery({
     queryKey: ['useGetMyPostDetail', postId],
     queryFn: async () => {
