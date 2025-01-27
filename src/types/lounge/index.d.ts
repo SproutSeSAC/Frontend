@@ -47,5 +47,5 @@ export type LoungeProjectFilter = PaginationFilter & {
   techStack?: number[];
   position?: number[];
   meetingType?: Progress;
-  keyWord?: string;
+  keyword?: string;
 };

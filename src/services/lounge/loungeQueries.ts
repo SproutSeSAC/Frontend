@@ -22,7 +22,7 @@ export const extractValidParams = (searchParams: URLSearchParams) => {
 export const useGetLoungeProjects = (params: LoungeProjectFilter) => {
   const [searchParams] = useSearchParams();
 
-  const { page, size, position, techStack, meetingType, sort, keyWord } =
+  const { page, size, position, techStack, meetingType, sort, keyword } =
     params;
 
   const newSearchParams =
@@ -45,7 +45,7 @@ export const useGetLoungeProjects = (params: LoungeProjectFilter) => {
   const newParams = {
     page,
     size,
-    keyWord,
+    keyword,
     ...sortParams,
     ...newSearchParams,
     ...positionParams,

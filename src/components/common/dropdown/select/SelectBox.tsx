@@ -107,14 +107,15 @@ export default function SelectBox<
           {isSingleSelect(rest) && (
             <>
               <span
-                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-mainGray'}`}
+                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'border-red border text-mainGray'} ${rest.selectedOptionLabel && 'pr-7'}`}
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>
-              {open ? <Icon name="ChevronUp" /> : <Icon name="ChevronDown" />}
+              {!rest.selectedOptionLabel && (
+                <Icon name={open ? 'ChevronUp' : 'ChevronDown'} />
+              )}
             </>
           )}
-
           {isMultiSelect(rest) && (
             <>
               <span
@@ -122,27 +123,16 @@ export default function SelectBox<
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
-              {rest.selectedOptions?.length === 0 &&
-                (open ? (
-                  <Icon name="ChevronUp" />
-                ) : (
-                  <Icon name="ChevronDown" />
-                ))}
+              {rest.selectedOptions?.length === 0 && (
+                <Icon name={open ? 'ChevronUp' : 'ChevronDown'} />
+              )}
             </>
           )}
         </button>
 
-        {isSingleSelect(rest) &&
-          rest.selectedOptionLabel &&
-          rest.onResetClick && (
-            <ResetButton
-              onResetClick={rest.onResetClick}
-              className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
-            />
-          )}
-        {isMultiSelect(rest) &&
-          rest.selectedOptions?.length >= 1 &&
-          rest.onResetClick && (
+        {rest.onResetClick &&
+          ((isSingleSelect(rest) && rest.selectedOptionLabel) ||
+            (isMultiSelect(rest) && rest.selectedOptions?.length >= 1)) && (
             <ResetButton
               onResetClick={rest.onResetClick}
               className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
