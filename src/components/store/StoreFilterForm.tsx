@@ -120,15 +120,13 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
     >
       <div>
         <div className="mb-[23px] flex w-full items-center justify-between">
-          <h3 className="ml-1 text-xl font-semibold text-[#2a2a2a] text-[#545B61]">
-            나의 위치 찾기
-          </h3>
+          <h3 className="ml-1 text-xl font-semibold">나의 위치 찾기</h3>
           <button
             type="button"
             className="flex h-[42px] w-[42px] items-center justify-center gap-2"
             onClick={handleReset}
           >
-            <MdOutlineRefresh className="h-6 w-6 text-gray-400" />
+            <MdOutlineRefresh className="h-6 w-6 text-darkGray" />
           </button>
         </div>
         <div>
@@ -224,7 +222,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
       </CheckboxGroup>
       <button
         type="button"
-        className="inline-flex h-[46px] w-[218px] items-center justify-center gap-2.5 rounded-lg bg-[#e9f1e1] px-3.5 py-2.5 text-lg font-semibold text-[#626262] hover:bg-[#d2e2c0] active:bg-[#6fa235] active:text-white"
+        className="inline-flex h-[46px] w-[218px] items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-[#626262] hover:bg-[#d2e2c0] active:bg-[#6fa235] active:text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',

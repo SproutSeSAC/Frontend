@@ -13,13 +13,9 @@ import {
   BsFillGeoAltFill,
   BsFillTelephoneFill,
 } from 'react-icons/bs';
-import {
-  IoIosArrowDown,
-  IoIosArrowForward,
-  IoIosArrowUp,
-} from 'react-icons/io';
 import { PiArrowSquareInThin } from 'react-icons/pi';
 
+import Icon from '@/components/common/Icon';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
@@ -173,7 +169,7 @@ export default function StoreCard({
                 className="flex items-center justify-center text-base font-semibold text-mainGray"
               >
                 정보 수정 제안하기
-                <IoIosArrowForward size={18} />
+                <Icon name="ChevronRight" width={18} height={18} />
               </button>
             )}
           </div>
@@ -244,9 +240,12 @@ export default function StoreCard({
                 <div className="line-clamp-1 min-w-[166px] overflow-hidden overflow-ellipsis">
                   {storeData.workingDay}
                 </div>
-
                 {storeData.breakTime &&
-                  (openHoursModal ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                  (openHoursModal ? (
+                    <Icon name="ChevronUp" width={18} height={18} />
+                  ) : (
+                    <Icon name="ChevronDown" width={18} height={18} />
+                  ))}
               </button>
               {storeData.breakTime && openHoursModal && (
                 <div className="absolute right-0 top-6 z-10 flex w-full min-w-[166px] flex-col justify-center gap-2 rounded-lg bg-white px-2.5 py-3 text-sm shadow-card">
@@ -277,10 +276,34 @@ export default function StoreCard({
         </div>
 
         <footer className="flex gap-1 overflow-x-auto scrollbar-hide">
-          {storeData.isZeropay && <Tag storeTag text="# 제로페이" />}
-          {storeData.isLessThan10000Menu && <Tag storeTag text="# 만원이하" />}
-          {storeData.isOverPerson && <Tag storeTag text="# 5인 이상" />}
-          {storeData.walkTime <= 5 && <Tag storeTag text="# 도보 5분 이내" />}
+          {storeData.isZeropay && (
+            <Tag
+              text="# 제로페이"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
+          {storeData.isLessThan10000Menu && (
+            <Tag
+              text="# 만원이하"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
+          {storeData.isOverPerson && (
+            <Tag
+              text="# 5인 이상"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
+          {storeData.walkTime <= 5 && (
+            <Tag
+              text="# 도보 5분 이내"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
         </footer>
       </section>
     </article>
