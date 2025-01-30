@@ -72,12 +72,6 @@ export default function Store() {
           </div>
         </Header>
         <MealRecruitList />
-        <div
-          className="top-[156px] w-[214px] h-[74px] left-[980px] absolute z-10 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to right, rgba(245, 245, 247, 0), rgba(245, 245, 247, 0.8))',
-          }}
-        />
         <div className="flex h-[727px] w-[1223px] rounded-[20px] bg-white p-5">
           <aside className="h-full w-[260px] flex-shrink-0">
             <StoreFilterForm onReset={() => setSearchKeyword('')} />

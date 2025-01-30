@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
@@ -26,6 +26,10 @@ const getButtonStyle = (
 };
 
 export default function MealRecruitCard({ post }: MealRecruitCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [tooltipStyle, setTooltipStyle] = useState({ top: 0, left: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const { id, isParticipant, targetMemberCount, currentMemberCount } = post;
   const { title, appointmentTime, storeName, meetingPlace } = post;
   const { ownerProfileImageUrl } = post;
@@ -44,23 +48,44 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
     });
   };
 
-  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = () => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setTooltipStyle({
+        top: rect.bottom + window.scrollY + 10,
+        left: rect.left + window.scrollX,
+      });
+    }
+    setIsHovered(true);
+  };
 
-  // 버튼 스타일 상태 타입 정의
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsHovered(false);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   type ButtonStateText = '모집완료' | '참여중' | '자세히';
 
   const buttonStyleByState: Record<ButtonStateText, string> = {
-    모집완료: 'bg-[#f3f3f3] text-[#626262]', // 모집 완료 시 색상
-    참여중: 'bg-[#e9f1e1] text-darkGray-active', // 참여 중 시 색상
-    자세히: 'bg-[#f1f6eb] text-darkGray-active', // 기본 상태
+    모집완료: 'bg-lightGray-active text-darkGray-active', // 모집 완료 시 색상
+    참여중: 'bg-lightGreen-hover text-darkGray-active', // 참여 중 시 색상
+    자세히: 'bg-lightGreen text-darkGray-active', // 기본 상태
   };
 
   const buttonStyle = buttonStyleByState[buttonState.text as ButtonStateText];
 
   return (
     <div
+      ref={cardRef}
       className="relative z-10 flex h-[74px] w-[346px] items-center justify-between rounded-xl border border-[#f2f2f7] bg-white px-5 py-[15px] shadow-[2px_4px_12px_0px_rgba(0,0,0,0.0)]"
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-center gap-2.5">
@@ -84,7 +109,10 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
         <div className="text-sm font-medium">{buttonState.text}</div>
       </button>
       {isHovered && (
-        <div className="absolute left-0 top-[80px] z-10 w-full rounded-2xl border border-[#f2f2f7] bg-white px-4 py-6 shadow-md">
+        <div
+          className="fixed z-20 w-[346px] rounded-2xl border border-[#f2f2f7] bg-white px-4 py-6 shadow-md"
+          style={tooltipStyle}
+        >
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2 text-sm">
               <p className="flex items-center gap-2">

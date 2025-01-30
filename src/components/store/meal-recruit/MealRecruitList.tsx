@@ -20,16 +20,6 @@ export default function MealRecruitList() {
     return data ? data.pages.flatMap(({ mealPostList }) => mealPostList) : [];
   }, [data]);
 
-  const getButtonPositionClass = () => {
-    if (mealPosts.length === 0) {
-      return 'absolute left-[300px] z-20 items-center';
-    } else if (mealPosts.length >= 3) {
-      return 'absolute right-[60px] z-20 mt-5';
-    } else {
-      return 'absolute ml-10 z-20';
-    }
-  };
-  
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
   };
@@ -47,50 +37,62 @@ export default function MealRecruitList() {
     });
   };
 
+  const getButtonPositionStyle = () => {
+    const cardWidth = 331 + 24;
+    const maxVisibleCards = Math.min(mealPosts.length, 3);
+    const totalWidth = cardWidth * maxVisibleCards;
+
+    if (mealPosts.length === 0) {
+      return { left: '300px' };
+    }
+    return { left: `${totalWidth}px` };
+  };
+
   return (
-  <section className="relative z-0 flex w-full cursor-default flex-col gap-5">
-    <div className="relative w-full z-10">
-      <div className={getButtonPositionClass()}
-        style={
-          mealPosts.length > 0 && mealPosts.length < 3
-            ? { left: `${mealPosts.length * 350}px`, top: '20px' }
-            : {}
-        }
-      >
-        <button
-          className="flex flex-col h-[74px] items-center justify-center gap-4"
-          onClick={handleShowDialog}
-        >
-          <div className="h-[30px] w-fit rounded-full bg-mainGray-active text-white">
-            <BsPlus size={30} />
-          </div>
-        </button>
-      </div>
-    </div>
-    <div className="relative flex max-w-[1050px] items-center min-h-[74px] gap-5 overflow-x-auto overflow-y-auto scrollbar-hide z-0">
-    {mealPosts.length === 0 && (
-      <div className='relative z-10 flex flex-col max-w-[360px] min-h-[74px] items-start rounded-xl border border-[#f2f2f7] bg-white px-6 py-4'>
-        <div className="max-w-[137px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">한끼팟 만들기</div>
-        <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
-          함께 식사할 사람을 찾아봐요!
-        </div>
-      </div>
-    )}
-      {mealPosts.map((post) => (
+    <section className="relative z-10 flex w-full cursor-default flex-col gap-5">
+      <div className="z-5 relative w-full">
         <div
-          key={post.id}
-          className="relative max-w-[331px] w-[331px] flex-shrink-0 pr-5"
+          className="absolute z-20 ml-10 mt-5"
+          style={{
+            ...getButtonPositionStyle(),
+          }}
         >
-          <MealRecruitCard post={post} />
+          <button
+            className="flex h-[74px] flex-col items-center justify-center gap-4"
+            onClick={handleShowDialog}
+          >
+            <div className="h-[30px] w-fit rounded-full bg-mainGray-active text-white">
+              <BsPlus size={30} />
+            </div>
+          </button>
         </div>
-      ))}
-    </div>
-    {isFetchingNextPage && (
-      <div className="m-auto">
-        <LoopLoading size={40} />
       </div>
-    )}
-    <div ref={mealPostObserveRef} />
-  </section>
+      <div className="relative z-0 flex min-h-[74px] w-[1065px] max-w-[1065px] items-center gap-[24px] overflow-x-auto overflow-y-auto scrollbar-hide">
+        {mealPosts.length === 0 && (
+          <div className="z-9 relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-[#f2f2f7] bg-white px-6 py-4">
+            <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">
+              한끼팟 만들기
+            </div>
+            <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
+              함께 식사할 사람을 찾아봐요!
+            </div>
+          </div>
+        )}
+        {mealPosts.map(post => (
+          <div
+            key={post.id}
+            className="relative z-10 w-[331px] max-w-[331px] flex-shrink-0 pr-5"
+          >
+            <MealRecruitCard post={post} />
+          </div>
+        ))}
+      </div>
+      {isFetchingNextPage && (
+        <div className="m-auto">
+          <LoopLoading size={40} />
+        </div>
+      )}
+      <div ref={mealPostObserveRef} />
+    </section>
   );
 }

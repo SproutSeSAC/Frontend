@@ -55,11 +55,12 @@ interface StoreCardProps {
 }
 
 export default function StoreCard({
-  width,
+  width = 'w-full',
   height,
   storeData,
   showFavoriteButton = true,
   isModal,
+  ...rest
 }: StoreCardProps) {
   const { showToast, showDialog } = useDialogContext();
   const [openHoursModal, setOpenHoursModal] = useState(false);
@@ -137,11 +138,15 @@ export default function StoreCard({
   const [test, setTest] = useState(false);
 
   return (
-    <article className={`${width} gap-[11px]`}>
+    <article className={`${width} gap-[11px]`} {...rest}>
       <StoreMenuImageSlider slideList={storeData?.storeImageList || []}>
         {item => {
           return (
-            <StoreMenuImage src={item.path} width="w-[16.5rem]" height="h-[16.5rem]" />
+            <StoreMenuImage
+              src={item.path}
+              width="w-full max-w-[406px]"
+              height="h-[16.5rem]"
+            />
           );
         }}
       </StoreMenuImageSlider>
