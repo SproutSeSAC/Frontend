@@ -5,21 +5,13 @@ import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 import { useDialogContext, useObserver } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
 
-import Icon from '@/components/common/Icon';
 import LoopLoading from '@/components/common/LoopLoading';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
 import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
-interface MealRecruitListProps {
-  sideViewOpen: boolean;
-}
-
-export default function MealRecruitList({
-  sideViewOpen,
-}: MealRecruitListProps) {
+export default function MealRecruitList() {
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfiniteMealPostList();
@@ -45,57 +37,56 @@ export default function MealRecruitList({
     });
   };
 
-  const handleScrollToTop = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <section className="flex flex-col gap-7 overflow-y-auto">
-      {sideViewOpen && (
+    <section className="relative z-10 flex w-full cursor-default flex-col gap-5">
+      <div
+        className={`${
+          mealPosts.length > 2 ? '' : 'inline-flex max-w-[350px]'
+        } relative w-fit max-w-full`}
+      >
+        {mealPosts.length > 2 && (
+          <div className="absolute right-0 z-10 h-[74px] w-[215px] bg-gradient-to-r from-[#f5f5f700] to-bg" />
+        )}
+        <div className="relative z-0 flex min-h-[74px] w-[1065px] max-w-[1065px] items-center gap-[24px] overflow-x-auto overflow-y-auto scrollbar-hide">
+          {mealPosts.length === 0 && (
+            <div className="z-9 relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-[#f2f2f7] bg-white px-6 py-4">
+              <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">
+                한끼팟 만들기
+              </div>
+              <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
+                함께 식사할 사람을 찾아봐요!
+              </div>
+            </div>
+          )}
+          {mealPosts.map(post => (
+            <div
+              key={post.id}
+              className="relative z-10 w-[331px] max-w-[331px] flex-shrink-0 pr-5"
+            >
+              <MealRecruitCard post={post} />
+            </div>
+          ))}
+        </div>
+
         <button
-          className="bg-gray5 flex w-72 flex-col items-center justify-center gap-4 rounded-lg px-5 py-8 shadow-card"
+          className={` ${
+            mealPosts.length > 2
+              ? 'absolute right-[-90px] top-1/2 -translate-y-1/2 transform'
+              : 'relative ml-3'
+          } flex h-[74px] flex-col items-center justify-center gap-4`}
           onClick={handleShowDialog}
         >
-          <div className="bg-vividGreen1 w-fit rounded-full text-white">
+          <div className="h-[30px] w-fit rounded-full bg-mainGray-active text-white">
             <BsPlus size={30} />
           </div>
-
-          <div className="flex flex-col items-center justify-center gap-2">
-            <h3 className="text-base font-semibold">한끼팟 만들기</h3>
-            {mealPosts.length !== 0 && (
-              <p className="text-gray1 text-xs">
-                다른 사람들의 이야기가 궁금한가요?
-                <br />
-                함께 식사할 사람을 찾아봐요!
-              </p>
-            )}
-          </div>
-        </button>
-      )}
-      <div
-        ref={scrollContainerRef}
-        className="flex max-h-[520px] flex-col gap-8 overflow-y-auto"
-      >
-        {mealPosts.map(post => (
-          <MealRecruitCard key={post.id} post={post} />
-        ))}
-        {isFetchingNextPage && (
-          <div className="m-auto">
-            <LoopLoading size={40} />
-          </div>
-        )}
-        <div ref={mealPostObserveRef} />
-        <button
-          type="button"
-          aria-label="스크롤 업"
-          onClick={handleScrollToTop}
-          className="bg-vividGreen1 m-auto h-10 w-10 rounded-full p-3 text-white opacity-50 shadow-md"
-        >
-          <Icon name="ChevronUp" className="text-darkerGray" />
         </button>
       </div>
+      {isFetchingNextPage && (
+        <div className="m-auto">
+          <LoopLoading size={40} />
+        </div>
+      )}
+      <div ref={mealPostObserveRef} />
     </section>
   );
 }
