@@ -5,7 +5,7 @@ import {
   useGetThisWeekNoticeList,
 } from '@/services/notice/noticeQueries';
 
-import { RolesObj } from '@/constants';
+import { rolesObj } from '@/constants';
 import { NoticeDisplay } from '@/types';
 import { getColorByRole } from '@/utils';
 
@@ -53,7 +53,7 @@ export default function NoticeListSideBox({ title }: NoticeListSideBoxProps) {
                 <Tag
                   size="big"
                   color={getColorByRole(roleType)}
-                  text={RolesObj[roleType]}
+                  text={rolesObj[roleType]}
                   className="!rounded-md !px-2 font-medium"
                   emphasisText
                 />

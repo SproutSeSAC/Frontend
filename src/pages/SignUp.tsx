@@ -8,10 +8,10 @@ import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
 import { currentStepAtom } from '@/atoms/formStepAtom';
 import { verificationNicknameAtom } from '@/atoms/verificationNicknameAtom';
 
-import { RolesObj, defaultSignUpFormValues } from '@/constants';
+import { defaultSignUpFormValues, rolesObj } from '@/constants';
 import { useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
-import { KeyOfRole } from '@/types';
+import { RoleKey } from '@/types';
 import {
   isEduManager,
   isJobCoordinator,
@@ -131,7 +131,7 @@ export default function SignUp() {
                           {'roles' in question && (
                             <fieldset className="flex flex-wrap gap-x-12 gap-y-3">
                               {/* 여기서 role을 바꿨으면 캠퍼스와 교육과정 초기화 */}
-                              {question.roles.map((role: KeyOfRole) => (
+                              {question.roles.map((role: RoleKey) => (
                                 <label
                                   key={role}
                                   className="flex items-center gap-2"
@@ -149,7 +149,7 @@ export default function SignUp() {
                                     })}
                                   />
 
-                                  <span>{RolesObj[role]}</span>
+                                  <span>{rolesObj[role]}</span>
                                 </label>
                               ))}
                             </fieldset>

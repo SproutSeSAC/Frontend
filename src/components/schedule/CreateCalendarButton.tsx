@@ -5,9 +5,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
 import { useGetManagerEmailListByCourse } from '@/services/schedule/calendarQueries';
 
-import { managerAndAdminRolesObj } from '@/constants';
+import { superAdminAndManagerRolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
-import { KeyOfRole } from '@/types';
+import { RoleKey } from '@/types';
 import { FaPlus } from 'react-icons/fa6';
 
 import Title from '@/components/common/Title';
@@ -16,7 +16,7 @@ import SquareButton from '@/components/common/button/SquareButton';
 interface CreateCalendarButtonProps {
   courseTitle: string;
   courseId: number;
-  userRole: KeyOfRole;
+  userRole: RoleKey;
   disabled: boolean;
 }
 
@@ -35,18 +35,18 @@ export default function CreateCalendarButton({
 
   const authorizedEmailListByCourse = authorizedEmailList
     ?.filter(item => item.roleType !== userRole)
-    ?.reduce<Partial<Record<KeyOfRole, string>>>((acc, user) => {
-      acc[user.roleType as KeyOfRole] = user.email;
+    ?.reduce<Partial<Record<RoleKey, string>>>((acc, user) => {
+      acc[user.roleType as RoleKey] = user.email;
       return acc;
     }, {}) as {
     EDU_MANAGER?: string;
-    CAMPUS_MANAGER?: string;
+    CAMPUS_LEADER?: string;
     JOB_COORDINATOR?: string;
   };
 
   const managerListExceptUserRole = Object.values(
     Object.fromEntries(
-      Object.entries(managerAndAdminRolesObj).filter(
+      Object.entries(superAdminAndManagerRolesObj).filter(
         ([key]) => key !== userRole,
       ),
     ),

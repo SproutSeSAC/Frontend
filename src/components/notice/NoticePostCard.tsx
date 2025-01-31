@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { usePostNoticeScrap } from '@/services/notice/noticeMutations';
 
-import { RolesObj, noticeCategoryDisplay } from '@/constants';
+import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import { useHandleOnScrap } from '@/hooks';
 import { NoticeDisplay } from '@/types';
 import { formatDate, getColorByRole } from '@/utils';
@@ -44,7 +44,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
         <Tag
           color={getColorByRole(notice.roleType)}
           size="big"
-          text={RolesObj[notice.roleType]}
+          text={rolesObj[notice.roleType]}
           emphasisText
           className="px-[10px] py-[5px]"
         />

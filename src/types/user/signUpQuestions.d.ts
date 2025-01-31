@@ -1,4 +1,4 @@
-import { Domain, Job, KeyOfRole, TechStack, UserProfileDto } from '@/types';
+import { Domain, Job, RoleKey, TechStack, UserProfileDto } from '@/types';
 
 export type SignUpFormTitle = {
   title: {
@@ -16,7 +16,7 @@ export type MarketingConsent = '동의' | '동의하지 않음';
 
 // SignUp Form의 형식
 export type SignUpQuestions = {
-  roles: KeyOfRole[];
+  roles: RoleKey[];
   name: string;
   nickname: string;
   jobList: Job[];

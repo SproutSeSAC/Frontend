@@ -5,10 +5,10 @@ import { z } from 'zod';
 export type RegisterSchemaType = z.infer<typeof SignUpFormSchema>;
 
 export enum Role {
-  ADMIN = 'ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
   TRAINEE = 'TRAINEE',
   EDU_MANAGER = 'EDU_MANAGER',
-  CAMPUS_MANAGER = 'CAMPUS_MANAGER',
+  CAMPUS_LEADER = 'CAMPUS_LEADER',
   JOB_COORDINATOR = 'JOB_COORDINATOR',
   PRE_TRAINEE = 'PRE_TRAINEE',
 }
@@ -17,8 +17,8 @@ export const SignUpFormSchema = z
   .object({
     role: z
       .enum([
-        Role.ADMIN,
-        Role.CAMPUS_MANAGER,
+        Role.SUPER_ADMIN,
+        Role.CAMPUS_LEADER,
         Role.EDU_MANAGER,
         Role.JOB_COORDINATOR,
         Role.PRE_TRAINEE,
@@ -63,7 +63,7 @@ export const SignUpFormSchema = z
   .refine(
     data => {
       if (
-        data.role !== Role.CAMPUS_MANAGER &&
+        data.role !== Role.CAMPUS_LEADER &&
         data.role !== Role.EDU_MANAGER &&
         data.role !== Role.JOB_COORDINATOR
       ) {
@@ -102,7 +102,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_MANAGER) {
+      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_LEADER) {
         return data.courseIdList.length > 0;
       }
       return true;

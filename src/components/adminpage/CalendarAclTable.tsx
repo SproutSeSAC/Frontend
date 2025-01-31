@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useGrantAcl } from '@/services/schedule/calendarMutations';
 
-import { RolesObj } from '@/constants';
+import { rolesObj } from '@/constants';
 import { useDialogContext, useGetUserAclList } from '@/hooks';
 import { getColorByRole } from '@/utils';
 import { FaPlus } from 'react-icons/fa6';
@@ -105,7 +105,7 @@ export default function CalendarAclTable() {
                             size="small"
                             color={getColorByRole(roleType)}
                             emphasisText
-                            text={RolesObj[roleType]}
+                            text={rolesObj[roleType]}
                             className="mr-0.5 font-medium"
                           />
                         )}
@@ -127,7 +127,7 @@ export default function CalendarAclTable() {
                           size="small"
                           color={getColorByRole(roleType)}
                           emphasisText
-                          text={RolesObj[roleType]}
+                          text={rolesObj[roleType]}
                           className="mr-0.5 font-medium"
                         />
                         <span>{email}</span>
