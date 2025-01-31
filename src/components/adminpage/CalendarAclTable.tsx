@@ -45,7 +45,7 @@ export default function CalendarAclTable() {
   ];
 
   return (
-    <table className="mx-1 my-4 border-separate border-spacing-y-5 rounded-lg border-red-500 bg-white px-1">
+    <table className="mx-1 my-4 border-separate border-spacing-y-5 rounded-lg bg-white px-1">
       <colgroup>
         <col width="5%" />
         <col width="9%" />

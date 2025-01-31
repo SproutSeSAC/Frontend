@@ -23,7 +23,7 @@ export default function SelectOption({
   className = '',
 }: SelectOptionProps) {
   return (
-    <li key={option.id} className="first:mt-2 last:mb-2">
+    <li key={option.id} className="rounded-lg first:mt-2 last:mb-2">
       {isMultiSelectOption ? (
         <label
           className={`hover:bg-lightGrey flex cursor-pointer items-center rounded-lg px-3 py-1.5 ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}

@@ -2,7 +2,9 @@ import { RoleKey, SignUpQuestionsByStep, SignUpUserFormValue } from '@/types';
 import {
   isCampusLeader,
   isEduManager,
+  isInstructor,
   isJobCoordinator,
+  isOperationManager,
   isPreTrainee,
   isTrainee,
 } from '@/utils';
@@ -118,10 +120,13 @@ export const getFormStepsByRole = (
     if (isPreTrainee(role)) {
       return [commonStudentStep, marketingConsent];
     }
-    if (isCampusLeader(role)) {
+    if (isOperationManager(role)) {
       return [adminCampusStep('isMultiple'), lastStep];
     }
-    if (isEduManager(role)) {
+    if (isCampusLeader(role) || isOperationManager(role)) {
+      return [adminCampusStep('isMultiple'), lastStep];
+    }
+    if (isEduManager(role) || isInstructor(role)) {
       return [[...adminCampusStep(), ...adminCourseStep()], lastStep];
     }
     if (isJobCoordinator(role)) {

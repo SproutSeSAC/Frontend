@@ -140,9 +140,9 @@ export default function SelectBox<
         )}
       </div>
 
-      <article className={defaultLabel !== '기술스택' ? 'relative' : ''}>
+      <article className={defaultLabel === '기술스택' ? '' : 'relative'}>
         <ul
-          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} w-full ${defaultLabel !== '기술스택' ? 'min-w-max' : ''} absolute z-40 mt-1 overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
+          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} absolute z-40 mt-1 w-full overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>

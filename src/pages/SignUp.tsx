@@ -241,6 +241,7 @@ export default function SignUp() {
                                     selectBoxClassName="!h-[50px] !text-base"
                                     onSelectBoxClick={triggerCourseIdListError}
                                     hasFullCheck={!!options.length}
+                                    optionClassName="text-start tracking-tight leading-5"
                                   />
                                 ) : (
                                   <SingleSelectDropdown
@@ -251,8 +252,9 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.courseIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base"
+                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden"
                                     onSelectBoxClick={triggerCourseIdListError}
+                                    optionClassName="text-start tracking-tight leading-5"
                                   />
                                 );
                               }}

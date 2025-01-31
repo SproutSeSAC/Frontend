@@ -5,21 +5,23 @@ import { z } from 'zod';
 export type RegisterSchemaType = z.infer<typeof SignUpFormSchema>;
 
 export enum Role {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  TRAINEE = 'TRAINEE',
-  EDU_MANAGER = 'EDU_MANAGER',
   CAMPUS_LEADER = 'CAMPUS_LEADER',
+  OPERATION_MANAGER = 'OPERATION_MANAGER',
+  EDU_MANAGER = 'EDU_MANAGER',
   JOB_COORDINATOR = 'JOB_COORDINATOR',
+  INSTRUCTOR = 'INSTRUCTOR',
   PRE_TRAINEE = 'PRE_TRAINEE',
+  TRAINEE = 'TRAINEE',
 }
 
 export const SignUpFormSchema = z
   .object({
     role: z
       .enum([
-        Role.SUPER_ADMIN,
         Role.CAMPUS_LEADER,
+        Role.OPERATION_MANAGER,
         Role.EDU_MANAGER,
+        Role.INSTRUCTOR,
         Role.JOB_COORDINATOR,
         Role.PRE_TRAINEE,
         Role.TRAINEE,
@@ -64,8 +66,10 @@ export const SignUpFormSchema = z
     data => {
       if (
         data.role !== Role.CAMPUS_LEADER &&
+        data.role !== Role.OPERATION_MANAGER &&
         data.role !== Role.EDU_MANAGER &&
-        data.role !== Role.JOB_COORDINATOR
+        data.role !== Role.JOB_COORDINATOR &&
+        data.role !== Role.INSTRUCTOR
       ) {
         return data.techStackIdList.length > 0;
       }
