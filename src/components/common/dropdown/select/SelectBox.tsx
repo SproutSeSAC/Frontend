@@ -89,9 +89,9 @@ export default function SelectBox<
   );
 
   const styleByBoxShape = {
-    inputShape: `w-full gap-4 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg`,
+    inputShape: `w-full rounded-2xl bg-white px-4 py-[15px] text-start text-lg`,
     buttonShape:
-      'rounded-2xl border border-mainGray bg-bg px-3 py-1 gap-4 text-darkGray-active',
+      'rounded-2xl border border-mainGray bg-bg px-3 py-1 text-darkGray-active',
   };
 
   const selectBoxStyle = styleByBoxShape[boxShape];
@@ -107,7 +107,7 @@ export default function SelectBox<
           {isSingleSelect(rest) && (
             <>
               <span
-                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-mainGray'}`}
+                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-mainGray'}`}
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>
@@ -142,7 +142,7 @@ export default function SelectBox<
 
       <article className={defaultLabel === '기술스택' ? '' : 'relative'}>
         <ul
-          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} absolute z-40 mt-1 w-full overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
+          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>
