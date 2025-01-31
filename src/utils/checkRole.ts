@@ -1,16 +1,6 @@
-import { ManagerRole, Role } from '@/types';
+import { HasAdminRole, Role } from '@/types';
 
-export const isManager = (role: keyof Role) => {
-  const managers: (keyof ManagerRole)[] = [
-    'CAMPUS_LEADER',
-    'OPERATION_MANAGER',
-    'EDU_MANAGER',
-    'JOB_COORDINATOR',
-    'INSTRUCTOR',
-  ];
-  return !!managers.includes(role as keyof ManagerRole);
-};
-
+/** Role 확인용 */
 export const isSuperAdmin = (role: keyof Role) => {
   return role === 'SUPER_ADMIN';
 };
@@ -35,11 +25,26 @@ export const isJobCoordinator = (role: keyof Role) => {
   return role === 'JOB_COORDINATOR';
 };
 
-// 교육생
 export const isTrainee = (role: keyof Role) => {
   return role === 'TRAINEE';
 };
 
 export const isPreTrainee = (role: keyof Role) => {
   return role === 'PRE_TRAINEE';
+};
+
+/** 권한 확인용 */
+export const hasSuperAdmin = (role: keyof Role) => {
+  return role === 'SUPER_ADMIN' || role === 'CAMPUS_LEADER';
+};
+
+export const hasAdmin = (role: keyof Role) => {
+  const managers: (keyof HasAdminRole)[] = [
+    'CAMPUS_LEADER',
+    'OPERATION_MANAGER',
+    'EDU_MANAGER',
+    'JOB_COORDINATOR',
+    'INSTRUCTOR',
+  ];
+  return !!managers.includes(role as keyof HasAdminRole);
 };

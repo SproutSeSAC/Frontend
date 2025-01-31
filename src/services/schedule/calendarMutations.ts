@@ -6,9 +6,9 @@ import { ADMIN_EMAIL } from '@/constants';
 import {
   FullCalendarEvent,
   GoogleCalendarApiDto,
+  HasAdminRole,
   RoleKey,
   SproutCalendarDto,
-  SuperAdminAndManagerRole,
 } from '@/types';
 
 type AuthorizedEmailsByRole = {
@@ -186,7 +186,7 @@ type GrantAclParams = {
   calendarId: string;
   hasNotAclEmailList: {
     email: string;
-    roleType: keyof SuperAdminAndManagerRole;
+    roleType: keyof HasAdminRole;
   }[];
 };
 

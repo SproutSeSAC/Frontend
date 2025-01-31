@@ -17,7 +17,7 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 import { getFormStepsByRole } from '@/constants';
 import { useDialogContext, useTechStackList } from '@/hooks';
 import { RoleKey, SignUpUserFormValue, UserProfileDto } from '@/types';
-import { isCampusLeader, isManager, isPreTrainee, isTrainee } from '@/utils';
+import { hasAdmin, isCampusLeader, isPreTrainee, isTrainee } from '@/utils';
 import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
@@ -75,7 +75,7 @@ export const useHandleSignUp = ({
     try {
       const { verifyCode, campusIdList, ...formData } = submittedValue;
 
-      if (isManager(formData.role)) {
+      if (hasAdmin(formData.role)) {
         const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
         const initializeValue = {
           jobIdList: [],

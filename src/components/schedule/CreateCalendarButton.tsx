@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCreateCalendar } from '@/services/schedule/calendarMutations';
 import { useGetManagerEmailListByCourse } from '@/services/schedule/calendarQueries';
 
-import { superAdminAndManagerRolesObj } from '@/constants';
+import { hasAdminRolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { RoleKey } from '@/types';
 import { FaPlus } from 'react-icons/fa6';
@@ -46,9 +46,7 @@ export default function CreateCalendarButton({
 
   const managerListExceptUserRole = Object.values(
     Object.fromEntries(
-      Object.entries(superAdminAndManagerRolesObj).filter(
-        ([key]) => key !== userRole,
-      ),
+      Object.entries(hasAdminRolesObj).filter(([key]) => key !== userRole),
     ),
   ).join(', ');
 

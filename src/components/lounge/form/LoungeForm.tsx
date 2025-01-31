@@ -19,7 +19,7 @@ import {
   usePageBlocker,
   useTechStackList,
 } from '@/hooks';
-import { Progress } from '@/types';
+import { ContactMethodDisplayKey, Progress } from '@/types';
 import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -46,7 +46,7 @@ import { loungeFormSchema } from '@/components/lounge/form/loungeFormSchema';
 export interface FormValues {
   recruitmentCount: number;
   meetingType: Progress;
-  contactMethod: string;
+  contactMethod: ContactMethodDisplayKey;
   contactDetail: string;
   recruitmentType: string;
   startDate: string;

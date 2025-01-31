@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 
-import { superAdminAndManagerRolesObj } from '@/constants';
+import { hasAdminRolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
-import { SuperAdminAndManagerRole } from '@/types';
+import { HasAdminRole } from '@/types';
 import { getColorByRole } from '@/utils';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -62,12 +62,12 @@ export default function ApplicationListOfSessionsCard() {
             'CAMPUS_LEADER',
             'EDU_MANAGER',
             'JOB_COORDINATOR',
-          ] as (keyof SuperAdminAndManagerRole)[]
+          ] as (keyof HasAdminRole)[]
         ).map(item => (
           <li key={item} className="flex items-center gap-2">
             <Tag
               size="medium"
-              text={superAdminAndManagerRolesObj[item]}
+              text={hasAdminRolesObj[item]}
               emphasisText
               color={getColorByRole(item)}
               className="!px-1"
