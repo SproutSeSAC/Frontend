@@ -2,10 +2,8 @@ import { useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import {
-  useGetLoungePositionsFilterList,
-  useGetLoungeProjects,
-} from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
+import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { progressList, sortList } from '@/constants';
 import { useFilterData, useTechStackList } from '@/hooks';
@@ -41,14 +39,17 @@ export default function Lounge() {
   const pType = searchParams.get('pType');
 
   const { data, isLoading } = useGetLoungeProjects(currFilter);
-  const { data: positionsList } = useGetLoungePositionsFilterList();
+  const { data: jobList } = useGetJobList();
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
 
   const selectedPositionOption = useMemo(() => {
     const { position } = currFilter;
-    return positionsList?.filter(({ id }) => position?.includes(id))?.[0];
-  }, [currFilter, positionsList]);
+    const selectedPosition = jobList
+      ?.filter(({ id }) => position?.includes(id))
+      .map(({ id, job }) => ({ id, name: job }))?.[0];
+    return selectedPosition;
+  }, [currFilter, jobList]);
 
   const selectedProgressOption = useMemo(() => {
     const { meetingType } = currFilter;
@@ -107,7 +108,7 @@ export default function Lounge() {
 
           <SingleSelectDropdown
             defaultLabel="포지션"
-            options={positionsList || []}
+            options={jobList?.map(({ id, job }) => ({ id, name: job })) || []}
             onChangeValue={value => {
               const newValue = value.map(item => item.id);
               handleChangeFilter({ position: newValue });

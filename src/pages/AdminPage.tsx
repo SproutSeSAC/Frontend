@@ -9,7 +9,7 @@ import {
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { isAdmin, updateQueryParams } from '@/utils';
+import { isSuperAdmin, updateQueryParams } from '@/utils';
 
 import CalendarAclTable from '@/components/adminpage/CalendarAclTable';
 import TabNavigation from '@/components/common/TabNavigation';
@@ -37,7 +37,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAdmin(role)) {
+    if (!isSuperAdmin(role)) {
       navigate(-1);
     }
   }, [navigate, role]);

@@ -16,7 +16,7 @@ import {
   useGetNoticeDetail,
 } from '@/services/notice/noticeQueries';
 
-import { RolesObj, noticeCategoryDisplay } from '@/constants';
+import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import {
   useDialogContext,
   useHandleComment,
@@ -165,7 +165,7 @@ export default function NoticeDetail() {
               <Tag
                 color={getColorByRole(noticeDetail?.writer.role)}
                 size="big"
-                text={RolesObj[noticeDetail?.writer.role]}
+                text={rolesObj[noticeDetail?.writer.role]}
                 emphasisText
                 className="px-[10px] py-[5px]"
               />

@@ -1,7 +1,7 @@
 import { noticeCategoryDisplay, noticeTabDisplay } from '@/constants';
 import { SessionStatus } from '@/constants/serviceConstant';
 import { NoticeDto } from '@/types/notice/noticeDto';
-import { ManagerRole } from '@/types/user';
+import { HasAdminRole } from '@/types/user';
 
 export * from '@/types/notice/noticeDto';
 
@@ -48,7 +48,7 @@ export type NoticeWriter = {
   userId: number;
   userName: string;
   profileUrl: string;
-  role: keyof ManagerRole;
+  role: keyof HasAdminRole;
 };
 export type NoticeSession = {
   sessionId: number;
