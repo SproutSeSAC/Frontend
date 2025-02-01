@@ -1,18 +1,16 @@
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
-
 import { useDialogContext } from '@/hooks';
+import { UserProfileDto } from '@/types';
 
 import EditButton from '@/components/common/button/EditButton';
 import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
 
-export default function UserNameImageCard() {
-  const { data: userProfile = initialUserProfile } = useGetUserProfile();
+interface UserNameImageProps {
+  data: UserProfileDto.GetCard['profile'];
+}
 
-  const { name, nickname, profileImageUrl } = userProfile;
+export default function UserNameImageCard({ data }: UserNameImageProps) {
+  const { name, nickname, profileUrl } = data;
 
   const { showDialog } = useDialogContext();
 
@@ -25,7 +23,7 @@ export default function UserNameImageCard() {
 
   return (
     <div className="relative flex items-center gap-7 rounded-xl bg-mainGreen px-6 py-10 shadow-card">
-      <UserImage imageNameSegment={profileImageUrl} className="size-[100px]" />
+      <UserImage imageNameSegment={profileUrl} className="size-[100px]" />
 
       <div className="flex flex-col gap-2">
         <span className="text-2xl font-medium text-white">{name}</span>
