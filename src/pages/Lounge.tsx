@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { progressList, sortList } from '@/constants';
@@ -24,6 +24,14 @@ const initialState: LoungeProjectFilter = {
   size: 20,
 };
 
+const initialProjectList = {
+  projects: [],
+  totalPages: 0,
+  currentPage: 0,
+  pageSize: 0,
+  nextPage: null,
+};
+
 export default function Lounge() {
   const {
     searchRef,
@@ -37,7 +45,11 @@ export default function Lounge() {
   const [searchParams] = useSearchParams();
   const pType = searchParams.get('pType');
 
-  const { data, isLoading } = useGetLoungeProjects(currFilter);
+  const {
+    data: { projects = [], totalPages, currentPage } = initialProjectList,
+    isLoading,
+  } = useGetLoungeProjectList(currFilter);
+
   const { data: jobList } = useGetJobList();
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
@@ -140,13 +152,13 @@ export default function Lounge() {
       </div>
 
       <ul className="mb-[90px] grid grid-cols-3 gap-6 lg:grid-cols-2">
-        {(data?.projects || []).map(card => (
-          <li key={card.id} className="[&>a]:!w-full">
-            <LoungePostCard card={card} />
+        {projects.map(project => (
+          <li key={project.id} className="[&>a]:!w-full">
+            <LoungePostCard card={project} />
           </li>
         ))}
       </ul>
-      {data?.projects.length === 0 && (
+      {projects.length === 0 && (
         <EmptyContent message="모집중인 프로젝트가 없습니다." />
       )}
       {isLoading && (
@@ -155,10 +167,10 @@ export default function Lounge() {
         </div>
       )}
 
-      {(data?.projects || []).length > 0 && (
+      {projects.length !== 0 && (
         <Pagination
-          totalPages={data?.totalPages || 0}
-          currentPage={data?.currentPage || 0 || 1}
+          totalPages={totalPages}
+          currentPage={currentPage}
           onPageChange={(pageNumber: number) => {
             handleChangeFilter({ page: pageNumber });
           }}

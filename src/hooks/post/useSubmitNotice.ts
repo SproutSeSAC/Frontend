@@ -81,7 +81,6 @@ export const useSubmitNotice = () => {
   };
 
   const { mutateAsync: postNotice } = usePostMyPost<NoticeDto.PostNotice>({
-    // Note: 이 부분에서 호출
     onError: () => {
       alert({
         text: '공지사항 등록 중 오류가 발생했습니다.',

@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetInfiniteNoticeList } from '@/services/notice/noticeQueries';
+import { useGetInfiniteNoticeList } from '@/services/post/noticeQueries';
 
 import { noticeCategoryList } from '@/constants';
 import { useFilterData, useObserver } from '@/hooks';

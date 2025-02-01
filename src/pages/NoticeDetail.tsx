@@ -10,11 +10,11 @@ import {
   useDeleteNotice,
   usePostNoticeComment,
   usePostNoticeScrap,
-} from '@/services/notice/noticeMutations';
+} from '@/services/post/noticeMutations';
 import {
   useGetNoticeCommentList,
   useGetNoticeDetail,
-} from '@/services/notice/noticeQueries';
+} from '@/services/post/noticeQueries';
 
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import {

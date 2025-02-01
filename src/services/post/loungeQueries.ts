@@ -4,31 +4,25 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
 import { LoungeProjectFilter } from '@/types';
 import { LoungeDto } from '@/types/lounge/loungeDto';
+import { extractValidParams } from '@/utils';
 
-export const extractValidParams = (searchParams: URLSearchParams) => {
-  return Object.fromEntries(
-    Array.from(searchParams.entries()).filter(
-      ([, value]) =>
-        value === PTYPE_PROJECT ||
-        value === PTYPE_STUDY ||
-        value === 'onlyScraped',
-    ),
-  );
-};
-
-export const useGetLoungeProjects = (params: LoungeProjectFilter) => {
+export const useGetLoungeProjectList = (params: LoungeProjectFilter) => {
   const [searchParams] = useSearchParams();
 
   const { page, size, position, techStack, meetingType, sort, keyword } =
     params;
 
-  const newSearchParams =
+  const tabParams =
+    extractValidParams(searchParams).pType === 'ALL'
+      ? {}
+      : extractValidParams(searchParams);
+
+  const onScrapedParams =
     extractValidParams(searchParams).pType === 'onlyScraped'
       ? { onlyScraped: true }
-      : extractValidParams(searchParams);
+      : tabParams;
 
   const positionParams =
     position && position.length > 0 ? { position: position.join(',') } : {};
@@ -47,48 +41,24 @@ export const useGetLoungeProjects = (params: LoungeProjectFilter) => {
     size,
     keyword,
     ...sortParams,
-    ...newSearchParams,
     ...positionParams,
     ...techStackParams,
     ...meetingTypeParams,
+    ...onScrapedParams,
   };
 
-  return useQuery({
-    queryKey: ['useGetLoungeProjects', newParams],
+  const isEditing = extractValidParams(searchParams).pType === 'EDIT';
+
+  return useQuery<LoungeDto.GetProjectList>({
+    queryKey: ['useGetLoungeProjectList', newParams],
     queryFn: async () => {
       const { data } = await axiosInstance.get<LoungeDto.GetProjectList>(
         '/project',
-        {
-          params: newParams,
-        },
+        { params: newParams },
       );
       return data;
     },
-  });
-};
-
-export const useGetLoungeProjectsDetail = (projectId: number | null) => {
-  return useQuery({
-    queryKey: ['useGetLoungeProjectsDetail', projectId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<LoungeDto.GetProjectDetail>(
-        `/project/${projectId}`,
-      );
-      return data;
-    },
-    enabled: !!projectId,
-  });
-};
-
-export const useGetLoungeProjectsComment = (projectId: number) => {
-  return useQuery({
-    queryKey: ['useGetLoungeProjectsComment'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<LoungeDto.GetProjectComment>(
-        `/project/${projectId}/comment`,
-      );
-      return data;
-    },
+    enabled: !isEditing,
   });
 };
 

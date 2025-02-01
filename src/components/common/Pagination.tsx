@@ -2,16 +2,18 @@ import React, { useMemo } from 'react';
 
 import Icon from '@/components/common/Icon';
 
-const previousNextButtonStyle = 'rounded-full bg-lightGrey p-1.5';
-const previousNextButtonIconStyle = 'size-2 stroke-1 text-mainGray';
-interface Props {
+interface PaginationProps {
   totalPages: number;
   currentPage: number;
   onPageChange: (pageNumber: number) => void;
 }
 
 // < 1,2,3,4,5 ... last page > => 형태로 구현
-function Pagination({ totalPages, onPageChange, currentPage }: Props) {
+function Pagination({
+  totalPages,
+  onPageChange,
+  currentPage,
+}: PaginationProps) {
   const pageNumbers = useMemo(() => {
     const range: number[] = [];
     const maxVisiblePages = 5;
@@ -46,15 +48,17 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
   }, [currentPage, totalPages]);
 
   return (
-    <div className="flex w-full items-center justify-center gap-5">
+    <div className="mt-auto flex w-full items-center justify-center gap-5">
       <button
         type="button"
         aria-label="이전 페이지로 이동"
-        className={previousNextButtonStyle}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
-        <Icon name="ChevronLeft" className={previousNextButtonIconStyle} />
+        <Icon
+          name="ChevronLeft"
+          className="size-5 cursor-pointer text-mainGray"
+        />
       </button>
 
       {pageNumbers[0] > 1 && (
@@ -68,7 +72,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`text-mainGray ${currentPage === page && 'text-black'}`}
+          className={`${currentPage === page ? 'text-black' : 'text-mainGray'}`}
         >
           {page}
         </button>
@@ -80,7 +84,7 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
             <span>...</span>
           )}
           <button
-            className="text-mainGray"
+            className="cursor-pointer text-mainGray"
             onClick={() => onPageChange(totalPages)}
           >
             {totalPages}
@@ -91,11 +95,10 @@ function Pagination({ totalPages, onPageChange, currentPage }: Props) {
       <button
         type="button"
         aria-label="다음 페이지로 이동"
-        className={previousNextButtonStyle}
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
-        <Icon name="ChevronRight" className={previousNextButtonIconStyle} />
+        <Icon name="ChevronRight" className="size-5 cursor-pointer" />
       </button>
     </div>
   );

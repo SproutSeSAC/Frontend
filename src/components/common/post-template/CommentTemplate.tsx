@@ -1,39 +1,32 @@
-import { formatDate } from '@/utils';
+// import { formatDate } from '@/utils';
+import { useGetUserProfileCard } from '@/services/auth/authQueries';
+
+import { myPostDto } from '@/types/mypage/myPostDto';
 import { useForm } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
-import UserImage from '@/components/user/UserImage';
 
-export interface CommentItem {
-  id: number;
-  content: string;
-  createdAt: string;
-  writer: string;
-  imgUrl: string | null;
-}
+// import UserImage from '@/components/user/UserImage';
 
 interface CommentTemplateProps {
-  commentList: CommentItem[];
-  onSubmit: (data: { content: string }) => void;
+  commentList: myPostDto.GetMyCommentList;
+  onSubmit: (data: { imgUrl: string; content: string }) => void;
 }
 
 export default function CommentTemplate({
   commentList,
   onSubmit,
 }: CommentTemplateProps) {
+  const { data } = useGetUserProfileCard();
+
   const { register, handleSubmit, reset } = useForm({
-    defaultValues: {
-      content: '',
-    },
+    defaultValues: { content: '' },
   });
 
-  const handleSearch = (data: { content: string }) => {
-    if (data.content) {
-      onSubmit(data);
-      reset();
-    } else {
-      console.log('값없음');
-    }
+  const onCommentSubmit = ({ content }: { content: string }) => {
+    if (content === '') return;
+    onSubmit({ imgUrl: data?.profile.profileUrl || '', content });
+    reset();
   };
 
   return (
@@ -43,7 +36,7 @@ export default function CommentTemplate({
         <div className="text-mainGreen">{commentList.length}</div>
       </header>
 
-      <form onSubmit={handleSubmit(handleSearch)} className="flex flex-col">
+      <form onSubmit={handleSubmit(onCommentSubmit)} className="flex flex-col">
         <textarea
           {...register('content')}
           className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg"
@@ -54,19 +47,19 @@ export default function CommentTemplate({
       </form>
 
       <ul className="mt-8 flex flex-col gap-8">
-        {commentList.map(({ id, writer, content, createdAt, imgUrl }) => (
-          <li key={id} className="flex w-full flex-col gap-4 text-lg">
+        {commentList.map(({ commentId, userId, content }) => (
+          <li key={commentId} className="flex w-full flex-col gap-4 text-lg">
             <header className="flex items-center gap-2">
-              <UserImage
+              {/* <UserImage
                 className="size-[30px]"
                 imageNameSegment={imgUrl ?? ''}
-              />
-              <div>{writer ? `@${writer}` : '-'}</div>
+              /> */}
+              <div>{userId ? `@${userId}` : '-'}</div>
             </header>
             <p>{content}</p>
             <footer className="flex gap-10 text-darkGray-active">
               <div className="flex gap-4">
-                <div>{formatDate(createdAt, 'yyyy.MM.dd HH:mm')}</div>
+                {/* <div>{formatDate(createdAt, 'yyyy.MM.dd HH:mm')}</div> */}
               </div>
             </footer>
           </li>

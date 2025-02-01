@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { usePutEditNotice } from '@/services/notice/noticeMutations';
+import { usePutEditNotice } from '@/services/post/noticeMutations';
 
 import { useDialogContext, useHandleImage } from '@/hooks';
 import { NoticeDto } from '@/types';

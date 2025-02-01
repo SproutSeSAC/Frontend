@@ -13,6 +13,7 @@ export interface SingleSelectProps {
 
 export interface MultiSelectProps {
   selectedOptions: Option[];
+  onResetClick: () => void;
 }
 
 export type SelectBoxShape = 'inputShape' | 'buttonShape';
@@ -26,7 +27,6 @@ interface SelectBoxPropsBase {
   errorMsg?: string;
   className?: string;
   boxShape?: SelectBoxShape;
-  onResetClick?: () => void;
 }
 
 type SelectBoxProps<T> = SelectBoxPropsBase & T;
@@ -111,11 +111,10 @@ export default function SelectBox<
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>
-              {!rest.selectedOptionLabel && (
-                <Icon name={open ? 'ChevronUp' : 'ChevronDown'} />
-              )}
+              {open ? <Icon name="ChevronUp" /> : <Icon name="ChevronDown" />}
             </>
           )}
+
           {isMultiSelect(rest) && (
             <>
               <span
@@ -123,21 +122,22 @@ export default function SelectBox<
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
-              {rest.selectedOptions?.length === 0 && (
-                <Icon name={open ? 'ChevronUp' : 'ChevronDown'} />
-              )}
+              {rest.selectedOptions?.length === 0 &&
+                (open ? (
+                  <Icon name="ChevronUp" />
+                ) : (
+                  <Icon name="ChevronDown" />
+                ))}
             </>
           )}
         </button>
 
-        {rest.onResetClick &&
-          ((isSingleSelect(rest) && rest.selectedOptionLabel) ||
-            (isMultiSelect(rest) && rest.selectedOptions?.length >= 1)) && (
-            <ResetButton
-              onResetClick={rest.onResetClick}
-              className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
-            />
-          )}
+        {isMultiSelect(rest) && rest.selectedOptions?.length >= 1 && (
+          <ResetButton
+            onResetClick={rest.onResetClick}
+            className={`absolute inset-y-0 ${boxShape === 'inputShape' ? 'right-2' : 'right-1'}`}
+          />
+        )}
       </div>
 
       <article className={defaultLabel === '기술스택' ? '' : 'relative'}>

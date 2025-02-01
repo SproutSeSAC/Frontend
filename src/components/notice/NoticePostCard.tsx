@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { usePostNoticeScrap } from '@/services/notice/noticeMutations';
+import { usePostNoticeScrap } from '@/services/post/noticeMutations';
 
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import { useHandleOnScrap } from '@/hooks';

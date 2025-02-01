@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   useGetInfiniteNoticeList,
   useGetThisWeekNoticeList,
-} from '@/services/notice/noticeQueries';
+} from '@/services/post/noticeQueries';
 
 import { rolesObj } from '@/constants';
 import { NoticeDisplay } from '@/types';

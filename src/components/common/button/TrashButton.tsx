@@ -46,7 +46,7 @@ export default function TrashButton({
     <button
       type="button"
       aria-label="삭제"
-      className={`${disabled ? '' : 'cursor-pointer'} text-mainGray ${className}`}
+      className={`${disabled ? '' : 'cursor-pointer'} text-darkGray ${className}`}
       onClick={onDeleteClick}
       disabled={disabled}
     >

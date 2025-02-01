@@ -2,9 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { myPostDto } from '@/types/mypage/myPostDto';
+
 export const useGetMyPostList = () => {
   const getMyPostList = async () => {
-    const { data } = await axiosInstance.get(`/mypage/getPost`);
+    const { data } =
+      await axiosInstance.get<myPostDto.GetMyPostList>(`/mypage/getPost`);
     return data;
   };
   return useQuery({
@@ -15,7 +18,24 @@ export const useGetMyPostList = () => {
 
 export const useGetMyScrapedPostList = () => {
   const getMyScrapedPostList = async () => {
-    const { data } = await axiosInstance.get(`/mypage/getScrap`);
+    const { data } =
+      await axiosInstance.get<myPostDto.GetMyScrapedPostList>(
+        `/mypage/getScrap`,
+      );
+    return data;
+  };
+  return useQuery({
+    queryKey: ['useGetMyScrapedPostList'],
+    queryFn: getMyScrapedPostList,
+  });
+};
+
+export const useGetMyCommentList = () => {
+  const getMyScrapedPostList = async () => {
+    const { data } =
+      await axiosInstance.get<myPostDto.GetMyCommentList>(
+        `/mypage/getComments`,
+      );
     return data;
   };
   return useQuery({

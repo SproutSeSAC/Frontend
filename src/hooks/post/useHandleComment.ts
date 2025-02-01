@@ -1,33 +1,32 @@
 import { useCallback } from 'react';
 
-import { UseMutateAsyncFunction, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+
+import { usePostMyComment } from '@/services/comment/commentMutations';
+import { useGetCommentByPostList } from '@/services/comment/commentQueries';
 
 import { useDialogContext } from '@/hooks';
-import { AxiosError } from 'axios';
 
 interface UseHandleCommentProps {
-  postComment: UseMutateAsyncFunction<
-    boolean,
-    AxiosError<unknown>,
-    {
-      content: string;
-    },
-    unknown
-  >;
+  postId: number;
   invalidateQueryKeys: string[];
 }
 
 // CRUD
 export const useHandleComment = ({
-  postComment,
+  postId,
   invalidateQueryKeys,
 }: UseHandleCommentProps) => {
+  const { data: commentList = [] } = useGetCommentByPostList(postId);
+
+  const { mutateAsync: postComment } = usePostMyComment(postId);
+
   const { showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
 
   const handleSubmitComment = useCallback(
-    async (data: { content: string }) => {
+    async (data: { imgUrl: string; content: string }) => {
       try {
         await postComment(data);
 
@@ -46,6 +45,7 @@ export const useHandleComment = ({
   );
 
   return {
+    commentList,
     handleSubmitComment,
   };
 };

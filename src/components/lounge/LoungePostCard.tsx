@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   usePostIncrementViewCount,
   usePostScrapProject,
-} from '@/services/lounge/loungeMutations';
+} from '@/services/post/loungeMutations';
 
 import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
 import { useHandleOnScrap } from '@/hooks';
@@ -30,46 +30,60 @@ const getTagColor = (tag: Ptype) => {
   }
 };
 
-export default function LoungePostCard({ card }: LoungePostCardProps) {
+export default function LoungePostCard({
+  card: {
+    postId,
+    ptype,
+    positionNames,
+    techStacks,
+    isScraped,
+    viewCount,
+    title,
+    recruitmentStart,
+    recruitmentEnd,
+    recruitmentCount,
+    meetingType,
+  },
+}: LoungePostCardProps) {
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
   const { mutateAsync: postScrapProject } = usePostScrapProject();
 
   const getScrapResult = useCallback(async () => {
-    return postScrapProject({ projectId: card.id });
-  }, [card.id, postScrapProject]);
+    return postScrapProject({ projectId: postId });
+  }, [postId, postScrapProject]);
 
   const { onScrapClick } = useHandleOnScrap({
     getScrapResult,
-    invalidateQueryKeys: ['useGetLoungeProjects'],
+    invalidateQueryKeys: ['useGetLoungeProjectList'],
   });
 
   const onViewCount = useCallback(async () => {
     try {
-      await postViewCount({ projectId: card.id });
+      await postViewCount({ projectId: postId });
     } catch (err) {
       console.error(err);
     }
-  }, [card.id, postViewCount]);
+  }, [postId, postViewCount]);
 
   return (
     <Link
-      to={`/lounge/post/${card.id}`}
+      to={`/lounge/post/${postId}`}
       className="flex w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-lightGray bg-white p-4"
       onClick={onViewCount}
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getTagColor(card.ptype)}
+          color={getTagColor(ptype)}
           size="medium"
-          text={ptypeDisplay[card.ptype]}
+          text={ptypeDisplay[ptype]}
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />
-            <span>{card.viewCount}</span>
+            <span>{viewCount}</span>
           </div>
           <FavoriteButton
-            isFavorite={card.isScraped}
+            isFavorite={isScraped}
             onClick={onScrapClick}
             size={20}
           />
@@ -80,11 +94,11 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         className="mt-3 line-clamp-2 overflow-hidden text-ellipsis whitespace-normal font-medium"
         style={{ wordBreak: 'break-word' }}
       >
-        {card.title}
+        {title}
       </h4>
 
       <ul className="my-4 flex gap-2">
-        {card.techStacks?.map(techStack => (
+        {techStacks?.map(techStack => (
           <img
             key={techStack.name}
             src={techStack.imageUrl}
@@ -101,8 +115,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           </span>
 
           <span>
-            {formatDate(card.recruitmentStart)} ~{' '}
-            {formatDate(card.recruitmentEnd)}
+            {formatDate(recruitmentStart)} ~ {formatDate(recruitmentEnd)}
           </span>
         </div>
 
@@ -111,7 +124,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
             모집
           </span>
 
-          <span>{card.recruitmentCount}</span>
+          <span>{recruitmentCount}</span>
         </div>
 
         <div className="flex">
@@ -120,7 +133,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           </span>
 
           <ul className="flex flex-1 flex-wrap gap-1 overflow-hidden">
-            {card.positionNames.map(tag => (
+            {positionNames?.map(tag => (
               <Tag
                 key={tag}
                 text={tag}
@@ -137,7 +150,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
             유형
           </span>
 
-          <span>{progressDisplay[card.meetingType]}</span>
+          <span>{progressDisplay[meetingType]}</span>
         </div>
       </div>
     </Link>

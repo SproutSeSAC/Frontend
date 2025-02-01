@@ -39,7 +39,7 @@ export default function StoreModalHeader({
         }
 
         queryClient.invalidateQueries({
-          queryKey: ['useGetLoungeProjects', {}],
+          queryKey: ['useGetLoungeProjectList', {}],
         });
       } catch (err) {
         console.error(err);

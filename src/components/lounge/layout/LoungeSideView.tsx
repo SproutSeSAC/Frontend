@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { useGetEndingTomorrowProjects } from '@/services/lounge/loungeQueries';
+import { useGetEndingTomorrowProjects } from '@/services/post/loungeQueries';
 
 import Title from '@/components/common/Title';
 import UserImage from '@/components/user/UserImage';

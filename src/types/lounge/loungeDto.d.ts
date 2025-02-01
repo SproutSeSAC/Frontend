@@ -25,6 +25,7 @@ interface LoungeCommonFields {
 
 interface LoungeProjectDisplay extends LoungeCommonFields {
   id: number;
+  postId: number;
   isScraped: boolean;
   title: string;
   description: string;
