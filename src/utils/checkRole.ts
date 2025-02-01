@@ -1,4 +1,4 @@
-import { HasAdminRole, Role } from '@/types';
+import { HasAdminRole, HasSuperAdminRole, Role } from '@/types';
 
 /** Role 확인용 */
 export const isSuperAdmin = (role: keyof Role) => {
@@ -35,16 +35,23 @@ export const isPreTrainee = (role: keyof Role) => {
 
 /** 권한 확인용 */
 export const hasSuperAdmin = (role: keyof Role) => {
-  return role === 'SUPER_ADMIN' || role === 'CAMPUS_LEADER';
+  const hasSuperAdminRoleList: (keyof HasSuperAdminRole)[] = [
+    'SUPER_ADMIN',
+    'CAMPUS_LEADER',
+  ];
+  return !!hasSuperAdminRoleList.find(
+    hasSuperAdminRole => hasSuperAdminRole === role,
+  );
 };
 
 export const hasAdmin = (role: keyof Role) => {
-  const managers: (keyof HasAdminRole)[] = [
+  const hasAdminRoleList: (keyof HasAdminRole)[] = [
+    'SUPER_ADMIN',
     'CAMPUS_LEADER',
     'OPERATION_MANAGER',
     'EDU_MANAGER',
-    'JOB_COORDINATOR',
     'INSTRUCTOR',
+    'JOB_COORDINATOR',
   ];
-  return !!managers.includes(role as keyof HasAdminRole);
+  return !!hasAdminRoleList.find(adminRole => adminRole === role);
 };

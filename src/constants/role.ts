@@ -23,3 +23,16 @@ export const hasAdminRolesObj: HasAdminRole = {
   JOB_COORDINATOR: '잡코디',
   INSTRUCTOR: '강사',
 };
+
+export const hasSuperAdminRoleList: (keyof HasSuperAdminRole)[] = [
+  'SUPER_ADMIN',
+  'CAMPUS_LEADER',
+];
+
+export const hasAdminRoleList: (keyof HasAdminRole)[] = [
+  ...hasSuperAdminRoleList,
+  'OPERATION_MANAGER',
+  'EDU_MANAGER',
+  'INSTRUCTOR',
+  'JOB_COORDINATOR',
+];
