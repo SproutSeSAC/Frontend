@@ -11,7 +11,7 @@ import NoticeIcon from '@/assets/icons/icon-park-solid-volume-notice.svg?react';
 import CalendarIcon from '@/assets/icons/majesticons-calendar.svg?react';
 import HomeIcon from '@/assets/icons/material-symbols-light-home.svg?react';
 import Logo from '@/layouts/Logo';
-import { isAdmin } from '@/utils';
+import { isSuperAdmin } from '@/utils';
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 export default function NavigationBar() {
@@ -85,7 +85,7 @@ export default function NavigationBar() {
           </li>
         ))}
 
-        {isAdmin(role) && (
+        {isSuperAdmin(role) && (
           <li>
             <Link
               to="/admin"

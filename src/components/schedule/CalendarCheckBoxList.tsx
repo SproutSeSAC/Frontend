@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { Calendar, CalendarListByCategory, KeyOfRole } from '@/types';
-import { isManagerAndAdmin, isPreTrainee, isTrainee } from '@/utils';
+import { Calendar, CalendarListByCategory, RoleKey } from '@/types';
+import { isPreTrainee, isTrainee } from '@/utils';
 import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';
@@ -13,7 +13,7 @@ import CreateCalendarButton from '@/components/schedule/CreateCalendarButton';
 import SubscribeCalendarButton from '@/components/schedule/SubscribeCalendarButton';
 
 interface CalendarCheckBoxListProps {
-  userRole: KeyOfRole;
+  userRole: RoleKey;
   allCourseCalendarList: Calendar[];
   personalCalendarList: Calendar[];
 }
@@ -97,7 +97,7 @@ export default function CalendarCheckBoxList({
                           textClassName="!text-black"
                           checkBoxColor={backgroundColor}
                         />
-                        {isManagerAndAdmin(userRole) && (
+                        {!isTrainee(userRole) && !isPreTrainee(userRole) && (
                           <AclInfoButton
                             courseId={courseId}
                             accessRole={accessRole}
@@ -113,7 +113,7 @@ export default function CalendarCheckBoxList({
                             disabled={!!calendarId}
                           />
                         )}
-                        {isManagerAndAdmin(userRole) && (
+                        {!isTrainee(userRole) && !isPreTrainee(userRole) && (
                           <CreateCalendarButton
                             courseTitle={courseTitle}
                             courseId={courseId}

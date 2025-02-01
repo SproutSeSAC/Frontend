@@ -44,13 +44,10 @@ export default function Lounge() {
 
   const selectedPositionOption = useMemo(() => {
     const { position } = currFilter;
-    const selectedPosition = jobList?.find(({ id }) => position?.includes(id));
-    return (
-      selectedPosition && {
-        id: selectedPosition.id,
-        name: selectedPosition.job,
-      }
-    );
+    const selectedPosition = jobList
+      ?.filter(({ id }) => position?.includes(id))
+      .map(({ id, job }) => ({ id, name: job }))?.[0];
+    return selectedPosition;
   }, [currFilter, jobList]);
 
   const selectedProgressOption = useMemo(() => {

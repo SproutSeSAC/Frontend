@@ -1,8 +1,10 @@
-import { KeyOfRole, SignUpQuestionsByStep, SignUpUserFormValue } from '@/types';
+import { RoleKey, SignUpQuestionsByStep, SignUpUserFormValue } from '@/types';
 import {
-  isCampusManager,
+  isCampusLeader,
   isEduManager,
+  isInstructor,
   isJobCoordinator,
+  isOperationManager,
   isPreTrainee,
   isTrainee,
 } from '@/utils';
@@ -13,8 +15,10 @@ const commonFirstStep: SignUpQuestionsByStep[] = [
     roles: [
       'TRAINEE',
       'EDU_MANAGER',
-      'CAMPUS_MANAGER',
+      'OPERATION_MANAGER',
+      'CAMPUS_LEADER',
       'JOB_COORDINATOR',
+      'INSTRUCTOR',
       'PRE_TRAINEE',
     ],
   },
@@ -105,7 +109,7 @@ const marketingConsent: SignUpQuestionsByStep[] = [
 ];
 
 export const getFormStepsByRole = (
-  role: KeyOfRole,
+  role: RoleKey,
 ): SignUpQuestionsByStep[][] => {
   const restStep = () => {
     const lastStep = [...indentification, ...marketingConsent];
@@ -116,10 +120,13 @@ export const getFormStepsByRole = (
     if (isPreTrainee(role)) {
       return [commonStudentStep, marketingConsent];
     }
-    if (isCampusManager(role)) {
+    if (isOperationManager(role)) {
       return [adminCampusStep('isMultiple'), lastStep];
     }
-    if (isEduManager(role)) {
+    if (isCampusLeader(role) || isOperationManager(role)) {
+      return [adminCampusStep('isMultiple'), lastStep];
+    }
+    if (isEduManager(role) || isInstructor(role)) {
       return [[...adminCampusStep(), ...adminCourseStep()], lastStep];
     }
     if (isJobCoordinator(role)) {

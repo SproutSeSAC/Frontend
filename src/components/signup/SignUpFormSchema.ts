@@ -3,21 +3,23 @@ import { z } from 'zod';
 export type RegisterSchemaType = z.infer<typeof SignUpFormSchema>;
 
 export enum Role {
-  ADMIN = 'ADMIN',
-  TRAINEE = 'TRAINEE',
+  CAMPUS_LEADER = 'CAMPUS_LEADER',
+  OPERATION_MANAGER = 'OPERATION_MANAGER',
   EDU_MANAGER = 'EDU_MANAGER',
-  CAMPUS_MANAGER = 'CAMPUS_MANAGER',
   JOB_COORDINATOR = 'JOB_COORDINATOR',
+  INSTRUCTOR = 'INSTRUCTOR',
   PRE_TRAINEE = 'PRE_TRAINEE',
+  TRAINEE = 'TRAINEE',
 }
 
 export const SignUpFormSchema = z
   .object({
     role: z
       .enum([
-        Role.ADMIN,
-        Role.CAMPUS_MANAGER,
+        Role.CAMPUS_LEADER,
+        Role.OPERATION_MANAGER,
         Role.EDU_MANAGER,
+        Role.INSTRUCTOR,
         Role.JOB_COORDINATOR,
         Role.PRE_TRAINEE,
         Role.TRAINEE,
@@ -61,9 +63,11 @@ export const SignUpFormSchema = z
   .refine(
     data => {
       if (
-        data.role !== Role.CAMPUS_MANAGER &&
+        data.role !== Role.CAMPUS_LEADER &&
+        data.role !== Role.OPERATION_MANAGER &&
         data.role !== Role.EDU_MANAGER &&
-        data.role !== Role.JOB_COORDINATOR
+        data.role !== Role.JOB_COORDINATOR &&
+        data.role !== Role.INSTRUCTOR
       ) {
         return data.techStackIdList.length > 0;
       }
@@ -100,7 +104,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_MANAGER) {
+      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_LEADER) {
         return data.courseIdList.length > 0;
       }
       return true;

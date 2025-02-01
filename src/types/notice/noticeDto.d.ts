@@ -6,7 +6,7 @@ import {
   NoticeTargetCourse,
   NoticeWriter,
 } from '@/types/notice';
-import { ManagerRole } from '@/types/user';
+import { HasAdminRole } from '@/types/user';
 
 import { NoticeFormSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
@@ -32,7 +32,7 @@ interface NoticeDisplay extends NoticeCommonFields {
   noticeId: number;
   userId: number;
   username: string;
-  roleType: keyof ManagerRole;
+  roleType: keyof HasAdminRole;
   isContentOverMaxLength: boolean;
   createdDateTime: string;
   modifiedDateTime: string;
