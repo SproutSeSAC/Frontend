@@ -1,11 +1,11 @@
-import { ChangeEvent, ElementType, ReactNode } from 'react';
+import { ChangeEvent, ElementType, MouseEvent, ReactNode } from 'react';
 
 import Checkbox from '@/components/common/checkbox/Checkbox';
 
 interface TableHeaderCellProps {
   name: string;
   icon?: ElementType;
-  onClick?: () => void;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   children?: ReactNode;
@@ -24,19 +24,28 @@ export default function TableHeaderCell({
 
   return (
     <th
-      className={`border-b border-mainGray px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
+      className={`relative border-b border-mainGray px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
     >
-      {name === '체크박스' && onChange ? (
+      {name === '체크박스' && onChange && (
         <Checkbox id={name} checked={false} onChange={onChange} />
-      ) : (
-        <span className="text-gray1 font-normal tracking-tighter">{name}</span>
       )}
 
-      {Icon && (
-        <button onClick={onClick}>
-          <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
-        </button>
-      )}
+      {name !== '체크박스' &&
+        (onClick ? (
+          <button type="button" onClick={onClick}>
+            <span>{name}</span>
+            {Icon && (
+              <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
+            )}
+          </button>
+        ) : (
+          <div>
+            <span>{name}</span>
+            {Icon && (
+              <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
+            )}
+          </div>
+        ))}
 
       {children}
     </th>

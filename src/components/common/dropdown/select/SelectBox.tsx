@@ -118,7 +118,7 @@ export default function SelectBox<
           {isMultiSelect(rest) && (
             <>
               <span
-                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-7'}`}
+                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-4'}`}
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
