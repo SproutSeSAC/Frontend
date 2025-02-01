@@ -49,15 +49,15 @@ export default function Store() {
   };
 
   return (
-    <div className="h-[1024px] w-[1440px] overflow-x-hidden scrollbar-hide">
+    <div className="h-full w-[90%] overflow-x-hidden scrollbar-hide">
       <MainView>
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
           <div className="flex items-center gap-[30px]">
             <SearchInput
               name="keyword"
               placeholder="검색어를 입력해 주세요"
-              width="w-[422px]"
-              height="h-[45px]"
+              width="min-w-[422px] w-full"
+              height="h-12"
               onEnter={() => {
                 updateQueryParams(
                   searchParams,
@@ -72,13 +72,13 @@ export default function Store() {
           </div>
         </Header>
         <MealRecruitList />
-        <div className="flex h-[727px] w-[1223px] rounded-[20px] bg-white p-5">
-          <aside className="h-full w-[260px] flex-shrink-0">
+        <div className="flex h-[90vh] w-full rounded-[20px] bg-white p-5">
+          <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
             <StoreFilterForm onReset={() => setSearchKeyword('')} />
           </aside>
           <div className="relative">
             <div className="h-full flex-1 overflow-y-auto overflow-x-hidden px-8 scrollbar-hide">
-              <div className="mb-[24px] mt-2 inline-flex h-6 w-[845px] items-center justify-between">
+              <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
                 <div className="text-xl font-semibold text-[#2a2a2a]">
                   맛집 리스트
                 </div>
@@ -89,7 +89,7 @@ export default function Store() {
                   지도 보기
                 </button>
               </div>
-              <div className="grid gap-9 text-base xl:grid-cols-3 2xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-9 text-base sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                 {storeList &&
                   storeList.length > 0 &&
                   storeList.map(storeData => (
@@ -114,7 +114,7 @@ export default function Store() {
                   ))}
 
                 <div ref={observeRef} />
-                <div className="w-[1440px] pt-32">
+                <div className="flex w-[90%] min-w-[350px] justify-center pt-32">
                   {storeList.length === 0 && !isLoading && (
                     <EmptyContent
                       message="맛집 데이터가 없습니다."

@@ -34,7 +34,7 @@ export default function MealRecruitList() {
     if (mealPosts.length === 0 || mealPosts.length === 1)
       return 'max-w-[400px] inline-flex';
     if (mealPosts.length === 2) return 'max-w-[770px] inline-flex';
-    return 'w-fit max-w-full';
+    return ' xl:max-w-[90%] w-fit max-w-full';
   };
 
   const handleShowDialog = async () => {
@@ -56,7 +56,7 @@ export default function MealRecruitList() {
             className="pointer-events-none absolute right-0 h-[74px] w-[215px] bg-gradient-to-r from-[#f5f5f700] to-bg"
           />
         )}
-        <div className="relative z-0 flex min-h-[74px] w-[750px] max-w-[750px] items-center gap-[24px] overflow-y-auto scrollbar-hide lg:w-[1065px] lg:max-w-[1065px]">
+        <div className="relative z-0 flex min-h-[74px] w-[750px] max-w-[750px] items-center gap-[24px] overflow-y-auto scrollbar-hide lg:w-[1065px] lg:max-w-[1065px] xl:w-full xl:max-w-full">
           {mealPosts.length === 0 && (
             <div className="relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-[#f2f2f7] bg-white px-6 py-4">
               <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">

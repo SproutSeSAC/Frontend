@@ -116,7 +116,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   return (
     <form
       action=""
-      className="flex w-[200px] flex-shrink-0 flex-col gap-8 pl-4"
+      className="flex w-[80%] min-w-[220px] flex-shrink-0 flex-col gap-8 pl-4"
     >
       <div>
         <div className="mb-[23px] flex w-full items-center justify-between">
