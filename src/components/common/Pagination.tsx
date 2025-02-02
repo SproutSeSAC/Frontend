@@ -8,7 +8,6 @@ interface PaginationProps {
   onPageChange: (pageNumber: number) => void;
 }
 
-// < 1,2,3,4,5 ... last page > => 형태로 구현
 function Pagination({
   totalPages,
   onPageChange,
@@ -54,11 +53,9 @@ function Pagination({
         aria-label="이전 페이지로 이동"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        className="disabled:text-mainGray"
       >
-        <Icon
-          name="ChevronLeft"
-          className="size-5 cursor-pointer text-mainGray"
-        />
+        <Icon name="ChevronLeft" className="size-5" />
       </button>
 
       {pageNumbers[0] > 1 && (
@@ -84,7 +81,7 @@ function Pagination({
             <span>...</span>
           )}
           <button
-            className="cursor-pointer text-mainGray"
+            className="disabled:text-mainGray"
             onClick={() => onPageChange(totalPages)}
           >
             {totalPages}
@@ -97,8 +94,9 @@ function Pagination({
         aria-label="다음 페이지로 이동"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        className="disabled:text-mainGray"
       >
-        <Icon name="ChevronRight" className="size-5 cursor-pointer" />
+        <Icon name="ChevronRight" className="size-5" />
       </button>
     </div>
   );
