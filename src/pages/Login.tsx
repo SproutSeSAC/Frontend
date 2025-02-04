@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { TermsAndPolicyType } from '@/services/auth/termsAndPolicy';
 import { axiosInstance } from '@/services/axiosInstance';
 
@@ -6,12 +8,13 @@ import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import Logo from '@/layouts/Logo';
 import styles from '@/policy.module.css';
-import { getCookie, setCookie } from '@/utils';
+import { setCookie } from '@/utils';
 import { FcGoogle } from 'react-icons/fc';
 
 import Modal from '@/components/common/modal/Modal';
 
 export default function Login() {
+  const navigate = useNavigate();
   const handleGoogle = async () => {
     window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
   };
@@ -62,13 +65,7 @@ export default function Login() {
       setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
       setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
 
-      if (getCookie(ACCESS_TOKEN_KEY) && getCookie(REFRESH_TOKEN_KEY)) {
-        window.location.href = `https://prod-sprout.duckdns.org/login-check?access_token=${encodeURIComponent(
-          accessToken,
-        )}&refresh_token=${encodeURIComponent(refreshToken)}`;
-      } else {
-        alert('로그인에 실패했습니다.');
-      }
+      navigate('/');
     } catch (error) {
       alert('로그인에 실패했습니다.');
     }
