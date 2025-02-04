@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { usePostMeal } from '@/services/store/storeMutations';
+import { usePostMyPost } from '@/services/post/postMutation';
 
 import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext } from '@/hooks';
@@ -46,7 +46,8 @@ export default function MealRecruitModal() {
     resolver: zodResolver(mealRecruitSchema),
   });
   const { control, handleSubmit } = methods;
-  const { mutateAsync } = usePostMeal();
+
+  const { mutateAsync } = usePostMyPost();
 
   const onSubmit = useCallback(
     async (data: FormValues) => {

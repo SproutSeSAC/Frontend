@@ -1,12 +1,9 @@
-import { useCallback } from 'react';
-
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
-import { usePostScrapProject } from '@/services/post/loungeMutations';
 import { useDeleteMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 
@@ -14,8 +11,8 @@ import { ptypeDisplay } from '@/constants';
 import {
   useHandleComment,
   useHandleImage,
-  useHandleOnScrap,
   useHandlePostActions,
+  useHandleScrap,
 } from '@/hooks';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 
@@ -45,14 +42,9 @@ export default function LoungeDetail() {
     },
   });
 
-  const { mutateAsync: postScrapProject } = usePostScrapProject();
-
-  const getScrapResult = useCallback(async () => {
-    return postScrapProject({ projectId });
-  }, [projectId, postScrapProject]);
-
-  const { onScrapClick } = useHandleOnScrap({
-    getScrapResult,
+  const { onScrapClick } = useHandleScrap({
+    postId: postDetail?.id || projectId,
+    isScraped: !!postDetail?.isScraped,
     invalidateQueryKeys: ['useGetPostDetail'],
   });
 

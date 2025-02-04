@@ -2,10 +2,8 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { usePostNoticeScrap } from '@/services/post/noticeMutations';
-
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
-import { useHandleOnScrap } from '@/hooks';
+import { useHandleScrap } from '@/hooks';
 import { NoticeDisplay } from '@/types';
 import { formatDate, getColorByRole } from '@/utils';
 import { BsEye } from 'react-icons/bs';
@@ -24,20 +22,15 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     return doc.body.textContent || '-';
   }, []);
 
-  const { mutateAsync: postNoticeScrap } = usePostNoticeScrap();
-
-  const getScrapResult = useCallback(async () => {
-    return postNoticeScrap({ noticeId: notice.noticeId });
-  }, [notice.noticeId, postNoticeScrap]);
-
-  const { onScrapClick } = useHandleOnScrap({
-    getScrapResult,
+  const { onScrapClick } = useHandleScrap({
+    postId: notice.postId,
+    isScraped: notice.isScraped,
     invalidateQueryKeys: ['useGetInfiniteNoticeList'],
   });
 
   return (
     <Link
-      to={`/notice/post/${notice.noticeId}`}
+      to={`/notice/post/${notice.postId}`}
       className="flex w-full flex-col rounded-2xl bg-white p-4 px-6 py-4"
     >
       <div className="flex w-full items-center justify-between">

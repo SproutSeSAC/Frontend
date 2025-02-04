@@ -6,24 +6,18 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
-import {
-  useDeleteNotice,
-  usePostNoticeComment,
-  usePostNoticeScrap,
-} from '@/services/post/noticeMutations';
-import {
-  useGetNoticeCommentList,
-  useGetNoticeDetail,
-} from '@/services/post/noticeQueries';
+import { useDeleteMyPost } from '@/services/post/postMutation';
+import { useGetPostDetail } from '@/services/post/postQueries';
 
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import {
   useDialogContext,
   useHandleComment,
   useHandleImage,
-  useHandleOnScrap,
   useHandlePostActions,
+  useHandleScrap,
 } from '@/hooks';
+import { NoticeDto } from '@/types';
 import { findCurrNotice, getColorByRole, isPreTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
@@ -36,23 +30,20 @@ import NoticeApplicationInfoTemplate from '@/components/notice/NoticeApplication
 import NoticeModal from '@/components/notice/modal/NoticeModal';
 
 export default function NoticeDetail() {
-  const { postId } = useParams<{ postId: string }>();
+  const { postId: id } = useParams();
 
-  const noticeId = +postId!;
+  const postId = +id!;
 
   const { showDialog } = useDialogContext();
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { data: noticeDetail } = useGetNoticeDetail(noticeId);
-
-  const { mutateAsync: postNoticeComment } = usePostNoticeComment(noticeId);
-
-  const { data: commentList } = useGetNoticeCommentList(noticeId);
+  const { data: noticeDetail } =
+    useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
 
   const { deletePostImages } = useHandleImage();
 
-  const { mutateAsync: deleteNotice } = useDeleteNotice({
+  const { mutateAsync: deleteNotice } = useDeleteMyPost({
     onSuccess: () => {
       if (noticeDetail?.content) {
         deletePostImages(noticeDetail.content);
@@ -61,19 +52,14 @@ export default function NoticeDetail() {
   });
 
   const { handleSubmitComment } = useHandleComment({
-    postComment: postNoticeComment,
+    postId,
     invalidateQueryKeys: ['useGetNoticeCommentList'],
   });
 
-  const { mutateAsync: postNoticeScrap } = usePostNoticeScrap();
-
-  const getScrapResult = useCallback(async () => {
-    return postNoticeScrap({ noticeId: noticeDetail?.id || noticeId });
-  }, [postNoticeScrap, noticeDetail?.id, noticeId]);
-
-  const { onScrapClick } = useHandleOnScrap({
-    getScrapResult,
-    invalidateQueryKeys: ['useGetNoticeDetail'],
+  const { onScrapClick } = useHandleScrap({
+    postId,
+    isScraped: !!noticeDetail?.isScraped,
+    invalidateQueryKeys: ['useGetPostDetail'],
   });
 
   const navigate = useNavigate();
@@ -83,14 +69,14 @@ export default function NoticeDetail() {
     requiredActions: {
       delete: {
         action: () => {
-          deleteNotice({ noticeId });
+          deleteNotice({ postId });
           navigate('/notice');
         },
       },
       edit: {
         action: () => {
           const state = noticeDetail;
-          navigate(`/notice?tab=EDIT&modifyNotice=${noticeId}`, { state });
+          navigate(`/notice?tab=EDIT&modifyNotice=${postId}`, { state });
         },
       },
     },
@@ -216,18 +202,7 @@ export default function NoticeDetail() {
           />
         </section>
 
-        <CommentTemplate
-          commentList={(commentList || []).map(
-            ({ content, createdAt, ...rest }) => ({
-              id: rest.commentId,
-              content,
-              createdAt,
-              writer: rest.userName,
-              imgUrl: rest.userProfileUrl,
-            }),
-          )}
-          onSubmit={handleSubmitComment}
-        />
+        <CommentTemplate commentList={[]} onSubmit={handleSubmitComment} />
       </div>
     </main>
   );

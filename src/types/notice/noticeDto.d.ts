@@ -21,6 +21,7 @@ export namespace NoticeDto {
 }
 
 interface NoticeCommonFields {
+  postId: number;
   title: string;
   content: string;
   noticeType: NoticeCategoryDisplayKey;

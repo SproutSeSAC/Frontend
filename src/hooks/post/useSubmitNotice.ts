@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-// import { usePostNotice } from '@/services/notice/noticeMutations';
 import { usePostMyPost } from '@/services/post/postMutation';
 import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 

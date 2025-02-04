@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { usePutEditNotice } from '@/services/post/noticeMutations';
+import { usePutMyPost } from '@/services/post/postMutation';
 
 import { useDialogContext, useHandleImage } from '@/hooks';
 import { NoticeDto } from '@/types';
@@ -9,12 +9,12 @@ import { findCurrNotice } from '@/utils';
 import { Session } from '@/components/notice/form/ControllerSessions';
 
 interface UseEditNoticeProps {
-  noticeId: number;
+  postId: number;
   content?: string;
 }
 
 export const useEditNotice = ({
-  noticeId,
+  postId,
   content: prevContent,
 }: UseEditNoticeProps) => {
   const { alert, hideDialog } = useDialogContext();
@@ -25,11 +25,11 @@ export const useEditNotice = ({
     name: '확인',
     onClick: async () => {
       hideDialog();
-      navigate(`/notice/post/${noticeId}`);
+      navigate(`/notice/post/${postId}`);
     },
   };
 
-  const { mutateAsync: mutateEditedNotice } = usePutEditNotice({
+  const { mutateAsync: mutateEditedNotice } = usePutMyPost({
     onError: () => {
       alert({
         text: '공지사항 수정 중 오류가 발생했습니다.',
@@ -73,7 +73,7 @@ export const useEditNotice = ({
         sessions: sessionsWithNoId,
         content: contentWithHandledImage,
       };
-      mutateEditedNotice({ ...extraFormValue, noticeId });
+      mutateEditedNotice({ postId, params: extraFormValue });
     }
 
     if (!needExtraInfoNoticeType) {
@@ -83,7 +83,7 @@ export const useEditNotice = ({
         content: contentWithHandledImage,
         targetCourseIdList,
       };
-      mutateEditedNotice({ ...formValue, noticeId });
+      mutateEditedNotice({ postId, params: formValue });
     }
   };
   return {

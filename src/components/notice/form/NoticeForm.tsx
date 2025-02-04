@@ -31,13 +31,13 @@ export default function NoticeForm() {
     title,
     content,
     noticeType,
-    id: editNoticeId,
+    postId,
     ...rest
   }: NoticeDto.GetNoticeDetail = useLocation()?.state || { state: null };
 
   const { onSubmit, onError, isCreateEventsPending } = useSubmitNotice();
 
-  const { onEditSubmit } = useEditNotice({ noticeId: editNoticeId, content });
+  const { onEditSubmit } = useEditNotice({ postId, content });
 
   const NoticeExtraDetailToForm = {
     isPhoneNumberRequired: rest.isPhoneNumberRequired,
@@ -67,9 +67,7 @@ export default function NoticeForm() {
   };
 
   const methods = useForm<NoticeDto.PostNotice>({
-    defaultValues: editNoticeId
-      ? editNoticeDetailToForm
-      : defaultNoticeFormValues,
+    defaultValues: postId ? editNoticeDetailToForm : defaultNoticeFormValues,
     resolver: zodResolver(NoticeConditionalFormSchema),
   });
 
@@ -109,10 +107,7 @@ export default function NoticeForm() {
 
       <FormProvider {...methods}>
         <form
-          onSubmit={handleSubmit(
-            editNoticeId ? onEditSubmit : onSubmit,
-            onError,
-          )}
+          onSubmit={handleSubmit(postId ? onEditSubmit : onSubmit, onError)}
           className="mt-[26px]"
         >
           <section>

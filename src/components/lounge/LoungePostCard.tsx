@@ -2,13 +2,10 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import {
-  usePostIncrementViewCount,
-  usePostScrapProject,
-} from '@/services/post/loungeMutations';
+import { usePostIncrementViewCount } from '@/services/post/loungeMutations';
 
 import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
-import { useHandleOnScrap } from '@/hooks';
+import { useHandleScrap } from '@/hooks';
 import { Ptype } from '@/types';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 import { formatDate } from '@/utils';
@@ -30,8 +27,9 @@ const getTagColor = (tag: Ptype) => {
   }
 };
 
-export default function LoungePostCard({
-  card: {
+export default function LoungePostCard({ card }: LoungePostCardProps) {
+  const {
+    id,
     postId,
     ptype,
     positionNames,
@@ -43,27 +41,19 @@ export default function LoungePostCard({
     recruitmentEnd,
     recruitmentCount,
     meetingType,
-  },
-}: LoungePostCardProps) {
+  } = card;
+
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
-  const { mutateAsync: postScrapProject } = usePostScrapProject();
 
-  const getScrapResult = useCallback(async () => {
-    return postScrapProject({ projectId: postId });
-  }, [postId, postScrapProject]);
-
-  const { onScrapClick } = useHandleOnScrap({
-    getScrapResult,
+  const { onScrapClick } = useHandleScrap({
+    postId,
+    isScraped,
     invalidateQueryKeys: ['useGetLoungeProjectList'],
   });
 
   const onViewCount = useCallback(async () => {
-    try {
-      await postViewCount({ projectId: postId });
-    } catch (err) {
-      console.error(err);
-    }
-  }, [postId, postViewCount]);
+    await postViewCount({ projectId: id });
+  }, [id, postViewCount]);
 
   return (
     <Link

@@ -7,7 +7,6 @@ import { axiosInstance } from '@/services/axiosInstance';
 import { SessionStatus } from '@/constants/serviceConstant';
 import { NoticeDto, NoticeFilter } from '@/types';
 import { isInThisWeek } from '@/utils';
-import { AxiosResponse } from 'axios';
 
 import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
 
@@ -80,30 +79,6 @@ export const useGetThisWeekNoticeList = () => {
     queryKey: ['useGetThisWeekNoticeList'],
     queryFn: getThisWeekNotice,
     retry: false,
-  });
-};
-
-export const useGetNoticeDetail = (noticeId: number) => {
-  return useQuery({
-    queryKey: ['useGetNoticeDetail', noticeId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<NoticeDto.GetNoticeDetail>(
-        `/notices/${noticeId}`,
-      );
-      return data;
-    },
-  });
-};
-
-export const useGetNoticeCommentList = (noticeId: number) => {
-  const getComment = async () => {
-    const { data }: AxiosResponse<NoticeDto.GetNoticeComment> =
-      await axiosInstance.get(`/notices/${noticeId}/comments`);
-    return data?.comments;
-  };
-  return useQuery({
-    queryKey: ['useGetNoticeCommentList', noticeId],
-    queryFn: getComment,
   });
 };
 

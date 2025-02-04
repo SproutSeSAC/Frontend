@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react';
 
+// import { useGetPostList } from '@/services/post/postQueries';
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
 import { useDialogContext, useObserver } from '@/hooks';
@@ -15,6 +16,8 @@ export default function MealRecruitList() {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfiniteMealPostList();
+
+  // const { data: mealPostLists } = useGetPostList<any[]>('meal');
 
   const mealPosts = useMemo(() => {
     return data ? data.pages.flatMap(({ mealPostList }) => mealPostList) : [];

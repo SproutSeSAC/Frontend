@@ -8,8 +8,9 @@ import {
   useGetMyCommentList,
   useGetMyPostList,
   useGetMyScrapedPostList,
-} from '@/services/mypage/myPostQueries';
+} from '@/services/post/myPostQueries';
 import { useDeleteMyPost } from '@/services/post/postMutation';
+import { useGetScrapedPostList } from '@/services/post/postQueries';
 
 import {
   myCollectionList,
@@ -75,6 +76,9 @@ export default function MyCollection() {
   const { data: myCommentList } = useGetMyCommentList();
 
   const { data: myScrapedPostList } = useGetMyScrapedPostList();
+  const { data: myScrapedPostListsss } = useGetScrapedPostList();
+
+  console.log(myScrapedPostListsss);
 
   const changeCollection = (contentType: Collection) => {
     setCurrCollection(contentType);
@@ -274,7 +278,7 @@ export default function MyCollection() {
 
                   <TableDataCell className="pr-5 text-end [&>button]:px-2">
                     <TrashButton
-                      className="border border-red-500 px-1.5 py-2"
+                      className="px-1.5 py-2"
                       onConfirmClick={() => onDeleteConfirmClick([postId])}
                     />
                   </TableDataCell>

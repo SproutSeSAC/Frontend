@@ -158,9 +158,11 @@ export default function Lounge() {
           </li>
         ))}
       </ul>
+
       {projects.length === 0 && (
         <EmptyContent message="모집중인 프로젝트가 없습니다." />
       )}
+
       {isLoading && (
         <div className="flex w-full justify-center py-10">
           <LoopLoading />
