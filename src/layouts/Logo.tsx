@@ -1,21 +1,26 @@
 import { Link } from 'react-router-dom';
 
 interface LogoProps {
-  linkSize?: string;
-  imgSize?: string;
+  size?: 'small' | 'large';
 }
 
-export default function Logo({
-  linkSize = 'size-[57px]',
-  imgSize = 'size-10',
-}: LogoProps) {
+export default function Logo({ size = 'small' }: LogoProps) {
+  const sizeClasses = {
+    small: 'size-[40px]',
+    large: 'size-[90px]',
+  };
+
   return (
     <Link
       to="/"
       title="홈 이동"
-      className={`flex ${linkSize} items-center justify-center rounded-full`}
+      className={`flex items-center justify-center rounded-full ${sizeClasses[size]}`}
     >
-      <img src="/sprout_logo.png" alt="Sprout Logo" className={imgSize} />
+      <img
+        src="/sprout_logo.png"
+        alt="Sprout Logo"
+        className="h-full w-full object-cover"
+      />
     </Link>
   );
 }

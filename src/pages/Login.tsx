@@ -74,28 +74,6 @@ export default function Login() {
     }
   };
 
-  /*
-  const handleTestLogin = async () => { 
-    try {
-      const email = ''; // 내 이메일
-      const response = await axiosInstance.get(
-        `/test/getUserCookie?email=${email}`,
-      );
-      if (response) {
-        const { access_token: accessToken, refresh_token: refreshToken } =
-          response.data;
-        if (accessToken && refreshToken) {
-          setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
-          setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
-          window.location.href = 'http://localhost:3000/';
-        }
-      } 
-    } catch (error) {
-      alert('로그인에 실패했습니다.');
-    }
-  };
-  */
-
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-lightGreen-active to-lightGreen-hover">
       <div className="absolute bottom-4 left-20 opacity-20">
@@ -103,21 +81,18 @@ export default function Login() {
       </div>
       <div className="z-10 flex h-[80vh] flex-col items-center justify-center gap-[60px] rounded-xl border border-white bg-white/70 px-11 py-20 shadow-[0px_4px_20px_0px_rgba(85,128,20,0.20)]">
         <div className="inline-flex flex-col items-center justify-start gap-10 self-stretch">
-          <Logo linkSize="size-[100px]" imgSize="size-100" />
+          <Logo size="large" />
           <div className="flex flex-col items-start justify-start gap-10 self-stretch">
             <div className="flex flex-col items-start justify-start gap-10 self-stretch">
               <div className="flex flex-col items-start justify-start gap-[22px] self-stretch">
-                <div className="self-stretch text-center">
+                <h1 className="self-stretch text-center">
                   <span className="text-2xl font-semibold leading-tight text-mainGreen">
-                    SPROUT{' '}
+                    SPROUT
                   </span>
                   <span className="text-lg font-semibold leading-tight text-black">
                     에 오신것을 환영합니다.
                   </span>
-                  <span className="text-lg font-semibold leading-tight text-mainGreen">
-                    {' '}
-                  </span>
-                </div>
+                </h1>
                 <div className="self-stretch text-center text-sm font-medium leading-snug text-darkerGray">
                   편리한 일정관리를 위해 <br />
                   구글 아이디를 사용하여 구글 캘린더를 연동합니다.
