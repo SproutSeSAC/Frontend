@@ -97,7 +97,7 @@ export default function Login() {
   */
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-[#dbeac5] to-[#c8eac6]">
+    <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-lightGreen-active to-lightGreen-hover">
       <div className="absolute bottom-4 left-20 opacity-20">
         <img src={Logo2} className="w-[30vw]" alt="Sprout 로고" />
       </div>
