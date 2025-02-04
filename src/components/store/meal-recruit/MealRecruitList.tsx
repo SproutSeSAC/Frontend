@@ -46,11 +46,11 @@ export default function MealRecruitList() {
         )}
         <ScrollContainer gap={7}>
           {mealPosts.length === 0 && (
-            <div className="relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-[#f2f2f7] bg-white px-6 py-4">
-              <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">
+            <div className="relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-lightGray-active bg-white px-6 py-4">
+              <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-black scrollbar-hide">
                 한끼팟 만들기
               </div>
-              <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
+              <div className="text-sm font-normal tracking-tight text-darkGray-active">
                 함께 식사할 사람을 찾아봐요!
               </div>
             </div>

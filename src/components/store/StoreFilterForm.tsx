@@ -223,7 +223,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
       </CheckboxGroup>
       <button
         type="button"
-        className="inline-flex h-[46px] w-full max-w-[218px] items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-[#626262] hover:bg-[#d2e2c0] active:bg-[#6fa235] active:text-white"
+        className="inline-flex h-[46px] w-full max-w-[218px] items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-darkGray-active hover:bg-lightGreen-active active:bg-mainGreen active:text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',

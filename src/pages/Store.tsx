@@ -78,7 +78,7 @@ export default function Store() {
         <div className="relative">
           <div className="h-full flex-1 overflow-y-auto overflow-x-hidden px-8 scrollbar-hide">
             <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
-              <div className="text-xl font-semibold text-[#2a2a2a]">
+              <div className="text-xl font-semibold text-black">
                 맛집 리스트
               </div>
               <button
