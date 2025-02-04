@@ -83,8 +83,8 @@ export default function StoreListSliderCard({
         }}
       >
         <StoreMenuImage
-          width="w-[147px]"
-          height="h-[147px]"
+          width="w-[147px] min-w-[147px]"
+          height="h-[147px] min-h-[147px]"
           src={slideItem.storeImageList[0]?.path}
         />
 
