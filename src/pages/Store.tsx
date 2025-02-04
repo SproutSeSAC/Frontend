@@ -83,7 +83,7 @@ export default function Store() {
               </div>
               <button
                 onClick={() => navigate('/stores/detail-location')}
-                className="text-sm font-normal text-[#828282]"
+                className="text-sm font-normal text-darkGray-hover"
               >
                 지도 보기
               </button>
