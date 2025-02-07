@@ -41,7 +41,7 @@ export const useHandleImage = () => {
     const objectKey = `${folderPath}/${file?.name}`;
 
     const { data } = await axios.post<PresignedUrlResponse>(
-      `${import.meta.env.VITE_API_PRESIGNED_URL}/aws/uploadurl`,
+      `${import.meta.env.VITE_SERVER_API_URL}/aws/uploadurl`,
       {
         bucketName: 'sprout-public-asset',
         objectKey,
@@ -108,7 +108,7 @@ export const useHandleImage = () => {
   };
 
   const deleteImageFromS3 = async (fileName: string) => {
-    axios.delete(`${import.meta.env.VITE_API_PRESIGNED_URL}/aws/deletefile`, {
+    axios.delete(`${import.meta.env.VITE_SERVER_API_URL}/aws/deletefile`, {
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
