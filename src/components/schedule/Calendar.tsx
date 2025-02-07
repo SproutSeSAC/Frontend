@@ -39,7 +39,7 @@ export default function Calendar({
 
       return (
         <div className="relative flex h-8 w-full flex-col items-center justify-center px-2">
-          <span>{date}</span>
+          <span className="text-sm font-normal">{date}</span>
 
           {eventDots?.length !== 0 && (
             <ul className="absolute -bottom-[1px] flex w-full items-center justify-center gap-0.5">
@@ -61,7 +61,7 @@ export default function Calendar({
   );
 
   return (
-    <div className={`${type}-calendar w-full rounded-xl bg-white shadow-card`}>
+    <div className={`${type}-calendar w-full rounded-xl bg-white`}>
       {type === 'big' ? (
         <FullCalendar
           weekends
@@ -88,17 +88,18 @@ export default function Calendar({
             locales={[koLocale]}
             height="auto"
             titleFormat={({ date: { year, month } }) =>
-              `${month + 1}월 ${year}년`
+              `${year}년 ${month + 1}월`
             }
-            headerToolbar={{
-              left: 'title',
-              right: 'prev next',
-            }}
+            headerToolbar={{ left: 'title', right: 'prev next' }}
             dayCellContent={info => renderDayCellContent(info, events)}
             eventDisplay="block"
+            dayHeaderContent={info =>
+              ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][info.date.getDay()]
+            }
           />
-          {sideViewEvents && sideViewEvents.length !== 0 && (
-            <ul className="mb-2 mt-1 flex flex-col gap-2">
+
+          {sideViewEvents && sideViewEvents.length !== 0 ? (
+            <ul className="flex w-full flex-col justify-center gap-4">
               {sideViewEvents.map(event => (
                 <SmallCalendarBottomEvent
                   key={event.id}
@@ -107,6 +108,10 @@ export default function Calendar({
                 />
               ))}
             </ul>
+          ) : (
+            <span className="w-full pt-2 text-mainGray-active">
+              일정이 없습니다.
+            </span>
           )}
         </>
       )}

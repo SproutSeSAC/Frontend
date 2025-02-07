@@ -1,8 +1,13 @@
-import { TermsAndPolicyType } from '@/services/auth/termsAndPolicy';
+import { useNavigate } from 'react-router-dom';
 
+import { TermsAndPolicyType } from '@/services/auth/termsAndPolicy';
+import { axiosInstance } from '@/services/axiosInstance';
+
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
 import styles from '@/policy.module.css';
+import { setCookie } from '@/utils';
 import { FcGoogle } from 'react-icons/fc';
 
 import Modal from '@/components/common/modal/Modal';
@@ -13,6 +18,8 @@ export default function Login() {
   };
 
   const { showDialog, hideDialog } = useDialogContext();
+
+  const navigate = useNavigate();
 
   const onContentClick = async (type: TermsAndPolicyType) => {
     const filename =
@@ -41,6 +48,31 @@ export default function Login() {
     });
   };
 
+  const handleTestLogin = async () => {
+    try {
+      const response = await axiosInstance.get(
+        // `/test/getAdminCookie`,
+        `/test/getUserCookie?email=talentforest0501@gmail.com`, // 내 이메일 넣기
+        // 내 이메일 넣기
+      );
+      if (response) {
+        const { access_token: accessToken, refresh_token: refreshToken } =
+          response.data;
+        if (accessToken && refreshToken) {
+          setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
+          setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
+          navigate('/');
+          // window.location.href = 'http://localhost:3000/';
+        }
+      } else {
+        throw new Error('Failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('에러');
+    }
+  };
+
   return (
     <AuthPageLayout>
       <img src="/sprout_logo.png" alt="sprout 로고" className="size-10" />
@@ -65,6 +97,14 @@ export default function Login() {
       >
         <FcGoogle className="text-lg" />
         구글 계정으로 시작하기
+      </button>
+
+      <button
+        type="button"
+        onClick={handleTestLogin}
+        className="my-[14%] flex w-full items-center justify-center gap-2 rounded-lg bg-black py-3 text-sm font-medium tracking-tight text-white"
+      >
+        테스트 계정으로 시작하기
       </button>
 
       <p className="mb-4 text-darkGray-active">

@@ -7,15 +7,21 @@ import {
 
 import sproutLogo from '@/assets/images/sprout-logo2.png';
 import { courseGrowthLevelList } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { getDDay, getDateProgress } from '@/utils';
 
 import CircularGauge from '@/components/common/CircularGauge';
+import EditButton from '@/components/common/button/EditButton';
+import ScrollContainer from '@/components/common/container/ScrollContainer';
+import Tag from '@/components/common/tag/Tag';
+import DomainJobTechStackModal from '@/components/user/DomainJobTechStackModal';
 
 export default function MyCourseProgressCard() {
   const { data: userProfile = initialUserProfile, isLoading } =
     useGetUserProfile();
 
-  const { name, courseList, campusList } = userProfile;
+  const { courseList, campusList, jobList, techStackList, domainList } =
+    userProfile;
 
   const getProgress = useCallback(() => {
     return (
@@ -31,44 +37,64 @@ export default function MyCourseProgressCard() {
 
   const DDay = getDDay(courseList?.[0]?.courseEndDate);
 
-  const courseGrowthLevel =
+  const { level, label, image } =
     courseGrowthLevelList.find(
       ({ maxProgress }) => maxProgress >= getProgress(),
     ) || courseGrowthLevelList[0];
 
+  const { showDialog } = useDialogContext();
+
+  const openModalClick = async () => {
+    await showDialog({
+      key: 'DOMAIN_JOB_TECH_STACK_CARD',
+      element: <DomainJobTechStackModal />,
+    });
+  };
+
   if (isLoading) return null;
 
   return (
-    <div className="flex h-[396px] min-w-[380px] flex-col items-center justify-between gap-4 rounded-3xl bg-white p-10 shadow-card">
-      <div className="flex w-full items-center justify-center gap-[10px]">
-        <span className="rounded-lg bg-mainGreen px-3 py-1 text-xl font-bold text-white">
-          D{DDay}
-        </span>
+    <>
+      <EditButton
+        label="나의 새싹 정보 수정하기"
+        className="absolute -top-[0px] right-2 text-darkGray-hover"
+        onClick={openModalClick}
+      />
+      <div className="flex min-w-[404px] flex-1 flex-col justify-between rounded-[20px] bg-white py-5">
+        <ul className="mb-4 flex gap-4 px-4">
+          {[`D${DDay}`, `${progress}% 달성`].map(text => (
+            <li key={text}>
+              <Tag
+                text={text}
+                color="gray-light"
+                size="big"
+                className="px-[14px] py-[10px]"
+              />
+            </li>
+          ))}
+        </ul>
 
-        <p className="text-sm font-semibold">
-          {name} 스프님은
-          <span className="border-b-mainGreenx-1 mx-1 inline-block border-b text-mainGreen">
-            {progress}%
-          </span>
-          달성했어요!
-        </p>
-      </div>
-
-      <div className="relative flex h-40 w-full flex-col items-center justify-end rounded-xl bg-lightGray px-4 py-4">
-        <div className="absolute -top-24 flex items-center justify-center">
-          <img
-            src={courseGrowthLevel.image}
-            alt="성장캐릭터"
-            className="absolute rounded-full bg-white object-contain p-10"
-          />
-          <CircularGauge gauge={progress} />
-
-          <div className="absolute -bottom-2 rounded-lg bg-mainGreen px-4 py-2 font-semibold text-white">
-            Lv{courseGrowthLevel.level}. {courseGrowthLevel.label}
+        {/* 레벨정보 */}
+        <div className="relative mb-7 mt-4 flex h-48 items-center justify-center px-4">
+          <div className="peer absolute -top-0 flex items-center justify-center">
+            <img
+              src={image}
+              alt="성장캐릭터"
+              className="absolute rounded-full bg-white object-contain p-10"
+            />
+            <CircularGauge gauge={progress} />
+            <span className="absolute -bottom-2 rounded-lg bg-mainGreen px-4 py-2 font-semibold text-white">
+              Lv{level}. {label}
+            </span>
           </div>
+
+          <span className="absolute -bottom-2 hidden rounded-lg bg-black p-[10px] text-sm text-white opacity-90 hover:block peer-hover:block">
+            다음 그래프는 진행률을 나타내며 수료율을 의미하지 않습니다
+          </span>
         </div>
 
-        <div className="flex items-center">
+        {/* 캠퍼스 */}
+        <div className="mb-7 flex items-center px-4">
           <img src={sproutLogo} alt="새싹 로고" className="size-5 p-1" />
           <span className="mr-2 text-sm font-bold">
             {campusList[0]?.campusName}
@@ -78,7 +104,58 @@ export default function MyCourseProgressCard() {
             {courseList?.[0]?.courseEndDate?.replaceAll('-', '.')}
           </span>
         </div>
+
+        {/* 도메인 직무 기술스택 */}
+        <div className="flex w-full flex-1 flex-col justify-between gap-1.5 pl-4">
+          <div className="flex w-full items-center [&>div]:flex-1">
+            <span className="w-20 text-sm font-semibold">도메인</span>
+            <ScrollContainer gap={3} isBlurRight>
+              {domainList
+                ?.sort((a, b) => a.id - b.id)
+                ?.map(({ id, domain }) => (
+                  <li key={id}>
+                    <Tag
+                      text={domain}
+                      size="big"
+                      color="gray-light"
+                      className="px-[14px] py-[10px] !font-normal"
+                    />
+                  </li>
+                ))}
+            </ScrollContainer>
+          </div>
+
+          <div className="flex w-full items-center [&>div]:flex-1">
+            <span className="w-20 text-sm font-semibold">직무</span>
+            <ScrollContainer gap={4} isBlurRight>
+              {jobList
+                ?.sort((a, b) => a.id - b.id)
+                ?.map(({ job, id }) => (
+                  <li key={id} className="leading-5 tracking-tight">
+                    {job}
+                  </li>
+                ))}
+            </ScrollContainer>
+          </div>
+
+          <div className="flex w-full items-center [&>div]:flex-1">
+            <span className="w-20 text-sm font-semibold">기술스택</span>
+            <ScrollContainer gap={3} isBlurRight>
+              {techStackList
+                ?.sort((a, b) => a.id - b.id)
+                ?.map(({ id, techStack, iconImageUrl }) => (
+                  <li key={id} className="size-7">
+                    <img
+                      src={iconImageUrl}
+                      alt={techStack}
+                      className="size-full"
+                    />
+                  </li>
+                ))}
+            </ScrollContainer>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

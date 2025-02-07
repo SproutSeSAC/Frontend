@@ -9,7 +9,7 @@ interface CircularGaugeProps {
 
 export default function CircularGauge({
   gauge,
-  size = 180,
+  size = 190,
   trackColor = '#d9d9d9',
   gaugeColor = '#6fa235',
 }: CircularGaugeProps) {

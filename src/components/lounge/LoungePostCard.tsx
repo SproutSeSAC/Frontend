@@ -54,7 +54,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
   return (
     <Link
       to={`/lounge/post/${card.id}`}
-      className="flex w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-lightGray bg-white p-4"
+      className="flex w-[275px] max-w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-lightGray bg-white p-4"
       onClick={onViewCount}
     >
       <div className="flex w-full items-center justify-between">

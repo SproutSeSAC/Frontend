@@ -6,9 +6,9 @@ import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
 import Title from '@/components/common/Title';
-import NoticeListSideBox from '@/components/notice/layout/NoticeListSideBox';
 import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
 import Calendar from '@/components/schedule/Calendar';
+import NoticeInfoList from '@/components/user/NoticeInfoList';
 
 export default function NoticeLayout() {
   const { pathname } = useLocation();
@@ -31,7 +31,7 @@ export default function NoticeLayout() {
           events={fullCalendarEvents}
           sideViewEvents={fullCalendarSideViewEvents}
         />
-        <NoticeListSideBox title="이번주 공지사항" />
+        <NoticeInfoList title="공지사항" />
       </SideView>
     </>
   );

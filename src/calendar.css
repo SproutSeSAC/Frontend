@@ -115,15 +115,18 @@
 }
 
 .small-calendar {
-  @apply p-3 pb-2;
+  @apply flex gap-[2vw] px-4 py-4;
+
   .fc {
+    @apply max-w-[450px];
+
     .fc-toolbar {
-      @apply mb-1 items-center justify-between;
+      @apply mb-1.5 items-center justify-between;
       .fc-toolbar-title {
-        @apply ml-1.5 text-xs font-semibold;
+        @apply ml-1.5 text-base font-normal text-darkGray-hover;
       }
       .fc-button {
-        @apply mb-0.5 bg-transparent py-0.5 text-[10px];
+        @apply mb-0.5 bg-transparent p-1 text-[13px];
       }
     }
     .fc-view {
@@ -132,11 +135,8 @@
     .fc-day {
       @apply h-fit font-medium text-darkGray-active;
     }
-    .fc-daygrid-body-unbalanced {
-      @apply pb-2;
-    }
     .fc-daygrid-day-top {
-      @apply min-h-6 py-0;
+      @apply h-5 py-0;
     }
     /* 이벤트 박스 */
     .fc-daygrid-day-events {
@@ -148,7 +148,7 @@
       @apply border-0;
       /* 요일 표시 */
       .fc-col-header-cell-cushion {
-        @apply pb-2 text-[11px] font-medium tracking-wider text-black;
+        @apply pb-1.5 text-sm font-medium tracking-wider text-black;
       }
     }
     td,
@@ -157,7 +157,7 @@
     }
   }
   .fc-daygrid-day.fc-day-today .fc-daygrid-day-number div span {
-    @apply flex size-5 items-center justify-center rounded-full bg-mainGreen text-white;
+    @apply flex size-7 items-center justify-center rounded-full bg-[#2b2b2b] text-white;
   }
   .fc-daygrid-body-natural .fc-daygrid-day-events {
     @apply mb-0;
