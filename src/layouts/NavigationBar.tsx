@@ -72,7 +72,7 @@ export default function NavigationBar() {
   return (
     <nav className="sticky top-[60px] flex h-[100vh] min-w-[130px] flex-col items-center justify-between px-5 pb-[4%]">
       <ul className="flex w-[62px] flex-col items-center justify-center gap-y-[5vh] rounded-[20px] bg-white px-4 pb-28 pt-5 shadow-lg">
-        <Logo />
+        <Logo size="small" />
         {menuList.map(menu => (
           <li key={menu.title}>
             <Link

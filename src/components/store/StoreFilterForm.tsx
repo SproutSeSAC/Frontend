@@ -114,13 +114,12 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   }, []);
 
   return (
-    <form
-      action=""
-      className="flex w-[200px] flex-shrink-0 flex-col gap-8 pl-4"
-    >
+    <form className="flex min-w-[80%] flex-shrink-0 flex-col gap-8">
       <div>
-        <div className="mb-[23px] flex w-full items-center justify-between">
-          <h3 className="ml-1 text-xl font-semibold">나의 위치 찾기</h3>
+        <div className="mb-[23px] flex w-full max-w-[220px] items-center justify-between">
+          <h3 className="ml-1 whitespace-nowrap text-xl font-semibold">
+            나의 위치 찾기
+          </h3>
           <button
             type="button"
             className="flex h-[42px] w-[42px] items-center justify-center gap-2"
@@ -137,23 +136,25 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
               const selectedOption = campusList?.find(({ id }) => id === value);
 
               return (
-                <SingleSelectDropdown
-                  defaultLabel={campusList ? campusList[0].name : '선택'}
-                  options={campusList || []}
-                  selectedOption={selectedOption}
-                  onChangeValue={data => {
-                    onChange(data[0].id);
-                    updateQueryParams(
-                      searchParams,
-                      setSearchParams,
-                      'campusId',
-                      data[0].id.toString(),
-                    );
-                  }}
-                  errorMsg={error?.message}
-                  selectBoxClassName="w-[218px] h-[46px] p-5 bg-[#f9f9f9] rounded-lg border border-[#aeaeae] justify-between items-center inline-flex"
-                  optionClassName="text-sm hover:rounded-sm hover:bg-gray3 pl-1"
-                />
+                <div className="max-w-[90%]">
+                  <SingleSelectDropdown
+                    defaultLabel={campusList ? campusList[0].name : '선택'}
+                    options={campusList || []}
+                    selectedOption={selectedOption}
+                    onChangeValue={data => {
+                      onChange(data[0].id);
+                      updateQueryParams(
+                        searchParams,
+                        setSearchParams,
+                        'campusId',
+                        data[0].id.toString(),
+                      );
+                    }}
+                    errorMsg={error?.message}
+                    selectBoxClassName="w-full h-[46px] p-5 bg-lightGray rounded-lg border border-mainGray-active justify-between items-center inline-flex"
+                    optionClassName="text-sm hover:rounded-sm hover:bg-lightGray-hover pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
+                  />
+                </div>
               );
             }}
           />
@@ -222,7 +223,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
       </CheckboxGroup>
       <button
         type="button"
-        className="inline-flex h-[46px] w-[218px] items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-[#626262] hover:bg-[#d2e2c0] active:bg-[#6fa235] active:text-white"
+        className="inline-flex h-[46px] w-full max-w-[218px] items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-darkGray-active hover:bg-lightGreen-active active:bg-mainGreen active:text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',
