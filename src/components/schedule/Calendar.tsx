@@ -100,11 +100,11 @@ export default function Calendar({
 
           {sideViewEvents && sideViewEvents.length !== 0 ? (
             <ul className="flex w-full flex-col justify-center gap-4">
-              {sideViewEvents.map(event => (
+              {sideViewEvents.map(({ id, start, title }) => (
                 <SmallCalendarBottomEvent
-                  key={event.id}
-                  date={new Date(event.start).toLocaleDateString()}
-                  title={event.title}
+                  key={id}
+                  date={new Date(start).toLocaleDateString()}
+                  title={title}
                 />
               ))}
             </ul>

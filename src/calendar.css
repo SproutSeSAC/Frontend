@@ -115,10 +115,10 @@
 }
 
 .small-calendar {
-  @apply flex gap-[2vw] px-4 py-4;
+  @apply p-4;
 
   .fc {
-    @apply max-w-[450px];
+    @apply mb-10;
 
     .fc-toolbar {
       @apply mb-1.5 items-center justify-between;

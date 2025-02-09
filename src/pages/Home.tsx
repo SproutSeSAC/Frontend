@@ -59,37 +59,40 @@ export default function Home() {
     <MainView>
       <Header title={`${name} 스프님, 환영합니다!`} />
 
-      <div className="mb-10 grid grid-cols-[404px_1fr_1fr] grid-rows-[auto_auto] gap-x-8 gap-y-5">
-        <section className="relative col-start-1 row-span-2 flex h-full flex-col">
+      <div className="mb-10 grid grid-cols-[1fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
+        <section className="relative flex h-full flex-col">
           <Title title="나의 새싹 정보" className="mb-[14px]" />
           <MyCourseProgressCard />
         </section>
 
-        <section className="col-span-2 col-start-2 h-max">
+        <section>
           <header className="flex items-center justify-between">
             <Title title="주요 일정" className="mb-[14px]" />
             <Link to="/schedule" className={linkButtonStyle}>
               더보기
             </Link>
           </header>
-          <div className="max-h-[246px] w-full rounded-[20px] bg-white">
+
+          <div className="h-[509px] w-full rounded-[20px] bg-white">
             <Calendar type="small" />
           </div>
         </section>
 
-        <section className="col-span-2 col-start-2 h-max">
+        <section>
           <header className="flex items-center justify-between">
             <Title title="공지사항" className="mb-[14px]" />
             <Link to="/notice" className={linkButtonStyle}>
               더보기
             </Link>
           </header>
-          <div className="flex h-[214px] w-full justify-between overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
-            <div className="flex w-1/2 flex-col">
+
+          <div className="flex h-[509px] w-full flex-col justify-between overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
+            <div className="mb-4 flex h-full flex-col border-b">
               <h4 className="mb-4 font-semibold">마감임박</h4>
               <NoticeInfoList title="마감임박" />
             </div>
-            <div className="flex w-1/2 flex-col">
+
+            <div className="mt-4 flex h-full flex-col">
               <span className="mb-4 font-semibold">NEW</span>
               <NoticeInfoList title="NEW" />
             </div>

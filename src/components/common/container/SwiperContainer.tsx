@@ -21,6 +21,16 @@ export default function SwiperContainer<T>({
 
   return (
     <div className="flex items-center justify-between">
+      <button
+        onClick={() => swiperRef.current?.slidePrev()}
+        className="flex w-[4vw] items-center justify-center py-5"
+      >
+        <Icon
+          name="ChevronLeft"
+          className={`"size-10 ${swiperRef.current?.isEnd ? 'fill-red-200' : 'fill-darkGray'}`}
+        />
+      </button>
+
       <Swiper
         onSwiper={swiper => {
           swiperRef.current = swiper;
@@ -43,7 +53,7 @@ export default function SwiperContainer<T>({
 
       <button
         onClick={() => swiperRef.current?.slideNext()}
-        className="flex w-[8vw] items-center justify-center py-5"
+        className="flex w-[4vw] items-center justify-center py-5"
       >
         <Icon
           name="ChevronRight"
