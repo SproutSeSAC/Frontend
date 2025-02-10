@@ -7,7 +7,7 @@ import { useDialogContext } from '@/hooks';
 interface UseHandleOnScrapProps {
   postId: number;
   isScraped: boolean;
-  invalidateQueryKeys: string[];
+  invalidateQueryKeys: (string | number)[];
 }
 
 export const useHandleScrap = ({
@@ -23,10 +23,6 @@ export const useHandleScrap = ({
 
   const { mutateAsync: deleteScrap } = useDeleteScrap();
 
-  const getScrapResult = async () => {
-    return isScraped ? deleteScrap({ postId }) : postScrap({ postId });
-  };
-
   const onScrapClick = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
@@ -34,14 +30,16 @@ export const useHandleScrap = ({
     event.stopPropagation();
 
     try {
-      const result = await getScrapResult();
+      if (isScraped) {
+        await deleteScrap({ postId });
+        showToast('게시물 찜을 취소 했어요!', 1000);
+      } else {
+        await postScrap({ postId });
+        showToast('게시물을 찜했어요!', 1000);
+      }
 
-      showToast(
-        result ? '게시물을 찜했어요!' : '게시물 찜을 취소 했어요!',
-        1000,
-      );
       if (invalidateQueryKeys) {
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: invalidateQueryKeys,
         });
       }

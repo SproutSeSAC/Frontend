@@ -12,7 +12,6 @@ import { useGetPostDetail } from '@/services/post/postQueries';
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import {
   useDialogContext,
-  useHandleComment,
   useHandleImage,
   useHandlePostActions,
   useHandleScrap,
@@ -49,11 +48,6 @@ export default function NoticeDetail() {
         deletePostImages(noticeDetail.content);
       }
     },
-  });
-
-  const { handleSubmitComment } = useHandleComment({
-    postId,
-    invalidateQueryKeys: ['useGetNoticeCommentList'],
   });
 
   const { onScrapClick } = useHandleScrap({
@@ -202,7 +196,7 @@ export default function NoticeDetail() {
           />
         </section>
 
-        <CommentTemplate commentList={[]} onSubmit={handleSubmitComment} />
+        <CommentTemplate postId={postId} />
       </div>
     </main>
   );

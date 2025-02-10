@@ -1,11 +1,7 @@
 import { MouseEvent, useCallback, useState } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
-
-import { usePostStoreScrap } from '@/services/store/storeMutations';
-
 import { foodFilterDisplay } from '@/constants';
-import { useDialogContext } from '@/hooks';
+import { useDialogContext, useHandleScrap } from '@/hooks';
 import { FoodFilterDisplayKey } from '@/types';
 import { Store } from '@/types/store/storeDto';
 import {
@@ -58,36 +54,41 @@ export default function StoreCard({
   isModal,
   ...rest
 }: StoreCardProps) {
-  const { showToast, showDialog } = useDialogContext();
   const [openHoursModal, setOpenHoursModal] = useState(false);
 
-  const queryClient = useQueryClient();
+  const { showDialog } = useDialogContext();
 
-  const { mutateAsync: postStoreScrap } = usePostStoreScrap();
+  const { onScrapClick } = useHandleScrap({
+    postId: 0,
+    isScraped: false,
+    invalidateQueryKeys: ['useGetInfiniteNoticeList'],
+  });
 
-  const onStoreScrap = useCallback(
-    async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-      e.preventDefault();
-      e.stopPropagation();
+  // const { mutateAsync: postStoreScrap } = usePostStoreScrap();
 
-      try {
-        const result = await postStoreScrap({ storeId: storeData.id });
+  // const onStoreScrap = useCallback(
+  //   async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+  //     e.preventDefault();
+  //     e.stopPropagation();
 
-        if (result) {
-          showToast('맛집을 찜했어요!', 1000);
-        } else {
-          showToast('맛집 찜하기를 취소 했어요!', 1000);
-        }
+  //     try {
+  //       const result = await postStoreScrap({ storeId: storeData.id });
 
-        queryClient.invalidateQueries({
-          queryKey: ['useGetInfiniteStoreList', {}],
-        });
-      } catch (err) {
-        showToast('맛집 찜하기를 실패했어요');
-      }
-    },
-    [postStoreScrap, queryClient, showToast, storeData.id],
-  );
+  //       if (result) {
+  //         showToast('맛집을 찜했어요!', 1000);
+  //       } else {
+  //         showToast('맛집 찜하기를 취소 했어요!', 1000);
+  //       }
+
+  //       queryClient.invalidateQueries({
+  //         queryKey: ['useGetInfiniteStoreList', {}],
+  //       });
+  //     } catch (err) {
+  //       showToast('맛집 찜하기를 실패했어요');
+  //     }
+  //   },
+  //   [postStoreScrap, queryClient, showToast, storeData.id],
+  // );
 
   const isOpen = useCallback((): boolean => {
     const parseTimeString = (timeString: string) => {
@@ -177,7 +178,7 @@ export default function StoreCard({
             <FavoriteButton
               size={18}
               isFavorite={storeData.isScrap}
-              onClick={onStoreScrap}
+              onClick={onScrapClick}
             />
           )}
         </header>

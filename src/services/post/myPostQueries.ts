@@ -39,7 +39,7 @@ export const useGetMyCommentList = () => {
     return data;
   };
   return useQuery({
-    queryKey: ['useGetMyScrapedPostList'],
+    queryKey: ['useGetMyCommentList'],
     queryFn: getMyScrapedPostList,
   });
 };

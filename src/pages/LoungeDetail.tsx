@@ -8,12 +8,7 @@ import { useDeleteMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 
 import { ptypeDisplay } from '@/constants';
-import {
-  useHandleComment,
-  useHandleImage,
-  useHandlePostActions,
-  useHandleScrap,
-} from '@/hooks';
+import { useHandleImage, useHandlePostActions, useHandleScrap } from '@/hooks';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 
 import BackButton from '@/components/common/button/BackButton';
@@ -25,14 +20,14 @@ import LoungeApplicationInfoTemplate from '@/components/lounge/LoungeApplication
 
 export default function LoungeDetail() {
   const params = useParams();
-  const projectId = +params.postId!;
+  const postId = +params.postId!;
 
   const { deletePostImages } = useHandleImage();
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
   const { data: postDetail } =
-    useGetPostDetail<LoungeDto.GetProjectDetail>(projectId);
+    useGetPostDetail<LoungeDto.GetProjectDetail>(postId);
 
   const { mutateAsync: deletePost } = useDeleteMyPost({
     onSuccess: async () => {
@@ -43,14 +38,9 @@ export default function LoungeDetail() {
   });
 
   const { onScrapClick } = useHandleScrap({
-    postId: postDetail?.id || projectId,
+    postId,
     isScraped: !!postDetail?.isScraped,
-    invalidateQueryKeys: ['useGetPostDetail'],
-  });
-
-  const { handleSubmitComment, commentList } = useHandleComment({
-    postId: postDetail?.id || 0,
-    invalidateQueryKeys: [''],
+    invalidateQueryKeys: ['useGetPostDetail', postId],
   });
 
   const navigate = useNavigate();
@@ -60,14 +50,14 @@ export default function LoungeDetail() {
     requiredActions: {
       delete: {
         action: () => {
-          deletePost({ postId: projectId });
+          deletePost({ postId });
           navigate('/lounge');
         },
       },
       edit: {
         action: () => {
           const state = postDetail;
-          navigate(`/lounge?pType=EDIT&modifyProject=${projectId}`, { state });
+          navigate(`/lounge?pType=EDIT&modifyProject=${postId}`, { state });
         },
       },
     },
@@ -119,10 +109,7 @@ export default function LoungeDetail() {
           />
         </div>
 
-        <CommentTemplate
-          onSubmit={handleSubmitComment}
-          commentList={commentList}
-        />
+        <CommentTemplate postId={postId} />
       </div>
     </div>
   );

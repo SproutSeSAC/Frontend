@@ -1,42 +1,42 @@
-// import { formatDate } from '@/utils';
 import { useGetUserProfileCard } from '@/services/auth/authQueries';
 
-import { myPostDto } from '@/types/mypage/myPostDto';
+import { useHandleComment } from '@/hooks';
+import { formatDate } from '@/utils';
 import { useForm } from 'react-hook-form';
 
+import EditButton from '@/components/common/button/EditButton';
 import SquareButton from '@/components/common/button/SquareButton';
-
-// import UserImage from '@/components/user/UserImage';
+import TrashButton from '@/components/common/button/TrashButton';
+import UserImage from '@/components/user/UserImage';
 
 interface CommentTemplateProps {
-  commentList: myPostDto.GetMyCommentList;
-  onSubmit: (data: { imgUrl: string; content: string }) => void;
+  postId: number;
 }
 
-export default function CommentTemplate({
-  commentList,
-  onSubmit,
-}: CommentTemplateProps) {
-  const { data } = useGetUserProfileCard();
+export default function CommentTemplate({ postId }: CommentTemplateProps) {
+  const { data: profileCard } = useGetUserProfileCard();
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { content: '' },
   });
 
-  const onCommentSubmit = ({ content }: { content: string }) => {
-    if (content === '') return;
-    onSubmit({ imgUrl: data?.profile.profileUrl || '', content });
-    reset();
-  };
+  const {
+    isEditingComment,
+    toggleEditingComment,
+    onSubmit,
+    commentList,
+    onEditSubmit,
+    deleteComment,
+  } = useHandleComment({ postId, reset });
 
   return (
     <section className="mb-24 mt-10">
       <header className="flex gap-2 text-2xl font-semibold">
-        <div className="">댓글</div>
-        <div className="text-mainGreen">{commentList.length}</div>
+        <h4 className="">댓글</h4>
+        <span className="text-mainGreen">{commentList.length}</span>
       </header>
 
-      <form onSubmit={handleSubmit(onCommentSubmit)} className="flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <textarea
           {...register('content')}
           className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg"
@@ -47,23 +47,66 @@ export default function CommentTemplate({
       </form>
 
       <ul className="mt-8 flex flex-col gap-8">
-        {commentList.map(({ commentId, userId, content }) => (
-          <li key={commentId} className="flex w-full flex-col gap-4 text-lg">
-            <header className="flex items-center gap-2">
-              {/* <UserImage
-                className="size-[30px]"
-                imageNameSegment={imgUrl ?? ''}
-              /> */}
-              <div>{userId ? `@${userId}` : '-'}</div>
-            </header>
-            <p>{content}</p>
-            <footer className="flex gap-10 text-darkGray-active">
-              <div className="flex gap-4">
-                {/* <div>{formatDate(createdAt, 'yyyy.MM.dd HH:mm')}</div> */}
+        {commentList
+          .sort(
+            (a, b) =>
+              new Date(b.createAt).getTime() - new Date(a.createAt).getTime(),
+          )
+          .map(({ id, userNickname, content, imgUrl, createAt }) => (
+            <li
+              key={id}
+              className="flex w-full flex-col gap-4 border border-red-500 text-lg"
+            >
+              <div className="flex items-center gap-2">
+                <UserImage
+                  className="size-[30px]"
+                  imageNameSegment={imgUrl ?? ''}
+                />
+                <span>{userNickname ? `@${userNickname}` : '-'}</span>
+                {userNickname === profileCard?.profile?.nickname && (
+                  <>
+                    <EditButton
+                      label="댓글 수정하기"
+                      onClick={() => {
+                        toggleEditingComment(id);
+                        reset({ content });
+                      }}
+                    />
+                    <TrashButton
+                      onConfirmClick={() => deleteComment({ commentId: id })}
+                    />
+                  </>
+                )}
               </div>
-            </footer>
-          </li>
-        ))}
+
+              {isEditingComment.isEditing &&
+              isEditingComment.commentId === id ? (
+                <form
+                  onSubmit={handleSubmit(({ content: editedContent }) =>
+                    onEditSubmit({ content: editedContent, commentId: id }),
+                  )}
+                  className="flex flex-col"
+                >
+                  <textarea
+                    {...register('content')}
+                    className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg"
+                    placeholder="댓글을 수정해 주세요."
+                    rows={5}
+                  />
+                  <SquareButton
+                    type="submit"
+                    name="수정"
+                    className="self-end"
+                  />
+                </form>
+              ) : (
+                <p>{content}</p>
+              )}
+              <span className="text-darkGray-active">
+                {formatDate(createAt, 'yyyy.MM.dd HH:mm')}
+              </span>
+            </li>
+          ))}
       </ul>
     </section>
   );

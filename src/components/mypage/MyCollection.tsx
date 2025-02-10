@@ -10,7 +10,6 @@ import {
   useGetMyScrapedPostList,
 } from '@/services/post/myPostQueries';
 import { useDeleteMyPost } from '@/services/post/postMutation';
-import { useGetScrapedPostList } from '@/services/post/postQueries';
 
 import {
   myCollectionList,
@@ -76,9 +75,6 @@ export default function MyCollection() {
   const { data: myCommentList } = useGetMyCommentList();
 
   const { data: myScrapedPostList } = useGetMyScrapedPostList();
-  const { data: myScrapedPostListsss } = useGetScrapedPostList();
-
-  console.log(myScrapedPostListsss);
 
   const changeCollection = (contentType: Collection) => {
     setCurrCollection(contentType);

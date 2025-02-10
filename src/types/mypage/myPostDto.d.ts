@@ -23,8 +23,10 @@ interface MyPost {
 }
 
 interface MyComment {
-  commentId: number;
-  userId: number;
+  id: number;
   postId: number;
   content: string;
+  createAt: string;
+  userNickname: string;
+  imgUrl: string;
 }

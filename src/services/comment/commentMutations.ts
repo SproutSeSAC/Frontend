@@ -4,7 +4,7 @@ import { axiosInstance } from '@/services/axiosInstance';
 
 import { AxiosError } from 'axios';
 
-export const usePostMyComment = (
+export const usePostComment = (
   postId?: number,
   options?: UseMutationOptions<
     unknown,
@@ -25,33 +25,29 @@ export const usePostMyComment = (
   });
 };
 
-export const usePutMyComment = (
+export const usePatchComment = (
   options?: UseMutationOptions<
     unknown,
     Error,
-    { content: string; commentId: number; postId: number }
+    { commentId: number; postId: number; content: string; imgUrl: string }
   >,
 ) => {
-  return useMutation<
-    unknown,
-    AxiosError,
-    { content: string; commentId: number; postId: number }
-  >({
-    mutationFn: async ({ content, commentId, postId }) => {
-      const { data } = await axiosInstance.put(`/comments/${commentId}`, {
-        postId,
-        content,
-      });
+  return useMutation({
+    mutationFn: async ({ commentId, ...rest }) => {
+      const { data } = await axiosInstance.patch(
+        `/comments/${commentId}`,
+        rest,
+      );
       return data;
     },
     ...options,
   });
 };
 
-export const useDeleteMyComment = (
+export const useDeleteComment = (
   options?: UseMutationOptions<unknown, Error, { commentId: number }>,
 ) => {
-  return useMutation<unknown, AxiosError, { commentId: number }>({
+  return useMutation({
     mutationFn: async ({ commentId }) => {
       const { data } = await axiosInstance.delete(`/comments/${commentId}`);
       return data;
