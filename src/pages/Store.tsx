@@ -49,7 +49,7 @@ export default function Store() {
   };
 
   return (
-    <MainView>
+    <MainView className="h-screen">
       <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
         <div className="flex items-center gap-[30px]">
           <SearchInput
@@ -70,62 +70,63 @@ export default function Store() {
           />
         </div>
       </Header>
+
       <MealRecruitList />
-      <div className="flex h-[90vh] w-full rounded-[20px] bg-white p-5">
+
+      <div className="flex w-full flex-1 overflow-auto rounded-[20px] bg-white p-5">
         <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
           <StoreFilterForm onReset={() => setSearchKeyword('')} />
         </aside>
-        <div className="relative">
-          <div className="h-full flex-1 overflow-y-auto overflow-x-hidden px-8 scrollbar-hide">
-            <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
-              <div className="text-xl font-semibold text-black">
-                맛집 리스트
-              </div>
-              <button
-                onClick={() => navigate('/stores/detail-location')}
-                className="text-sm font-normal text-darkGray-hover"
-              >
-                지도 보기
-              </button>
-            </div>
-            <div className="grid grid-cols-1 gap-9 text-base lg:grid-cols-3">
-              {storeList &&
-                storeList.length > 0 &&
-                storeList.map(storeData => (
-                  <div
-                    className="aspect-square"
-                    onClick={() => onOpenModal(storeData.id)}
-                    key={storeData.id}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        onOpenModal(storeData.id);
-                      }
-                    }}
-                  >
-                    <StoreCard
-                      width="w-full"
-                      height="h-full"
-                      storeData={storeData}
-                    />
-                  </div>
-                ))}
 
-              <div ref={observeRef} />
-              <div className="flex w-[90%] min-w-[350px] justify-center pt-32">
-                {storeList.length === 0 && !isLoading && (
-                  <EmptyContent
-                    message="맛집 데이터가 없습니다."
-                    className="absolute left-1/2 top-1/2 mt-4 -translate-x-1/2 -translate-y-1/2 transform"
+        {/* 아래 나머지 영역 차지 */}
+        <div className="relative flex w-full flex-col overflow-auto overflow-x-hidden px-8 scrollbar-hide">
+          <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
+            <div className="text-xl font-semibold text-black">맛집 리스트</div>
+            <button
+              onClick={() => navigate('/stores/detail-location')}
+              className="text-sm font-normal text-darkGray-hover"
+            >
+              지도 보기
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-9 pb-12 text-base">
+            {storeList &&
+              storeList.length > 0 &&
+              storeList.map(storeData => (
+                <div
+                  className="aspect-square"
+                  onClick={() => onOpenModal(storeData.id)}
+                  key={storeData.id}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      onOpenModal(storeData.id);
+                    }
+                  }}
+                >
+                  <StoreCard
+                    width="w-full"
+                    height="h-full"
+                    storeData={storeData}
                   />
-                )}
-                {isLoading && (
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
-                    <LoopLoading />
-                  </div>
-                )}
-              </div>
+                </div>
+              ))}
+
+            <div ref={observeRef} />
+            <div className="flex w-[90%] min-w-[350px] justify-center pt-32">
+              {storeList.length === 0 && !isLoading && (
+                <EmptyContent
+                  message="맛집 데이터가 없습니다."
+                  className="absolute left-1/2 top-1/2 mt-4 -translate-x-1/2 -translate-y-1/2 transform"
+                />
+              )}
+              {isLoading && (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+                  <LoopLoading />
+                </div>
+              )}
             </div>
           </div>
         </div>

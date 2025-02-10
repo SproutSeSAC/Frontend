@@ -115,8 +115,6 @@
 }
 
 .small-calendar {
-  @apply p-4;
-
   .fc {
     @apply mb-10;
 
@@ -133,7 +131,7 @@
       @apply border-0;
     }
     .fc-day {
-      @apply h-fit font-medium text-darkGray-active;
+      @apply h-fit py-0.5 font-medium text-darkGray-active;
     }
     .fc-daygrid-day-top {
       @apply h-5 py-0;

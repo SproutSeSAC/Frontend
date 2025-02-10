@@ -22,13 +22,13 @@ export default function Schedule() {
   if (isCalendarDataLoading || isUserProfileLoading) return <LoadingPage />;
 
   return (
-    <MainView>
+    <MainView className="h-screen">
       <Header
         title={`${userProfile?.name} 스프님 새싹 일정`}
         highlight="새싹"
       />
-      <div className="flex h-[85vh] min-h-[700px] gap-4">
-        <div className="flex h-full max-w-[300px] flex-col gap-4">
+      <div className="flex flex-1 gap-6 overflow-auto">
+        <div className="flex max-w-[340px] flex-col gap-6">
           <Calendar
             type="small"
             events={fullCalendarEvents}

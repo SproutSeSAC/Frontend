@@ -141,7 +141,7 @@ export default function Lounge() {
         />
       </div>
 
-      <ul className="mb-[90px] grid grid-cols-3 gap-6 lg:grid-cols-2">
+      <ul className="grid grid-cols-3 gap-6">
         {(data?.projects || []).map(card => (
           <li key={card.id} className="[&>a]:!w-full">
             <LoungePostCard card={card} />

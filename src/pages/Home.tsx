@@ -56,52 +56,44 @@ export default function Home() {
   const linkButtonStyle = 'pr-[10px] tracking-tight text-darkGray-hover';
 
   return (
-    <MainView>
+    <MainView className="pb-20">
       <Header title={`${name} 스프님, 환영합니다!`} />
 
-      <div className="mb-10 grid grid-cols-[1fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
+      <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
         <section className="relative flex h-full flex-col">
           <Title title="나의 새싹 정보" className="mb-[14px]" />
+
           <MyCourseProgressCard />
         </section>
 
         <section>
-          <header className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <Title title="주요 일정" className="mb-[14px]" />
             <Link to="/schedule" className={linkButtonStyle}>
               더보기
             </Link>
-          </header>
-
-          <div className="h-[509px] w-full rounded-[20px] bg-white">
-            <Calendar type="small" />
           </div>
+          <Calendar type="small" className="h-[509px]" />
         </section>
 
         <section>
-          <header className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <Title title="공지사항" className="mb-[14px]" />
             <Link to="/notice" className={linkButtonStyle}>
               더보기
             </Link>
-          </header>
-
+          </div>
           <div className="flex h-[509px] w-full flex-col justify-between overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
-            <div className="mb-4 flex h-full flex-col border-b">
-              <h4 className="mb-4 font-semibold">마감임박</h4>
-              <NoticeInfoList title="마감임박" />
-            </div>
-
-            <div className="mt-4 flex h-full flex-col">
-              <span className="mb-4 font-semibold">NEW</span>
-              <NoticeInfoList title="NEW" />
-            </div>
+            <span className="mb-4 font-semibold">마감임박</span>
+            <NoticeInfoList title="마감임박" />
+            <span className="my-4 border-t pt-4 font-semibold">NEW</span>
+            <NoticeInfoList title="NEW" />
           </div>
         </section>
       </div>
 
       <section>
-        <header className="mb-[22px] flex w-full items-center justify-between pr-2">
+        <div className="mb-[22px] flex w-full items-center justify-between pr-2">
           <Title
             title="나에게 딱 맞는 프로젝트를 만나보세요!"
             highlight="프로젝트"
@@ -109,7 +101,7 @@ export default function Home() {
           <Link to="/lounge" className={linkButtonStyle}>
             라운지 바로가기
           </Link>
-        </header>
+        </div>
 
         <SwiperContainer slideList={loungeList?.projects || []}>
           {item => <LoungePostCard card={item} />}

@@ -25,13 +25,17 @@ export default function NoticeLayout() {
       </MainView>
 
       <SideView>
-        <Title title="주요일정" className="mb-2" />
+        <Title title="주요일정" className="mb-[14px]" />
         <Calendar
           type="small"
           events={fullCalendarEvents}
           sideViewEvents={fullCalendarSideViewEvents}
         />
-        <NoticeInfoList title="공지사항" />
+        <Title title="공지사항" className="mb-[14px] mt-7" />
+        <NoticeInfoList
+          title="공지사항"
+          className="!h-fit rounded-[20px] bg-white px-[15px] py-[22px]"
+        />
       </SideView>
     </>
   );

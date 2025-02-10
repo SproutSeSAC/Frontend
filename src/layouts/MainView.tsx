@@ -9,11 +9,11 @@ interface Props {
 export default function MainView({ children, isEmpty, className }: Props) {
   return (
     <main
-      className={`flex flex-1 flex-col pr-[60px] ${className} ${
+      className={`flex flex-1 flex-col pr-[50px] ${
         isEmpty
-          ? 'mb-11 items-center justify-center rounded-l-[80px] bg-white shadow-card'
-          : 'pb-11 pl-3'
-      }`}
+          ? 'mb-10 mt-[60px] items-center justify-center rounded-l-[80px] bg-white shadow-card'
+          : 'pb-10 pl-3 pt-[60px]'
+      } ${className}`}
     >
       {children}
     </main>

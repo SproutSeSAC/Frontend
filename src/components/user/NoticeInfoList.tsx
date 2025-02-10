@@ -35,19 +35,23 @@ export default function NoticeInfoList({
 
   return notice?.length !== 0 ? (
     <ul
-      className={`flex h-full w-full flex-col justify-center gap-4 ${className}`}
+      className={`flex h-full w-full flex-col justify-start gap-4 ${className}`}
     >
-      {notice?.map(({ roleType, noticeId, title: noticeTitle }) => (
-        <li key={noticeId}>
-          <TitleLinkWithRoleTag
-            to={`/notice/post/${noticeId}` || `${noticeId}`}
-            roleType={roleType}
-            title={noticeTitle}
-          />
-        </li>
-      ))}
+      {notice
+        ?.slice(0, 3)
+        ?.map(({ roleType, noticeId, title: noticeTitle }) => (
+          <li key={noticeId}>
+            <TitleLinkWithRoleTag
+              to={`/notice/post/${noticeId}` || `${noticeId}`}
+              roleType={roleType}
+              title={noticeTitle}
+            />
+          </li>
+        ))}
     </ul>
   ) : (
-    <span className="text-mainGray-active">{title} 공지사항이 없습니다.</span>
+    <span className="h-full text-mainGray-active">
+      {title} 공지사항이 없습니다.
+    </span>
   );
 }

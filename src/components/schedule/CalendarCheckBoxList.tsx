@@ -54,7 +54,7 @@ export default function CalendarCheckBoxList({
   );
 
   return (
-    <ul className="h-full overflow-auto rounded-xl bg-white px-5 pt-5 shadow-card scrollbar-hide">
+    <ul className="flex-1 overflow-auto rounded-[20px] bg-white px-5 pt-5 scrollbar-hide">
       {calendarListByCategory.map(({ category, calendarList }) => (
         <Accordion
           key={category}

@@ -26,7 +26,6 @@ export default function App() {
       <DialogContextProvider>
         <Suspense
           fallback={
-            // TODO : 수정 필요, 에러바운더리추가
             <MainView className="flex h-screen w-full items-center justify-center">
               <LoopLoading />
             </MainView>

@@ -14,12 +14,14 @@ interface CalendarProps {
   type: 'big' | 'small';
   events?: FullCalendarEvent[];
   sideViewEvents?: FullCalendarEvent[];
+  className?: string;
 }
 
 export default function Calendar({
   type,
   events,
   sideViewEvents,
+  className = '',
 }: CalendarProps) {
   const renderDayCellContent = useCallback(
     (info: DayCellContentArg, cellEvents?: FullCalendarEvent[]) => {
@@ -61,7 +63,9 @@ export default function Calendar({
   );
 
   return (
-    <div className={`${type}-calendar w-full rounded-xl bg-white`}>
+    <div
+      className={`${type}-calendar w-full rounded-[20px] bg-white p-4 ${className}`}
+    >
       {type === 'big' ? (
         <FullCalendar
           weekends

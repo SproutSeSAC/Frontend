@@ -32,7 +32,7 @@ export default function Header({ title, highlight, children }: Props) {
     useGetUserProfile();
 
   return (
-    <header className="mb-[60px] flex items-center justify-between">
+    <header className="mb-10 flex items-center justify-between">
       <section>
         <Title as="h1" title={title} highlight={highlight} />
         {homePathname && (
