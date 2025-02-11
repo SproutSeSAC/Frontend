@@ -77,11 +77,20 @@ export default function SelectBox<
         option => option.name !== '전체',
       );
       if (filteredFullCheckOptions.length) {
-        return `${filteredFullCheckOptions[0].name} ${
-          filteredFullCheckOptions.length > 1
-            ? `외 ${filteredFullCheckOptions.length - 1}개`
-            : ''
-        }`;
+        return (
+          <div className="flex w-full gap-1 overflow-hidden">
+            <span className="inline-block truncate">
+              {filteredFullCheckOptions[0].name}
+            </span>
+            {filteredFullCheckOptions.length > 1 ? (
+              <span className="text-darkGray">
+                외 {filteredFullCheckOptions.length - 1}개
+              </span>
+            ) : (
+              ''
+            )}
+          </div>
+        );
       }
       return label;
     },
@@ -118,7 +127,7 @@ export default function SelectBox<
           {isMultiSelect(rest) && (
             <>
               <span
-                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-7'}`}
+                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-6'}`}
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>

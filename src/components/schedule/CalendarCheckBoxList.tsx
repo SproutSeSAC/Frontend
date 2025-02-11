@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { Calendar, CalendarListByCategory, RoleKey } from '@/types';
-import { isPreTrainee, isTrainee } from '@/utils';
+import { isTrainee } from '@/utils';
 import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';
@@ -62,13 +62,6 @@ export default function CalendarCheckBoxList({
           className="mb-6"
           titleClassName="text-mainGreen text-sm text-darkGray-active mb-3 [&>button>svg]:text-xs [&>button>svg]:text-darkGray-active"
           initialOpen
-          tooltip={
-            category === '교육과정 캘린더' &&
-            calendarList.length === 0 &&
-            isPreTrainee(userRole)
-              ? '훈련생이 되면 교육과정과 관련된 일정을 볼 수 있어요.'
-              : undefined
-          }
         >
           <ul className="flex flex-col gap-2">
             {category === '교육과정 캘린더' &&
@@ -97,7 +90,7 @@ export default function CalendarCheckBoxList({
                           textClassName="!text-black"
                           checkBoxColor={backgroundColor}
                         />
-                        {!isTrainee(userRole) && !isPreTrainee(userRole) && (
+                        {!isTrainee(userRole) && (
                           <AclInfoButton
                             courseId={courseId}
                             accessRole={accessRole}
@@ -113,7 +106,7 @@ export default function CalendarCheckBoxList({
                             disabled={!!calendarId}
                           />
                         )}
-                        {!isTrainee(userRole) && !isPreTrainee(userRole) && (
+                        {!isTrainee(userRole) && (
                           <CreateCalendarButton
                             courseTitle={courseTitle}
                             courseId={courseId}
