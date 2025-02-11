@@ -38,8 +38,6 @@ export default function MyCourseProgressCard() {
 
   if (isLoading) return null;
 
-  console.log(courseGrowthLevel);
-
   return (
     <div className="flex h-[396px] min-w-[380px] flex-col items-center justify-between gap-4 rounded-3xl bg-white p-10 shadow-card">
       <div className="flex w-full items-center justify-center gap-[10px]">

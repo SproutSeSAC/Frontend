@@ -1,3 +1,4 @@
+import { hasAdminRolesObj } from '@/constants/role';
 import {
   MeetingTypeKey,
   MeetingTypeValue,
@@ -11,9 +12,7 @@ import { formatDate } from '@/utils';
 export const noticeTabDisplay = {
   ALL: '전체',
   BOOKMARK: '북마크',
-  CAMPUS_MANAGER: '캠퍼스 매니저',
-  EDU_MANAGER: '교육 매니저',
-  JOB_COORDINATOR: '잡코디',
+  ...hasAdminRolesObj,
   EDIT: '공지사항 등록',
 } as const;
 
@@ -28,8 +27,10 @@ export const noticeCategoryDisplay = {
 
 export const noticeTabList: NoticeTabList = [
   { text: '전체', type: 'ALL' },
-  { text: '캠퍼스 매니저', type: 'CAMPUS_MANAGER' },
+  { text: '캠퍼스 담당자', type: 'CAMPUS_LEADER' },
+  { text: '운영 매니저', type: 'OPERATION_MANAGER' },
   { text: '교육 매니저', type: 'EDU_MANAGER' },
+  { text: '강사', type: 'INSTRUCTOR' },
   { text: '잡코디', type: 'JOB_COORDINATOR' },
   { text: '북마크', type: 'BOOKMARK' },
 ];

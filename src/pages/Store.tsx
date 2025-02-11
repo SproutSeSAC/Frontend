@@ -2,30 +2,20 @@ import { useRef, useState } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import {
-  useCollapsibleSideView,
-  useDialogContext,
-  useGetStoreList,
-  useObserver,
-} from '@/hooks';
+import { useDialogContext, useGetStoreList, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { updateQueryParams } from '@/utils';
-import { BsMap } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
-import Icon from '@/components/common/Icon';
 import LoopLoading from '@/components/common/LoopLoading';
-import Title from '@/components/common/Title';
 import SearchInput from '@/components/common/input/SearchInput';
 import StoreCard from '@/components/store/StoreCard';
 import StoreFilterForm from '@/components/store/StoreFilterForm';
-import MealRecruitSideView from '@/components/store/meal-recruit/MealRecruitSideView';
+import MealRecruitList from '@/components/store/meal-recruit/MealRecruitList';
 import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function Store() {
-  const { sideViewOpen, openSideView, closeSideView } =
-    useCollapsibleSideView();
   const navigate = useNavigate();
   const { showDialog, hideDialog } = useDialogContext();
 
@@ -51,7 +41,7 @@ export default function Store() {
     await showDialog({
       key: 'STORE_MODAL',
       element: (
-        <div className="bg-red fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform bg-red-300">
+        <div className="fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform">
           <StoreModal onClose={hideDialog} storeId={storeId} />
         </div>
       ),
@@ -59,14 +49,14 @@ export default function Store() {
   };
 
   return (
-    <>
-      <MainView>
-        <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
+    <MainView>
+      <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
+        <div className="flex items-center gap-[30px]">
           <SearchInput
             name="keyword"
             placeholder="검색어를 입력해 주세요"
-            width="w-[422px]"
-            height="h-[45px]"
+            width="min-w-[422px] w-full"
+            height="h-12"
             onEnter={() => {
               updateQueryParams(
                 searchParams,
@@ -76,86 +66,70 @@ export default function Store() {
               );
             }}
             value={searchKeyword}
-            onChange={e => {
-              setSearchKeyword(e.target.value);
-            }}
+            onChange={e => setSearchKeyword(e.target.value)}
           />
-        </Header>
-
-        <section className="flex gap-8">
+        </div>
+      </Header>
+      <MealRecruitList />
+      <div className="flex h-[90vh] w-full rounded-[20px] bg-white p-5">
+        <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
           <StoreFilterForm onReset={() => setSearchKeyword('')} />
-
-          <div className="relative flex-auto">
-            <div className="mb-6 flex justify-between">
-              <Title title="맛집 리스트" />
+        </aside>
+        <div className="relative">
+          <div className="h-full flex-1 overflow-y-auto overflow-x-hidden px-8 scrollbar-hide">
+            <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
+              <div className="text-xl font-semibold text-black">
+                맛집 리스트
+              </div>
               <button
-                type="button"
-                className="flex size-[30px] items-center justify-center rounded-full bg-white"
-                aria-label="식당 상세보기로 이동"
                 onClick={() => navigate('/stores/detail-location')}
+                className="text-sm font-normal text-darkGray-hover"
               >
-                <BsMap className="text-mainGray" />
+                지도 보기
               </button>
             </div>
-
-            <div className="grid gap-9 text-base xl:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-9 text-base lg:grid-cols-3">
               {storeList &&
                 storeList.length > 0 &&
-                storeList.map(storeData => {
-                  return (
-                    <div
-                      className="aspect-square"
-                      onClick={() => onOpenModal(storeData.id)}
-                      key={storeData.id}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                          onOpenModal(storeData.id);
-                        }
-                      }}
-                    >
-                      <StoreCard
-                        width="w-full"
-                        height="h-full"
-                        storeData={storeData}
-                      />
-                    </div>
-                  );
-                })}
-              <div ref={observeRef} />
+                storeList.map(storeData => (
+                  <div
+                    className="aspect-square"
+                    onClick={() => onOpenModal(storeData.id)}
+                    key={storeData.id}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        onOpenModal(storeData.id);
+                      }
+                    }}
+                  >
+                    <StoreCard
+                      width="w-full"
+                      height="h-full"
+                      storeData={storeData}
+                    />
+                  </div>
+                ))}
 
-              {storeList.length === 0 && !isLoading && (
-                <EmptyContent
-                  message="맛집 데이터가 없습니다."
-                  className="absolute left-1/2 top-1/2 mt-4 -translate-x-1/2 -translate-y-1/2 transform"
-                />
-              )}
-              {isLoading && (
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
-                  <LoopLoading />
-                </div>
-              )}
+              <div ref={observeRef} />
+              <div className="flex w-[90%] min-w-[350px] justify-center pt-32">
+                {storeList.length === 0 && !isLoading && (
+                  <EmptyContent
+                    message="맛집 데이터가 없습니다."
+                    className="absolute left-1/2 top-1/2 mt-4 -translate-x-1/2 -translate-y-1/2 transform"
+                  />
+                )}
+                {isLoading && (
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+                    <LoopLoading />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </section>
-      </MainView>
-
-      <MealRecruitSideView
-        sideViewOpen={sideViewOpen}
-        onClose={closeSideView}
-      />
-
-      {!sideViewOpen && (
-        <button
-          type="button"
-          aria-label="사이드뷰 펼치기"
-          className="fixed right-0 mt-12 flex size-10 items-center justify-center rounded-lg bg-white text-mainGray"
-          onClick={openSideView}
-        >
-          <Icon name="ChevronLeft" className="size-6 fill-darkerGray" />
-        </button>
-      )}
-    </>
+        </div>
+      </div>
+    </MainView>
   );
 }

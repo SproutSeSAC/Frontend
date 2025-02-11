@@ -6,7 +6,7 @@ export namespace GoogleCalendarApiDto {
   export type GetAclList = Acl[];
 
   export type PostCalendar = {
-    userRole: KeyOfRole;
+    userRole: RoleKey;
     summary: string;
     courseId: number;
     authorizedEmails: AuthorizedEmailsByRole;

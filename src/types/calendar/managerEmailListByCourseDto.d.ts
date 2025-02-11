@@ -5,6 +5,6 @@ export namespace ManagerEmailListByCourseDto {
     id: number;
     email: string;
     nickname: string;
-    roleType: KeyOfRole;
+    roleType: RoleKey;
   };
 }
