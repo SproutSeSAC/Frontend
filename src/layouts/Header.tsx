@@ -34,9 +34,9 @@ export default function Header({ title, highlight, children }: Props) {
   return (
     <header className="mb-10 flex items-center justify-between">
       <section>
-        <Title as="h1" title={title} highlight={highlight} />
+        <Title as="h1" title={title} highlight={highlight} className="mb-3" />
         {homePathname && (
-          <h2 className="mt-3 text-lg font-semibold text-[#A2C27D]">
+          <h2 className="text-lg font-semibold text-[#A2C27D]">
             Seoul Software Academy
           </h2>
         )}
