@@ -65,7 +65,7 @@ export default function DomainJobTechStackModal() {
   const {
     handleSubmit,
     control,
-    formState: { dirtyFields },
+    formState: { dirtyFields, isValid },
   } = methods;
 
   const onSubmit: SubmitHandler<FormValue> = (formData: FormValue) => {
@@ -262,8 +262,8 @@ export default function DomainJobTechStackModal() {
 
           <SquareButton
             name="저장하기"
-            color="gray"
             type="submit"
+            color={isValid ? 'mainGreen' : 'gray'}
             className="mt-5 h-[58px]"
           />
         </form>

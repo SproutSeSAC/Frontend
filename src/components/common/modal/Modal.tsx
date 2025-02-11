@@ -68,7 +68,7 @@ export default function Modal({
           </header>
         )}
 
-        <div className="max-h-[80vh] overflow-scroll scrollbar-hide">
+        <div className="max-h-[75vh] overflow-scroll scrollbar-hide">
           {children}
         </div>
       </section>

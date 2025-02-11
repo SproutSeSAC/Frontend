@@ -49,7 +49,7 @@ export default function Store() {
   };
 
   return (
-    <MainView className="h-screen min-h-[1000px]">
+    <MainView className="h-screen !min-h-[1000px]">
       <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
         <div className="flex items-center gap-[30px]">
           <SearchInput

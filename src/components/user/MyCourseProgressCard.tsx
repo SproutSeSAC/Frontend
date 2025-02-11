@@ -58,7 +58,7 @@ export default function MyCourseProgressCard() {
     <>
       <EditButton
         label="나의 새싹 정보 수정하기"
-        className="absolute -top-[0px] right-2 text-darkGray-hover"
+        className="absolute right-2 top-0.5 text-darkGray-hover"
         onClick={openModalClick}
       />
       <div className="flex min-w-[404px] flex-1 flex-col justify-between rounded-[20px] bg-white py-5">

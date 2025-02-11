@@ -62,13 +62,12 @@ export default function Home() {
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
         <section className="relative flex h-full flex-col">
           <Title title="나의 새싹 정보" className="mb-[14px]" />
-
           <MyCourseProgressCard />
         </section>
 
         <section>
-          <div className="flex items-center justify-between">
-            <Title title="주요 일정" className="mb-[14px]" />
+          <div className="mb-[14px] flex items-center justify-between">
+            <Title title="주요 일정" />
             <Link to="/schedule" className={linkButtonStyle}>
               더보기
             </Link>
@@ -77,8 +76,8 @@ export default function Home() {
         </section>
 
         <section>
-          <div className="flex items-center justify-between">
-            <Title title="공지사항" className="mb-[14px]" />
+          <div className="mb-[14px] flex items-center justify-between">
+            <Title title="공지사항" />
             <Link to="/notice" className={linkButtonStyle}>
               더보기
             </Link>
