@@ -13,7 +13,7 @@ export default function ScrollContainer({
 }: ScrollContainerProps) {
   return (
     <div className="relative">
-      <div className="-my-2.5 overflow-x-scroll py-2.5 scrollbar-hide [&>ul>*]:flex-shrink-0">
+      <div className="overflow-x-scroll scrollbar-hide [&>ul>*]:flex-shrink-0">
         <ul className={`flex max-w-0 flex-1 gap-${gap}`}>{children}</ul>
       </div>
 

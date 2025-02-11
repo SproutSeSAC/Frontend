@@ -22,7 +22,7 @@ export default function Schedule() {
   if (isCalendarDataLoading || isUserProfileLoading) return <LoadingPage />;
 
   return (
-    <MainView className="h-screen">
+    <MainView className="h-screen min-h-[1000px]">
       <Header
         title={`${userProfile?.name} 스프님 새싹 일정`}
         highlight="새싹"

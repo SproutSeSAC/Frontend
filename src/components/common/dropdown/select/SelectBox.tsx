@@ -102,12 +102,12 @@ export default function SelectBox<
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:min-w-[18px] [&>svg]:text-darkGray-active ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-6 [&>svg]:min-w-[20px] [&>svg]:text-darkGray ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
         >
           {isSingleSelect(rest) && (
             <>
               <span
-                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-mainGray'}`}
+                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-darkGray'}`}
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>

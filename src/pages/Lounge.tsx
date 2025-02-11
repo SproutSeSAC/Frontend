@@ -10,7 +10,6 @@ import { useFilterData, useTechStackList } from '@/hooks';
 import { LoungeProjectFilters } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
-import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
 import SquareButton from '@/components/common/button/SquareButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
@@ -141,30 +140,25 @@ export default function Lounge() {
         />
       </div>
 
-      <ul className="grid grid-cols-3 gap-6">
-        {(data?.projects || []).map(card => (
-          <li key={card.id} className="[&>a]:!w-full">
-            <LoungePostCard card={card} />
-          </li>
-        ))}
-      </ul>
-      {data?.projects.length === 0 && (
+      {data?.projects.length === 0 && !isLoading ? (
         <EmptyContent message="모집중인 프로젝트가 없습니다." />
-      )}
-      {isLoading && (
-        <div className="flex w-full justify-center py-10">
-          <LoopLoading />
-        </div>
-      )}
-
-      {(data?.projects || []).length > 0 && (
-        <Pagination
-          totalPages={data?.totalPages || 0}
-          currentPage={data?.currentPage || 0 || 1}
-          onPageChange={(pageNumber: number) => {
-            handleChangeFilter({ page: pageNumber, modify: true });
-          }}
-        />
+      ) : (
+        <>
+          <ul className="grid grid-cols-3 gap-6">
+            {data?.projects.map(card => (
+              <li key={card.id} className="[&>a]:!w-full">
+                <LoungePostCard card={card} />
+              </li>
+            ))}
+          </ul>
+          <Pagination
+            totalPages={data?.totalPages || 0}
+            currentPage={data?.currentPage || 0 || 1}
+            onPageChange={(pageNumber: number) => {
+              handleChangeFilter({ page: pageNumber, modify: true });
+            }}
+          />
+        </>
       )}
     </>
   );

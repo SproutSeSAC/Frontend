@@ -3,7 +3,6 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { TechStackTab } from '@/types';
 
 import TabNavigation from '@/components/common/TabNavigation';
-import XButton from '@/components/common/button/XButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import TechStackOption from '@/components/common/dropdown/option/TechStackOption';
 import SelectBox, {
@@ -133,21 +132,16 @@ const TechStackDropdown = memo(function TechStackDropdown({
   return (
     <>
       {isMarkTechStackList && (
-        <ScrollContainer gap={3}>
+        <ScrollContainer gap={4}>
           {selectedOptions?.map(option => (
             <li
               key={option.id}
-              className="relative mb-1.5 flex size-10 flex-shrink-0 items-center justify-center rounded-lg"
+              className="relative mb-3 flex size-8 flex-shrink-0 items-center justify-center"
             >
               <img
                 src={option.iconImageUrl}
                 alt={option.name}
-                className="size-8"
-              />
-              <XButton
-                className="absolute -right-1 -top-1 rounded-full bg-black opacity-70"
-                onDeleteClick={() => handleSelectOptionChange(option)}
-                iconClassName="text-white"
+                className="size-8 rounded-lg"
               />
             </li>
           ))}

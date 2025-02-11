@@ -43,7 +43,7 @@ export default function CircularGauge({
         strokeWidth="11"
         fill="none"
         stroke={trackColor}
-        className="stroke-lightGrey"
+        className="stroke-lightGray"
       />
       <circle
         cx="50"

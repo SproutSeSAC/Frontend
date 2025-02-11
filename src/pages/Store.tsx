@@ -49,7 +49,7 @@ export default function Store() {
   };
 
   return (
-    <MainView className="h-screen">
+    <MainView className="h-screen min-h-[1000px]">
       <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
         <div className="flex items-center gap-[30px]">
           <SearchInput
@@ -73,12 +73,11 @@ export default function Store() {
 
       <MealRecruitList />
 
-      <div className="flex w-full flex-1 overflow-auto rounded-[20px] bg-white p-5">
+      <div className="flex size-full flex-1 overflow-auto rounded-[20px] bg-white p-5">
         <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
           <StoreFilterForm onReset={() => setSearchKeyword('')} />
         </aside>
 
-        {/* 아래 나머지 영역 차지 */}
         <div className="relative flex w-full flex-col overflow-auto overflow-x-hidden px-8 scrollbar-hide">
           <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
             <div className="text-xl font-semibold text-black">맛집 리스트</div>

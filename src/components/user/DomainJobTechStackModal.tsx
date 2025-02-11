@@ -117,14 +117,14 @@ export default function DomainJobTechStackModal() {
   if (isLoading) return null;
 
   return (
-    <Modal onToggleClick={hideDialog} title="도메인 정보" className="p-4">
+    <Modal onToggleClick={hideDialog} title="도메인 정보" className="p-[40px]">
       <FormProvider {...methods}>
         <form
-          className="flex w-[350px] flex-col gap-4"
+          className="mt-8 flex w-[40vw] min-w-[350px] flex-col gap-8"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="관심 도메인" />
+          <div className="flex flex-col">
+            <Label htmlFor="관심 도메인" className="mb-4 text-xl font-medium" />
             {allDomainList && (
               <Controller
                 control={control}
@@ -140,9 +140,9 @@ export default function DomainJobTechStackModal() {
 
                   return (
                     <>
-                      <ScrollContainer gap={1}>
+                      <ScrollContainer gap={5}>
                         {value.map(({ id, domain }) => (
-                          <li key={id}>
+                          <li key={id} className="mb-3">
                             <Tag
                               text={domain}
                               color="green"
@@ -153,6 +153,7 @@ export default function DomainJobTechStackModal() {
                                 );
                                 onChange(filteredData);
                               }}
+                              className="h-[30px]"
                             />
                           </li>
                         ))}
@@ -170,7 +171,7 @@ export default function DomainJobTechStackModal() {
                           const newArr = [...value, ...newData];
                           onChange(newArr);
                         }}
-                        selectBoxClassName="h-[50px] !text-base"
+                        selectBoxClassName="h-[50px] rounded-lg !text-base  border border-darkGray"
                         errorMsg={errors.updatedDomainList?.message}
                       />
                     </>
@@ -180,8 +181,8 @@ export default function DomainJobTechStackModal() {
             )}
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="관심 직무" />
+          <div className="flex flex-col">
+            <Label htmlFor="관심 직무" className="mb-4 text-xl font-medium" />
             {allJobList && (
               <Controller
                 control={control}
@@ -196,11 +197,12 @@ export default function DomainJobTechStackModal() {
                   }));
                   return (
                     <>
-                      <ScrollContainer gap={1}>
+                      <ScrollContainer gap={5}>
                         {value?.map(({ id, job }) => (
-                          <li key={id}>
+                          <li key={id} className="mb-3">
                             <Tag
                               text={job}
+                              color="green"
                               size="medium"
                               onDeleteClick={() => {
                                 const filteredData = value.filter(
@@ -208,6 +210,7 @@ export default function DomainJobTechStackModal() {
                                 );
                                 onChange(filteredData);
                               }}
+                              className="h-[30px]"
                             />
                           </li>
                         ))}
@@ -225,7 +228,7 @@ export default function DomainJobTechStackModal() {
                           const newArr = [...value, ...newData];
                           onChange(newArr);
                         }}
-                        selectBoxClassName="h-[50px] !text-base"
+                        selectBoxClassName="h-[50px] rounded-lg !text-base border border-darkGray"
                         errorMsg={errors.updatedJobList?.message}
                       />
                     </>
@@ -235,8 +238,8 @@ export default function DomainJobTechStackModal() {
             )}
           </div>
 
-          <div className="relative flex flex-col gap-1.5">
-            <Label htmlFor="기술 스택" />
+          <div className="relative flex flex-col">
+            <Label htmlFor="기술 스택" className="mb-4 text-xl font-medium" />
             <Controller
               control={control}
               name="updatedTechStackList"
@@ -250,14 +253,19 @@ export default function DomainJobTechStackModal() {
                     onChangeValue={onChange}
                     isMarkTechStackList
                     errorMsg={errors.updatedTechStackList?.message}
-                    selectBoxClassName="h-[50px] !text-base"
+                    selectBoxClassName="h-[50px] rounded-lg !text-base border border-darkGray"
                   />
                 );
               }}
             />
           </div>
 
-          <SquareButton name="저장하기" type="submit" className="self-end" />
+          <SquareButton
+            name="저장하기"
+            color="gray"
+            type="submit"
+            className="mt-5 h-[58px]"
+          />
         </form>
       </FormProvider>
     </Modal>

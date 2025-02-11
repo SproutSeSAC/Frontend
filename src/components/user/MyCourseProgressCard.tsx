@@ -9,6 +9,7 @@ import sproutLogo from '@/assets/images/sprout-logo2.png';
 import { courseGrowthLevelList } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { getDDay, getDateProgress } from '@/utils';
+import { IoIosInformation } from 'react-icons/io';
 
 import CircularGauge from '@/components/common/CircularGauge';
 import EditButton from '@/components/common/button/EditButton';
@@ -72,6 +73,12 @@ export default function MyCourseProgressCard() {
               />
             </li>
           ))}
+          <li className="group relative ml-auto flex h-[50px] w-10 cursor-pointer items-center justify-center rounded-lg bg-bg">
+            <IoIosInformation className="size-8 text-xl text-darkGray-active" />
+            <span className="absolute right-0 top-14 z-20 hidden w-56 rounded-lg bg-black px-5 py-4 text-sm leading-6 text-white opacity-70 group-hover:block">
+              다음 그래프는 진행률을 나타내며 수료율을 의미하지 않습니다
+            </span>
+          </li>
         </ul>
 
         {/* 레벨정보 */}
@@ -87,10 +94,6 @@ export default function MyCourseProgressCard() {
               Lv{level}. {label}
             </span>
           </div>
-
-          <span className="absolute -bottom-2 hidden rounded-lg bg-black p-[10px] text-sm text-white opacity-90 hover:block peer-hover:block">
-            다음 그래프는 진행률을 나타내며 수료율을 의미하지 않습니다
-          </span>
         </div>
 
         {/* 캠퍼스 */}
