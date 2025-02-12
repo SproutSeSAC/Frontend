@@ -14,8 +14,8 @@ import AuthPageLayout from '@/layouts/AuthPageLayout';
 import { RoleKey } from '@/types';
 import {
   isEduManager,
+  isInstructor,
   isJobCoordinator,
-  isPreTrainee,
   isTrainee,
 } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -176,7 +176,8 @@ export default function SignUp() {
                                 );
 
                                 return isTrainee(currRole) ||
-                                  isEduManager(currRole) ? (
+                                  isEduManager(currRole) ||
+                                  isInstructor(currRole) ? (
                                   <SingleSelectDropdown
                                     defaultLabel="캠퍼스 선택"
                                     options={campusList}
@@ -238,10 +239,10 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.courseIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base border border-red-500"
+                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden"
                                     onSelectBoxClick={triggerCourseIdListError}
                                     hasFullCheck={!!options.length}
-                                    optionClassName="leading-5"
+                                    optionClassName="text-start tracking-tight leading-5"
                                   />
                                 ) : (
                                   <SingleSelectDropdown
@@ -361,22 +362,11 @@ export default function SignUp() {
                     );
                   }),
               )}
-
-              {isPreTrainee(currRole) &&
-                currentStep === questionListByRole.length && (
-                  <span className="mb-14 mt-auto inline-block w-full text-center text-darkGray-active">
-                    예비 수강생은 제한된 서비스만 이용 가능합니다.
-                  </span>
-                )}
             </div>
 
             {currentStep === questionListByRole.length && (
               <SquareButton
-                color={
-                  !isAuthenticationCode && currRole !== 'PRE_TRAINEE'
-                    ? 'gray'
-                    : 'mainGreen'
-                }
+                color={!isAuthenticationCode ? 'gray' : 'mainGreen'}
                 type="submit"
                 name="시작하기"
                 className="mx-auto w-[50%] px-4 py-3 font-medium"

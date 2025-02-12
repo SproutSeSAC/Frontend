@@ -10,25 +10,22 @@ import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
-import { useCalendarEvents, useDialogContext } from '@/hooks';
+import { useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import SideView from '@/layouts/SideView';
 import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
 import Title from '@/components/common/Title';
-import ScrollContainer from '@/components/common/container/ScrollContainer';
+import SwiperContainer from '@/components/common/container/SwiperContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
-import NoticeListSideBox from '@/components/notice/layout/NoticeListSideBox';
 import Calendar from '@/components/schedule/Calendar';
-import DomainJobTechStackCard from '@/components/user/DomainJobTechStackCard';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
-import ThisMonthOfMealPriceChart from '@/components/user/ThisMonthOfMealPriceChart';
+import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function Home() {
-  const [isInitialLogin, setIsInitialLogin] = useAtom(initialLogin);
+  const [isFirstLogin, setIsFirstLogin] = useAtom(initialLogin);
 
   const {
     data: loungeList,
@@ -43,68 +40,72 @@ export default function Home() {
 
   const { name } = userProfile;
 
-  const { fullCalendarEvents, fullCalendarSideViewEvents } =
-    useCalendarEvents();
-
   const { showToast } = useDialogContext();
 
   useEffect(() => {
-    if (isInitialLogin) {
+    if (isFirstLogin) {
       showToast('새싹 회원이 되신 것을 환영합니다!');
-      setIsInitialLogin(false);
+      setIsFirstLogin(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInitialLogin]);
+  }, [isFirstLogin]);
 
   if ((!isFetched && isGetUserProfileLoading) || isGetLoungeListLoading)
     return <LoadingPage />;
 
-  return (
-    <>
-      <MainView className="">
-        <Header title={`${name} 스프님, 환영합니다!`} />
+  const linkButtonStyle = 'pr-[10px] tracking-tight text-darkGray-hover';
 
-        <section>
-          <Title title="나의 새싹 정보" className="mb-[10px]" />
-          <div className="mb-14 flex h-full max-h-[380px] gap-4">
-            <MyCourseProgressCard />
-            <div className="relative max-h-[400px] w-full items-center gap-2">
-              <DomainJobTechStackCard />
-              <ThisMonthOfMealPriceChart />
-            </div>
-          </div>
+  return (
+    <MainView className="pb-20">
+      <Header title={`${name} 스프님, 환영합니다!`} />
+
+      <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
+        <section className="relative flex h-full flex-col">
+          <Title title="나의 새싹 정보" className="mb-[14px]" />
+          <MyCourseProgressCard />
         </section>
 
         <section>
-          <div className="mb-[10px] flex w-full items-center justify-between pr-2">
-            <Title
-              title="나에게 딱 맞는 프로젝트를 만나보세요!"
-              highlight="프로젝트"
-            />
-            <Link to="/lounge" className="tracking-tight text-mainGray">
-              라운지 바로가기
+          <div className="mb-[14px] flex items-center justify-between">
+            <Title title="주요 일정" />
+            <Link to="/schedule" className={linkButtonStyle}>
+              더보기
             </Link>
           </div>
-
-          <ScrollContainer>
-            {(loungeList?.projects || []).map(card => (
-              <LoungePostCard key={card.id} card={card} />
-            ))}
-            <div />
-          </ScrollContainer>
+          <Calendar type="small" className="h-[509px]" />
         </section>
-      </MainView>
 
-      <SideView>
-        <Title title="새싹 주요일정" highlight="새싹" className="mb-2" />
-        <Calendar
-          type="small"
-          events={fullCalendarEvents}
-          sideViewEvents={fullCalendarSideViewEvents}
-        />
+        <section>
+          <div className="mb-[14px] flex items-center justify-between">
+            <Title title="공지사항" />
+            <Link to="/notice" className={linkButtonStyle}>
+              더보기
+            </Link>
+          </div>
+          <div className="flex h-[509px] w-full flex-col justify-between overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
+            <span className="mb-4 font-semibold">마감임박</span>
+            <NoticeDisplayList title="마감임박" />
+            <span className="my-4 border-t pt-4 font-semibold">NEW</span>
+            <NoticeDisplayList title="NEW" />
+          </div>
+        </section>
+      </div>
 
-        <NoticeListSideBox title="공지사항" />
-      </SideView>
-    </>
+      <section>
+        <div className="mb-[22px] flex w-full items-center justify-between pr-2">
+          <Title
+            title="나에게 딱 맞는 프로젝트를 만나보세요!"
+            highlight="프로젝트"
+          />
+          <Link to="/lounge" className={linkButtonStyle}>
+            라운지 바로가기
+          </Link>
+        </div>
+
+        <SwiperContainer slideList={loungeList?.projects || []}>
+          {item => <LoungePostCard card={item} />}
+        </SwiperContainer>
+      </section>
+    </MainView>
   );
 }

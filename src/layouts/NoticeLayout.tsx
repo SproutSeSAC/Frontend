@@ -6,9 +6,9 @@ import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
 import Title from '@/components/common/Title';
-import NoticeListSideBox from '@/components/notice/layout/NoticeListSideBox';
 import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
 import Calendar from '@/components/schedule/Calendar';
+import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function NoticeLayout() {
   const { pathname } = useLocation();
@@ -25,13 +25,17 @@ export default function NoticeLayout() {
       </MainView>
 
       <SideView>
-        <Title title="주요일정" className="mb-2" />
+        <Title title="주요일정" className="mb-[14px]" />
         <Calendar
           type="small"
           events={fullCalendarEvents}
           sideViewEvents={fullCalendarSideViewEvents}
         />
-        <NoticeListSideBox title="이번주 공지사항" />
+        <Title title="공지사항" className="mb-[14px] mt-7" />
+        <NoticeDisplayList
+          title="공지사항"
+          className="!h-fit rounded-[20px] bg-white px-[15px] py-[22px]"
+        />
       </SideView>
     </>
   );

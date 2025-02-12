@@ -10,7 +10,6 @@ export enum Role {
   EDU_MANAGER = 'EDU_MANAGER',
   JOB_COORDINATOR = 'JOB_COORDINATOR',
   INSTRUCTOR = 'INSTRUCTOR',
-  PRE_TRAINEE = 'PRE_TRAINEE',
   TRAINEE = 'TRAINEE',
 }
 
@@ -23,7 +22,6 @@ export const SignUpFormSchema = z
         Role.EDU_MANAGER,
         Role.INSTRUCTOR,
         Role.JOB_COORDINATOR,
-        Role.PRE_TRAINEE,
         Role.TRAINEE,
       ])
       .default(Role.TRAINEE),
@@ -82,10 +80,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE) {
-        return data.campusIdList.length > 0;
-      }
-      return true;
+      return data.campusIdList.length > 0;
     },
     {
       message: '캠퍼스를 선택해주세요.',
@@ -94,10 +89,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE) {
-        return data.verifyCode.length > 0;
-      }
-      return true;
+      return data.verifyCode.length > 0;
     },
     {
       message: '인증코드를 입력해주세요.',
@@ -106,7 +98,10 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_LEADER) {
+      if (
+        data.role !== Role.CAMPUS_LEADER &&
+        data.role !== Role.OPERATION_MANAGER
+      ) {
         return data.courseIdList.length > 0;
       }
       return true;
