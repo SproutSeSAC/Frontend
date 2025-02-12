@@ -20,6 +20,10 @@ const router = createBrowserRouter([
   },
 ]);
 
+export function redirectToLogin() {
+  router.navigate('/login', { replace: true });
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>

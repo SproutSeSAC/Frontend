@@ -3,6 +3,7 @@ import {
   getNewAccessToken,
 } from '@/services/auth/authQueries';
 
+import { redirectToLogin } from '@/App';
 import {
   ACCESS_TOKEN_KEY,
   CALENDAR_TOKEN_KEY,
@@ -21,10 +22,9 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+    const headers = new AxiosHeaders(config.headers);
     const accessToken = getCookie(ACCESS_TOKEN_KEY);
     const refreshToken = getCookie(REFRESH_TOKEN_KEY);
-
-    const headers = new AxiosHeaders(config.headers);
 
     if (accessToken) {
       headers.set('Access-Token', accessToken);
@@ -40,9 +40,7 @@ axiosInstance.interceptors.request.use(
 
     return modifiedConfig;
   },
-  error => {
-    return Promise.reject(error);
-  },
+  error => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
@@ -51,23 +49,34 @@ axiosInstance.interceptors.response.use(
   },
   async error => {
     const originalRequest = error.config;
-    if (
-      error.response &&
-      (error.response.status === 401 || error.response.status === 304) &&
-      !originalRequest.retry
-    ) {
+    if (error.response && !originalRequest.retry) {
       originalRequest.retry = true;
 
-      const response = await getNewAccessToken();
-      const newAccessToken = response.data.access_token;
+      const handleNewAccessToken = async () => {
+        const response = await getNewAccessToken();
+        if (response?.status && response.status !== 200)
+          return redirectToLogin();
+        const newAccessToken = response.data.access_token;
+        originalRequest.headers['Access-Token'] = newAccessToken;
+        setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
+        return axiosInstance(originalRequest);
+      };
 
-      originalRequest.headers['Access-Token'] = newAccessToken;
+      switch (error.response.status) {
+        case 401:
+        case 304:
+          return handleNewAccessToken();
 
-      setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
+        case 404:
+          return redirectToLogin();
 
-      return axiosInstance(originalRequest);
+        default:
+          alert(
+            `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
+          );
+          return redirectToLogin();
+      }
     }
-    // NOTE: 이외 에러 발생시 로그인 페이지로 이동시킬 예정 특히 404
     return Promise.reject(error);
   },
 );
@@ -91,9 +100,7 @@ axiosCalendarInstance.interceptors.request.use(
 
     return modifiedConfig;
   },
-  error => {
-    return Promise.reject(error);
-  },
+  error => Promise.reject(error),
 );
 
 axiosCalendarInstance.interceptors.response.use(
@@ -103,20 +110,27 @@ axiosCalendarInstance.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest.retry
-    ) {
-      originalRequest.retry = true;
-
+    const handleCalendarToken = async () => {
       const response = await getCalendarToken();
+      if (response?.status && response.status !== 200) return redirectToLogin();
       const newCalendarAccessToken = response.data.access_token;
       setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
-
       return axiosCalendarInstance(originalRequest);
+    };
+
+    if (error.response && !originalRequest.retry) {
+      originalRequest.retry = true;
+
+      switch (error.response.status) {
+        case 401:
+          return handleCalendarToken();
+
+        default:
+          alert(
+            `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
+          );
+      }
     }
-    // NOTE: 이외 에러 발생시 로그인 페이지로 이동시킬 예정
     return Promise.reject(error);
   },
 );
