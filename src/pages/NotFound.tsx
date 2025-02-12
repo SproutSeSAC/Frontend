@@ -11,7 +11,7 @@ export default function NotFound() {
   const onGoHomeClick = () => navigate('/');
 
   return (
-    <MainView isEmpty>
+    <MainView>
       <img
         src={notfound}
         alt="존재하지 않는 페이지"
