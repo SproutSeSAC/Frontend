@@ -8,7 +8,7 @@ import SideView from '@/layouts/SideView';
 import Title from '@/components/common/Title';
 import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
 import Calendar from '@/components/schedule/Calendar';
-import NoticeInfoList from '@/components/user/NoticeInfoList';
+import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function NoticeLayout() {
   const { pathname } = useLocation();
@@ -32,7 +32,7 @@ export default function NoticeLayout() {
           sideViewEvents={fullCalendarSideViewEvents}
         />
         <Title title="공지사항" className="mb-[14px] mt-7" />
-        <NoticeInfoList
+        <NoticeDisplayList
           title="공지사항"
           className="!h-fit rounded-[20px] bg-white px-[15px] py-[22px]"
         />

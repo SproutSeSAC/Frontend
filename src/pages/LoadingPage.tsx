@@ -2,8 +2,12 @@ import MainView from '@/layouts/MainView';
 
 import LoopLoading from '@/components/common/LoopLoading';
 
+/**
+ * @param noLayout - <Layout />으로 감싸이지 않았을 때의 로딩 페이지
+ */
+
 interface LoadingPageProps {
-  noLayout?: boolean; // <Layout />으로 감싸지 않았을 때
+  noLayout?: boolean;
 }
 
 export default function LoadingPage({ noLayout }: LoadingPageProps) {

@@ -22,7 +22,7 @@ import SwiperContainer from '@/components/common/container/SwiperContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import Calendar from '@/components/schedule/Calendar';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
-import NoticeInfoList from '@/components/user/NoticeInfoList';
+import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function Home() {
   const [isFirstLogin, setIsFirstLogin] = useAtom(initialLogin);
@@ -84,9 +84,9 @@ export default function Home() {
           </div>
           <div className="flex h-[509px] w-full flex-col justify-between overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
             <span className="mb-4 font-semibold">마감임박</span>
-            <NoticeInfoList title="마감임박" />
+            <NoticeDisplayList title="마감임박" />
             <span className="my-4 border-t pt-4 font-semibold">NEW</span>
-            <NoticeInfoList title="NEW" />
+            <NoticeDisplayList title="NEW" />
           </div>
         </section>
       </div>

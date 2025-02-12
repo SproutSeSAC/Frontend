@@ -14,7 +14,7 @@ interface NoticeInfoListProps {
   className?: string;
 }
 
-export default function NoticeInfoList({
+export default function NoticeDisplayList({
   title,
   className = '',
 }: NoticeInfoListProps) {
@@ -29,15 +29,15 @@ export default function NoticeInfoList({
     공지사항: data.pages[0].notices,
     마감임박: [],
     NEW: thisWeekNoticeList,
-  };
+  }; // NOTE: 데이터 작업 예정
 
-  const notice = noticeObj[title];
+  const noticeDisplayList = noticeObj[title];
 
-  return notice?.length !== 0 ? (
+  return noticeDisplayList?.length !== 0 ? (
     <ul
       className={`flex h-full w-full flex-col justify-start gap-4 ${className}`}
     >
-      {notice
+      {noticeDisplayList
         ?.slice(0, 3)
         ?.map(({ roleType, noticeId, title: noticeTitle }) => (
           <li key={noticeId}>

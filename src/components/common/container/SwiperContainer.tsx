@@ -13,12 +13,11 @@ interface SwiperContainerProps<T> {
   children: (item: T) => ReactNode;
 }
 
-export default function SwiperContainer<T>({
+export default function SwiperContainer<T extends { id: number }>({
   children,
   slideList,
 }: SwiperContainerProps<T>) {
-  const [isFirstSlide, setIsFirsrSlide] = useState(true);
-  const [isLastSlide, setIsLastSlide] = useState(false);
+  const [slide, setSlide] = useState({ isBeginning: true, isEnd: false });
 
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -27,11 +26,15 @@ export default function SwiperContainer<T>({
       <button
         onClick={() => {
           swiperRef.current?.slidePrev();
-          setIsFirsrSlide(!!swiperRef.current?.isBeginning);
-          setIsLastSlide(!!swiperRef.current?.isEnd);
+          if (swiperRef.current) {
+            const {
+              current: { isEnd, isBeginning },
+            } = swiperRef;
+            setSlide({ isBeginning, isEnd });
+          }
         }}
         className="flex w-[4vw] items-center justify-center py-5 text-darkGray disabled:text-mainGray"
-        disabled={isFirstSlide}
+        disabled={slide.isBeginning}
       >
         <Icon name="ChevronLeft" className="size-14" />
       </button>
@@ -40,7 +43,6 @@ export default function SwiperContainer<T>({
         onSwiper={swiper => {
           swiperRef.current = swiper;
         }}
-        // onSlideChange={handleSlideChange}
         cssMode={false}
         spaceBetween={16}
         modules={[Navigation, Scrollbar]}
@@ -48,10 +50,10 @@ export default function SwiperContainer<T>({
         scrollbar
         slidesPerView="auto"
         className="!ml-0 w-full"
-        wrapperClass="max-w-0 bg-blue-500"
+        wrapperClass="max-w-0"
       >
         {slideList.map((item: T) => (
-          <SwiperSlide className="min-w-[275px]" key={JSON.stringify(item)}>
+          <SwiperSlide className="min-w-[275px]" key={JSON.stringify(item.id)}>
             {children(item)}
           </SwiperSlide>
         ))}
@@ -60,14 +62,15 @@ export default function SwiperContainer<T>({
       <button
         onClick={() => {
           swiperRef.current?.slideNext();
-          const {
-            current: { isEnd, isBeginning },
-          } = swiperRef as React.MutableRefObject<SwiperType>;
-          setIsFirsrSlide(isBeginning);
-          setIsLastSlide(isEnd);
+          if (swiperRef.current) {
+            const {
+              current: { isEnd, isBeginning },
+            } = swiperRef;
+            setSlide({ isBeginning, isEnd });
+          }
         }}
         className="flex w-[4vw] items-center justify-center py-5 text-darkGray disabled:text-mainGray"
-        disabled={isLastSlide}
+        disabled={slide.isEnd}
       >
         <Icon name="ChevronRight" className="size-14" />
       </button>
