@@ -26,6 +26,7 @@ export type SignUpQuestions = {
   marketingConsent: MarketingConsent[];
   campusList: { id: number; name: string }[];
   verifyCode: string;
+  phoneNumber: string;
 };
 
 export type SignUpUserFormValue = UserProfileDto.Post & {

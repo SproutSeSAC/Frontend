@@ -106,6 +106,11 @@ const marketingConsent: SignUpQuestionsByStep[] = [
   },
 ];
 
+const phoneNumber: SignUpQuestionsByStep = {
+  title: { text: '전화번호를 입력해주세요.', condition: '' },
+  phoneNumber: '',
+};
+
 export const getFormStepsByRole = (
   role: RoleKey,
 ): SignUpQuestionsByStep[][] => {
@@ -113,20 +118,24 @@ export const getFormStepsByRole = (
     const lastStep = [...indentification, ...marketingConsent];
 
     if (isTrainee(role)) {
-      return [sesacStudentStep, commonStudentStep, lastStep];
-    }
-    if (isOperationManager(role)) {
-      return [adminCampusStep('isMultiple'), lastStep];
+      return [[...sesacStudentStep, phoneNumber], commonStudentStep, lastStep];
     }
     if (isCampusLeader(role) || isOperationManager(role)) {
-      return [adminCampusStep('isMultiple'), lastStep];
+      return [[...adminCampusStep('isMultiple'), phoneNumber], lastStep];
     }
     if (isEduManager(role) || isInstructor(role)) {
-      return [[...adminCampusStep(), ...adminCourseStep()], lastStep];
+      return [
+        [...adminCampusStep(), ...adminCourseStep(), phoneNumber],
+        lastStep,
+      ];
     }
     if (isJobCoordinator(role)) {
       return [
-        [...adminCampusStep('isMultiple'), ...adminCourseStep('isMultiple')],
+        [
+          ...adminCampusStep('isMultiple'),
+          ...adminCourseStep('isMultiple'),
+          phoneNumber,
+        ],
         lastStep,
       ];
     }
@@ -147,4 +156,5 @@ export const defaultSignUpFormValues: SignUpUserFormValue = {
   techStackIdList: [],
   marketingConsent: true,
   verifyCode: '',
+  phoneNumber: '',
 };

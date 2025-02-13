@@ -17,6 +17,7 @@ type SignUpUserProfile = {
   jobIdList: number[];
   domainIdList: number[];
   marketingConsent: boolean;
+  phoneNumber: string;
 };
 
 type UserProfile = {

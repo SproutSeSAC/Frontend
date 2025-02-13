@@ -96,11 +96,7 @@ export const useHandleSignUp = ({
           isOperationManager(formData.role)
         ) {
           const courseIdList = courseList.map(({ id }) => id);
-          const result = {
-            ...adminData,
-            courseIdList,
-            campusIdList,
-          };
+          const result = { ...adminData, courseIdList, campusIdList };
           mutate(result);
         } else {
           mutate(adminData);

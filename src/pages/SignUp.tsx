@@ -26,6 +26,7 @@ import SquareButton from '@/components/common/button/SquareButton';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
+import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import TextInput from '@/components/common/input/TextInput';
 import AuthenticationCode from '@/components/signup/AuthenticationCode';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
@@ -260,6 +261,10 @@ export default function SignUp() {
                                 );
                               }}
                             />
+                          )}
+
+                          {'phoneNumber' in question && (
+                            <ControllerPhoneNumber name="phoneNumber" />
                           )}
 
                           {'techStackList' in question && techStackList && (

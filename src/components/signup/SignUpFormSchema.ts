@@ -44,6 +44,11 @@ export const SignUpFormSchema = z
 
     courseIdList: z.array(z.number()),
 
+    phoneNumber: z
+      .string()
+      .min(1, '전화번호를 입력해주세요.')
+      .regex(/^010-\d{4}-\d{4}$/, '유효한 전화번호 형식이 아닙니다.'),
+
     techStackIdList: z.array(z.number()),
 
     jobIdList: z
