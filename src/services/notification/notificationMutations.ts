@@ -26,6 +26,19 @@ export const useUpdateNotificationStatus = (
   });
 };
 
+export const useUpdateAllNotificationAsRead = (
+  mutationOptions?: UseMutationOptionsType,
+) => {
+  const updateAllNotificationAsRead = async () => {
+    await axiosInstance.patch('/noti/all');
+  };
+
+  return useMutation<unknown, AxiosError>({
+    mutationFn: updateAllNotificationAsRead,
+    ...mutationOptions,
+  });
+};
+
 export const useDeleteNotification = (
   mutationOptions?: UseMutationOptionsType,
 ) => {
