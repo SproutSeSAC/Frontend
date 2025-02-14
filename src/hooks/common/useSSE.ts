@@ -51,6 +51,7 @@ export const useSSE = () => {
     // 연결이 열렸을 때
     eventSource.onopen = () => {
       console.log('SSE 연결 열림');
+      console.log('📡 readyState:', eventSource.readyState); // 1이면 OPEN 상태, 0(CONNECTING)이면 연결 중
       setIsConnected(true);
     };
 
@@ -76,7 +77,7 @@ export const useSSE = () => {
     try {
       await axiosInstance.post(
         `${import.meta.env.VITE_SERVER_API_URL}/sse/publish/${clientID}`,
-        `0,${message}`,
+        `0::${message}`,
         {
           headers: {
             'Content-Type': 'text/plain',
