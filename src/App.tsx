@@ -23,7 +23,7 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  const { subscribe, unsubscribe, publishMessage } = useSSE(); // TODO test
+  const { subscribe, unsubscribe, publishMessage } = useSSE(); // TODO 서버에서 SSE 확인 중
 
   useEffect(() => {
     subscribe();
@@ -46,6 +46,8 @@ export default function App() {
         >
           {/* TODO 버튼 제거 */}
           <button onClick={() => publishMessage(8)}>버튼</button>
+          <button onClick={subscribe}>구독 시작</button>
+          <button onClick={unsubscribe}>구독 취소</button>
           <RouterProvider router={router} />
         </Suspense>
       </DialogContextProvider>
