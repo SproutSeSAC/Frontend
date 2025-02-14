@@ -55,11 +55,13 @@ export default function StoreDetail() {
         </Header>
 
         <section className="flex h-full w-full gap-8">
-          <StoreFilterForm
-            onReset={() => {
-              setSearchKeyword('');
-            }}
-          />
+          <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
+            <StoreFilterForm
+              onReset={() => {
+                setSearchKeyword('');
+              }}
+            />
+          </aside>
 
           <StoreMap storeList={storeList} />
         </section>

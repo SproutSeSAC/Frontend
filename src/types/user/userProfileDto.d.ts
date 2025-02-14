@@ -9,7 +9,7 @@ export namespace UserProfileDto {
 }
 
 type SignUpUserProfile = {
-  role: KeyOfRole;
+  role: RoleKey;
   name: string;
   nickname: string;
   courseIdList: number[];
@@ -36,7 +36,7 @@ type UserProfile = {
   jobList: Job[];
   techStackList: TechStack[];
   nickname: string;
-  role: KeyOfRole;
+  role: RoleKey;
   userId: number;
   profileImageUrl: string;
 };

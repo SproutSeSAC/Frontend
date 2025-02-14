@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { Calendar, CalendarListByCategory, KeyOfRole } from '@/types';
-import { isManagerAndAdmin, isPreTrainee, isTrainee } from '@/utils';
+import { Calendar, CalendarListByCategory, RoleKey } from '@/types';
+import { isTrainee } from '@/utils';
 import { useAtom } from 'jotai';
 
 import Accordion from '@/components/common/Accordion';
@@ -13,7 +13,7 @@ import CreateCalendarButton from '@/components/schedule/CreateCalendarButton';
 import SubscribeCalendarButton from '@/components/schedule/SubscribeCalendarButton';
 
 interface CalendarCheckBoxListProps {
-  userRole: KeyOfRole;
+  userRole: RoleKey;
   allCourseCalendarList: Calendar[];
   personalCalendarList: Calendar[];
 }
@@ -54,7 +54,7 @@ export default function CalendarCheckBoxList({
   );
 
   return (
-    <ul className="h-full overflow-auto rounded-xl bg-white px-5 pt-5 shadow-card scrollbar-hide">
+    <ul className="flex-1 overflow-auto rounded-[20px] bg-white px-5 pt-5 scrollbar-hide">
       {calendarListByCategory.map(({ category, calendarList }) => (
         <Accordion
           key={category}
@@ -62,13 +62,6 @@ export default function CalendarCheckBoxList({
           className="mb-6"
           titleClassName="text-mainGreen text-sm text-darkGray-active mb-3 [&>button>svg]:text-xs [&>button>svg]:text-darkGray-active"
           initialOpen
-          tooltip={
-            category === '교육과정 캘린더' &&
-            calendarList.length === 0 &&
-            isPreTrainee(userRole)
-              ? '훈련생이 되면 교육과정과 관련된 일정을 볼 수 있어요.'
-              : undefined
-          }
         >
           <ul className="flex flex-col gap-2">
             {category === '교육과정 캘린더' &&
@@ -97,7 +90,7 @@ export default function CalendarCheckBoxList({
                           textClassName="!text-black"
                           checkBoxColor={backgroundColor}
                         />
-                        {isManagerAndAdmin(userRole) && (
+                        {!isTrainee(userRole) && (
                           <AclInfoButton
                             courseId={courseId}
                             accessRole={accessRole}
@@ -113,7 +106,7 @@ export default function CalendarCheckBoxList({
                             disabled={!!calendarId}
                           />
                         )}
-                        {isManagerAndAdmin(userRole) && (
+                        {!isTrainee(userRole) && (
                           <CreateCalendarButton
                             courseTitle={courseTitle}
                             courseId={courseId}

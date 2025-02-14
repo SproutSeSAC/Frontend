@@ -1,22 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
-
 import LoungeIcon from '@/assets/icons/bi_person-fill-add.svg?react';
 import StoreIcon from '@/assets/icons/fluent_food-20-filled.svg?react';
 import NoticeIcon from '@/assets/icons/icon-park-solid-volume-notice.svg?react';
 import CalendarIcon from '@/assets/icons/majesticons-calendar.svg?react';
 import HomeIcon from '@/assets/icons/material-symbols-light-home.svg?react';
 import Logo from '@/layouts/Logo';
-import { isAdmin } from '@/utils';
-import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 export default function NavigationBar() {
-  const { data: { role } = initialUserProfile } = useGetUserProfile();
-
   const { pathname } = useLocation();
 
   const iconStyle = 'size-10';
@@ -70,9 +61,9 @@ export default function NavigationBar() {
   ];
 
   return (
-    <nav className="sticky top-[60px] flex h-[100vh] min-w-[130px] flex-col items-center justify-between px-5 pb-[4%]">
-      <ul className="flex w-[62px] flex-col items-center justify-center gap-y-[5vh] rounded-[20px] bg-white px-4 pb-28 pt-5 shadow-lg">
-        <Logo />
+    <nav className="sticky top-[60px] flex h-fit min-w-[130px] flex-col items-center justify-between px-5">
+      <ul className="flex w-[62px] flex-col items-center justify-center gap-y-[5vh] rounded-[20px] bg-white px-4 pb-20 pt-5 shadow-lg">
+        <Logo size="small" />
         {menuList.map(menu => (
           <li key={menu.title}>
             <Link
@@ -84,18 +75,6 @@ export default function NavigationBar() {
             </Link>
           </li>
         ))}
-
-        {isAdmin(role) && (
-          <li>
-            <Link
-              to="/admin"
-              title="관리자 페이지 이동"
-              className="flex size-10 items-center justify-center"
-            >
-              <MdOutlineAdminPanelSettings className={`${iconStyle} size-4`} />
-            </Link>
-          </li>
-        )}
       </ul>
     </nav>
   );

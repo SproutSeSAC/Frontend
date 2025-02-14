@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { PTYPE_PROJECT, PTYPE_STUDY } from '@/constants';
-import { LoungeProjectFilters, Option } from '@/types';
+import { LoungeProjectFilters } from '@/types';
 import {
   GetEndingTomorrowProjects,
   GetLoungeProject,
@@ -52,16 +52,6 @@ export const useGetLoungeProjects = (params: LoungeProjectFilters) => {
       const { data } = await axiosInstance.get<GetLoungeProject>('/project', {
         params: newParams,
       });
-      return data;
-    },
-  });
-};
-
-export const useGetLoungePositionsFilterList = () => {
-  return useQuery({
-    queryKey: ['useGetLoungePositionsFilterList'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<Option[]>('/positions');
       return data;
     },
   });

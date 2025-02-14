@@ -77,11 +77,20 @@ export default function SelectBox<
         option => option.name !== '전체',
       );
       if (filteredFullCheckOptions.length) {
-        return `${filteredFullCheckOptions[0].name} ${
-          filteredFullCheckOptions.length > 1
-            ? `외 ${filteredFullCheckOptions.length - 1}개`
-            : ''
-        }`;
+        return (
+          <div className="flex w-full gap-1 overflow-hidden">
+            <span className="inline-block truncate">
+              {filteredFullCheckOptions[0].name}
+            </span>
+            {filteredFullCheckOptions.length > 1 ? (
+              <span className="text-darkGray">
+                외 {filteredFullCheckOptions.length - 1}개
+              </span>
+            ) : (
+              ''
+            )}
+          </div>
+        );
       }
       return label;
     },
@@ -89,9 +98,9 @@ export default function SelectBox<
   );
 
   const styleByBoxShape = {
-    inputShape: `w-full gap-4 rounded-2xl border bg-white px-4 py-[15px] text-start text-lg`,
+    inputShape: `w-full rounded-2xl bg-white px-4 py-[15px] text-start text-lg`,
     buttonShape:
-      'rounded-2xl border border-mainGray bg-bg px-3 py-1 gap-4 text-darkGray-active',
+      'rounded-2xl border border-mainGray bg-bg px-3 py-1 text-darkGray-active',
   };
 
   const selectBoxStyle = styleByBoxShape[boxShape];
@@ -102,12 +111,12 @@ export default function SelectBox<
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-5 [&>svg]:min-w-[18px] [&>svg]:text-darkGray-active ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-6 [&>svg]:min-w-[20px] [&>svg]:text-darkGray ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
         >
           {isSingleSelect(rest) && (
             <>
               <span
-                className={`w-full whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-mainGray'}`}
+                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest?.selectedOptionLabel && 'text-darkGray'}`}
               >
                 {rest?.selectedOptionLabel || defaultLabel}
               </span>
@@ -118,7 +127,7 @@ export default function SelectBox<
           {isMultiSelect(rest) && (
             <>
               <span
-                className={`w-full ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-7'}`}
+                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-6'}`}
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
@@ -140,9 +149,9 @@ export default function SelectBox<
         )}
       </div>
 
-      <article className={defaultLabel !== '기술스택' ? 'relative' : ''}>
+      <article className={defaultLabel === '기술스택' ? '' : 'relative'}>
         <ul
-          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} w-full ${defaultLabel !== '기술스택' ? 'min-w-max' : ''} absolute z-40 mt-1 overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
+          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>

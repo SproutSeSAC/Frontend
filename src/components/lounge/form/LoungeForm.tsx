@@ -8,10 +8,8 @@ import {
   usePostLoungeProject,
   usePutLoungeProject,
 } from '@/services/lounge/loungeMutations';
-import {
-  useGetLoungePositionsFilterList,
-  useGetLoungeProjectsDetail,
-} from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjectsDetail } from '@/services/lounge/loungeQueries';
+import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { PtypeList, progressList } from '@/constants';
 import { recruitmentCountList } from '@/constants/optionList';
@@ -21,7 +19,7 @@ import {
   usePageBlocker,
   useTechStackList,
 } from '@/hooks';
-import { Progress } from '@/types';
+import { ContactMethodDisplayKey, Progress } from '@/types';
 import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -45,18 +43,10 @@ import ControllerContentEditor from '@/components/common/text-editor/ControllerC
 import ContactMethodContainer from '@/components/lounge/form/ContactMethodContainer';
 import { loungeFormSchema } from '@/components/lounge/form/loungeFormSchema';
 
-const defaultInputStyle =
-  'rounded-2xl border border-solid px-[15px] py-4 bg-white';
-export const inputStyle = {
-  default: `${defaultInputStyle} border-lightGrey`,
-  error: `${defaultInputStyle} border-[#FF3939]`,
-};
-
-// TODO: api type 수정 필요
 export interface FormValues {
   recruitmentCount: number;
   meetingType: Progress;
-  contactMethod: string;
+  contactMethod: ContactMethodDisplayKey;
   contactDetail: string;
   recruitmentType: string;
   startDate: string;
@@ -92,7 +82,7 @@ export default function LoungeForm() {
   const { showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
-  const { data: positionsList } = useGetLoungePositionsFilterList();
+  const { data: jobList } = useGetJobList();
   const { data: projectsDetail } = useGetLoungeProjectsDetail(
     Number(modifyProjectId || 0),
   );
@@ -252,7 +242,9 @@ export default function LoungeForm() {
                     <MultiSelectDropdown
                       defaultLabel="모집 직무"
                       value={value}
-                      options={positionsList || []}
+                      options={
+                        jobList?.map(({ id, job }) => ({ id, name: job })) || []
+                      }
                       onChangeValue={data => {
                         const ids = data.map(item => item.id);
                         onChange(ids);

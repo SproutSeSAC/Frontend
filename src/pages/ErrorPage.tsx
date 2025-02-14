@@ -13,7 +13,7 @@ export default function ErrorPage() {
 
   return (
     <Layout>
-      <MainView isEmpty>
+      <MainView>
         <Warning className="mb-[1%] h-[50%] max-h-[117px] max-w-[131px] object-cover" />
 
         <h2 className="mb-[1%] text-[40px] font-semibold">

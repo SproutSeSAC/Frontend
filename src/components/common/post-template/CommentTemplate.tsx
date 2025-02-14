@@ -28,12 +28,9 @@ export default function CommentTemplate({
   });
 
   const handleSearch = (data: { content: string }) => {
-    if (data.content) {
-      onSubmit(data);
-      reset();
-    } else {
-      console.log('값없음');
-    }
+    if (!data.content) return;
+    onSubmit(data);
+    reset();
   };
 
   return (

@@ -32,14 +32,14 @@ export default function UserNameImageModal() {
     useGetUserProfile();
 
   const { mutateAsync: mutateProfile } = useUpdateUserProfile({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
     },
   });
 
   const { mutateAsync: mutateProfileImage } = useUpdateProfileImage({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
     },
   });
 
@@ -56,6 +56,13 @@ export default function UserNameImageModal() {
     deleteImageFromS3,
   } = useHandleImage();
 
+  const resetProfileImage = async () => {
+    if (profileImageUrl !== '') {
+      deleteImageFromS3(profileImageUrl);
+      await mutateProfileImage({ profileUrl: '' });
+    }
+  };
+
   const onSubmit = async (formData: {
     nickname: string;
     profileImageFiles: File[] | null;
@@ -63,8 +70,7 @@ export default function UserNameImageModal() {
     if (nickname !== formData.nickname) {
       await mutateProfile({ nickname: formData.nickname });
     }
-    if (profileImageUrl && profileImageUrl !== 'https://aaa.com') {
-      // NOTE: DB에서 기본값('https://aaa.com') 정리하면 수정.
+    if (profileImageUrl !== '') {
       deleteImageFromS3(profileImageUrl);
     }
     const file = formData.profileImageFiles?.[0];
@@ -79,10 +85,10 @@ export default function UserNameImageModal() {
   };
 
   return (
-    <Modal onToggleClick={hideDialog} title="개인정보" className="p-4">
+    <Modal onToggleClick={hideDialog} title="개인정보" className="p-[50px]">
       <FormProvider {...methods}>
         <form
-          className="flex w-[350px] flex-col"
+          className="mt-4 flex w-[350px] flex-col"
           onSubmit={handleSubmit(onSubmit)}
         >
           <UserImage
@@ -107,11 +113,19 @@ export default function UserNameImageModal() {
             {...register('nickname')}
           />
 
-          <SquareButton
-            type="submit"
-            name="저장하기"
-            className="mt-6 self-end font-semibold text-white"
-          />
+          <div className="mt-6 flex gap-4 self-end">
+            <SquareButton
+              type="button"
+              name="기본 이미지 적용"
+              onClick={resetProfileImage}
+              className="bg-darkGray font-medium text-white"
+            />
+            <SquareButton
+              type="submit"
+              name="저장하기"
+              className="font-medium text-white"
+            />
+          </div>
         </form>
       </FormProvider>
     </Modal>

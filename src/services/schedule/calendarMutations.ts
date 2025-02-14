@@ -6,14 +6,14 @@ import { ADMIN_EMAIL } from '@/constants';
 import {
   FullCalendarEvent,
   GoogleCalendarApiDto,
-  KeyOfRole,
-  ManagerAdminRole,
+  HasAdminRole,
+  RoleKey,
   SproutCalendarDto,
 } from '@/types';
 
 type AuthorizedEmailsByRole = {
   EDU_MANAGER?: string;
-  CAMPUS_MANAGER?: string;
+  CAMPUS_LEADER?: string;
   JOB_COORDINATOR?: string;
 };
 
@@ -65,12 +65,12 @@ export const useCreateCalendar = (
   };
 
   const grantAclByRole = async (
-    userRole: KeyOfRole,
+    userRole: RoleKey,
     calendarId: string,
     authorizedEmails: AuthorizedEmailsByRole,
   ) => {
     try {
-      if (userRole !== 'ADMIN') {
+      if (userRole !== 'SUPER_ADMIN') {
         const adminAclData = {
           role: 'owner',
           scope: {
@@ -98,12 +98,12 @@ export const useCreateCalendar = (
         );
       }
 
-      if (authorizedEmails?.CAMPUS_MANAGER) {
+      if (authorizedEmails?.CAMPUS_LEADER) {
         const campusManagerAclData = {
           role: 'owner',
           scope: {
             type: 'user',
-            value: authorizedEmails.CAMPUS_MANAGER,
+            value: authorizedEmails.CAMPUS_LEADER,
           },
         };
         await axiosCalendarInstance.post(
@@ -186,7 +186,7 @@ type GrantAclParams = {
   calendarId: string;
   hasNotAclEmailList: {
     email: string;
-    roleType: keyof ManagerAdminRole;
+    roleType: keyof HasAdminRole;
   }[];
 };
 

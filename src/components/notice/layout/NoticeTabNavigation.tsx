@@ -7,7 +7,7 @@ import {
 
 import { noticeTabList } from '@/constants/notice';
 import { NoticeTabDisplayKey } from '@/types';
-import { isManagerAndAdmin, updateQueryParams } from '@/utils';
+import { isTrainee, updateQueryParams } from '@/utils';
 
 import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
 
@@ -39,7 +39,7 @@ export default function NoticeTabNavigation() {
       selectValue={tabName ?? 'ALL'}
       onChangeValue={handleChangeValue}
     >
-      {isManagerAndAdmin(userProfile?.role) && (
+      {!isTrainee(userProfile?.role) && (
         <button
           type="button"
           onClick={() => handleChangeValue(EDIT)}

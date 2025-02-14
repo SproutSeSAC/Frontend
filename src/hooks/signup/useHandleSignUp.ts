@@ -16,14 +16,19 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { useDialogContext, useTechStackList } from '@/hooks';
-import { KeyOfRole, SignUpUserFormValue, UserProfileDto } from '@/types';
-import { isCampusManager, isManager, isPreTrainee, isTrainee } from '@/utils';
+import { RoleKey, SignUpUserFormValue, UserProfileDto } from '@/types';
+import {
+  hasAdmin,
+  isCampusLeader,
+  isOperationManager,
+  isTrainee,
+} from '@/utils';
 import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
 interface UseHandleSignUpProps {
   currCampusIdList: number[];
-  currRole: KeyOfRole;
+  currRole: RoleKey;
 }
 
 export const useHandleSignUp = ({
@@ -70,42 +75,36 @@ export const useHandleSignUp = ({
   });
 
   const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
-    if (!isVerifiedCode && !isPreTrainee(submittedValue.role)) return;
+    if (!isVerifiedCode) return;
 
     try {
       const { verifyCode, campusIdList, ...formData } = submittedValue;
 
-      if (isManager(formData.role)) {
+      if (hasAdmin(formData.role)) {
         const { jobIdList, techStackIdList, domainIdList, ...rest } = formData;
         const initializeValue = {
           jobIdList: [],
           techStackIdList: [],
           domainIdList: [],
         };
-        const managerData: UserProfileDto.Post = {
+        const adminData: UserProfileDto.Post = {
           ...rest,
           ...initializeValue,
         };
-        if (isCampusManager(formData.role)) {
+        if (
+          isCampusLeader(formData.role) ||
+          isOperationManager(formData.role)
+        ) {
           const courseIdList = courseList.map(({ id }) => id);
-          const campusManangerData = {
-            ...managerData,
+          const result = {
+            ...adminData,
             courseIdList,
             campusIdList,
           };
-          mutate(campusManangerData);
+          mutate(result);
         } else {
-          mutate(managerData);
+          mutate(adminData);
         }
-      }
-
-      if (isPreTrainee(formData.role)) {
-        const { courseIdList, ...rest } = formData;
-        const preTraineeData: UserProfileDto.Post = {
-          ...rest,
-          courseIdList: [],
-        };
-        mutate(preTraineeData);
       }
 
       if (isTrainee(formData.role)) {

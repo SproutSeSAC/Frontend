@@ -5,21 +5,14 @@ import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 import { useDialogContext, useObserver } from '@/hooks';
 import { BsPlus } from 'react-icons/bs';
 
-import Icon from '@/components/common/Icon';
 import LoopLoading from '@/components/common/LoopLoading';
+import ScrollContainer from '@/components/common/container/ScrollContainer';
 import MealRecruitCard from '@/components/store/meal-recruit/MealRecruitCard';
 import MealRecruitModal from '@/components/store/meal-recruit/MealRecruitModal';
 
-interface MealRecruitListProps {
-  sideViewOpen: boolean;
-}
-
-export default function MealRecruitList({
-  sideViewOpen,
-}: MealRecruitListProps) {
+export default function MealRecruitList() {
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfiniteMealPostList();
@@ -45,57 +38,51 @@ export default function MealRecruitList({
     });
   };
 
-  const handleScrollToTop = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <section className="flex flex-col gap-7 overflow-y-auto">
-      {sideViewOpen && (
-        <button
-          className="bg-gray5 flex w-72 flex-col items-center justify-center gap-4 rounded-lg px-5 py-8 shadow-card"
-          onClick={handleShowDialog}
-        >
-          <div className="bg-vividGreen1 w-fit rounded-full text-white">
-            <BsPlus size={30} />
-          </div>
-
-          <div className="flex flex-col items-center justify-center gap-2">
-            <h3 className="text-base font-semibold">한끼팟 만들기</h3>
-            {mealPosts.length !== 0 && (
-              <p className="text-gray1 text-xs">
-                다른 사람들의 이야기가 궁금한가요?
-                <br />
-                함께 식사할 사람을 찾아봐요!
-              </p>
-            )}
-          </div>
-        </button>
-      )}
-      <div
-        ref={scrollContainerRef}
-        className="flex max-h-[520px] flex-col gap-8 overflow-y-auto"
-      >
-        {mealPosts.map(post => (
-          <MealRecruitCard key={post.id} post={post} />
-        ))}
-        {isFetchingNextPage && (
-          <div className="m-auto">
-            <LoopLoading size={40} />
-          </div>
+    <section className="relative z-10 flex cursor-default flex-col gap-5">
+      <div className="relative max-w-[75vw]">
+        {mealPosts.length > 2 && (
+          <div className="pointer-events-none absolute right-0 top-0 z-20 h-[74px] w-[215px] bg-gradient-to-r from-[#f5f5f700] to-bg" />
         )}
-        <div ref={mealPostObserveRef} />
-        <button
-          type="button"
-          aria-label="스크롤 업"
-          onClick={handleScrollToTop}
-          className="bg-vividGreen1 m-auto h-10 w-10 rounded-full p-3 text-white opacity-50 shadow-md"
-        >
-          <Icon name="ChevronUp" className="text-darkerGray" />
-        </button>
+        <ScrollContainer gap={7}>
+          {mealPosts.length === 0 && (
+            <div className="relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-lightGray-active bg-white px-6 py-4">
+              <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-black scrollbar-hide">
+                한끼팟 만들기
+              </div>
+              <div className="text-sm font-normal tracking-tight text-darkGray-active">
+                함께 식사할 사람을 찾아봐요!
+              </div>
+            </div>
+          )}
+          {mealPosts.map(post => (
+            <div
+              key={post.id}
+              className="relative z-10 w-[331px] max-w-[331px] flex-shrink-0 pr-5"
+            >
+              <MealRecruitCard post={post} />
+            </div>
+          ))}
+          <button
+            className={`${
+              mealPosts.length > 2
+                ? 'absolute -right-20 top-1/2 -translate-y-1/2 transform'
+                : 'relative ml-3'
+            } z-10 flex h-[74px] flex-col items-center justify-center gap-4`}
+            onClick={handleShowDialog}
+          >
+            <div className="h-[30px] w-fit rounded-full bg-mainGray-active text-white">
+              <BsPlus size={30} />
+            </div>
+          </button>
+        </ScrollContainer>
       </div>
+      {isFetchingNextPage && (
+        <div className="m-auto">
+          <LoopLoading size={40} />
+        </div>
+      )}
+      <div ref={mealPostObserveRef} />
     </section>
   );
 }

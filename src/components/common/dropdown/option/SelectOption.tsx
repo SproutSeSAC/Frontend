@@ -23,23 +23,23 @@ export default function SelectOption({
   className = '',
 }: SelectOptionProps) {
   return (
-    <li key={option.id} className="first:mt-2 last:mb-2">
+    <li key={option.id} className="rounded-lg first:mt-2 last:mb-2">
       {isMultiSelectOption ? (
         <label
-          className={`hover:bg-lightGrey flex cursor-pointer items-center rounded-lg px-3 py-1.5 ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`hover:bg-lightGrey flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-start ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
         >
           <input
             type="checkbox"
             checked={isSelected}
             onChange={() => onOptionClick(option)}
-            className="mr-3 size-4 rounded border-gray-300"
+            className="mr-3 size-4 rounded border-darkGray"
           />
           <span>{option.name}</span>
         </label>
       ) : (
         <button
           type="button"
-          className={`hover:bg-lightGrey flex min-w-full cursor-pointer items-center rounded-lg px-3 py-1.5 ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`hover:bg-lightGrey flex min-w-full cursor-pointer items-center whitespace-pre rounded-lg px-3 py-1.5 text-start ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
           onClick={() => onOptionClick(option)}
           disabled={isSelected}
         >

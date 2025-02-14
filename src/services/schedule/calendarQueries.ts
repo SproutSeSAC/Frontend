@@ -6,7 +6,7 @@ import { ADMIN_EMAIL, CALENDAR_TOKEN_KEY } from '@/constants';
 import {
   AccessRole,
   GoogleCalendarApiDto,
-  ManagerAdminRole,
+  HasAdminRole,
   ManagerEmailListByCourseDto,
   SproutCalendarDto,
 } from '@/types';
@@ -109,14 +109,14 @@ export type CalendarDetail = {
 export type AllCalendarAclEmail = CalendarDetail & {
   isCreated: boolean;
   hasAcl: boolean;
-  aclEmailList?: { email: string; roleType?: keyof ManagerAdminRole }[];
+  aclEmailList?: { email: string; roleType?: keyof HasAdminRole }[];
   managerEmailList?: {
     email: string;
-    roleType: keyof ManagerAdminRole;
+    roleType: keyof HasAdminRole;
   }[];
   hasNotAclEmailList?: {
     email: string;
-    roleType: keyof ManagerAdminRole;
+    roleType: keyof HasAdminRole;
   }[];
 };
 
@@ -171,7 +171,7 @@ export const useGetAllCalendarAclEmailList = (
     return aclEmailList.map(acl => {
       const managerData = managerEmailMap.get(acl.email);
       const adminData =
-        acl.email === ADMIN_EMAIL ? { ...acl, roleType: 'ADMIN' } : acl;
+        acl.email === ADMIN_EMAIL ? { ...acl, roleType: 'SUPER_ADMIN' } : acl;
       return managerData ? { ...acl, ...managerData } : adminData;
     });
   };

@@ -70,9 +70,11 @@ export const useGetThisWeekNoticeList = () => {
       `/notices`,
       { params: { page: 1, size: 20 } },
     );
+
     const thisWeekNotice = data.notices
       .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
-      .slice(0, 6);
+      .slice(0, 3);
+
     return thisWeekNotice;
   };
 

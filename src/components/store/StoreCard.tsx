@@ -13,7 +13,6 @@ import {
   BsFillGeoAltFill,
   BsFillTelephoneFill,
 } from 'react-icons/bs';
-import { IoIosArrowForward } from 'react-icons/io';
 import { PiArrowSquareInThin } from 'react-icons/pi';
 
 import Icon from '@/components/common/Icon';
@@ -52,11 +51,12 @@ interface StoreCardProps {
 }
 
 export default function StoreCard({
-  width,
+  width = 'w-full',
   height,
   storeData,
   showFavoriteButton = true,
   isModal,
+  ...rest
 }: StoreCardProps) {
   const { showToast, showDialog } = useDialogContext();
   const [openHoursModal, setOpenHoursModal] = useState(false);
@@ -83,7 +83,6 @@ export default function StoreCard({
           queryKey: ['useGetInfiniteStoreList', {}],
         });
       } catch (err) {
-        console.error(err);
         showToast('맛집 찜하기를 실패했어요');
       }
     },
@@ -117,7 +116,6 @@ export default function StoreCard({
 
       return currentTime >= openTime && currentTime <= closeTime;
     } catch (error) {
-      console.error(error);
       return false;
     }
   }, [storeData.workingDay]);
@@ -136,11 +134,15 @@ export default function StoreCard({
   const [test, setTest] = useState(false);
 
   return (
-    <article className={`${width} gap-[11px]`}>
+    <article className={`${width} gap-[11px]`} {...rest}>
       <StoreMenuImageSlider slideList={storeData?.storeImageList || []}>
         {item => {
           return (
-            <StoreMenuImage src={item.path} width={width} height={height} />
+            <StoreMenuImage
+              src={item.path}
+              width="w-full max-w-[406px]"
+              height="h-[16.5rem]"
+            />
           );
         }}
       </StoreMenuImageSlider>
@@ -167,7 +169,7 @@ export default function StoreCard({
                 className="flex items-center justify-center text-base font-semibold text-mainGray"
               >
                 정보 수정 제안하기
-                <IoIosArrowForward size={18} />
+                <Icon name="ChevronRight" width={18} height={18} />
               </button>
             )}
           </div>
@@ -238,12 +240,11 @@ export default function StoreCard({
                 <div className="line-clamp-1 min-w-[166px] overflow-hidden overflow-ellipsis">
                   {storeData.workingDay}
                 </div>
-
                 {storeData.breakTime &&
                   (openHoursModal ? (
-                    <Icon name="ChevronUp" />
+                    <Icon name="ChevronUp" width={18} height={18} />
                   ) : (
-                    <Icon name="ChevronDown" />
+                    <Icon name="ChevronDown" width={18} height={18} />
                   ))}
               </button>
               {storeData.breakTime && openHoursModal && (
@@ -274,11 +275,35 @@ export default function StoreCard({
           )}
         </div>
 
-        <footer className="flex gap-2 overflow-x-scroll">
-          {storeData.isZeropay && <Tag text="# 제로페이" />}
-          {storeData.isLessThan10000Menu && <Tag text="# 만원이하" />}
-          {storeData.isOverPerson && <Tag text="# 5인 이상" />}
-          {storeData.walkTime <= 5 && <Tag text="# 도보 5분 이내" />}
+        <footer className="flex gap-1 overflow-x-auto scrollbar-hide">
+          {storeData.isZeropay && (
+            <Tag
+              text="# 제로페이"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
+          {storeData.isLessThan10000Menu && (
+            <Tag
+              text="# 만원이하"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
+          {storeData.isOverPerson && (
+            <Tag
+              text="# 5인 이상"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
+          {storeData.walkTime <= 5 && (
+            <Tag
+              text="# 도보 5분 이내"
+              color="gray-light"
+              className="h-[27px] rounded-lg px-2.5 py-1"
+            />
+          )}
         </footer>
       </section>
     </article>
