@@ -43,8 +43,8 @@ export const useSSE = () => {
           'Refresh-Token': refreshToken,
         },
         // 서버가 정해진 시간 안에 데이터를 보내지 않을 경우 연결이 끊어지고 재연결하도록 설정하는 클라이언트 측 타이머
-        // 1분 동안 서버 응답 없으면 연결 종료(onerror 로직) 및 자동 재연결 시도
-        heartbeatTimeout: 60000,
+        // 90초 동안 서버 응답 없으면 연결 종료(onerror 로직) 및 자동 재연결 시도
+        heartbeatTimeout: 90000,
       },
     );
 
