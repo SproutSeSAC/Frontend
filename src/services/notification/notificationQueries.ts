@@ -4,9 +4,9 @@ import { axiosInstance } from '../axiosInstance';
 
 import { Notification } from '@/types';
 
-export const useGetNotifications = () => {
+export const useGetNotificationList = () => {
   return useQuery({
-    queryKey: ['useGetNotifications'],
+    queryKey: ['useGetNotificationList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get<Notification[]>('/noti');
       return data;
@@ -14,9 +14,9 @@ export const useGetNotifications = () => {
   });
 };
 
-export const useGetUnReadNotifications = () => {
+export const useGetUnReadNotificationList = () => {
   return useQuery({
-    queryKey: ['useGetUnReadNotifications'],
+    queryKey: ['useGetUnReadNotificationList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get<Notification[]>('/noti/unread');
       return data;

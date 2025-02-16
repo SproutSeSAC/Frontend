@@ -6,7 +6,7 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
-import { useGetUnReadNotifications } from '@/services/notification/notificationQueries';
+import { useGetUnReadNotificationList } from '@/services/notification/notificationQueries';
 
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
@@ -31,7 +31,7 @@ export default function Header({ title, highlight, children }: Props) {
 
   const { data: { profileImageUrl } = initialUserProfile } =
     useGetUserProfile();
-  const { data: notifications } = useGetUnReadNotifications();
+  const { data: notificationList } = useGetUnReadNotificationList();
 
   return (
     <header className="mb-10 flex items-center justify-between">
@@ -53,7 +53,7 @@ export default function Header({ title, highlight, children }: Props) {
             onClick={() => setIsNotificationOpenOpen(prev => !prev)}
           >
             <BsBell className="size-[26px] stroke-[0.3] font-bold text-darkGray-hover" />
-            {notifications?.length !== 0 && (
+            {notificationList?.length !== 0 && (
               <div className="absolute right-0 top-0.5 size-2 rounded-full border bg-red-500" />
             )}
           </button>

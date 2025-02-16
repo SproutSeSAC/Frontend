@@ -13,7 +13,7 @@ export const useNotification = () => {
   const { mutateAsync: updateNotification } = useUpdateNotificationStatus({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['useGetNotifications'],
+        queryKey: ['useGetNotificationList'],
       });
     },
   });
@@ -21,7 +21,7 @@ export const useNotification = () => {
   const { mutate: updateAllNotification } = useUpdateAllNotificationAsRead({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['useGetNotifications'],
+        queryKey: ['useGetNotificationList'],
       });
     },
   });
@@ -29,7 +29,7 @@ export const useNotification = () => {
   const { mutate: deleteNotification } = useDeleteNotification({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['useGetNotifications'],
+        queryKey: ['useGetNotificationList'],
       });
     },
   });
@@ -37,11 +37,12 @@ export const useNotification = () => {
   const { mutate: deleteAllNotificationMutate } = useDeleteAllNotification({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['useGetNotifications'],
+        queryKey: ['useGetNotificationList'],
       });
     },
   });
 
+  // --개별 알림 읽기
   const setNotificationAsRead = (id: number) => {
     updateNotification(id);
   };
@@ -51,6 +52,7 @@ export const useNotification = () => {
     updateAllNotification();
   };
 
+  // --알림 모두 삭제
   const deleteAllNotification = () => {
     deleteAllNotificationMutate();
   };

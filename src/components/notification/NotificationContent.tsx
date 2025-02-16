@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useNotification } from '@/hooks/notification/useNotification';
 
-import { useGetNotifications } from '@/services/notification/notificationQueries';
+import { useGetNotificationList } from '@/services/notification/notificationQueries';
 
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
@@ -13,7 +13,7 @@ import CardContent from '@/components/notification/CardContent';
 
 export default function NotificationContent() {
   const isNotificationOpen = useAtomValue(notificationOpenAtom);
-  const { data: notifications, refetch } = useGetNotifications();
+  const { data: notificationList, refetch } = useGetNotificationList();
   const { deleteAllNotification, setAllNotificationAsRead } = useNotification();
 
   useEffect(() => {
@@ -28,14 +28,14 @@ export default function NotificationContent() {
         <button
           onClick={setAllNotificationAsRead}
           className="flex items-center justify-end gap-1 text-end font-normal"
-          disabled={notifications?.length === 0}
+          disabled={notificationList?.length === 0}
         >
           모두 읽음
         </button>
         <button
           onClick={deleteAllNotification}
           className="flex items-center justify-end gap-1 text-end font-medium"
-          disabled={notifications?.length === 0}
+          disabled={notificationList?.length === 0}
         >
           <FaRegTrashAlt />
           모두 삭제
@@ -43,7 +43,7 @@ export default function NotificationContent() {
       </div>
 
       <div className="flex h-full flex-col gap-[22px] overflow-y-auto">
-        {notifications?.map(item => {
+        {notificationList?.map(item => {
           return (
             <div
               key={item.id}
