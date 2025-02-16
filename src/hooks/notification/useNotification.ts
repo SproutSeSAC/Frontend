@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
@@ -11,11 +9,12 @@ import {
 
 export const useNotification = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { mutateAsync: updateNotification } = useUpdateNotificationStatus({
     onSuccess: () => {
-      navigate('/lounge/post/39'); // TODO 알림에 맞는 게시물로 이동
+      queryClient.invalidateQueries({
+        queryKey: ['useGetNotifications'],
+      });
     },
   });
 

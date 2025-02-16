@@ -4,16 +4,26 @@ import { useNotification } from '@/hooks/notification/useNotification';
 
 import { Notification } from '@/types/notification';
 import { BsX } from 'react-icons/bs';
-
-import UserImage from '@/components/user/UserImage';
+import { RiCheckFill } from 'react-icons/ri';
 
 interface CardContentProps {
   notification: Notification;
 }
 
+/**
+ * TODO
+ * 1. 알림 발송 시간  ~시간 전
+ * 2. type에 따른 알림 카테고리, 라벨 색상 구분
+ * 3. [x] 확인 체크 표시
+ * 4. [x] 확인 한 공지는 엑스 표시
+ * 5. info 문구
+ * 6. 빨간 점
+ * 7. 링크로 이동하기
+ */
+
 export default function CardContent({ notification }: CardContentProps) {
-  const { content, isRead } = notification;
-  const { deleteNotification } = useNotification();
+  const { id, content, isRead } = notification;
+  const { deleteNotification, setNotificationAsRead } = useNotification();
 
   const handleDeleteNotification = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -21,36 +31,26 @@ export default function CardContent({ notification }: CardContentProps) {
   };
 
   return (
-    <>
-      <div className="mb-3.5 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          {/* TODO type에 따른 알림 타이틀 구분 */}
-          <div className="text-sm text-darkGray-active">공지사항</div>
-        </div>
-        <button onClick={handleDeleteNotification}>
-          <BsX
-            className={`size-5 ${isRead ? 'text-lightGrey opacity-[0.3]' : 'text-mainGray'}`}
-          />
-        </button>
+    <div className="flex flex-col gap-[14px]">
+      <div className="flex items-center justify-between">
+        <h3 className="flex items-center gap-2">
+          <div className="size-[14px] rounded-full border bg-mainGreen" />
+          <span className="text-darkGray-active">공지사항</span>
+          <span className="font-normal text-darkGray">2024. 10. 04</span>
+        </h3>
+        {isRead ? (
+          <button onClick={handleDeleteNotification}>
+            <BsX className="size-6 text-darkGray-hover" />
+          </button>
+        ) : (
+          <button onClick={() => setNotificationAsRead(id)}>
+            <RiCheckFill className="size-6 p-0.5 text-darkGray-hover" />
+          </button>
+        )}
       </div>
-      <div className="mb-6 line-clamp-2 w-full overflow-hidden text-ellipsis">
+      <p className="line-clamp-2 w-full overflow-hidden text-ellipsis text-start text-darkGray">
         {content}
-      </div>
-
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <UserImage className="size-6" imageNameSegment="" />
-          {/* TODO 알림 보낸 유저 정보 추가 */}
-          <div className="text-black">박민석 매니저</div>
-        </div>
-
-        <div
-          className={`text-xs ${isRead ? 'text-lightGrey opacity-[0.3]' : 'text-mainGray'}`}
-        >
-          {/* TODO 알림 발송 시간 추가 */}
-          2024. 10. 04
-        </div>
-      </div>
-    </>
+      </p>
+    </div>
   );
 }

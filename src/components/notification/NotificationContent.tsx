@@ -14,8 +14,7 @@ import CardContent from '@/components/notification/CardContent';
 export default function NotificationContent() {
   const isNotificationOpen = useAtomValue(notificationOpenAtom);
   const { data: notifications, refetch } = useGetNotifications();
-  const { setNotificationAsRead, setAllNotificationAsRead } = useNotification();
-  const { deleteAllNotification } = useNotification();
+  const { deleteAllNotification, setAllNotificationAsRead } = useNotification();
 
   useEffect(() => {
     if (isNotificationOpen) {
@@ -25,17 +24,17 @@ export default function NotificationContent() {
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between text-base text-darkGray-active">
         <button
           onClick={setAllNotificationAsRead}
-          className="flex items-center justify-end gap-1 text-end text-base text-darkGreen"
+          className="flex items-center justify-end gap-1 text-end font-normal"
           disabled={notifications?.length === 0}
         >
           모두 읽음
         </button>
         <button
           onClick={deleteAllNotification}
-          className="flex items-center justify-end gap-1 text-end text-base text-[#6D6D6D]"
+          className="flex items-center justify-end gap-1 text-end font-medium"
           disabled={notifications?.length === 0}
         >
           <FaRegTrashAlt />
@@ -46,13 +45,12 @@ export default function NotificationContent() {
       <div className="flex h-full flex-col gap-6 overflow-y-auto">
         {notifications?.map(item => {
           return (
-            <button
-              onClick={() => setNotificationAsRead(item.id)}
+            <div
               key={item.id}
-              className={`border-lightGrey block w-full rounded-lg border border-solid p-4 text-sm text-darkGray-active ${item.isRead && 'bg-mainGray'} cursor-pointer`}
+              className={`border-lightGrey block w-full rounded-lg border border-solid px-7 py-[22px] text-sm ${item.isRead && 'opacity-50'}`}
             >
               <CardContent notification={item} />
-            </button>
+            </div>
           );
         })}
       </div>
