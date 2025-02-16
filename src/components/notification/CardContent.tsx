@@ -2,7 +2,7 @@ import { MouseEvent } from 'react';
 
 import { useNotification } from '@/hooks/notification/useNotification';
 
-import { Notification } from '@/types/notification';
+import { Notification } from '@/types';
 import { BsX } from 'react-icons/bs';
 import { RiCheckFill } from 'react-icons/ri';
 

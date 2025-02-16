@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '../axiosInstance';
 
-import { Notification } from '@/types/notification';
+import { Notification } from '@/types';
 
 export const useGetNotifications = () => {
   return useQuery({
