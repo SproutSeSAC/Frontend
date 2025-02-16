@@ -13,3 +13,13 @@ export const useGetNotifications = () => {
     },
   });
 };
+
+export const useGetUnReadNotifications = () => {
+  return useQuery({
+    queryKey: ['useGetUnReadNotifications'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<Notification[]>('/noti/unread');
+      return data;
+    },
+  });
+};

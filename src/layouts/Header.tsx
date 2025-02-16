@@ -6,6 +6,7 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
+import { useGetUnReadNotifications } from '@/services/notification/notificationQueries';
 
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
@@ -30,6 +31,7 @@ export default function Header({ title, highlight, children }: Props) {
 
   const { data: { profileImageUrl } = initialUserProfile } =
     useGetUserProfile();
+  const { data: notifications } = useGetUnReadNotifications();
 
   return (
     <header className="mb-10 flex items-center justify-between">
@@ -51,8 +53,9 @@ export default function Header({ title, highlight, children }: Props) {
             onClick={() => setIsNotificationOpenOpen(prev => !prev)}
           >
             <BsBell className="size-[26px] stroke-[0.3] font-bold text-darkGray-hover" />
-            {/* 새로운 알림 시 표시 */}
-            <div className="absolute right-0 top-0.5 size-2 rounded-full border bg-red-500" />
+            {notifications?.length !== 0 && (
+              <div className="absolute right-0 top-0.5 size-2 rounded-full border bg-red-500" />
+            )}
           </button>
 
           <UserImage className="size-[50px]" imageNameSegment={profileImageUrl}>
