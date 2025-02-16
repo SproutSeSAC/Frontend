@@ -7,6 +7,11 @@ import { getCookie } from '@/utils';
 import { AxiosError } from 'axios';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
+/**
+ * SSE 구독, 취소, 메세지 발행 기능 hook
+ * 서버로부터 SSE 메세지 정상적으로 수신받을 때 사용 예정
+ */
+
 export const useSSE = () => {
   const accessToken = getCookie(ACCESS_TOKEN_KEY);
   const refreshToken = getCookie(REFRESH_TOKEN_KEY);
