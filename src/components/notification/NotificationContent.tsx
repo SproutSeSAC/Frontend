@@ -42,7 +42,7 @@ export default function NotificationContent() {
         </button>
       </div>
 
-      <div className="flex h-full flex-col gap-6 overflow-y-auto">
+      <div className="flex h-full flex-col gap-[22px] overflow-y-auto">
         {notifications?.map(item => {
           return (
             <div

@@ -16,7 +16,7 @@ interface CardContentProps {
  * 2. type에 따른 알림 카테고리, 라벨 색상 구분
  * 3. [x] 확인 체크 표시
  * 4. [x] 확인 한 공지는 엑스 표시
- * 5. info 문구
+ * 5. [x] info 문구
  * 6. 빨간 점
  * 7. 링크로 이동하기
  */
