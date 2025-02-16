@@ -2,6 +2,8 @@ import { MouseEvent } from 'react';
 
 import { useNotification } from '@/hooks/notification/useNotification';
 
+import { formatElapsedTime } from '@/utils/formatElapsedTime';
+
 import { Notification } from '@/types';
 import { BsX } from 'react-icons/bs';
 import { RiCheckFill } from 'react-icons/ri';
@@ -12,7 +14,7 @@ interface CardContentProps {
 
 /**
  * TODO
- * 1. 알림 발송 시간  ~시간 전
+ * 1. [x] 알림 발송 시간  ~시간 전
  * 2. type에 따른 알림 카테고리, 라벨 색상 구분
  * 3. [x] 확인 체크 표시
  * 4. [x] 확인 한 공지는 엑스 표시
@@ -36,7 +38,10 @@ export default function CardContent({ notification }: CardContentProps) {
         <h3 className="flex items-center gap-2">
           <div className="size-[14px] rounded-full border bg-mainGreen" />
           <span className="text-darkGray-active">공지사항</span>
-          <span className="font-normal text-darkGray">2024. 10. 04</span>
+          <span className="font-normal text-darkGray">
+            {/* TODO 시간 - 리스폰스 데이터로 수정 */}
+            {formatElapsedTime(`2025-02-15T14:30:00Z`)}
+          </span>
         </h3>
         {isRead ? (
           <button onClick={handleDeleteNotification}>
