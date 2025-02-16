@@ -14,13 +14,9 @@ interface CardContentProps {
 
 /**
  * TODO
- * 1. [x] 알림 발송 시간  ~시간 전
- * 2. type에 따른 알림 카테고리, 라벨 색상 구분
- * 3. [x] 확인 체크 표시
- * 4. [x] 확인 한 공지는 엑스 표시
- * 5. [x] info 문구
- * 6. [x] 빨간 점
- * 7. 링크로 이동하기
+ * 1. type에 따른 알림 카테고리, 라벨 색상 구분
+ * 2. 링크로 이동하기
+ * 3. SSE 연결
  */
 
 export default function CardContent({ notification }: CardContentProps) {
