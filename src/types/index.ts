@@ -5,3 +5,4 @@ export * from '@/types/specifications';
 export * from '@/types/user';
 export * from '@/types/lounge';
 export * from '@/types/pageable';
+export * from '@/types/notification';
