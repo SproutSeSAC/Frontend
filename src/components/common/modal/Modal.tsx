@@ -35,25 +35,25 @@ export default function Modal({
   return createPortal(
     <>
       <section
-        className={`fixed inset-0 z-40 m-auto h-fit max-h-[80vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white ${className}`}
+        className={`fixed inset-0 z-40 m-auto h-fit max-h-[90vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white ${className}`}
       >
         {headerType === 'title-xIcon' && (
-          <header className="flex items-start justify-between p-3">
-            <h2 className="text-xl font-semibold">{title}</h2>
+          <header className="flex items-start justify-between">
+            <h2 className="text-2xl font-semibold">{title}</h2>
             {!hideClose && (
               <button
                 type="button"
                 aria-label="모달 닫기"
                 onClick={onToggleClick}
               >
-                <BsX size={30} />
+                <BsX size={34} />
               </button>
             )}
           </header>
         )}
 
         {headerType === 'squareBackBtn-title' && (
-          <header className="flex items-center justify-between p-3">
+          <header className="flex items-center justify-between">
             <button
               type="button"
               aria-label="접어두기"
@@ -68,7 +68,7 @@ export default function Modal({
           </header>
         )}
 
-        <div className="max-h-[58vh] overflow-scroll p-3 scrollbar-hide">
+        <div className="max-h-[75vh] overflow-scroll scrollbar-hide">
           {children}
         </div>
       </section>

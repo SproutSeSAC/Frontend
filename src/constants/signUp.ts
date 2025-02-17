@@ -5,7 +5,6 @@ import {
   isInstructor,
   isJobCoordinator,
   isOperationManager,
-  isPreTrainee,
   isTrainee,
 } from '@/utils';
 
@@ -19,7 +18,6 @@ const commonFirstStep: SignUpQuestionsByStep[] = [
       'CAMPUS_LEADER',
       'JOB_COORDINATOR',
       'INSTRUCTOR',
-      'PRE_TRAINEE',
     ],
   },
   {
@@ -116,9 +114,6 @@ export const getFormStepsByRole = (
 
     if (isTrainee(role)) {
       return [sesacStudentStep, commonStudentStep, lastStep];
-    }
-    if (isPreTrainee(role)) {
-      return [commonStudentStep, marketingConsent];
     }
     if (isOperationManager(role)) {
       return [adminCampusStep('isMultiple'), lastStep];

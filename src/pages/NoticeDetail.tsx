@@ -24,7 +24,7 @@ import {
   useHandleOnScrap,
   useHandlePostActions,
 } from '@/hooks';
-import { findCurrNotice, getColorByRole, isPreTrainee } from '@/utils';
+import { findCurrNotice, getColorByRole } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import BackButton from '@/components/common/button/BackButton';
@@ -100,7 +100,6 @@ export default function NoticeDetail() {
   const applySession = useCallback(() => {
     if (
       noticeDetail &&
-      !isPreTrainee(noticeDetail.writer.role) &&
       findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
     ) {
       const {

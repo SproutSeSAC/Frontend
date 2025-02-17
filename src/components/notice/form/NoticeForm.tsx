@@ -10,7 +10,7 @@ import {
 import { defaultNoticeFormValues } from '@/constants';
 import { useEditNotice, usePageBlocker, useSubmitNotice } from '@/hooks';
 import { NoticeDto, SpecialLectureOrEventValue } from '@/types';
-import { findCurrNotice, isPreTrainee, isTrainee } from '@/utils';
+import { findCurrNotice, isTrainee } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -91,7 +91,7 @@ export default function NoticeForm() {
   const { data: { role } = initialUserProfile } = useGetUserProfile();
 
   useEffect(() => {
-    if (isTrainee(role) || isPreTrainee(role)) {
+    if (isTrainee(role)) {
       navigate(-1);
     }
   }, [navigate, role]);

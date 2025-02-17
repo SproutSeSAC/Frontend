@@ -29,10 +29,6 @@ export const isTrainee = (role: keyof Role) => {
   return role === 'TRAINEE';
 };
 
-export const isPreTrainee = (role: keyof Role) => {
-  return role === 'PRE_TRAINEE';
-};
-
 /** 권한 확인용 */
 export const hasSuperAdmin = (role: keyof Role) => {
   const hasSuperAdminRoleList: (keyof HasSuperAdminRole)[] = [

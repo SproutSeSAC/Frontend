@@ -8,7 +8,6 @@ export const rolesObj = {
   INSTRUCTOR: '강사',
   JOB_COORDINATOR: '잡코디',
   TRAINEE: '새싹 교육생',
-  PRE_TRAINEE: '예비 수강생',
 } as const;
 
 export const hasSuperAdminRolesObj: HasSuperAdminRole = {
