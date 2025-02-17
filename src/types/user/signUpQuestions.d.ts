@@ -1,3 +1,5 @@
+import { TermsConsentList } from '@/services/auth/termsAndPolicy';
+
 import { Domain, Job, RoleKey, TechStack, UserProfileDto } from '@/types';
 
 export type SignUpFormTitle = {
@@ -12,9 +14,6 @@ export type SignUpStep = {
   step?: number;
 };
 
-export type MarketingConsent = '동의' | '동의하지 않음';
-
-// SignUp Form의 형식
 export type SignUpQuestions = {
   roles: RoleKey[];
   name: string;
@@ -23,13 +22,13 @@ export type SignUpQuestions = {
   domainList: Domain[];
   techStackList: TechStack[];
   courseList?: { id: number; name: string }[];
-  marketingConsent: MarketingConsent[];
   campusList: { id: number; name: string }[];
+  phoneNumber?: string;
   verifyCode: string;
-  phoneNumber: string;
+  termList: TermsConsentList[];
 };
 
-export type SignUpUserFormValue = UserProfileDto.Post & {
+export type SignUpFormValue = UserProfileDto.Post & {
   campusIdList: number[];
   verifyCode: string;
 };

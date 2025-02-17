@@ -3,14 +3,16 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { loginCheck } from '@/services/auth/authQueries';
+import { TermsConsentList } from '@/services/auth/termsAndPolicy';
 
 import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
 import { currentStepAtom } from '@/atoms/formStepAtom';
 import { verificationNicknameAtom } from '@/atoms/verificationNicknameAtom';
 
 import { defaultSignUpFormValues, rolesObj } from '@/constants';
-import { useHandleSignUp } from '@/hooks';
+import { useDialogContext, useHandleSignUp } from '@/hooks';
 import AuthPageLayout from '@/layouts/AuthPageLayout';
+import styles from '@/policy.module.css';
 import { RoleKey } from '@/types';
 import {
   isEduManager,
@@ -23,11 +25,14 @@ import { useAtomValue } from 'jotai';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
+import Checkbox from '@/components/common/checkbox/Checkbox';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 import TextInput from '@/components/common/input/TextInput';
+import Modal from '@/components/common/modal/Modal';
 import AuthenticationCode from '@/components/signup/AuthenticationCode';
 import FormQuestionItem from '@/components/signup/FormQuestionItem';
 import FormStepIndicator from '@/components/signup/FormStepIndicator';
@@ -51,7 +56,7 @@ export default function SignUp() {
     handleSubmit,
     control,
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     setError,
     clearErrors,
     getValues,
@@ -98,6 +103,35 @@ export default function SignUp() {
         message: '먼저 캠퍼스를 선택해주세요.',
       });
     }
+  };
+
+  const { showDialog, hideDialog } = useDialogContext();
+
+  const onContentClick = async (type: TermsConsentList) => {
+    const filename =
+      type === '이용약관'
+        ? 'termsAndConditionsOfService'
+        : 'policyOfHandlingPersonalInformation';
+
+    const response = await fetch(`/terms-and-policy/${filename}.html`);
+
+    return response.text().then(content => {
+      showDialog({
+        key: 'POLICY_TERM_KEY',
+        element: (
+          <Modal
+            title={type}
+            onToggleClick={hideDialog}
+            className="rounded-xl p-4"
+          >
+            <div
+              className={`h-[70vh] w-[500px] overflow-auto ${styles.policyContainer}`}
+              dangerouslySetInnerHTML={{ __html: content ?? '' }}
+            />
+          </Modal>
+        ),
+      });
+    });
   };
 
   if (isLoading) return null;
@@ -324,43 +358,46 @@ export default function SignUp() {
 
                           {'verifyCode' in question && <AuthenticationCode />}
 
-                          {'marketingConsent' in question && (
-                            <>
-                              <p className="mb-4 rounded border p-3 leading-5">
-                                {question.additionalInfo}
-                              </p>
-
-                              <Controller
-                                control={control}
-                                name="marketingConsent"
-                                render={({ field: { onChange, value } }) => {
-                                  return (
-                                    <fieldset className="flex flex-wrap gap-x-8 gap-y-3">
-                                      {question.marketingConsent.map(label => (
-                                        <label
-                                          key={label}
-                                          className="flex items-center gap-2"
+                          {'termList' in question && (
+                            <ul className="relative flex flex-wrap gap-x-8">
+                              {question.termList.map(term => (
+                                <Controller
+                                  key={term}
+                                  control={control}
+                                  name={
+                                    term === '이용약관'
+                                      ? 'termsAgree'
+                                      : 'dataConsent'
+                                  }
+                                  render={({ field: { onChange, value } }) => {
+                                    return (
+                                      <li
+                                        key={term}
+                                        className="mb-2 flex w-full items-center"
+                                      >
+                                        <Checkbox
+                                          id={term}
+                                          checked={value}
+                                          onChange={() => onChange(!value)}
+                                          text={`${term} 동의 (필수)`}
+                                        />
+                                        <button
+                                          type="button"
+                                          onClick={() => onContentClick(term)}
+                                          className="ml-auto text-darkGray-active underline"
                                         >
-                                          <input
-                                            type="radio"
-                                            id={label}
-                                            value={label}
-                                            checked={
-                                              value === (label === '동의')
-                                            }
-                                            onChange={() =>
-                                              onChange(label === '동의')
-                                            }
-                                            className="h-4 w-4 appearance-none rounded-full border border-black bg-white checked:border-mainGray checked:bg-darkGreen"
-                                          />
-                                          <span>{label}</span>
-                                        </label>
-                                      ))}
-                                    </fieldset>
-                                  );
-                                }}
-                              />
-                            </>
+                                          보기
+                                        </button>
+                                      </li>
+                                    );
+                                  }}
+                                />
+                              ))}
+
+                              {errors.dataConsent?.message && (
+                                <ErrorMsg msg={errors.dataConsent?.message} />
+                              )}
+                            </ul>
                           )}
                         </FormQuestionItem>
                       )
@@ -371,7 +408,7 @@ export default function SignUp() {
 
             {currentStep === questionListByRole.length && (
               <SquareButton
-                color={!isAuthenticationCode ? 'gray' : 'mainGreen'}
+                color={isAuthenticationCode && isValid ? 'mainGreen' : 'gray'}
                 type="submit"
                 name="시작하기"
                 className="mx-auto w-[50%] px-4 py-3 font-medium"

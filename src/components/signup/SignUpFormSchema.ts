@@ -61,9 +61,9 @@ export const SignUpFormSchema = z
 
     verifyCode: z.string(),
 
-    marketingConsent: z.boolean().refine(val => val === true || val === false, {
-      message: '마케팅 동의를 선택해야 합니다.',
-    }),
+    termsAgree: z.boolean(),
+
+    dataConsent: z.boolean(),
   })
   .refine(
     data => {
@@ -115,4 +115,9 @@ export const SignUpFormSchema = z
       message: '교육과정을 선택해주세요.',
       path: ['courseIdList'],
     },
-  );
+  )
+  .refine(data => data.termsAgree && data.dataConsent, {
+    message:
+      '이용약관과 개인정보 수집이용에 모두 동의해야 서비스를 이용하실 수 있습니다.',
+    path: ['dataConsent'],
+  });

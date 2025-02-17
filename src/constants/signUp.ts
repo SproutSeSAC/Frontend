@@ -1,4 +1,4 @@
-import { RoleKey, SignUpQuestionsByStep, SignUpUserFormValue } from '@/types';
+import { RoleKey, SignUpFormValue, SignUpQuestionsByStep } from '@/types';
 import {
   isCampusLeader,
   isEduManager,
@@ -97,12 +97,10 @@ const indentification: SignUpQuestionsByStep[] = [
   },
 ];
 
-const marketingConsent: SignUpQuestionsByStep[] = [
+const termsConsent: SignUpQuestionsByStep[] = [
   {
-    title: { text: '마케팅 활용 및 정보 수신에 동의하시나요?' },
-    marketingConsent: ['동의', '동의하지 않음'],
-    additionalInfo:
-      '스프라우트가 제공하는 이벤트, 혜택, 다양한 정보(뉴스레터, 취업, 교육 등) 안내 목적으로 이메일을 통한 정보수신을 위해 이용하고자 합니다. 마케팅 및 정보 수신을원하지 않는 경우, 동의하지 않아도 됩니다.',
+    title: { text: '이용약관 및 개인정보 수집이용에 동의하시나요?' },
+    termList: ['이용약관', '개인정보 수집이용'],
   },
 ];
 
@@ -115,7 +113,7 @@ export const getFormStepsByRole = (
   role: RoleKey,
 ): SignUpQuestionsByStep[][] => {
   const restStep = () => {
-    const lastStep = [...indentification, ...marketingConsent];
+    const lastStep = [...indentification, ...termsConsent];
 
     if (isTrainee(role)) {
       return [[...sesacStudentStep, phoneNumber], commonStudentStep, lastStep];
@@ -145,7 +143,7 @@ export const getFormStepsByRole = (
   return [commonFirstStep, ...restStep()];
 };
 
-export const defaultSignUpFormValues: SignUpUserFormValue = {
+export const defaultSignUpFormValues: SignUpFormValue = {
   name: '',
   nickname: '',
   role: 'TRAINEE',
@@ -154,7 +152,8 @@ export const defaultSignUpFormValues: SignUpUserFormValue = {
   domainIdList: [1, 2],
   jobIdList: [1, 2],
   techStackIdList: [],
-  marketingConsent: true,
+  termsAgree: false,
+  dataConsent: false,
   verifyCode: '',
   phoneNumber: '',
 };

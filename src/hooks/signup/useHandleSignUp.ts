@@ -16,7 +16,7 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { useDialogContext, useTechStackList } from '@/hooks';
-import { RoleKey, SignUpUserFormValue, UserProfileDto } from '@/types';
+import { RoleKey, SignUpFormValue, UserProfileDto } from '@/types';
 import {
   hasAdmin,
   isCampusLeader,
@@ -74,7 +74,7 @@ export const useHandleSignUp = ({
     },
   });
 
-  const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
+  const onSubmit: SubmitHandler<SignUpFormValue> = submittedValue => {
     if (!isVerifiedCode) return;
 
     try {
