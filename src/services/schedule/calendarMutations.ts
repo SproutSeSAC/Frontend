@@ -2,20 +2,16 @@ import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
-import { ADMIN_EMAIL } from '@/constants';
+import { SUPER_ADMIN_EMAIL } from '@/constants';
 import {
+  AdminEmailListByCourseDto,
+  CourseCalendarDto,
   FullCalendarEvent,
   GoogleCalendarApiDto,
   HasAdminRole,
-  RoleKey,
-  SproutCalendarDto,
+  HasSuperAdminRole,
 } from '@/types';
-
-type AuthorizedEmailsByRole = {
-  EDU_MANAGER?: string;
-  CAMPUS_LEADER?: string;
-  JOB_COORDINATOR?: string;
-};
+import { hasAdmin, hasSuperAdmin } from '@/utils';
 
 export const useCreateCalendar = (
   options?: UseMutationOptions<
@@ -24,11 +20,11 @@ export const useCreateCalendar = (
     GoogleCalendarApiDto.PostCalendar
   >,
 ) => {
-  const createCalendar = async (summary: string) => {
+  const createCalendar = async (summary: string, description?: string) => {
     const calendarData = {
       summary,
       timeZone: 'Asia/Seoul',
-      description: '',
+      description,
     };
     const calendarCreateResponse = await axiosCalendarInstance.post(
       '/calendars',
@@ -41,9 +37,9 @@ export const useCreateCalendar = (
     try {
       await axiosInstance.post(`/user/calendar/${courseId}`, {
         calendarId,
-      } as SproutCalendarDto.Post);
+      } as CourseCalendarDto.Post);
     } catch (error) {
-      console.error('캘린더 id 저장 중 오류 발생', error);
+      console.error('캘린더 id 교육과정 정보에 저장 중 오류 발생', error);
     }
   };
 
@@ -65,66 +61,52 @@ export const useCreateCalendar = (
   };
 
   const grantAclByRole = async (
-    userRole: RoleKey,
+    currentRoleAndEmail: { roleType: keyof HasSuperAdminRole; email: string },
     calendarId: string,
-    authorizedEmails: AuthorizedEmailsByRole,
+    emailListToBeAuthorized: AdminEmailListByCourseDto.Get,
   ) => {
     try {
-      if (userRole !== 'SUPER_ADMIN') {
-        const adminAclData = {
+      const aclUrl = `/calendars/${calendarId}/acl`;
+
+      const { roleType: currRoleType, email: currEmail } = currentRoleAndEmail;
+
+      if (currRoleType !== 'SUPER_ADMIN') {
+        await axiosCalendarInstance.post(aclUrl, {
           role: 'owner',
           scope: {
             type: 'user',
-            value: ADMIN_EMAIL,
+            value: SUPER_ADMIN_EMAIL, // 최고 관리자
           },
-        };
-        await axiosCalendarInstance.post(
-          `/calendars/${calendarId}/acl`,
-          adminAclData,
-        );
+        });
       }
 
-      if (authorizedEmails?.EDU_MANAGER) {
-        const eduManagerAclData = {
-          role: 'owner',
-          scope: {
-            type: 'user',
-            value: authorizedEmails.EDU_MANAGER,
-          },
-        };
-        await axiosCalendarInstance.post(
-          `/calendars/${calendarId}/acl`,
-          eduManagerAclData,
-        );
-      }
+      const exceptMyEmailList = emailListToBeAuthorized.filter(
+        ({ email }) => email !== currEmail,
+      );
 
-      if (authorizedEmails?.CAMPUS_LEADER) {
-        const campusManagerAclData = {
-          role: 'owner',
-          scope: {
-            type: 'user',
-            value: authorizedEmails.CAMPUS_LEADER,
-          },
-        };
-        await axiosCalendarInstance.post(
-          `/calendars/${calendarId}/acl`,
-          campusManagerAclData,
-        );
-      }
+      const hasOwnerAclList = exceptMyEmailList.filter(({ roleType }) =>
+        hasSuperAdmin(roleType),
+      );
 
-      if (authorizedEmails?.JOB_COORDINATOR) {
-        const jobCoordinatorAclData = {
+      hasOwnerAclList.map(async ({ email }) => {
+        const ownerAcl = {
           role: 'owner',
-          scope: {
-            type: 'user',
-            value: authorizedEmails.JOB_COORDINATOR,
-          },
+          scope: { type: 'user', value: email },
         };
-        await axiosCalendarInstance.post(
-          `/calendars/${calendarId}/acl`,
-          jobCoordinatorAclData,
-        );
-      }
+        await axiosCalendarInstance.post(aclUrl, ownerAcl);
+      });
+
+      const hasWriterAclList = emailListToBeAuthorized.filter(
+        ({ roleType }) => hasAdmin(roleType) && !hasSuperAdmin(roleType),
+      );
+
+      hasWriterAclList.map(async ({ email }) => {
+        const writerAcl = {
+          role: 'writer',
+          scope: { type: 'user', value: email },
+        };
+        await axiosCalendarInstance.post(aclUrl, writerAcl);
+      });
     } catch (error) {
       console.error('캘린더 일정관리 권한 부여 중 에러 발생', error);
     }
@@ -132,14 +114,21 @@ export const useCreateCalendar = (
 
   const createAndShareAclPublicCalendar = async (
     params: GoogleCalendarApiDto.PostCalendar,
+    // eslint-disable-next-line consistent-return
   ) => {
-    const { summary, courseId, userRole, authorizedEmails } = params;
+    const { summary, courseId, currentRoleAndEmail, emailListToBeAuthorized } =
+      params;
     try {
       const createdCalendar = await createCalendar(summary);
       const calendarId = createdCalendar.id;
       await saveCalendarIdInDB(calendarId, courseId);
       await makePublicCalendar(calendarId);
-      await grantAclByRole(userRole, calendarId, authorizedEmails);
+      await grantAclByRole(
+        currentRoleAndEmail,
+        calendarId,
+        emailListToBeAuthorized,
+      );
+      return createdCalendar;
     } catch (error) {
       console.error('캘린더 생성 중 오류 발생', error);
     }
@@ -147,7 +136,7 @@ export const useCreateCalendar = (
 
   return useMutation({
     mutationFn: createAndShareAclPublicCalendar,
-    mutationKey: ['createPublicCalendar'],
+    mutationKey: ['useCreateCalendar'],
     ...options,
   });
 };
@@ -184,7 +173,7 @@ export const useCreateEventsForMultipleCalendars = (
 
 type GrantAclParams = {
   calendarId: string;
-  hasNotAclEmailList: {
+  hasNotAclAdminList: {
     email: string;
     roleType: keyof HasAdminRole;
   }[];
@@ -194,22 +183,16 @@ export const useGrantAcl = (
   options?: UseMutationOptions<unknown, Error, GrantAclParams>,
 ) => {
   const grantAclByRole = async (params: GrantAclParams) => {
-    const { calendarId, hasNotAclEmailList } = params;
+    const { calendarId, hasNotAclAdminList } = params;
 
     try {
       await Promise.all(
-        hasNotAclEmailList.map(async email => {
-          const managerAclData = {
-            role: 'owner',
-            scope: {
-              type: 'user',
-              value: email,
-            },
+        hasNotAclAdminList.map(async ({ email, roleType }) => {
+          const acl = {
+            role: hasSuperAdmin(roleType) ? 'owner' : 'writer',
+            scope: { type: 'user', value: email },
           };
-          return axiosCalendarInstance.post(
-            `/calendars/${calendarId}/acl`,
-            managerAclData,
-          );
+          await axiosCalendarInstance.post(`/calendars/${calendarId}/acl`, acl);
         }),
       );
     } catch (error) {

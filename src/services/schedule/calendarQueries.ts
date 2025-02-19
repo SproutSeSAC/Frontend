@@ -2,13 +2,17 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
-import { ADMIN_EMAIL, CALENDAR_TOKEN_KEY } from '@/constants';
+import { CALENDAR_TOKEN_KEY, SUPER_ADMIN_EMAIL } from '@/constants';
 import {
   AccessRole,
+  Acl,
+  AclEmail,
+  AdminEmail,
+  AdminEmailListByCourseDto,
+  Calendar,
+  CourseCalendarAcl,
+  CourseCalendarDto,
   GoogleCalendarApiDto,
-  HasAdminRole,
-  ManagerEmailListByCourseDto,
-  SproutCalendarDto,
 } from '@/types';
 import { getCookie } from '@/utils';
 import { AxiosError, AxiosResponse } from 'axios';
@@ -23,10 +27,11 @@ export const useGetCalendarList = (
   };
 
   return useQuery({
-    queryKey: ['calendarList'],
+    queryKey: ['useGetCalendarList'],
     queryFn: getCalendarList,
-    ...options,
     enabled: !!getCookie(CALENDAR_TOKEN_KEY),
+
+    ...options,
   });
 };
 
@@ -44,6 +49,8 @@ export const useGetCalendarEvents = (
     queryKey: ['calendarEvents', calendarId],
     queryFn: getCalendarEvents,
     enabled: !!calendarId,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
@@ -65,86 +72,47 @@ export const useGetEventsByCalendar = (
         queryKey: ['eventsByCalenderId', calendarId],
         queryFn: () => getCalendarEvents(calendarId),
         enabled: !!calendarId,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
         ...options,
       };
     }),
   });
 };
 
-// 캘린더별 권한 데이터 가져오기
-export const useGetAclListByCalendar = (
-  calendarId?: string,
-  options?: UseQueryOptions<GoogleCalendarApiDto.GetAclList>,
+export const useGetCalendarAclList = (
+  calendarList: (Calendar & {
+    courseTitle: string;
+    courseId: number;
+    calendarId?: string;
+  })[],
+  options?: UseQueryOptions<CourseCalendarAcl[]>,
 ) => {
-  const getAclList = async () => {
-    try {
-      const res = await axiosCalendarInstance.get(
-        `/calendars/${calendarId}/acl`,
-      );
-      return res.data.items;
-    } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 403) {
-        return [];
-      }
-      throw error;
-    }
-  };
-
-  return useQuery<GoogleCalendarApiDto.GetAclList>({
-    queryKey: ['calendarAcl', calendarId],
-    queryFn: getAclList,
-    enabled: !!calendarId,
-    retry: false,
-    ...options,
-  });
-};
-
-export type CalendarDetail = {
-  courseTitle: string;
-  courseId: number;
-  calendarId?: string;
-  accessRole?: AccessRole;
-};
-
-export type AllCalendarAclEmail = CalendarDetail & {
-  isCreated: boolean;
-  hasAcl: boolean;
-  aclEmailList?: { email: string; roleType?: keyof HasAdminRole }[];
-  managerEmailList?: {
-    email: string;
-    roleType: keyof HasAdminRole;
-  }[];
-  hasNotAclEmailList?: {
-    email: string;
-    roleType: keyof HasAdminRole;
-  }[];
-};
-
-// 모든 캘린더별 acl 이메일 리스트 가져오기
-export const useGetAllCalendarAclEmailList = (
-  calendarList: CalendarDetail[],
-  options?: UseQueryOptions<AllCalendarAclEmail[]>,
-) => {
-  const getManagerEmailListByCourse = async (courseId: number) => {
-    const res: AxiosResponse<ManagerEmailListByCourseDto.Get> =
+  const getAdminListByCourse: (
+    courseId: number,
+  ) => Promise<AdminEmail[]> = async (courseId: number) => {
+    const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
       await axiosInstance.get(`/user/calendar/${courseId}/email`);
     return res.data;
   };
 
-  const getAclEmailList = async (calendarId?: string) => {
-    if (!calendarId) return [];
+  const getAclList: (
+    calendarId: string,
+  ) => Promise<{ email: string; accessRole: AccessRole }[]> = async (
+    calendarId: string,
+  ) => {
     try {
-      const aclResponse = await axiosCalendarInstance.get(
-        `/calendars/${calendarId}/acl`,
-      );
-      return aclResponse.data.items
-        .map((item: { scope: { value: string } }) => {
-          return { email: item.scope.value };
-        })
+      const aclRes: AxiosResponse<{ items: Acl[] }> =
+        await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+
+      const result = aclRes.data.items
         .filter(
-          ({ email }: { email: string }) =>
-            !email.includes('@public') && !email.includes('@group'),
-        );
+          ({ scope: { value } }) =>
+            !value.includes('@public') && !value.includes('@group'),
+        )
+        .map(({ role, scope }) => ({ email: scope.value, accessRole: role }));
+
+      return result;
     } catch (error) {
       throw new Error(
         `ACL이 있는 이메일 데이터 가져오는 중 에러 발생: ${error}`,
@@ -152,63 +120,42 @@ export const useGetAllCalendarAclEmailList = (
     }
   };
 
-  const getManagerEmailList = async (courseId: number) => {
-    const res = await getManagerEmailListByCourse(courseId);
-    return res.map(({ email, roleType }) => ({
-      email,
-      roleType,
-    }));
-  };
-
-  const mergeAclAndManagerEmails = (
-    aclEmailList: { email: string }[],
-    managerEmailList: { email: string; roleType: string }[],
-  ) => {
-    const managerEmailMap = new Map(
-      managerEmailList.map(({ email, roleType }) => [email, { roleType }]),
-    );
-
-    return aclEmailList.map(acl => {
-      const managerData = managerEmailMap.get(acl.email);
-      const adminData =
-        acl.email === ADMIN_EMAIL ? { ...acl, roleType: 'SUPER_ADMIN' } : acl;
-      return managerData ? { ...acl, ...managerData } : adminData;
-    });
-  };
-
-  const getCourseCalendarEmailList = async () => {
+  const getCalendarAclList = async () => {
     const requests = calendarList.map(async calendar => {
-      const isCreated = calendar?.accessRole === 'owner';
-
-      if (!isCreated) {
-        return { ...calendar, isCreated, hasAcl: false };
+      if (calendar?.accessRole !== 'owner' || !calendar?.calendarId) {
+        return { ...calendar, isCreated: false };
       }
 
       try {
-        const [aclEmailList, managerEmailList] = await Promise.all([
-          getAclEmailList(calendar.calendarId),
-          getManagerEmailList(calendar.courseId),
+        const [aclList, adminList] = await Promise.all([
+          getAclList(calendar.calendarId),
+          getAdminListByCourse(calendar.courseId),
         ]);
 
-        const aclEmailSet = new Set(
-          aclEmailList.map(({ email }: { email: string }) => email),
-        );
-        const hasNotAclEmailList = managerEmailList.filter(
-          ({ email }) => !aclEmailSet.has(email),
+        const hasAclAdminList = aclList.map(acl => {
+          const adminData = adminList.find(({ email }) => email === acl.email);
+          const isSuperAdmin = acl.email === SUPER_ADMIN_EMAIL;
+          return {
+            ...acl,
+            nickname: isSuperAdmin ? '관리자' : adminData?.nickname,
+            roleType: isSuperAdmin ? 'SUPER_ADMIN' : adminData?.roleType,
+          };
+        }) as AclEmail[];
+
+        const hasNotAclAdminList = adminList.filter(
+          ({ email }) =>
+            !aclList.find(({ email: aclEmail }) => email === aclEmail),
         );
 
-        const updatedAclEmailList = mergeAclAndManagerEmails(
-          aclEmailList,
-          managerEmailList,
-        );
+        const { accessRole, calendarId, courseId, courseTitle } = calendar;
 
         return {
-          ...calendar,
-          isCreated,
-          hasAcl: !!aclEmailList.length,
-          aclEmailList: updatedAclEmailList,
-          managerEmailList,
-          hasNotAclEmailList,
+          courseId,
+          courseTitle,
+          calendarId,
+          isCreated: !!accessRole,
+          hasAclAdminList,
+          hasNotAclAdminList,
         };
       } catch (err) {
         throw new Error(`캘린더 id ${calendar.courseTitle}: ${err}`);
@@ -218,85 +165,127 @@ export const useGetAllCalendarAclEmailList = (
     return Promise.all(requests);
   };
 
-  return useQuery<AllCalendarAclEmail[]>({
-    queryKey: ['useGetAllCalendarAclEmailList'],
-    queryFn: getCourseCalendarEmailList,
+  return useQuery<CourseCalendarAcl[]>({
+    queryKey: ['useGetCalendarAclList'],
+    queryFn: getCalendarAclList,
     enabled: calendarList.length > 0,
     retry: false,
     ...options,
   });
 };
 
-// 생성된 교육과정 데이터 가져오기
-export const useGetCreatedCourseCalendar = (
+// DB 교육과정별 담당 매니저 이메일 리스트
+export const useGetAdminEmailListByCourse = (
   courseId?: number,
-  options?: UseQueryOptions<SproutCalendarDto.Get>,
+  options?: UseQueryOptions<AdminEmailListByCourseDto.Get>,
+) => {
+  const getManagerEmailListByCourse = async () => {
+    const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
+      await axiosInstance.get(`/user/calendar/${courseId}/email`);
+    return res.data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetAdminEmailListByCourse', courseId],
+    queryFn: getManagerEmailListByCourse,
+    enabled: !!courseId,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  });
+};
+
+// DB 생성된 교육과정 캘린더 데이터 가져오기
+export const useGetCourseCalendar = (
+  courseId?: number,
+  options?: UseQueryOptions<CourseCalendarDto.Get>,
 ) => {
   const getCalendarIdByCourse = async () => {
-    const res: AxiosResponse<SproutCalendarDto.Get[]> = await axiosInstance.get(
+    const res: AxiosResponse<CourseCalendarDto.Get[]> = await axiosInstance.get(
       `/user/calendar/${courseId}`,
     );
     return res.data?.[0] || [];
   };
 
   return useQuery({
-    queryKey: ['calendarIdByCourse', courseId],
+    queryKey: ['useGetCourseCalendar', courseId],
     queryFn: getCalendarIdByCourse,
     enabled: !!courseId,
     ...options,
   });
 };
 
-export const useCourseCalendarList = (
+export const getCalendarAcl = async (calendarId?: string) => {
+  try {
+    const aclRes: AxiosResponse<{ items: Acl[] }> =
+      await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+
+    const result = aclRes.data.items
+      .filter(
+        ({ scope: { value } }) =>
+          !value.includes('@public') && !value.includes('@group'),
+      )
+      .map(({ role, scope }) => ({
+        email: scope.value,
+        accessRole: role,
+      })) as AclEmail[];
+
+    return result;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 403) {
+      return [];
+    }
+    throw error;
+  }
+};
+
+// 구글 캘린더별 acl 데이터 가져오기
+export const useGetCalendarAcl = (
+  calendarId?: string,
+  options?: UseQueryOptions<AclEmail[]>,
+) => {
+  return useQuery<AclEmail[]>({
+    queryKey: ['useGetCalendarAcl', calendarId],
+    queryFn: () => getCalendarAcl(calendarId),
+    enabled: !!calendarId,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  });
+};
+
+// DB에 저장된 나의 모든 교육과정 캘린더들 ID 정보
+export const useGetCourseCalendarStatusList = (
   courseList: {
     courseId: number;
     courseTitle: string;
   }[],
   options?: UseQueryOptions<
-    (SproutCalendarDto.Get & { courseTitle: string })[]
+    (CourseCalendarDto.Get & { courseTitle: string })[]
   >,
 ) => {
-  const getCourseCalendarInfoList = async () => {
+  const getCourseCalendarStatusList = async () => {
     const requests = courseList.map(({ courseId, courseTitle }) =>
       axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
         const baseDetail = { courseId, courseTitle };
 
         return res.data.length === 0
           ? [baseDetail]
-          : res.data
-              .slice(0, 1)
-              .map(({ calendarId }: SproutCalendarDto.Get) => {
-                return { ...baseDetail, calendarId };
-              });
+          : res.data.map(({ calendarId }: CourseCalendarDto.Get) => {
+              return { ...baseDetail, calendarId };
+            });
       }),
     );
     const responses = await Promise.all(requests);
-    return responses.flat();
+    return responses
+      .flat()
+      .sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
   };
 
-  return useQuery<(SproutCalendarDto.Get & { courseTitle: string })[]>({
-    queryKey: ['courseCalenderList', courseList],
-    queryFn: getCourseCalendarInfoList,
+  return useQuery<(CourseCalendarDto.Get & { courseTitle: string })[]>({
+    queryKey: ['useGetCourseCalendarStatusList'],
+    queryFn: getCourseCalendarStatusList,
     enabled: courseList.length > 0,
-    ...options,
-  });
-};
-
-// 교육과정별 담당 매니저 이메일 리스트
-export const useGetManagerEmailListByCourse = (
-  courseId?: number,
-  options?: UseQueryOptions<ManagerEmailListByCourseDto.Get>,
-) => {
-  const getManagerEmailListByCourse = async () => {
-    const res: AxiosResponse<ManagerEmailListByCourseDto.Get> =
-      await axiosInstance.get(`/user/calendar/${courseId}/email`);
-    return res.data;
-  };
-
-  return useQuery({
-    queryKey: ['useGetManagerEmailListByCourse', courseId],
-    queryFn: getManagerEmailListByCourse,
-    enabled: !!courseId,
     ...options,
   });
 };

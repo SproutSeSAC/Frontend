@@ -1,10 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 
+import { getCalendarToken } from '@/services/auth/authQueries';
 import { TermsAndPolicyType } from '@/services/auth/termsAndPolicy';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import Logo2 from '@/assets/images/sprout-logo2.png';
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants';
+import {
+  ACCESS_TOKEN_KEY,
+  CALENDAR_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+} from '@/constants';
 import { useDialogContext } from '@/hooks';
 import Logo from '@/layouts/Logo';
 import styles from '@/policy.module.css';
@@ -50,7 +55,7 @@ export default function Login() {
 
   const handleTestAdminLogin = async () => {
     try {
-      const response = await axiosInstance.get('/test/getAdminCookie', {
+      const response = await axiosInstance.get('test/getAdminCookie', {
         withCredentials: true,
       });
 
@@ -61,9 +66,15 @@ export default function Login() {
         alert('로그인에 실패했습니다.');
         return;
       }
-
       setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
       setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
+
+      const calendarToken = await getCalendarToken();
+
+      if (calendarToken.status === 200) {
+        const newCalendarAccessToken = calendarToken.data.access_token;
+        setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
+      }
 
       navigate('/');
     } catch (error) {

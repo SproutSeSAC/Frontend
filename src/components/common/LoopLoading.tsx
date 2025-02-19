@@ -7,7 +7,7 @@ interface LoopLoadingProps {
 export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
   return (
     <div
-      className="relative flex items-center justify-center"
+      className="relative flex items-center justify-center rounded-full"
       style={{ height: `${size}px`, width: `${size}px` }}
     >
       <svg
@@ -22,7 +22,7 @@ export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
           r="45"
           strokeWidth="11"
           fill="none"
-          className="stroke-lightGrey"
+          className="stroke-lightGray"
         />
         <circle
           cx="50"

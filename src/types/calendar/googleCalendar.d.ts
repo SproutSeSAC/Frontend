@@ -83,36 +83,36 @@ type NotificationSettings = {
   };
 };
 
-interface EventCreator {
+type EventCreator = {
   email: string;
   displayName?: string;
   self: boolean;
-}
+};
 
-interface EventOrganizer {
+type EventOrganizer = {
   email: string;
   displayName?: string;
   self: boolean;
-}
+};
 
-interface EventDateTime {
+type EventDateTime = {
   date: string;
   dateTime?: string;
   timeZone?: string;
-}
+};
 
-interface EventAttendee {
+type EventAttendee = {
   email: string;
   displayName?: string;
   responseStatus: 'accepted' | 'declined' | 'tentative' | 'needsAction';
-}
+};
 
-interface EventReminders {
+type EventReminders = {
   useDefault: boolean;
   overrides?: ReminderOverride[];
-}
+};
 
-interface ReminderOverride {
+type ReminderOverride = {
   method: 'email' | 'popup';
   minutes: number;
-}
+};

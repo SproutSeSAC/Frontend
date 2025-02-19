@@ -2,12 +2,11 @@ import { useEffect, useMemo } from 'react';
 
 import {
   getCalendarToken,
-  initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 import {
-  useCourseCalendarList,
   useGetCalendarList,
+  useGetCourseCalendarStatusList,
 } from '@/services/schedule/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
@@ -20,41 +19,55 @@ import { useSetAtom } from 'jotai';
 export const useCalendarList = () => {
   const setCurrShowingCalendarIds = useSetAtom(calendarIdsAtom);
 
+  const { data: userProfile } = useGetUserProfile();
+
   const {
     data: calendarData,
     isLoading: isCalendarDataLoading, //
   } = useGetCalendarList();
 
   const allCalendarList = useMemo(() => {
+    if (isCalendarDataLoading) return [];
     return calendarData?.items?.filter(({ id }) => id !== CALENDAR_ADDRESS_ID);
-  }, [calendarData?.items]);
+  }, [calendarData?.items, isCalendarDataLoading]);
 
-  const { data: { courseList } = initialUserProfile } = useGetUserProfile();
+  const {
+    data: courseCalendarStatusList = [],
+    isLoading: isCourseCalendarStatusLoading,
+  } = useGetCourseCalendarStatusList(userProfile?.courseList || []);
 
-  const { data: allCourseCalendarStatusListData = [] } =
-    useCourseCalendarList(courseList);
+  const courseCalendarList = useMemo(() => {
+    if (isCalendarDataLoading || isCourseCalendarStatusLoading) return [];
 
-  const allCourseCalendarList = useMemo(() => {
-    const findCourseCalendarInMyCalendarList = (calendarId: string) =>
+    const findCourseCalendar = (calendarId: string) =>
       allCalendarList?.find(({ id }) => id === calendarId);
 
-    return allCourseCalendarStatusListData
-      ?.map(courseCalendar => {
-        const createdCalendarDetails: Calendar =
-          findCourseCalendarInMyCalendarList(courseCalendar.calendarId) ?? {};
-        return { ...courseCalendar, ...createdCalendarDetails };
-      })
-      ?.sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
-  }, [allCalendarList, allCourseCalendarStatusListData]);
+    return courseCalendarStatusList.map(courseCalendar => {
+      const createdCalendarDetails: Calendar =
+        findCourseCalendar(courseCalendar.calendarId) ?? {};
 
+      return { ...courseCalendar, ...createdCalendarDetails };
+    });
+  }, [
+    allCalendarList,
+    courseCalendarStatusList,
+    isCalendarDataLoading,
+    isCourseCalendarStatusLoading,
+  ]);
+
+  // 개인 캘린더
   const personalCalendarList = useMemo(() => {
-    const ids = allCourseCalendarStatusListData.map(item => item.calendarId);
-    return allCalendarList
-      ? allCalendarList
-          ?.filter(({ id }) => !ids?.includes(id))
-          ?.filter(({ accessRole }) => accessRole === 'owner')
-      : [];
-  }, [allCalendarList, allCourseCalendarStatusListData]);
+    if (isCalendarDataLoading) return [];
+
+    const courseCalendarIdList = courseCalendarStatusList.map(
+      ({ calendarId }) => calendarId,
+    );
+
+    return allCalendarList?.filter(
+      ({ id, accessRole }) =>
+        accessRole === 'owner' && !courseCalendarIdList?.includes(id),
+    );
+  }, [allCalendarList, courseCalendarStatusList, isCalendarDataLoading]);
 
   useEffect(() => {
     if (!getCookie(CALENDAR_TOKEN_KEY)) {
@@ -65,19 +78,19 @@ export const useCalendarList = () => {
   }, []);
 
   useEffect(() => {
-    const courseCalendarIdList = allCourseCalendarList
+    const courseCalendarIdList = courseCalendarList
       .filter(detail => detail?.accessRole === 'owner')
       .map(({ calendarId }) => calendarId);
 
     if (courseCalendarIdList?.length !== 0) {
       setCurrShowingCalendarIds(courseCalendarIdList);
     }
-  }, [setCurrShowingCalendarIds, allCourseCalendarList]);
+  }, [setCurrShowingCalendarIds, courseCalendarList]);
 
   return {
     isCalendarDataLoading,
     allCalendarList,
-    allCourseCalendarList,
+    courseCalendarList,
     personalCalendarList,
   };
 };

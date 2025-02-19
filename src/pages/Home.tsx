@@ -17,10 +17,10 @@ import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
+import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
 import SwiperContainer from '@/components/common/container/SwiperContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
-import Calendar from '@/components/schedule/Calendar';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
 import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 

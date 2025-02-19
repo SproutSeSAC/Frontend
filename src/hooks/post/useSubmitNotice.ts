@@ -18,7 +18,7 @@ export const useSubmitNotice = () => {
 
   const queryClient = useQueryClient();
 
-  const { allCourseCalendarList } = useCalendarList();
+  const { courseCalendarList } = useCalendarList();
 
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ export const useSubmitNotice = () => {
       }),
     );
 
-    const targetCalendar = allCourseCalendarList.filter(({ courseId }) =>
+    const targetCalendar = courseCalendarList.filter(({ courseId }) =>
       targetCourseIdList.includes(courseId),
     );
 

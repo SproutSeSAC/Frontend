@@ -5,7 +5,7 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
-import { useCalendarList, useDialogContext, useGetUserAclList } from '@/hooks';
+import { useCalendarList, useDialogContext } from '@/hooks';
 import { Option } from '@/types';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -18,9 +18,9 @@ export default function ControllerTargetCourses() {
 
   const { alert, hideDialog } = useDialogContext();
 
-  const { hasNotAclCalendarList } = useGetUserAclList();
+  // const { hasNotAclCalendarList } = useGetUserAclList();
 
-  const { allCourseCalendarList } = useCalendarList();
+  const { courseCalendarList } = useCalendarList();
 
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ export default function ControllerTargetCourses() {
   ) => {
     const courseIds = data.map(({ id }) => id);
 
-    const selectedCourseCalendarList = allCourseCalendarList.filter(
+    const selectedCourseCalendarList = courseCalendarList.filter(
       ({ courseId }) => courseIds?.includes(courseId),
     );
 
@@ -63,25 +63,25 @@ export default function ControllerTargetCourses() {
     }
 
     // 캘린더 권한 확인 Alert
-    const hasNotAclCourse = hasNotAclCalendarList?.find(({ courseId }) =>
-      courseIds.includes(courseId),
-    );
+    // const hasNotAclCourse = hasNotAclCalendarList?.find(({ courseId }) =>
+    //   courseIds.includes(courseId),
+    // );
 
-    if (hasNotAclCourse) {
-      return alert({
-        text: `${hasNotAclCourse.courseTitle} 교육과정 캘린더에 일정관리 권한이 부여되지 않았습니다.`,
-        subText:
-          '잠시만 기다려주시면 바로 관리자가 확인 후 권한을 부여해드리겠습니다.',
-        subTextColor: 'green',
-        className: 'max-w-[600px]',
-        buttonList: [
-          {
-            name: '확인',
-            onClick: hideDialog,
-          },
-        ],
-      });
-    }
+    // if (hasNotAclCourse) {
+    //   return alert({
+    //     text: `${hasNotAclCourse.courseTitle} 교육과정 캘린더에 일정관리 권한이 부여되지 않았습니다.`,
+    //     subText:
+    //       '잠시만 기다려주시면 바로 관리자가 확인 후 권한을 부여해드리겠습니다.',
+    //     subTextColor: 'green',
+    //     className: 'max-w-[600px]',
+    //     buttonList: [
+    //       {
+    //         name: '확인',
+    //         onClick: hideDialog,
+    //       },
+    //     ],
+    //   });
+    // }
     return onChange(courseIds);
   };
 

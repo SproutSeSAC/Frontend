@@ -1,6 +1,6 @@
 import {
-  useGetAclListByCalendar,
-  useGetCreatedCourseCalendar,
+  useGetCalendarAcl,
+  useGetCourseCalendar,
 } from '@/services/schedule/calendarQueries';
 
 import { useDialogContext } from '@/hooks';
@@ -19,29 +19,43 @@ export default function AclInfoButton({
   accessRole,
 }: AclInfoButtonProps) {
   const { calendarId: sproutCalendarId = '' } =
-    useGetCreatedCourseCalendar(courseId).data || {};
+    useGetCourseCalendar(courseId).data || {};
 
   const { hideDialog, alert } = useDialogContext();
 
-  const { data: aclList } = useGetAclListByCalendar(sproutCalendarId);
+  const { data: aclList } = useGetCalendarAcl(sproutCalendarId);
 
   const alertText = {
-    noAcl: {
+    hasNotAcl: {
       text: '아직 일정관리 권한이 부여되지 않은 상태입니다.',
       subText:
         '잠시만 기다려주시면 관리자가 확인 후 권한을 곧 부여해드리겠습니다.',
     },
-    noInMyCalendar: {
-      text: '일정관리 권한이 부여되었으나 나의 캘린더 목록에는 추가되지 않은 상태입니다.',
+    notInMyCalendar: {
+      text: '캘린더 권한이 부여되었으나 나의 캘린더 목록에는 없는 상태입니다.',
       subText:
-        '현재 구글 계정의 Gmail에 캘린더 추가 링크가 전달되었으니 링크를 통해 내 캘린더 목록에도 꼭 추가해주세요. 추가하지 않을시 교육과정 캘린더 목록에서 보이지 않을 수 있습니다.',
+        '내 캘린더 목록에 추가하지 않을시 교육과정 캘린더 목록에서 보이지 않을 수 있습니다.',
     },
   };
 
   const onInfoClick = () => {
     alert({
-      ...alertText[aclList?.length === 0 ? 'noAcl' : 'noInMyCalendar'],
-      children: <SquareButton name="확인" onClick={hideDialog} type="button" />,
+      ...alertText[aclList?.length === 0 ? 'hasNotAcl' : 'notInMyCalendar'],
+      children: (
+        <div className="flex gap-4 border">
+          <SquareButton
+            name="확인"
+            color="gray"
+            onClick={hideDialog}
+            type="button"
+          />
+          <SquareButton
+            name="나의 캘린더에 추가"
+            onClick={hideDialog}
+            type="button"
+          />
+        </div>
+      ),
     });
   };
 

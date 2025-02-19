@@ -54,13 +54,19 @@ export const useGetUserProfile = (
   const getUserProfile = async () => {
     const res: AxiosResponse<UserProfileDto.Get> =
       await axiosInstance.get('/user/check');
-    return res.data;
+
+    const courseList = res.data.courseList.sort((a, b) =>
+      a.courseTitle.localeCompare(b.courseTitle),
+    );
+    return { ...res.data, courseList };
   };
 
   return useQuery<UserProfileDto.Get>({
     queryKey: ['useGetUserProfile'],
     queryFn: getUserProfile,
-    initialData: initialUserProfile,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };

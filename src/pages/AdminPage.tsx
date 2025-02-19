@@ -2,16 +2,13 @@ import { useEffect } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { isSuperAdmin, updateQueryParams } from '@/utils';
+import { hasSuperAdmin, updateQueryParams } from '@/utils';
 
-import CalendarAclTable from '@/components/adminpage/CalendarAclTable';
+import CalendarAclTable from '@/components/calendar/CalendarAclTable';
 import TabNavigation from '@/components/common/TabNavigation';
 
 const ADMIN_TAB = 'adminTab';
@@ -32,15 +29,15 @@ export default function AdminPage() {
     updateQueryParams(searchParams, setSearchParams, ADMIN_TAB, type);
   };
 
-  const { data: { role } = initialUserProfile } = useGetUserProfile();
-
   const navigate = useNavigate();
 
+  const { data, isLoading } = useGetUserProfile();
+
   useEffect(() => {
-    if (!isSuperAdmin(role)) {
+    if (!hasSuperAdmin(data?.role) && !isLoading) {
       navigate(-1);
     }
-  }, [navigate, role]);
+  }, [navigate, data?.role, isLoading]);
 
   return (
     <MainView>

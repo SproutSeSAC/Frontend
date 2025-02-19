@@ -25,6 +25,6 @@ export { useHandleComment } from '@/hooks/post/useHandleComment';
 export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
 
 /* schedule */
-export { useGetUserAclList } from '@/hooks/schedule/useGetUserAclList';
+export { useHandleAcl } from '@/hooks/schedule/useHandleAcl';
 export { useCalendarList } from '@/hooks/schedule/useCalendarList';
 export { useCalendarEvents } from '@/hooks/schedule/useCalendarEvents';

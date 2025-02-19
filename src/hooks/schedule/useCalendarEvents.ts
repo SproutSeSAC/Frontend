@@ -14,7 +14,7 @@ import { useAtomValue } from 'jotai';
 export const useCalendarEvents = () => {
   const currShowingCalendarIds = useAtomValue(calendarIdsAtom);
 
-  const { allCalendarList, allCourseCalendarList } = useCalendarList();
+  const { allCalendarList, courseCalendarList } = useCalendarList();
 
   const getCalendarColor = useMemo(() => {
     return (calendarSummary: string) =>
@@ -45,10 +45,10 @@ export const useCalendarEvents = () => {
   const eventsByCalendar = useGetEventsByCalendar(currShowingCalendarIds || []);
 
   const createdCourseCalendarIdList = useMemo(() => {
-    return allCourseCalendarList
+    return courseCalendarList
       .filter(calendar => calendar.accessRole === 'owner')
       .map(({ calendarId }) => calendarId);
-  }, [allCourseCalendarList]);
+  }, [courseCalendarList]);
 
   const createdCourseCalendarEventList = useGetEventsByCalendar(
     createdCourseCalendarIdList,

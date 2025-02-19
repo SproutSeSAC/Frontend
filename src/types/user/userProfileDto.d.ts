@@ -19,18 +19,22 @@ type SignUpUserProfile = {
   marketingConsent: boolean;
 };
 
+type UserCourse = {
+  courseId: number;
+  courseTitle: string;
+  courseStartDate: string;
+  courseEndDate: string;
+};
+
+type UserCampus = {
+  id: number;
+  campusName: string;
+};
+
 type UserProfile = {
   email: string;
-  campusList: {
-    id: number;
-    campusName: string;
-  }[];
-  courseList: {
-    courseId: number;
-    courseTitle: string;
-    courseStartDate: string;
-    courseEndDate: string;
-  }[];
+  campusList: UserCampus[];
+  courseList: UserCourse[];
   name: string;
   domainList: Domain[];
   jobList: Job[];

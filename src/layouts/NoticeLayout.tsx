@@ -5,9 +5,9 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
+import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
 import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
-import Calendar from '@/components/schedule/Calendar';
 import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function NoticeLayout() {

@@ -8,7 +8,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import FullCalendar from '@fullcalendar/react';
 import rrulePlugin from '@fullcalendar/rrule';
 
-import SmallCalendarBottomEvent from '@/components/schedule/SmallCalendarBottomEvent';
+import SmallCalendarBottomEvent from '@/components/calendar/SmallCalendarBottomEvent';
 
 interface CalendarProps {
   type: 'big' | 'small';
