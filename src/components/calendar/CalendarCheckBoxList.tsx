@@ -2,22 +2,19 @@ import { useMemo } from 'react';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { Calendar, CalendarListByCategory, RoleKey } from '@/types';
-import { hasAdmin } from '@/utils';
+import { Calendar, CalendarListByCategory } from '@/types';
 import { useAtom } from 'jotai';
 
-import AclInfoButton from '@/components/calendar/AclInfoButton';
+import CourseCalendarCheckBox from '@/components/calendar/CourseCalendarCheckBox';
 import Accordion from '@/components/common/Accordion';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 
 interface CalendarCheckBoxListProps {
-  userRole: RoleKey;
   courseCalendarList: Calendar[];
   personalCalendarList: Calendar[];
 }
 
 export default function CalendarCheckBoxList({
-  userRole,
   courseCalendarList,
   personalCalendarList,
 }: CalendarCheckBoxListProps) {
@@ -56,7 +53,7 @@ export default function CalendarCheckBoxList({
       {calendarListByCategory.map(({ category, calendarList }) => (
         <Accordion
           key={category}
-          title={category}
+          title={`${category} ${calendarList.length}개`}
           className="mb-6"
           titleClassName="text-mainGreen text-sm text-darkGray-active mb-3 [&>button>svg]:text-xs [&>button>svg]:text-darkGray-active"
           initialOpen
@@ -64,31 +61,14 @@ export default function CalendarCheckBoxList({
           <ul className="flex flex-col gap-2">
             {category === '교육과정 캘린더' &&
               calendarList?.map(calendar => (
-                <div
+                <CourseCalendarCheckBox
                   key={calendar.courseId}
-                  className="flex items-start justify-between [&>label]:items-start"
-                >
-                  <Checkbox
-                    id={calendar.courseId}
-                    text={calendar.summary || calendar.courseTitle}
-                    checked={!!currentCalendarIds?.includes(calendar.id)}
-                    onChange={() => onCheckBoxChange(calendar.id)}
-                    textClassName={
-                      calendar.summary ? '!text-black' : '!text-mainGray-active'
-                    }
-                    checkBoxColor={calendar.backgroundColor}
-                    disabled={!calendar.summary}
-                  />
-
-                  {hasAdmin(userRole) && (
-                    <AclInfoButton
-                      courseId={calendar.courseId}
-                      accessRole={calendar.accessRole}
-                    />
-                  )}
-                </div>
+                  calendar={calendar}
+                />
               ))}
+          </ul>
 
+          <ul className="flex flex-col gap-2">
             {category === '개인 캘린더' &&
               calendarList?.map(({ id, summary, backgroundColor, primary }) => (
                 <Checkbox

@@ -32,7 +32,6 @@ export default function Schedule() {
         <CalendarCheckBoxList
           courseCalendarList={courseCalendarList}
           personalCalendarList={personalCalendarList || []}
-          userRole={userProfile?.role}
         />
         <Calendar type="big" events={fullCalendarEvents} />
       </div>
