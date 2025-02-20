@@ -20,7 +20,7 @@ export default function CalendarAclTable() {
   ];
 
   return (
-    <table className="mx-1 my-4 border-separate border-spacing-y-0 rounded-lg bg-white px-1 pb-3 pt-5">
+    <table className="mx-1 my-4 border-separate rounded-lg bg-white px-1 pb-3 pt-5">
       <colgroup>
         <col width="5%" />
         <col width="9%" />

@@ -1,3 +1,5 @@
+import { useGetUserProfile } from '@/services/auth/authQueries';
+
 import { rolesObj } from '@/constants';
 import { AclEmail, AdminEmail } from '@/types';
 import { getColorByRole } from '@/utils';
@@ -13,11 +15,20 @@ interface AclUserProps {
 export default function AclUser({ admin }: AclUserProps) {
   const { email, nickname, roleType } = admin;
 
+  const { data: userProfile } = useGetUserProfile();
+
+  const currentUser = userProfile?.nickname === nickname;
+
   return (
     <li key={email} className="relative flex items-center">
-      <BiUserPin className="peer cursor-pointer" />
-      <span className="peer cursor-pointer truncate tracking-tighter">
+      <BiUserPin
+        className={`peer cursor-pointer ${currentUser ? 'text-mainGreen' : 'text-text'}`}
+      />
+      <span
+        className={`peer cursor-pointer truncate tracking-tighter ${currentUser ? 'text-mainGreen' : 'text-text'}`}
+      >
         {nickname}
+        {currentUser && <span className="mb-1 inline-block text-sm">(나)</span>}
       </span>
       {roleType && (
         <div className="absolute left-4 top-6 z-10 hidden flex-col items-start rounded-b-xl rounded-tr-xl bg-lightGreen-hover p-4 shadow-sm hover:flex peer-hover:flex">

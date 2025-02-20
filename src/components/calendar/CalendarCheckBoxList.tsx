@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { Calendar, CalendarListByCategory, RoleKey } from '@/types';
-import { hasAdmin, isSuperAdmin } from '@/utils';
+import { hasAdmin } from '@/utils';
 import { useAtom } from 'jotai';
 
 import AclInfoButton from '@/components/calendar/AclInfoButton';
@@ -79,7 +79,8 @@ export default function CalendarCheckBoxList({
                     checkBoxColor={calendar.backgroundColor}
                     disabled={!calendar.summary}
                   />
-                  {hasAdmin(userRole) && !isSuperAdmin(userRole) && (
+
+                  {hasAdmin(userRole) && (
                     <AclInfoButton
                       courseId={calendar.courseId}
                       accessRole={calendar.accessRole}

@@ -13,6 +13,24 @@ import {
 } from '@/types';
 import { hasAdmin, hasSuperAdmin } from '@/utils';
 
+export const useInsertCalendar = (
+  options?: UseMutationOptions<unknown, Error, string>,
+) => {
+  const insertCalendar = async (id: string) => {
+    const response = await axiosCalendarInstance.post(
+      '/users/me/calendarList',
+      { id },
+    );
+    return response.data;
+  };
+
+  return useMutation({
+    mutationFn: insertCalendar,
+    mutationKey: ['useInsertCalendar'],
+    ...options,
+  });
+};
+
 export const useCreateCalendar = (
   options?: UseMutationOptions<
     unknown,

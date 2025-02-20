@@ -1,6 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query';
+
+import { useInsertCalendar } from '@/services/schedule/calendarMutations';
 import {
   useGetCalendarAcl,
-  useGetCourseCalendar,
+  useGetCourseCalendarStatus,
 } from '@/services/schedule/calendarQueries';
 
 import { useDialogContext } from '@/hooks';
@@ -18,12 +21,21 @@ export default function AclInfoButton({
   courseId,
   accessRole,
 }: AclInfoButtonProps) {
-  const { calendarId: sproutCalendarId = '' } =
-    useGetCourseCalendar(courseId).data || {};
+  const queryClient = useQueryClient();
+
+  const { calendarId } = useGetCourseCalendarStatus(courseId).data || {};
 
   const { hideDialog, alert } = useDialogContext();
 
-  const { data: aclList } = useGetCalendarAcl(sproutCalendarId);
+  const { data: aclList } = useGetCalendarAcl(courseId, calendarId);
+
+  const { mutateAsync: insertCalendar } = useInsertCalendar({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetCalendarList', 'useGetCourseCalendarStatusList'],
+      });
+    },
+  });
 
   const alertText = {
     hasNotAcl: {
@@ -42,7 +54,7 @@ export default function AclInfoButton({
     alert({
       ...alertText[aclList?.length === 0 ? 'hasNotAcl' : 'notInMyCalendar'],
       children: (
-        <div className="flex gap-4 border">
+        <div className="flex gap-4">
           <SquareButton
             name="확인"
             color="gray"
@@ -51,7 +63,12 @@ export default function AclInfoButton({
           />
           <SquareButton
             name="나의 캘린더에 추가"
-            onClick={hideDialog}
+            onClick={() => {
+              if (calendarId) {
+                insertCalendar(calendarId);
+              }
+              hideDialog();
+            }}
             type="button"
           />
         </div>

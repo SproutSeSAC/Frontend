@@ -15,7 +15,7 @@ import {
   GoogleCalendarApiDto,
 } from '@/types';
 import { getCookie } from '@/utils';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 export const useGetCalendarList = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalendarList>,
@@ -196,7 +196,7 @@ export const useGetAdminEmailListByCourse = (
 };
 
 // DB 생성된 교육과정 캘린더 데이터 가져오기
-export const useGetCourseCalendar = (
+export const useGetCourseCalendarStatus = (
   courseId?: number,
   options?: UseQueryOptions<CourseCalendarDto.Get>,
 ) => {
@@ -204,11 +204,11 @@ export const useGetCourseCalendar = (
     const res: AxiosResponse<CourseCalendarDto.Get[]> = await axiosInstance.get(
       `/user/calendar/${courseId}`,
     );
-    return res.data?.[0] || [];
+    return res.data?.[0] || {};
   };
 
   return useQuery({
-    queryKey: ['useGetCourseCalendar', courseId],
+    queryKey: ['useGetCourseCalendarStatus', courseId],
     queryFn: getCalendarIdByCourse,
     enabled: !!courseId,
     ...options,
@@ -216,40 +216,35 @@ export const useGetCourseCalendar = (
 };
 
 export const getCalendarAcl = async (calendarId?: string) => {
-  try {
-    const aclRes: AxiosResponse<{ items: Acl[] }> =
-      await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+  const aclRes: AxiosResponse<{ items: Acl[] }> =
+    await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
 
-    const result = aclRes.data.items
-      .filter(
-        ({ scope: { value } }) =>
-          !value.includes('@public') && !value.includes('@group'),
-      )
-      .map(({ role, scope }) => ({
-        email: scope.value,
-        accessRole: role,
-      })) as AclEmail[];
+  const result = aclRes.data.items
+    .filter(
+      ({ scope: { value } }) =>
+        !value.includes('@public') && !value.includes('@group'),
+    )
+    .map(({ role, scope }) => ({
+      email: scope.value,
+      accessRole: role,
+    })) as AclEmail[];
 
-    return result;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response?.status === 403) {
-      return [];
-    }
-    throw error;
-  }
+  return result;
 };
 
 // 구글 캘린더별 acl 데이터 가져오기
 export const useGetCalendarAcl = (
+  courseId: number,
   calendarId?: string,
   options?: UseQueryOptions<AclEmail[]>,
 ) => {
   return useQuery<AclEmail[]>({
-    queryKey: ['useGetCalendarAcl', calendarId],
+    queryKey: ['useGetCalendarAcl', courseId],
     queryFn: () => getCalendarAcl(calendarId),
     enabled: !!calendarId,
-    refetchOnMount: false,
+
     refetchOnWindowFocus: false,
+    throwOnError: false,
     ...options,
   });
 };

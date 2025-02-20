@@ -1,11 +1,10 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { UseMutateAsyncFunction } from '@tanstack/react-query';
 
 import { useGetUserProfile } from '@/services/auth/authQueries';
-import { useCreateCalendar } from '@/services/schedule/calendarMutations';
 
 import { rolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
-import { AdminEmailListByCourseDto, Calendar } from '@/types';
+import { AdminEmailListByCourseDto, GoogleCalendarApiDto } from '@/types';
 import { getColorByRole } from '@/utils';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -15,57 +14,26 @@ interface CreateCalendarButtonProps {
   courseTitle: string;
   courseId: number;
   adminList?: AdminEmailListByCourseDto.Get;
+  createCalendar: UseMutateAsyncFunction<
+    unknown,
+    Error,
+    GoogleCalendarApiDto.PostCalendar,
+    unknown
+  >;
+  isCreateCalendarPending: boolean;
 }
 
 export default function CalendarCreateButton({
   courseTitle,
   courseId,
   adminList,
+  createCalendar,
+  isCreateCalendarPending,
 }: CreateCalendarButtonProps) {
-  const queryClient = useQueryClient();
+  const { alert, hideDialog } = useDialogContext();
 
-  const { alert, hideDialog, loadingAlert } = useDialogContext();
-
-  const {
-    data: userProfile,
-    isLoading: isUserProfileLoading, //
-  } = useGetUserProfile();
-
-  const {
-    mutateAsync: createCalendar,
-    isPending: isCreateCalendarPending, //
-  } = useCreateCalendar({
-    onMutate: async () => {
-      loadingAlert({
-        text: '캘린더 생성 중입니다... 잠시만 기다려주세요',
-      });
-    },
-    onSuccess: async data => {
-      const newCalendarId = (data as Calendar)?.id;
-
-      if (!newCalendarId) {
-        return;
-      }
-
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetCourseCalendar'],
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetCalendarAcl', newCalendarId],
-      });
-
-      await queryClient.refetchQueries({
-        queryKey: ['useGetCourseCalendar'],
-      });
-
-      await queryClient.refetchQueries({
-        queryKey: ['useGetCalendarAcl', newCalendarId],
-      });
-
-      hideDialog();
-    },
-  });
+  const { data: userProfile, isLoading: isUserProfileLoading } =
+    useGetUserProfile();
 
   const onCreateCalendarClick = () => {
     alert({
@@ -82,7 +50,12 @@ export default function CalendarCreateButton({
             <ul className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-4">
               {adminList?.map(({ roleType, email, nickname }) => (
                 <li key={email} className="flex">
-                  <span className="tracking-tighter">{nickname}</span>
+                  <span className="tracking-tighter">
+                    {nickname}
+                    {userProfile?.nickname === nickname && (
+                      <span className="mb-1 inline-block text-sm">(나)</span>
+                    )}
+                  </span>
                   <Tag
                     size="small"
                     color={getColorByRole(roleType)}
