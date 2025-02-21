@@ -91,6 +91,7 @@ export const useHandleSignUp = ({
           ...rest,
           ...initializeValue,
         };
+
         if (
           isCampusLeader(formData.role) ||
           isOperationManager(formData.role)

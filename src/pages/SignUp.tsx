@@ -366,8 +366,8 @@ export default function SignUp() {
                                   control={control}
                                   name={
                                     term === '이용약관'
-                                      ? 'termsAgree'
-                                      : 'dataConsent'
+                                      ? 'serviceTerms'
+                                      : 'personalInformationTerms'
                                   }
                                   render={({ field: { onChange, value } }) => {
                                     return (
@@ -394,8 +394,10 @@ export default function SignUp() {
                                 />
                               ))}
 
-                              {errors.dataConsent?.message && (
-                                <ErrorMsg msg={errors.dataConsent?.message} />
+                              {errors.personalInformationTerms?.message && (
+                                <ErrorMsg
+                                  msg={errors.personalInformationTerms?.message}
+                                />
                               )}
                             </ul>
                           )}

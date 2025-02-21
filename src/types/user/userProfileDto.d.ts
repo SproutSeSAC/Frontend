@@ -17,8 +17,8 @@ type SignUpValue = {
   jobIdList: number[];
   domainIdList: number[];
   phoneNumber: string;
-  termsAgree: boolean;
-  dataConsent: boolean;
+  serviceTerms: boolean;
+  personalInformationTerms: boolean;
 };
 
 type UserProfile = {
