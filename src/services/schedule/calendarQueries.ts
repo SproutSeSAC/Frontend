@@ -2,17 +2,15 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosCalendarInstance, axiosInstance } from '@/services/axiosInstance';
 
-import { CALENDAR_TOKEN_KEY, SUPER_ADMIN_EMAIL } from '@/constants';
+import { CALENDAR_TOKEN_KEY } from '@/constants';
 import {
-  AccessRole,
   Acl,
   AclEmail,
   AdminEmail,
   AdminEmailListByCourseDto,
-  Calendar,
-  CourseCalendarAcl,
   CourseCalendarDto,
   GoogleCalendarApiDto,
+  UserCourse,
 } from '@/types';
 import { getCookie } from '@/utils';
 import { AxiosResponse } from 'axios';
@@ -77,100 +75,6 @@ export const useGetEventsByCalendar = (
         ...options,
       };
     }),
-  });
-};
-
-export const useGetCalendarAclList = (
-  calendarList: (Calendar & {
-    courseTitle: string;
-    courseId: number;
-    calendarId?: string;
-  })[],
-  options?: UseQueryOptions<CourseCalendarAcl[]>,
-) => {
-  const getAdminListByCourse: (
-    courseId: number,
-  ) => Promise<AdminEmail[]> = async (courseId: number) => {
-    const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
-      await axiosInstance.get(`/user/calendar/${courseId}/email`);
-    return res.data;
-  };
-
-  const getAclList: (
-    calendarId: string,
-  ) => Promise<{ email: string; accessRole: AccessRole }[]> = async (
-    calendarId: string,
-  ) => {
-    try {
-      const aclRes: AxiosResponse<{ items: Acl[] }> =
-        await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
-
-      const result = aclRes.data.items
-        .filter(
-          ({ scope: { value } }) =>
-            !value.includes('@public') && !value.includes('@group'),
-        )
-        .map(({ role, scope }) => ({ email: scope.value, accessRole: role }));
-
-      return result;
-    } catch (error) {
-      throw new Error(
-        `ACL이 있는 이메일 데이터 가져오는 중 에러 발생: ${error}`,
-      );
-    }
-  };
-
-  const getCalendarAclList = async () => {
-    const requests = calendarList.map(async calendar => {
-      if (calendar?.accessRole !== 'owner' || !calendar?.calendarId) {
-        return { ...calendar, isCreated: false };
-      }
-
-      try {
-        const [aclList, adminList] = await Promise.all([
-          getAclList(calendar.calendarId),
-          getAdminListByCourse(calendar.courseId),
-        ]);
-
-        const hasAclAdminList = aclList.map(acl => {
-          const adminData = adminList.find(({ email }) => email === acl.email);
-          const isSuperAdmin = acl.email === SUPER_ADMIN_EMAIL;
-          return {
-            ...acl,
-            nickname: isSuperAdmin ? '관리자' : adminData?.nickname,
-            roleType: isSuperAdmin ? 'SUPER_ADMIN' : adminData?.roleType,
-          };
-        }) as AclEmail[];
-
-        const hasNotAclAdminList = adminList.filter(
-          ({ email }) =>
-            !aclList.find(({ email: aclEmail }) => email === aclEmail),
-        );
-
-        const { accessRole, calendarId, courseId, courseTitle } = calendar;
-
-        return {
-          courseId,
-          courseTitle,
-          calendarId,
-          isCreated: !!accessRole,
-          hasAclAdminList,
-          hasNotAclAdminList,
-        };
-      } catch (err) {
-        throw new Error(`캘린더 id ${calendar.courseTitle}: ${err}`);
-      }
-    });
-
-    return Promise.all(requests);
-  };
-
-  return useQuery<CourseCalendarAcl[]>({
-    queryKey: ['useGetCalendarAclList'],
-    queryFn: getCalendarAclList,
-    enabled: calendarList.length > 0,
-    retry: false,
-    ...options,
   });
 };
 
@@ -245,6 +149,101 @@ export const useGetCalendarAcl = (
 
     refetchOnWindowFocus: false,
     throwOnError: false,
+    ...options,
+  });
+};
+
+export const useGetIsWaitingAcl = (
+  courseList: UserCourse[],
+  options?: UseQueryOptions<boolean>,
+) => {
+  // 여기서 그냥 권한이 있는지 없는지만 확인
+  // 1. 나의 교육과정의 캘린더 상태 가져오기
+  const getCourseCalendarIdList = async () => {
+    const requests = courseList.map(({ courseId }) =>
+      axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
+        return res.data.length !== 0
+          ? res.data.map(({ calendarId }: CourseCalendarDto.Get) => {
+              return { calendarId, courseId };
+            })
+          : [];
+      }),
+    );
+    const responses = await Promise.all(requests);
+    return responses.flat() as { calendarId: string; courseId: number }[];
+  };
+
+  const getAdminListByCourse: (
+    courseId: number,
+  ) => Promise<AdminEmail[]> = async (courseId: number) => {
+    const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
+      await axiosInstance.get(`/user/calendar/${courseId}/email`);
+    return res.data;
+  };
+
+  const getAclList: (
+    calendarId: string,
+  ) => Promise<{ email: string }[]> = async (calendarId: string) => {
+    try {
+      const aclRes: AxiosResponse<{ items: Acl[] }> =
+        await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+
+      const result = aclRes.data.items
+        .filter(
+          ({ scope: { value } }) =>
+            !value.includes('@public') && !value.includes('@group'),
+        )
+        .map(({ scope }) => ({ email: scope.value }));
+
+      return result;
+    } catch (error) {
+      throw new Error(
+        `ACL이 있는 이메일 데이터 가져오는 중 에러 발생: ${error}`,
+      );
+    }
+  };
+
+  const getHasNotAclList = async () => {
+    const courseCalendarList = await getCourseCalendarIdList();
+
+    const requests = courseCalendarList.map(
+      async ({ calendarId, courseId }) => {
+        if (!calendarId || !courseId) return { isWaitingAcl: false };
+
+        try {
+          const [aclList, adminList] = await Promise.all([
+            getAclList(calendarId),
+            getAdminListByCourse(courseId),
+          ]);
+
+          const hasNotAclAdminList = adminList.filter(
+            ({ email }) =>
+              !aclList.find(({ email: aclEmail }) => email === aclEmail),
+          );
+
+          return { isWaitingAcl: !!hasNotAclAdminList.length };
+        } catch (err) {
+          throw new Error(`캘린더 id ${calendarId}: ${err}`);
+        }
+      },
+    );
+
+    return Promise.all(requests);
+  };
+
+  const getIsWaitingAcl = async () => {
+    const calendarAclList = await getHasNotAclList();
+    const isWaitingAclList = calendarAclList?.filter(
+      ({ isWaitingAcl }) => isWaitingAcl,
+    );
+    return !!isWaitingAclList.length;
+  };
+
+  return useQuery<boolean>({
+    queryKey: ['useGetIsWaitingAcl'],
+    queryFn: getIsWaitingAcl,
+    enabled: courseList.length > 0,
+    retry: false,
     ...options,
   });
 };

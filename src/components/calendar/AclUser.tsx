@@ -2,7 +2,7 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { rolesObj } from '@/constants';
 import { AclEmail, AdminEmail } from '@/types';
-import { getColorByRole } from '@/utils';
+import { getColorByRole, isSuperAdmin } from '@/utils';
 import { BiUserPin } from 'react-icons/bi';
 import { MdOutlineEmail } from 'react-icons/md';
 
@@ -17,7 +17,12 @@ export default function AclUser({ admin }: AclUserProps) {
 
   const { data: userProfile } = useGetUserProfile();
 
-  const currentUser = userProfile?.nickname === nickname;
+  const adminNickName =
+    isSuperAdmin(userProfile?.role) && nickname === '관리자'
+      ? userProfile.nickname
+      : nickname;
+
+  const currentUser = userProfile?.nickname === adminNickName;
 
   return (
     <li key={email} className="relative flex items-center">
@@ -27,7 +32,7 @@ export default function AclUser({ admin }: AclUserProps) {
       <span
         className={`peer cursor-pointer truncate tracking-tighter ${currentUser ? 'text-mainGreen' : 'text-text'}`}
       >
-        {nickname}
+        {adminNickName}
         {currentUser && <span className="mb-1 inline-block text-sm">(나)</span>}
       </span>
       {roleType && (

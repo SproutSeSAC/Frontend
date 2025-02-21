@@ -2,11 +2,9 @@ import { useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
+import { useGetIsWaitingAcl } from '@/services/schedule/calendarQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
@@ -33,12 +31,14 @@ export default function Home() {
   } = useGetLoungeProjects({ page: 1, size: 10 });
 
   const {
-    data: userProfile = initialUserProfile,
+    data: userProfile,
     isLoading: isGetUserProfileLoading, //
     isFetched,
   } = useGetUserProfile();
 
-  const { name } = userProfile;
+  const { data: isWaitingAcl } = useGetIsWaitingAcl(
+    userProfile?.courseList || [],
+  );
 
   const { showToast } = useDialogContext();
 
@@ -47,8 +47,12 @@ export default function Home() {
       showToast('새싹 회원이 되신 것을 환영합니다!');
       setIsFirstLogin(false);
     }
+
+    if (isWaitingAcl) {
+      showToast('권한 대기중인 매니저가 있습니다.');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFirstLogin]);
+  }, [isFirstLogin, isWaitingAcl]);
 
   if ((!isFetched && isGetUserProfileLoading) || isGetLoungeListLoading)
     return <LoadingPage />;
@@ -57,7 +61,7 @@ export default function Home() {
 
   return (
     <MainView className="pb-20">
-      <Header title={`${name} 스프님, 환영합니다!`} />
+      <Header title={`${userProfile?.name} 스프님, 환영합니다!`} />
 
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
         <section className="relative flex h-full flex-col">
@@ -68,9 +72,6 @@ export default function Home() {
         <section>
           <div className="mb-[14px] flex items-center justify-between">
             <Title title="주요 일정" />
-            <Link to="/schedule" className={linkButtonStyle}>
-              더보기
-            </Link>
           </div>
           <Calendar type="small" className="h-[509px]" />
         </section>
