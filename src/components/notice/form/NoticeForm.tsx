@@ -40,7 +40,6 @@ export default function NoticeForm() {
   const { onEditSubmit } = useEditNotice({ noticeId: editNoticeId, content });
 
   const NoticeExtraDetailToForm = {
-    isPhoneNumberRequired: rest.isPhoneNumberRequired,
     applicationStartDateTime: rest.applicationStartDateTime,
     applicationEndDateTime: rest.applicationEndDateTime,
     meetingPlace: rest.meetingPlace,

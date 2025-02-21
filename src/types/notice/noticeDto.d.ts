@@ -49,7 +49,6 @@ interface NoticeDetail extends NoticeCommonFields {
   createdAt: string;
   // Optional
   sessions?: NoticeSession[];
-  isPhoneNumberRequired?: boolean;
   applicationStartDateTime?: string;
   applicationEndDateTime?: string;
   meetingPlace?: string;
