@@ -17,7 +17,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
   const { data: profileCard } = useGetUserProfileCard();
 
   const { register, handleSubmit, reset } = useForm({
-    defaultValues: { content: '' },
+    defaultValues: { content: '', editedContent: '' },
   });
 
   const {
@@ -39,74 +39,82 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <textarea
           {...register('content')}
-          className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg"
+          className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] outline-none"
           placeholder="댓글을 작성해 주세요."
           rows={5}
         />
-        <SquareButton type="submit" name="등록" className="self-end" />
+        <SquareButton type="submit" name="등록" className="self-end px-5" />
       </form>
 
       <ul className="mt-8 flex flex-col gap-8">
-        {commentList
-          .sort(
-            (a, b) =>
-              new Date(b.createAt).getTime() - new Date(a.createAt).getTime(),
-          )
-          .map(({ id, userNickname, content, imgUrl, createAt }) => (
-            <li
-              key={id}
-              className="flex w-full flex-col gap-4 border border-red-500 text-lg"
-            >
-              <div className="flex items-center gap-2">
-                <UserImage
-                  className="size-[30px]"
-                  imageNameSegment={imgUrl ?? ''}
-                />
-                <span>{userNickname ? `@${userNickname}` : '-'}</span>
-                {userNickname === profileCard?.profile?.nickname && (
-                  <>
-                    <EditButton
-                      label="댓글 수정하기"
-                      onClick={() => {
-                        toggleEditingComment(id);
-                        reset({ content });
-                      }}
-                    />
-                    <TrashButton
-                      onConfirmClick={() => deleteComment({ commentId: id })}
-                    />
-                  </>
-                )}
+        {commentList.map(
+          ({ id, userInfo: { nickname, profileImg }, content, createAt }) => (
+            <li key={id} className="flex w-full flex-col gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1">
+                  <UserImage
+                    className="size-[30px]"
+                    imageNameSegment={profileImg ?? ''}
+                  />
+                  <span>{nickname ? `@${nickname}` : '-'}</span>
+                </div>
+
+                {nickname === profileCard?.profile?.nickname &&
+                  !isEditingComment.isEditing && (
+                    <div className="flex items-center gap-3">
+                      <EditButton
+                        label="댓글 수정하기"
+                        onClick={() => {
+                          toggleEditingComment(id);
+                          reset({ editedContent: content });
+                        }}
+                        className="!size-4 pb-0.5"
+                      />
+                      <TrashButton
+                        className="!size-5 pt-0.5"
+                        onConfirmClick={() => deleteComment({ commentId: id })}
+                      />
+                    </div>
+                  )}
               </div>
 
               {isEditingComment.isEditing &&
               isEditingComment.commentId === id ? (
                 <form
-                  onSubmit={handleSubmit(({ content: editedContent }) =>
-                    onEditSubmit({ content: editedContent, commentId: id }),
+                  onSubmit={handleSubmit(({ editedContent }) =>
+                    onEditSubmit({ editedContent, commentId: id }),
                   )}
                   className="flex flex-col"
                 >
                   <textarea
-                    {...register('content')}
-                    className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg"
+                    {...register('editedContent')}
+                    className="border-lightGrey mb-2 w-full resize-none rounded border border-solid p-[15px] focus:outline-none"
                     placeholder="댓글을 수정해 주세요."
                     rows={5}
                   />
-                  <SquareButton
-                    type="submit"
-                    name="수정"
-                    className="self-end"
-                  />
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-darkGray">
+                      {formatDate(createAt, 'yyyy.MM.dd HH:mm')}
+                    </span>
+                    <SquareButton
+                      type="submit"
+                      name="수정"
+                      className="self-end px-5"
+                    />
+                  </div>
                 </form>
               ) : (
-                <p>{content}</p>
+                <>
+                  <p className="my-3">{content}</p>
+                  <span className="text-darkGray">
+                    {formatDate(createAt, 'yyyy.MM.dd HH:mm')}
+                  </span>
+                </>
               )}
-              <span className="text-darkGray-active">
-                {formatDate(createAt, 'yyyy.MM.dd HH:mm')}
-              </span>
             </li>
-          ))}
+          ),
+        )}
       </ul>
     </section>
   );

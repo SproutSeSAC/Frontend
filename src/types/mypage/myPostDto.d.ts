@@ -27,6 +27,6 @@ interface MyComment {
   postId: number;
   content: string;
   createAt: string;
-  userNickname: string;
+  userInfo: { nickname: string; profileImg: string };
   imgUrl: string;
 }

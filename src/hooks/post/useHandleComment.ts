@@ -20,6 +20,7 @@ interface UseHandleCommentProps {
   postId: number;
   reset: UseFormReset<{
     content: string;
+    editedContent: string;
   }>;
 }
 
@@ -76,16 +77,16 @@ export const useHandleComment = ({ postId, reset }: UseHandleCommentProps) => {
   };
 
   const onEditSubmit = async ({
-    content,
+    editedContent,
     commentId,
   }: {
-    content: string;
+    editedContent: string;
     commentId: number;
   }) => {
-    if (content === '') return;
+    if (editedContent === '') return;
 
     try {
-      await editComment({ commentId, postId, imgUrl, content });
+      await editComment({ commentId, postId, imgUrl, content: editedContent });
       showToast('댓글을 수정했어요!');
       toggleEditingComment();
       reset();

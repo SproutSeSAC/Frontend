@@ -6,12 +6,15 @@ import { myPostDto } from '@/types/mypage/myPostDto';
 
 export const useGetCommentByPostList = (postId: number) => {
   return useQuery({
-    queryKey: ['useGetCommentByPostList', postId],
+    queryKey: ['useGetCommentByPostList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get<myPostDto.GetMyCommentList>(
         `/posts/${postId}/comments`,
       );
-      return data;
+      return data.sort(
+        (a, b) =>
+          new Date(b.createAt).getTime() - new Date(a.createAt).getTime(),
+      );
     },
   });
 };

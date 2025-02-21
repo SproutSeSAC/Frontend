@@ -26,13 +26,13 @@ export default function SelectOption({
     <li key={option.id} className="rounded-lg first:mt-2 last:mb-2">
       {isMultiSelectOption ? (
         <label
-          className={`hover:bg-lightGrey flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-start ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-start hover:bg-lightGray ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
         >
           <input
             type="checkbox"
             checked={isSelected}
             onChange={() => onOptionClick(option)}
-            className="mr-3 size-4 rounded border-gray-300"
+            className="mr-3 size-4 min-h-4 min-w-4 rounded border-gray-300"
           />
           <span>{option.name}</span>
         </label>

@@ -20,6 +20,7 @@ import { NoticeDto } from '@/types';
 import { findCurrNotice, getColorByRole, isPreTrainee } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
+import LoopLoading from '@/components/common/LoopLoading';
 import BackButton from '@/components/common/button/BackButton';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import CommentTemplate from '@/components/common/post-template/CommentTemplate';
@@ -37,7 +38,7 @@ export default function NoticeDetail() {
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { data: noticeDetail } =
+  const { data: noticeDetail, isLoading: isNoticeDetailLoading } =
     useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
 
   const { deletePostImages } = useHandleImage();
@@ -124,80 +125,85 @@ export default function NoticeDetail() {
   const onBackClick = () => navigate('/notice');
 
   return (
-    <main className="flex w-full">
+    <div className="flex w-full">
       <BackButton onClick={onBackClick} />
 
-      <div className="w-full">
-        <section className="w-full px-6 pb-[45px] pt-5">
-          <header className="flex items-center justify-between">
-            <h1 className="text-[32px] font-semibold">
-              {noticeDetail?.title || '-'}
-            </h1>
-            <FavoriteButton
-              isFavorite={noticeDetail?.isScraped ?? false}
-              onClick={onScrapClick}
-              size={24}
-            />
-          </header>
+      {isNoticeDetailLoading ? (
+        <div className="ml-2 flex h-[80vh] w-full items-center justify-center">
+          <LoopLoading />
+        </div>
+      ) : (
+        <div className="w-full">
+          <section className="w-full px-6 pb-[45px] pt-5">
+            <header className="flex items-center justify-between">
+              <h1 className="text-[32px] font-semibold">
+                {noticeDetail?.title || '-'}
+              </h1>
+              <FavoriteButton
+                isFavorite={noticeDetail?.isScraped ?? false}
+                onClick={onScrapClick}
+                size={24}
+              />
+            </header>
 
-          <div className="mt-12 flex gap-2">
-            {noticeDetail?.writer.role && (
-              <Tag
-                color={getColorByRole(noticeDetail?.writer.role)}
-                size="big"
-                text={rolesObj[noticeDetail?.writer.role]}
-                emphasisText
-                className="px-[10px] py-[5px]"
-              />
-            )}
-            {noticeDetail?.noticeType && (
-              <Tag
-                color="gray"
-                size="big"
-                text={noticeCategoryDisplay[noticeDetail?.noticeType]}
-                className="px-[10px] py-[5px]"
-              />
-            )}
-            {noticeDetail?.writer.userId === userProfile.userId && (
-              <div className="group relative ml-auto flex items-center justify-center">
-                <button className="px-2">
-                  <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
-                </button>
-                <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
-                  <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
-                    {actions.map(action => (
-                      <li key={action.label}>
-                        <button
-                          onClick={action.onClick}
-                          className={action.className}
-                        >
-                          {action.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+            <div className="mt-12 flex gap-2">
+              {noticeDetail?.writer.role && (
+                <Tag
+                  color={getColorByRole(noticeDetail?.writer.role)}
+                  size="big"
+                  text={rolesObj[noticeDetail?.writer.role]}
+                  emphasisText
+                  className="px-[10px] py-[5px]"
+                />
+              )}
+              {noticeDetail?.noticeType && (
+                <Tag
+                  color="gray"
+                  size="big"
+                  text={noticeCategoryDisplay[noticeDetail?.noticeType]}
+                  className="px-[10px] py-[5px]"
+                />
+              )}
+              {noticeDetail?.writer.userId === userProfile.userId && (
+                <div className="group relative ml-auto flex items-center justify-center">
+                  <button className="px-2">
+                    <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
+                  </button>
+                  <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
+                    <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
+                      {actions.map(action => (
+                        <li key={action.label}>
+                          <button
+                            onClick={action.onClick}
+                            className={action.className}
+                          >
+                            {action.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {noticeDetail?.noticeType &&
-            findCurrNotice(noticeDetail?.noticeType)?.needExtraInfo && (
-              <NoticeApplicationInfoTemplate notice={noticeDetail} />
-            )}
+            {noticeDetail?.noticeType &&
+              findCurrNotice(noticeDetail?.noticeType)?.needExtraInfo && (
+                <NoticeApplicationInfoTemplate notice={noticeDetail} />
+              )}
 
-          <PostDetailsTemplate
-            nickname={noticeDetail?.writer.userName || '-'}
-            createdAt={noticeDetail?.createdAt}
-            viewCount={noticeDetail?.viewCount || 0}
-            description={noticeDetail?.content || '-'}
-            actions={applySession()}
-            imageNameSegment={noticeDetail?.writer.profileUrl}
-          />
-        </section>
-
-        <CommentTemplate postId={postId} />
-      </div>
-    </main>
+            <PostDetailsTemplate
+              nickname={noticeDetail?.writer.userName || '-'}
+              createdAt={noticeDetail?.createdAt}
+              viewCount={noticeDetail?.viewCount || 0}
+              description={noticeDetail?.content || '-'}
+              actions={applySession()}
+              imageNameSegment={noticeDetail?.writer.profileUrl}
+            />
+          </section>
+          <CommentTemplate postId={postId} />
+        </div>
+      )}
+    </div>
   );
 }
