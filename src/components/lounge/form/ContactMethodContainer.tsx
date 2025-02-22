@@ -11,7 +11,7 @@ export default function ContactMethodContainer({
 }: {
   control: Control<FormValues>;
 }) {
-  const contactMethod: ContactMethodDisplayKey = useWatch({
+  const contactMethod: ContactMethodDisplayKey | '' = useWatch({
     control,
     name: 'contactMethod',
   });
