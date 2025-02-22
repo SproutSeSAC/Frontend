@@ -47,7 +47,7 @@ export default function MealRecruitModal() {
   });
   const { control, handleSubmit } = methods;
 
-  const { mutateAsync } = usePostMyPost();
+  const { mutateAsync: postMealRecruit } = usePostMyPost();
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
@@ -71,20 +71,21 @@ export default function MealRecruitModal() {
       };
 
       try {
-        await mutateAsync(params);
+        await postMealRecruit(params);
 
         showToast('한끼팟을 생성했습니다.');
 
         await queryClient.invalidateQueries({
           queryKey: ['useGetInfiniteMealPostList'],
         });
+
         hideDialog();
       } catch (err) {
         console.error(err);
         showToast('한끼팟을 생성하지 못했습니다.');
       }
     },
-    [hideDialog, mutateAsync, queryClient, showToast],
+    [hideDialog, postMealRecruit, queryClient, showToast],
   );
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(

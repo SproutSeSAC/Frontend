@@ -37,7 +37,9 @@ export const useHandlePostActions = ({
         deletePost();
         showToast(`${postType} 삭제했습니다.`);
         if (invalidateQueryKeys) {
-          queryClient.invalidateQueries({ queryKey: invalidateQueryKeys });
+          await queryClient.invalidateQueries({
+            queryKey: invalidateQueryKeys,
+          });
         }
       } catch (err) {
         showToast(`${postType.slice(0, -1)} 삭제를 실패했습니다.`);

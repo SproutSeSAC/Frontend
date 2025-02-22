@@ -22,7 +22,7 @@ export default function ControllerParticipantCapacity() {
 
         return (
           <div
-            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-lightGrey'}`}
+            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-lightGray'}`}
           >
             <button
               type="button"

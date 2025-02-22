@@ -47,7 +47,7 @@ export default function NotificationContent() {
           return (
             <div
               key={item.id}
-              className={`border-lightGrey block w-full rounded-lg border border-solid px-7 py-[22px] text-sm ${item.isRead && 'opacity-50'}`}
+              className={`block w-full rounded-lg border border-solid border-lightGray px-7 py-[22px] text-sm ${item.isRead && 'opacity-50'}`}
             >
               <CardContent notification={item} />
             </div>

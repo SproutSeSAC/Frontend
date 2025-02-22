@@ -77,11 +77,13 @@ export default function MealRecruitList() {
           </button>
         </ScrollContainer>
       </div>
+
       {isFetchingNextPage && (
         <div className="m-auto">
           <LoopLoading size={40} />
         </div>
       )}
+
       <div ref={mealPostObserveRef} />
     </section>
   );

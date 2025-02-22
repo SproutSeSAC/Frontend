@@ -63,8 +63,8 @@ export default function NoticeDetail() {
     postType: '공지사항을',
     requiredActions: {
       delete: {
-        action: () => {
-          deleteNotice({ postId });
+        action: async () => {
+          await deleteNotice({ postId });
           navigate('/notice');
         },
       },

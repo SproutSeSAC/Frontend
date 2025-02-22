@@ -29,22 +29,23 @@ export const useEditNotice = ({
     },
   };
 
-  const { mutateAsync: mutateEditedNotice } = usePutMyPost({
-    onError: () => {
-      alert({
-        text: '공지사항 수정 중 오류가 발생했습니다.',
-        subText: '다시 시도해주세요.',
-        buttonList: [confirmBtn],
-      });
-    },
-    onSuccess: async () => {
-      alert({
-        dimClick: false,
-        text: '공지사항이 수정되었습니다!',
-        buttonList: [confirmBtn],
-      });
-    },
-  });
+  const { mutateAsync: mutateEditedNotice, isPending: isEditingPostPending } =
+    usePutMyPost({
+      onError: () => {
+        alert({
+          text: '공지사항 수정 중 오류가 발생했습니다.',
+          subText: '다시 시도해주세요.',
+          buttonList: [confirmBtn],
+        });
+      },
+      onSuccess: async () => {
+        alert({
+          dimClick: false,
+          text: '공지사항이 수정되었습니다!',
+          buttonList: [confirmBtn],
+        });
+      },
+    });
 
   const { handleImagesInHtmlContent } = useHandleImage();
 
@@ -87,6 +88,7 @@ export const useEditNotice = ({
     }
   };
   return {
+    isEditingPostPending,
     onEditSubmit,
   };
 };

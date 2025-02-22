@@ -79,43 +79,44 @@ export const useSubmitNotice = () => {
     return mutateCreateEvent(events);
   };
 
-  const { mutateAsync: postNotice } = usePostMyPost<NoticeDto.PostNotice>({
-    onError: () => {
-      alert({
-        text: '공지사항 등록 중 오류가 발생했습니다.',
-        subText: '다시 시도해주세요.',
-        buttonList: [confirmBtn],
-      });
-    },
-    onSuccess: async (_, data: NoticeDto.PostNotice) => {
-      const currNotice = findCurrNotice(data.noticeType);
-
-      if (!currNotice?.needExtraInfo) {
+  const { mutateAsync: postNotice, isPending: isPostMyPostPending } =
+    usePostMyPost<NoticeDto.PostNotice>({
+      onError: () => {
         alert({
-          dimClick: false,
-          text: '공지사항이 성공적으로 등록되었습니다!',
+          text: '공지사항 등록 중 오류가 발생했습니다.',
+          subText: '다시 시도해주세요.',
           buttonList: [confirmBtn],
         });
-        return;
-      }
+      },
+      onSuccess: async (_, data: NoticeDto.PostNotice) => {
+        const currNotice = findCurrNotice(data.noticeType);
 
-      if (currNotice?.needExtraInfo && data.sessions) {
-        const { sessions, title, targetCourseIdList, meetingPlace } = data;
-        await createEventsForTargetCourse({
-          sessions,
-          title,
-          targetCourseIdList,
-          meetingPlace,
-        });
-        alert({
-          dimClick: false,
-          text: '공지사항이 성공적으로 등록되었습니다!',
-          subText: `${currNotice?.name} 일정이 교육과정 캘린더에 추가되었습니다!`,
-          buttonList: [confirmBtn],
-        });
-      }
-    },
-  });
+        if (!currNotice?.needExtraInfo) {
+          alert({
+            dimClick: false,
+            text: '공지사항이 성공적으로 등록되었습니다!',
+            buttonList: [confirmBtn],
+          });
+          return;
+        }
+
+        if (currNotice?.needExtraInfo && data.sessions) {
+          const { sessions, title, targetCourseIdList, meetingPlace } = data;
+          await createEventsForTargetCourse({
+            sessions,
+            title,
+            targetCourseIdList,
+            meetingPlace,
+          });
+          alert({
+            dimClick: false,
+            text: '공지사항이 성공적으로 등록되었습니다!',
+            subText: `${currNotice?.name} 일정이 교육과정 캘린더에 추가되었습니다!`,
+            buttonList: [confirmBtn],
+          });
+        }
+      },
+    });
 
   const onError: SubmitErrorHandler<NoticeDto.PostNotice> = errors => {
     const firstErrorKey = Object?.keys(
@@ -169,5 +170,6 @@ export const useSubmitNotice = () => {
     onError,
     onSubmit,
     isCreateEventsPending,
+    isPostMyPostPending,
   };
 };

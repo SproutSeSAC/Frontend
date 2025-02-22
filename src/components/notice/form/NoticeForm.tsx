@@ -35,9 +35,13 @@ export default function NoticeForm() {
     ...rest
   }: NoticeDto.GetNoticeDetail = useLocation()?.state || { state: null };
 
-  const { onSubmit, onError, isCreateEventsPending } = useSubmitNotice();
+  const { onSubmit, onError, isCreateEventsPending, isPostMyPostPending } =
+    useSubmitNotice();
 
-  const { onEditSubmit } = useEditNotice({ postId, content });
+  const { onEditSubmit, isEditingPostPending } = useEditNotice({
+    postId,
+    content,
+  });
 
   const NoticeExtraDetailToForm = {
     applicationStartDateTime: rest.applicationStartDateTime,
@@ -95,11 +99,15 @@ export default function NoticeForm() {
 
   return (
     <>
-      {isCreateEventsPending && (
+      {(isCreateEventsPending ||
+        isPostMyPostPending ||
+        isEditingPostPending) && (
         <div className="fixed inset-0 bottom-0 top-0 z-[1000] flex flex-col items-center justify-center gap-10 bg-gray-500 bg-opacity-10">
           <LoopLoading />
           <span className="text-lg font-medium text-darkGray-active">
-            캘린더에 일정을 생성중입니다...
+            {isCreateEventsPending
+              ? '캘린더에 일정을 생성중입니다...'
+              : '잠시만 기다려주세요...'}
           </span>
         </div>
       )}

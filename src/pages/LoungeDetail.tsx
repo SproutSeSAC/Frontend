@@ -49,8 +49,8 @@ export default function LoungeDetail() {
     postType: '프로젝트를',
     requiredActions: {
       delete: {
-        action: () => {
-          deletePost({ postId });
+        action: async () => {
+          await deletePost({ postId });
           navigate('/lounge');
         },
       },

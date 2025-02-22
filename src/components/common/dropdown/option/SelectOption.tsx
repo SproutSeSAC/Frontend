@@ -39,7 +39,7 @@ export default function SelectOption({
       ) : (
         <button
           type="button"
-          className={`hover:bg-lightGrey flex min-w-full cursor-pointer items-center whitespace-pre rounded-lg px-3 py-1.5 text-start ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`flex min-w-full cursor-pointer items-center whitespace-pre rounded-lg px-3 py-1.5 text-start hover:bg-lightGray ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
           onClick={() => onOptionClick(option)}
           disabled={isSelected}
         >

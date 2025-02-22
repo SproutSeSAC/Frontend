@@ -71,10 +71,10 @@ axiosInstance.interceptors.response.use(
           return redirectToLogin();
 
         default:
-          alert(
-            `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
-          );
-          return redirectToLogin();
+        // alert(
+        //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
+        // );
+        // return redirectToLogin();
       }
     }
     return Promise.reject(error);

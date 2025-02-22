@@ -60,7 +60,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
           {stripHTML(notice.content)}
         </p>
 
-        <div className="border-lightGrey mt-6 border-b border-solid pb-[18px]">
+        <div className="mt-6 border-b border-solid border-lightGray pb-[18px]">
           <span className="notice-text-divider leading-4 text-black">
             {noticeCategoryDisplay[notice.noticeType]}
           </span>

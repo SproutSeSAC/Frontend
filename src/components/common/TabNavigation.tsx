@@ -21,7 +21,7 @@ export default function TabNavigation<T>({
   tabClassName,
 }: TabNavigationProps<T>) {
   return (
-    <nav className="border-b-lightGrey flex justify-between border-b border-solid pt-4 text-lg font-semibold">
+    <nav className="flex justify-between border-b border-solid border-b-lightGray pt-4 text-lg font-semibold">
       <ul className="flex flex-wrap justify-start gap-4">
         {tabList.map(({ text, type }) => (
           <li

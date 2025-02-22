@@ -16,7 +16,7 @@ export default function ControllerMeetingType() {
 
   return (
     <div
-      className={`relative flex items-center rounded-2xl border ${errors?.meetingPlace?.message ? 'border-red-600' : 'border-lightGrey'} bg-white [&>div:first-child]:w-44`}
+      className={`relative flex items-center rounded-2xl border ${errors?.meetingPlace?.message ? 'border-red-600' : 'border-lightGray'} bg-white [&>div:first-child]:w-44`}
     >
       <Controller
         control={control}

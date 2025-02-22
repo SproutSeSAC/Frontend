@@ -39,7 +39,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <textarea
           {...register('content')}
-          className="border-lightGrey my-2.5 w-full resize-none rounded border border-solid p-[15px] outline-none"
+          className="my-2.5 w-full resize-none rounded border border-solid border-lightGray p-[15px] outline-none"
           placeholder="댓글을 작성해 주세요."
           rows={5}
         />
@@ -88,7 +88,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                 >
                   <textarea
                     {...register('editedContent')}
-                    className="border-lightGrey mb-2 w-full resize-none rounded border border-solid p-[15px] focus:outline-none"
+                    className="mb-2 w-full resize-none rounded border border-solid border-lightGray p-[15px] focus:outline-none"
                     placeholder="댓글을 수정해 주세요."
                     rows={5}
                   />
