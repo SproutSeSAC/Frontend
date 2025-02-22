@@ -102,11 +102,7 @@ export default function NoticeDetail() {
       noticeDetail &&
       findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
     ) {
-      const {
-        sessions,
-        isPhoneNumberRequired,
-        participantCapacity, //
-      } = noticeDetail;
+      const { sessions, participantCapacity } = noticeDetail;
 
       if ((sessions?.length || 0) > 0 && participantCapacity) {
         if (sessions?.[0]?.currentStatus === null) {
@@ -119,7 +115,6 @@ export default function NoticeDetail() {
                   <NoticeModal
                     participantCapacity={participantCapacity}
                     sessions={sessions ?? []}
-                    isPhoneNumberRequired={isPhoneNumberRequired ?? false}
                   />
                 ),
               });

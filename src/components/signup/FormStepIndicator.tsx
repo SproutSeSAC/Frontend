@@ -5,8 +5,8 @@ import { verificationNicknameAtom } from '@/atoms/verificationNicknameAtom';
 
 import {
   SignUpFormTitle,
+  SignUpFormValue,
   SignUpQuestionsByStep,
-  SignUpUserFormValue,
 } from '@/types';
 import { useAtom, useAtomValue } from 'jotai';
 import { useFormContext } from 'react-hook-form';
@@ -52,7 +52,7 @@ export default function FormStepIndicator({
       .map(key => keyName[key] || key);
 
     return keys;
-  }) as (keyof SignUpUserFormValue)[][];
+  }) as (keyof SignUpFormValue)[][];
 
   const goNextStep = async () => {
     if (!verifiedNickname) {

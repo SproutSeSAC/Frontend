@@ -95,7 +95,6 @@ export const specialLectureEventFormValues = {
   meetingPlace: undefined,
   participantCapacity: LIMITLESS_CAPACITY_NUM,
   satisfactionSurvey: '',
-  isPhoneNumberRequired: false,
 };
 
 export const defaultNoticeFormValues: NoticeDto.PostNotice = {

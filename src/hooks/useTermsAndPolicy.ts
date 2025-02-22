@@ -3,15 +3,14 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import {
-  TermsAndPolicyType,
+  TermsConsentList,
   getPolicyContent,
 } from '@/services/auth/termsAndPolicy';
 
 export const useTermsAndPolicy = () => {
-  const [contentType, setContentType] =
-    useState<TermsAndPolicyType>('서비스 이용약관');
+  const [contentType, setContentType] = useState<TermsConsentList>('이용약관');
 
-  const toggleContentType = (type: TermsAndPolicyType) => setContentType(type);
+  const toggleContentType = (type: TermsConsentList) => setContentType(type);
 
   const { data: htmlContent, isLoading: isContentLoading } = useQuery({
     queryKey: ['policyContent', contentType],

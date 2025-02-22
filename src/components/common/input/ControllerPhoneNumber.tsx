@@ -30,10 +30,10 @@ export default function ControllerPhoneNumber({
         return (
           <TextInput
             name="연락처"
-            placeholder="연락처를 적어주세요 (숫자만 적어주세요)"
+            placeholder="전화번호를 적어주세요. (숫자만 적어주세요)"
             value={value}
             onChange={handleChange}
-            className="h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-mainGray focus:border-mainGreen"
+            className="h-[50px] !rounded-2xl px-4 py-[18px] placeholder:text-mainGray"
             errorMsg={error?.message}
             maxLength={13}
           />
