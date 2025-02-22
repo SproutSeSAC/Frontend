@@ -8,7 +8,6 @@ export enum Role {
   EDU_MANAGER = 'EDU_MANAGER',
   JOB_COORDINATOR = 'JOB_COORDINATOR',
   INSTRUCTOR = 'INSTRUCTOR',
-  PRE_TRAINEE = 'PRE_TRAINEE',
   TRAINEE = 'TRAINEE',
 }
 
@@ -21,7 +20,6 @@ export const SignUpFormSchema = z
         Role.EDU_MANAGER,
         Role.INSTRUCTOR,
         Role.JOB_COORDINATOR,
-        Role.PRE_TRAINEE,
         Role.TRAINEE,
       ])
       .default(Role.TRAINEE),
@@ -44,6 +42,11 @@ export const SignUpFormSchema = z
 
     courseIdList: z.array(z.number()),
 
+    phoneNumber: z
+      .string()
+      .min(1, '전화번호를 입력해주세요.')
+      .regex(/^010-\d{4}-\d{4}$/, '유효한 전화번호 형식이 아닙니다.'),
+
     techStackIdList: z.array(z.number()),
 
     jobIdList: z
@@ -56,9 +59,9 @@ export const SignUpFormSchema = z
 
     verifyCode: z.string(),
 
-    marketingConsent: z.boolean().refine(val => val === true || val === false, {
-      message: '마케팅 동의를 선택해야 합니다.',
-    }),
+    serviceTerms: z.boolean(),
+
+    personalInformationTerms: z.boolean(),
   })
   .refine(
     data => {
@@ -80,10 +83,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE) {
-        return data.campusIdList.length > 0;
-      }
-      return true;
+      return data.campusIdList.length > 0;
     },
     {
       message: '캠퍼스를 선택해주세요.',
@@ -92,10 +92,7 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE) {
-        return data.verifyCode.length > 0;
-      }
-      return true;
+      return data.verifyCode.length > 0;
     },
     {
       message: '인증코드를 입력해주세요.',
@@ -104,7 +101,10 @@ export const SignUpFormSchema = z
   )
   .refine(
     data => {
-      if (data.role !== Role.PRE_TRAINEE && data.role !== Role.CAMPUS_LEADER) {
+      if (
+        data.role !== Role.CAMPUS_LEADER &&
+        data.role !== Role.OPERATION_MANAGER
+      ) {
         return data.courseIdList.length > 0;
       }
       return true;
@@ -113,4 +113,9 @@ export const SignUpFormSchema = z
       message: '교육과정을 선택해주세요.',
       path: ['courseIdList'],
     },
-  );
+  )
+  .refine(data => data.serviceTerms && data.personalInformationTerms, {
+    message:
+      '이용약관과 개인정보 수집이용에 모두 동의해야 서비스를 이용하실 수 있습니다.',
+    path: ['personalInformationTerms'],
+  });

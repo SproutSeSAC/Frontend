@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-export type TermsAndPolicyType = '개인정보 처리방침' | '서비스 이용약관';
+export type TermsConsentList = '이용약관' | '개인정보 수집이용';
 
-export const getPolicyContent = async (type: TermsAndPolicyType) => {
+export const getPolicyContent = async (type: TermsConsentList) => {
   const filename =
-    type === '서비스 이용약관'
+    type === '이용약관'
       ? 'termsAndConditionsOfService'
       : 'policyOfHandlingPersonalInformation';
 

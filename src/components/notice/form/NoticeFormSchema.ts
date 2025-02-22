@@ -86,8 +86,6 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
     .optional(),
 
   satisfactionSurvey: z.string().optional(),
-
-  isPhoneNumberRequired: z.boolean().optional(),
 })
   .refine(
     data => {

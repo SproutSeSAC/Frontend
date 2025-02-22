@@ -32,6 +32,15 @@
   body {
     @apply bg-bg font-pretendard text-black;
 
+    /* Swiper */
+    /* .swiper {
+      @apply flex;
+    } */
+    .swiper-button-prev,
+    .swiper-button-next {
+      @apply hidden;
+    }
+
     /* 이모지 컨테이너 CSS */
     #quill-editor {
       @apply flex flex-row-reverse flex-wrap rounded-xl border border-lightGray bg-white pt-1;

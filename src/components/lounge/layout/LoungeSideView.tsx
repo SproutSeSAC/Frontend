@@ -9,7 +9,7 @@ export default function LoungeSideView() {
   const { data: EndingTomorrowProjectList } = useGetEndingTomorrowProjects();
   return (
     <div className="flex flex-col gap-10">
-      <div className="max-h-[90vh] overflow-y-scroll rounded-lg bg-white p-4 shadow-card">
+      <div className="max-h-[90vh] min-h-60 overflow-y-scroll rounded-[20px] bg-white px-4 py-5">
         <Title
           as="h2"
           title="곧 마감합니다!"

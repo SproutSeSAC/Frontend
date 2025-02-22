@@ -17,7 +17,7 @@ import {
   useHandleScrap,
 } from '@/hooks';
 import { NoticeDto } from '@/types';
-import { findCurrNotice, getColorByRole, isPreTrainee } from '@/utils';
+import { findCurrNotice, getColorByRole } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -81,14 +81,9 @@ export default function NoticeDetail() {
   const applySession = useCallback(() => {
     if (
       noticeDetail &&
-      !isPreTrainee(noticeDetail.writer.role) &&
       findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
     ) {
-      const {
-        sessions,
-        isPhoneNumberRequired,
-        participantCapacity, //
-      } = noticeDetail;
+      const { sessions, participantCapacity } = noticeDetail;
 
       if ((sessions?.length || 0) > 0 && participantCapacity) {
         if (sessions?.[0]?.currentStatus === null) {
@@ -101,7 +96,6 @@ export default function NoticeDetail() {
                   <NoticeModal
                     participantCapacity={participantCapacity}
                     sessions={sessions ?? []}
-                    isPhoneNumberRequired={isPhoneNumberRequired ?? false}
                   />
                 ),
               });

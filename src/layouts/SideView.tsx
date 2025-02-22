@@ -6,7 +6,7 @@ interface Props {
 
 export default function SideView({ children }: Props) {
   return (
-    <section className="w-[27%] max-w-[290px] pl-1 pr-[60px]">
+    <section className="w-[25%] max-w-[390px] pb-10 pr-[50px] pt-[60px]">
       {children}
     </section>
   );

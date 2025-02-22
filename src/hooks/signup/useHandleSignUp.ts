@@ -16,8 +16,13 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 
 import { getFormStepsByRole } from '@/constants';
 import { useDialogContext, useTechStackList } from '@/hooks';
-import { RoleKey, SignUpUserFormValue, UserProfileDto } from '@/types';
-import { hasAdmin, isCampusLeader, isPreTrainee, isTrainee } from '@/utils';
+import { RoleKey, SignUpFormValue, UserProfileDto } from '@/types';
+import {
+  hasAdmin,
+  isCampusLeader,
+  isOperationManager,
+  isTrainee,
+} from '@/utils';
 import { useAtom, useSetAtom } from 'jotai';
 import { SubmitHandler } from 'react-hook-form';
 
@@ -69,8 +74,8 @@ export const useHandleSignUp = ({
     },
   });
 
-  const onSubmit: SubmitHandler<SignUpUserFormValue> = submittedValue => {
-    if (!isVerifiedCode && !isPreTrainee(submittedValue.role)) return;
+  const onSubmit: SubmitHandler<SignUpFormValue> = submittedValue => {
+    if (!isVerifiedCode) return;
 
     try {
       const { verifyCode, campusIdList, ...formData } = submittedValue;
@@ -82,30 +87,21 @@ export const useHandleSignUp = ({
           techStackIdList: [],
           domainIdList: [],
         };
-        const managerData: UserProfileDto.Post = {
+        const adminData: UserProfileDto.Post = {
           ...rest,
           ...initializeValue,
         };
-        if (isCampusLeader(formData.role)) {
-          const courseIdList = courseList.map(({ id }) => id);
-          const campusManangerData = {
-            ...managerData,
-            courseIdList,
-            campusIdList,
-          };
-          mutate(campusManangerData);
-        } else {
-          mutate(managerData);
-        }
-      }
 
-      if (isPreTrainee(formData.role)) {
-        const { courseIdList, ...rest } = formData;
-        const preTraineeData: UserProfileDto.Post = {
-          ...rest,
-          courseIdList: [],
-        };
-        mutate(preTraineeData);
+        if (
+          isCampusLeader(formData.role) ||
+          isOperationManager(formData.role)
+        ) {
+          const courseIdList = courseList.map(({ id }) => id);
+          const result = { ...adminData, courseIdList, campusIdList };
+          mutate(result);
+        } else {
+          mutate(adminData);
+        }
       }
 
       if (isTrainee(formData.role)) {

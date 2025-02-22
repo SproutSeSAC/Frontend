@@ -43,6 +43,7 @@ export default function Notice() {
     },
     fetchNextPage,
     hasNextPage,
+    isLoading,
   } = useGetInfiniteNoticeList(currFilter);
 
   const noticeList: NoticeDisplay[] = useMemo(() => {
@@ -99,13 +100,12 @@ export default function Notice() {
         <div ref={observeRef} />
       </div>
 
-      <div className="pt-32">
-        {noticeList.length === 0 && (
-          <EmptyContent
-            message={`${tab === 'BOOKMARK' ? '북마크한' : '등록된'} 공지사항이 없습니다.`}
-          />
-        )}
-      </div>
+      {noticeList.length === 0 && !isLoading && (
+        <EmptyContent
+          message={`${tab === 'BOOKMARK' ? '북마크한' : '등록된'} 공지사항이 없습니다.`}
+          className="mt-32"
+        />
+      )}
     </>
   );
 }

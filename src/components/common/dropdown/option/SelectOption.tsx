@@ -32,7 +32,7 @@ export default function SelectOption({
             type="checkbox"
             checked={isSelected}
             onChange={() => onOptionClick(option)}
-            className="mr-3 size-4 min-h-4 min-w-4 rounded border-gray-300"
+            className="mr-3 size-4 min-h-4 min-w-4 rounded border-darkGray"
           />
           <span>{option.name}</span>
         </label>

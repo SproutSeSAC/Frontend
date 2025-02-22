@@ -27,8 +27,7 @@ function UserImage(
       )}
 
       {!previewUrl &&
-        (imageNameSegment && imageNameSegment !== 'https://aaa.com' ? (
-          // NOTE: DB에서 기본값('https://aaa.com') 정리하면 수정.
+        (imageNameSegment ? (
           <img
             src={`${import.meta.env.VITE_SPROUT_PUBLIC_ASSET_URL}/${imageNameSegment}`}
             alt="프로필 이미지"
