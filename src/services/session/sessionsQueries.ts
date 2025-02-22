@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { SessionStatus } from '@/constants/serviceConstant';
 import { AxiosResponse } from 'axios';
 
 interface Participant {
@@ -20,5 +21,35 @@ export const useGetMyParticipationList = () => {
   return useQuery({
     queryKey: ['useGetMyParticipationList'],
     queryFn: getMyParticipationList,
+  });
+};
+
+export const useGetSessionStatus = ({
+  sessionId,
+  page = 1,
+  size = 10,
+  searchParticipantStatus = 'WAIT',
+}: {
+  sessionId: number;
+  page?: number;
+  size?: number;
+  searchParticipantStatus?: SessionStatus;
+}) => {
+  const getSessionStatus = async () => {
+    const { data } = await axiosInstance.get(`/notices/sessions/${sessionId}`, {
+      params: {
+        sessionId,
+        page,
+        size,
+        searchParticipantStatus,
+      },
+    });
+    return data;
+  };
+  return useQuery({
+    queryKey: ['useGetSessionStatus', sessionId],
+    queryFn: getSessionStatus,
+    enabled: !!Number(sessionId),
+    retry: false,
   });
 };

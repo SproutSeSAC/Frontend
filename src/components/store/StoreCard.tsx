@@ -59,36 +59,10 @@ export default function StoreCard({
   const { showDialog } = useDialogContext();
 
   const { onScrapClick } = useHandleScrap({
-    postId: 0,
+    postId: 0, // NOTE: 수정
     isScraped: false,
-    invalidateQueryKeys: ['useGetInfiniteNoticeList'],
+    invalidateQueryKeys: [''],
   });
-
-  // const { mutateAsync: postStoreScrap } = usePostStoreScrap();
-
-  // const onStoreScrap = useCallback(
-  //   async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-
-  //     try {
-  //       const result = await postStoreScrap({ storeId: storeData.id });
-
-  //       if (result) {
-  //         showToast('맛집을 찜했어요!', 1000);
-  //       } else {
-  //         showToast('맛집 찜하기를 취소 했어요!', 1000);
-  //       }
-
-  //       queryClient.invalidateQueries({
-  //         queryKey: ['useGetInfiniteStoreList', {}],
-  //       });
-  //     } catch (err) {
-  //       showToast('맛집 찜하기를 실패했어요');
-  //     }
-  //   },
-  //   [postStoreScrap, queryClient, showToast, storeData.id],
-  // );
 
   const isOpen = useCallback((): boolean => {
     const parseTimeString = (timeString: string) => {

@@ -101,7 +101,6 @@ interface NoticeSessionParticipantsStatus {
     {
       userId: number;
       status: SessionStatus;
-      phoneNumber: string;
       userName: string;
       nickName: string;
       profileImageUrl: string;
