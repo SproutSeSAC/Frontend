@@ -75,7 +75,7 @@ export default function MealRecruitModal() {
 
         showToast('한끼팟을 생성했습니다.');
 
-        await queryClient.invalidateQueries({
+        await queryClient.fetchQuery({
           queryKey: ['useGetInfiniteMealPostList'],
         });
 

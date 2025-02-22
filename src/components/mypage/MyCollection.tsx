@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
-  useGetMyCommentList,
+  // useGetMyCommentList,
   useGetMyPostList,
   useGetMyScrapedPostList,
 } from '@/services/post/myPostQueries';
@@ -72,7 +72,7 @@ export default function MyCollection() {
     },
   });
 
-  const { data: myCommentList } = useGetMyCommentList();
+  // const { data: myCommentList } = useGetMyCommentList();
 
   const { data: myScrapedPostList } = useGetMyScrapedPostList();
 
@@ -246,7 +246,7 @@ export default function MyCollection() {
                   </tr>
                 ))}
 
-            {currCollection === '내가 쓴 댓글' &&
+            {/* {currCollection === '내가 쓴 댓글' &&
               myCommentList?.length !== 0 &&
               myCommentList?.map(({ postId, content }) => (
                 <tr key={postId} className="hover:bg-gray4 group">
@@ -279,7 +279,7 @@ export default function MyCollection() {
                     />
                   </TableDataCell>
                 </tr>
-              ))}
+              ))} */}
           </tbody>
         </table>
       )}
