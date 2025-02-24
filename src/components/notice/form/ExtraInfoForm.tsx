@@ -7,7 +7,6 @@ import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 import ControllerMeetingType from '@/components/notice/form/ControllerMeetingType';
 import ControllerParticipantCapacity from '@/components/notice/form/ControllerParticipantCapacity';
-import ControllerRequiredPhoneNumber from '@/components/notice/form/ControllerRequiredPhoneNumber';
 import ControllerSessions from '@/components/notice/form/ControllerSessions';
 
 interface ExtraInfoFormProps {
@@ -40,10 +39,6 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
         <ControllerMeetingType />
       </LabeledSection>
 
-      <LabeledSection label="핸드폰 번호">
-        <ControllerRequiredPhoneNumber />
-      </LabeledSection>
-
       <LabeledSection label="만족도 조사" tooltip={tooltip.satisfactionSurvey}>
         <Controller
           control={control}
@@ -62,7 +57,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
         />
       </LabeledSection>
 
-      <p className="self-end text-end text-mainGray">
+      <p className="col-span-2 text-end text-darkGray">
         Zoom, 만족도 조사 링크는 추후에 등록해 주셔도 됩니다.
       </p>
     </>

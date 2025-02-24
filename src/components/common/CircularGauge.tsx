@@ -53,7 +53,7 @@ export default function CircularGauge({
         strokeWidth="10"
         strokeLinecap="round"
         strokeDasharray={circumference}
-        strokeDashoffset={dashOffset}
+        strokeDashoffset={dashOffset || 0}
         stroke={gaugeColor}
         className="transition-all duration-[2s] ease-out"
         transform="rotate(90 50 50)"

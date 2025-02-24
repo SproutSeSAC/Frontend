@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { usePostNoticeSessions } from '@/services/notice/noticeMutations';
+import { usePostNoticeSessions } from '@/services/post/noticeMutations';
 
 import { useDialogContext } from '@/hooks';
 import { NoticeSession } from '@/types';
@@ -9,14 +9,12 @@ import { AxiosError } from 'axios';
 import {
   Controller,
   FormProvider,
-  SubmitErrorHandler,
   SubmitHandler,
   useForm,
   useWatch,
 } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
-import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import Modal from '@/components/common/modal/Modal';
 import { noticeModalFormSchema } from '@/components/notice/modal/NoticeModalFormSchema';
@@ -24,25 +22,19 @@ import SessionSelectBox from '@/components/notice/modal/SessionSelectBox';
 
 interface NoticeModalProps {
   sessions: NoticeSession[];
-  isPhoneNumberRequired: boolean;
   participantCapacity: number;
 }
 
 export interface FormValues {
-  isPhoneNumberRequired: boolean;
-  phoneNumber: string;
   sessionIdList: number[];
 }
 
 const initialValue: FormValues = {
   sessionIdList: [],
-  phoneNumber: '',
-  isPhoneNumberRequired: false,
 };
 
 export default function NoticeModal({
   sessions,
-  isPhoneNumberRequired,
   participantCapacity,
 }: NoticeModalProps) {
   const { hideDialog, showToast } = useDialogContext();
@@ -50,23 +42,21 @@ export default function NoticeModal({
   const { mutateAsync: postNoticeSession } = usePostNoticeSessions();
 
   const methods = useForm<FormValues>({
-    defaultValues: { ...initialValue, isPhoneNumberRequired },
+    defaultValues: initialValue,
     resolver: zodResolver(noticeModalFormSchema),
   });
 
-  const { control, handleSubmit } = methods;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
   const onSubmit: SubmitHandler<FormValues> = useCallback(
-    async ({ phoneNumber, sessionIdList }: FormValues) => {
+    async ({ sessionIdList }: FormValues) => {
       try {
-        const onlyNumericPhoneNumberValue = phoneNumber.replace(/\D/g, '');
         await Promise.all(
-          sessionIdList.map(sessionId =>
-            postNoticeSession({
-              phoneNumber: onlyNumericPhoneNumberValue,
-              sessionId,
-            }),
-          ),
+          sessionIdList.map(sessionId => postNoticeSession({ sessionId })),
         );
         showToast(
           '신청하였습니다. 신청 내역은 마이페이지에서 확인할 수 있습니다.',
@@ -83,20 +73,9 @@ export default function NoticeModal({
     [hideDialog, postNoticeSession, showToast],
   );
 
-  const onError: SubmitErrorHandler<{ phoneNumber: FormValues }> = useCallback(
-    err => {
-      const firstErrMsg = err.phoneNumber?.phoneNumber?.message || '';
-      if (firstErrMsg) {
-        showToast(firstErrMsg);
-      }
-    },
-    [showToast],
-  );
-
   const sessionIdList = useWatch({ name: 'sessionIdList', control });
-  const phoneNumber = useWatch({ name: 'phoneNumber', control });
 
-  const isNotValid = (!phoneNumber && isPhoneNumberRequired) || !sessionIdList;
+  const isNotValid = !sessionIdList;
 
   return (
     <Modal
@@ -105,14 +84,11 @@ export default function NoticeModal({
       className="p-[50px]"
     >
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit, onError)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             control={control}
             name="sessionIdList"
-            render={({
-              field: { onChange, value: selectedIdList },
-              fieldState: { error },
-            }) => {
+            render={({ field: { onChange, value: selectedIdList } }) => {
               return (
                 <div className="relative">
                   <ul className="mb-20 mt-14 grid grid-cols-2 gap-6">
@@ -139,30 +115,25 @@ export default function NoticeModal({
                       );
                     })}
                   </ul>
-                  {error && (
-                    <ErrorMsg
-                      msg={error?.message || ''}
-                      className="absolute bottom-[-30px] left-0 ml-2"
-                    />
-                  )}
                 </div>
               );
             }}
           />
 
-          <div className="flex h-[50px] items-center justify-end gap-6">
-            {sessions.length > 0 && isPhoneNumberRequired && (
-              <ControllerPhoneNumber name="phoneNumber" />
-            )}
-
-            <SquareButton
-              name="신청하기"
-              type="submit"
-              disabled={isNotValid}
-              color={isNotValid ? 'gray' : 'mainGreen'}
-              className="h-full self-end whitespace-nowrap px-3 py-[12px] text-xl"
+          {errors && (
+            <ErrorMsg
+              msg={errors?.sessionIdList?.message || ''}
+              className="absolute bottom-[-30px] left-0 ml-2"
             />
-          </div>
+          )}
+
+          <SquareButton
+            name="신청하기"
+            type="submit"
+            disabled={isNotValid}
+            color={isNotValid ? 'gray' : 'mainGreen'}
+            className="h-full self-end whitespace-nowrap px-3 py-[12px] text-xl"
+          />
         </form>
       </FormProvider>
     </Modal>

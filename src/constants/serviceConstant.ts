@@ -29,6 +29,7 @@ export type CampusType =
   | typeof CAMPUS_GANGBUK
   | typeof CAMPUS_DONGDAEMUN;
 
+// NOTE: 위의 캠퍼스 정보와 아래 리스트 삭제
 export const campusList: Array<{
   id: number;
   name: string;

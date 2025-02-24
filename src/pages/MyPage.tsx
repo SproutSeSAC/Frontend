@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
 import {
-  initialUserProfile,
-  useGetUserProfile,
+  initialUserProfileCard,
+  useGetUserProfileCard,
 } from '@/services/auth/authQueries';
 
 import imgUrl from '@/assets/images/faq.png';
@@ -18,13 +18,18 @@ import MyCollection from '@/components/mypage/MyCollection';
 import UserNameImageCard from '@/components/user/UserNameImageCard';
 
 export default function MyPage() {
-  const { data: userProfile = initialUserProfile, isLoading } =
-    useGetUserProfile();
+  const { data: userProfileCard = initialUserProfileCard, isLoading } =
+    useGetUserProfileCard();
 
-  const { name, email, campusList, courseList } = userProfile;
+  const {
+    profile: { name },
+    study: { course: courseList, campus: campusList, email },
+  } = userProfileCard;
 
   const sortedCourseList = useMemo(() => {
-    return courseList.sort((a, b) => (a.courseTitle > b.courseTitle ? 1 : -1));
+    return courseList.length === 1
+      ? courseList
+      : courseList.sort((a, b) => (a.courseName > b.courseName ? 1 : -1));
   }, [courseList]);
 
   const userInfoList = [
@@ -43,17 +48,17 @@ export default function MyPage() {
       value: (
         <div className="peer flex w-full items-center truncate">
           {courseList.length > 1 ? (
-            sortedCourseList.slice(0, 1).map(({ courseTitle }) => (
+            sortedCourseList.slice(0, 1).map(({ courseName }) => (
               <span
                 className="w-full overflow-hidden truncate text-end"
-                key={courseTitle}
+                key={courseName}
               >
-                {courseTitle}
+                {courseName}
               </span>
             ))
           ) : (
             <span className="w-full overflow-hidden truncate text-end">
-              {courseList[0].courseTitle}
+              {courseList[0]?.courseName}
             </span>
           )}
           {courseList.length > 1 && (
@@ -71,43 +76,42 @@ export default function MyPage() {
       <Header title="마이페이지" />
 
       <section className="mb-16 flex gap-x-4 [&>*:first-child]:w-[280px] [&>*:last-child]:w-[30vw] [&>*:last-child]:lg:w-[300px]">
-        <UserNameImageCard />
+        <UserNameImageCard data={userProfileCard.profile} />
 
-        <div className="relative">
-          <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl bg-darkGreen px-6 py-4 shadow-card peer-hover:cursor-pointer">
-            {userInfoList.map(({ value, label }) => (
-              <li
-                key={label}
-                className={`flex w-full items-start justify-between py-2.5 font-medium text-white ${label === '소속 교육과정' ? 'peer' : ''}`}
-              >
-                <span className="mr-3 whitespace-nowrap font-medium text-darkGreen-active">
-                  {label}:
-                </span>
-                {value}
-              </li>
-            ))}
+        <ul className="relative flex h-full w-[36vw] flex-col justify-between rounded-xl bg-darkGreen px-6 py-4 shadow-card peer-hover:cursor-pointer">
+          {userInfoList.map(({ value, label }) => (
+            <li
+              key={label}
+              className={`flex w-full items-start justify-between py-2.5 font-medium text-white ${label === '소속 교육과정' ? 'peer' : ''}`}
+            >
+              <span className="mr-3 whitespace-nowrap font-medium text-darkGreen-active">
+                {label}:
+              </span>
 
-            {courseList.length > 1 && (
-              <div className="absolute right-5 top-40 hidden rounded-xl bg-white p-5 shadow-card hover:block peer-hover:block">
-                <header className="flex items-center justify-between border-b border-mainGray pb-2 text-black">
-                  <h4>교육과정 전체 목록</h4>
-                  <span>총 {courseList.length}개</span>
-                </header>
+              {value}
+            </li>
+          ))}
 
-                <ul className="mt-3 flex flex-col gap-y-3">
-                  {sortedCourseList.map(({ courseTitle }, index) => (
-                    <li
-                      className="w-full overflow-hidden truncate text-black"
-                      key={courseTitle}
-                    >
-                      {index + 1}. {courseTitle}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </ul>
-        </div>
+          {sortedCourseList.length > 1 && (
+            <div className="absolute right-5 top-40 hidden rounded-xl bg-white p-5 shadow-card hover:block peer-hover:block">
+              <header className="flex items-center justify-between border-b border-mainGray pb-2 text-black">
+                <h4>교육과정 전체 목록</h4>
+                <span>총 {sortedCourseList.length}개</span>
+              </header>
+
+              <ul className="mt-3 flex flex-col gap-y-3">
+                {sortedCourseList.map(({ courseName }, index) => (
+                  <li
+                    className="w-full overflow-hidden truncate text-black"
+                    key={courseName}
+                  >
+                    {index + 1}. {courseName}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </ul>
 
         <ApplicationListOfSessionsCard />
       </section>
@@ -132,7 +136,7 @@ export default function MyPage() {
           <img
             src={imgUrl}
             className="mb-auto w-2/5 object-contain"
-            alt="faq 관련 이미지"
+            alt="FAQ"
           />
         </div>
       </section>

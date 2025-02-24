@@ -1,14 +1,14 @@
 import { Domain, Job, TechStack } from '@/types/specifications';
 
 export namespace UserProfileDto {
-  export type Post = SignUpUserProfile;
+  export type Post = SignUpValue;
   export type Get = UserProfile;
   export type GetCard = UserProfileCard;
   export type Update = UpdateableUserProfile;
   export type UpdateProfileImage = UpdateableProfileImage;
 }
 
-type SignUpUserProfile = {
+type SignUpValue = {
   role: RoleKey;
   name: string;
   nickname: string;
@@ -16,7 +16,9 @@ type SignUpUserProfile = {
   techStackIdList: number[];
   jobIdList: number[];
   domainIdList: number[];
-  marketingConsent: boolean;
+  phoneNumber: string;
+  serviceTerms: boolean;
+  personalInformationTerms: boolean;
 };
 
 type UserCourse = {
@@ -61,17 +63,20 @@ type UserProfileCard = {
   profile: {
     name: string;
     nickname: string;
+    phoneNumber: string | null;
     profileUrl: string;
   };
   study: {
     email: string;
     campus: {
       id: number;
-      name: string;
-    };
+      campusName: string;
+    }[];
     course: {
       id: number;
-      name: string;
-    };
+      courseName: string;
+    }[];
   };
 };
+
+export {};

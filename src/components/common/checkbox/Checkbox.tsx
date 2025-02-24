@@ -41,7 +41,7 @@ export default function Checkbox({
         checked={checked}
         disabled={disabled}
         onChange={onChange}
-        className={`mr-2 mt-1 h-4 w-4 appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-mainBlue checked:bg-[url('./assets/images/check.png')] checked:bg-contain disabled:border-mainGray disabled:bg-mainGray ${inputClassName}`}
+        className={`mr-2 mt-1 h-4 w-4 cursor-pointer appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-mainBlue checked:bg-[url('./assets/images/check.png')] checked:bg-contain ${inputClassName}`}
         style={{ backgroundColor: checked ? checkBoxColor : '' }}
       />
       {text && (

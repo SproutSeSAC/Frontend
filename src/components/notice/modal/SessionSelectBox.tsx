@@ -33,7 +33,7 @@ export default function SessionSelectBox({
       ? 'bg-white [&>h4]:text-darkGray-active'
       : '';
   const isSelectedStyle = isSelected
-    ? 'bg-mainGreen text-white [&>h4]:text-lightGrey'
+    ? 'bg-mainGreen text-white [&>h4]:text-lightGray'
     : '';
 
   const boxStyle = isSelected ? isSelectedStyle : initialStyle;

@@ -71,6 +71,20 @@ export const useGetUserProfile = (
   });
 };
 
+export const initialUserProfileCard = {
+  profile: {
+    name: '',
+    nickname: '',
+    phoneNumber: null,
+    profileUrl: '',
+  },
+  study: {
+    email: '',
+    campus: [],
+    course: [],
+  },
+};
+
 // 나의 카드 정보 얻기
 export const useGetUserProfileCard = (
   options?: UseQueryOptions<UserProfileDto.GetCard>,
@@ -84,6 +98,7 @@ export const useGetUserProfileCard = (
   return useQuery<UserProfileDto.GetCard>({
     queryKey: ['useGetUserProfileCard'],
     queryFn: getUserProfileCard,
+    initialData: initialUserProfileCard,
     ...options,
   });
 };

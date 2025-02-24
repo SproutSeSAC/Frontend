@@ -31,7 +31,7 @@ function UserImage(
           <img
             src={`${import.meta.env.VITE_SPROUT_PUBLIC_ASSET_URL}/${imageNameSegment}`}
             alt="프로필 이미지"
-            className="aspect-square overflow-hidden rounded-full object-cover"
+            className="aspect-square size-full overflow-hidden rounded-full object-cover"
           />
         ) : (
           <BsPerson className="size-[65%] text-mainGreen" />

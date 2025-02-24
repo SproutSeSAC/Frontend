@@ -1,7 +1,7 @@
 import {
   useGetInfiniteNoticeList,
   useGetThisWeekNoticeList,
-} from '@/services/notice/noticeQueries';
+} from '@/services/post/noticeQueries';
 
 import { NoticeDisplay } from '@/types';
 

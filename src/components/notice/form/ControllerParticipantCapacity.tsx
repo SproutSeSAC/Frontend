@@ -22,7 +22,7 @@ export default function ControllerParticipantCapacity() {
 
         return (
           <div
-            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-lightGrey'}`}
+            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-lightGray'}`}
           >
             <button
               type="button"
@@ -44,7 +44,7 @@ export default function ControllerParticipantCapacity() {
                 const { valueAsNumber } = e.target;
                 onChange(Number.isNaN(valueAsNumber) ? '' : valueAsNumber);
               }}
-              className={`border-y-0 border-r-0 ${error?.message ? '' : 'border-l text-mainGray'} mr-0 !h-full !rounded-l-none rounded-r-2xl px-4 py-[18px] text-lg text-black placeholder:text-mainGray`}
+              className={`border-y-0 border-r-0 ${error?.message ? '' : 'border-l'} mr-0 !h-full !rounded-l-none rounded-r-2xl px-4 py-[18px] text-lg text-black placeholder:text-mainGray`}
               errorMsg={error?.message}
               value={participantCapacityNum}
               disabled={isLimited}

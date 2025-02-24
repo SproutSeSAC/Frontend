@@ -88,7 +88,7 @@ export default function MembershipLeaveModal() {
         <textarea
           value={textForLeave}
           onChange={onTextChange}
-          className="bg-lightGrey min-h-48 w-full resize-none rounded-lg border p-4 outline-none placeholder:text-darkGray-active"
+          className="min-h-48 w-full resize-none rounded-lg border bg-lightGray p-4 outline-none placeholder:text-darkGray-active"
           placeholder="서비스 탈퇴 사유에 대해 알려주세요. 소중한 피드백을 담아 더 나은 서비스로 보답 드리도록 하겠습니다."
         />
         <div className="mb-4 mt-16 flex gap-[10px]">

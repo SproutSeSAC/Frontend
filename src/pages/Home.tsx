@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useGetUserProfile } from '@/services/auth/authQueries';
-import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 import { useGetIsWaitingAcl } from '@/services/schedule/calendarQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
@@ -28,7 +28,7 @@ export default function Home() {
   const {
     data: loungeList,
     isLoading: isGetLoungeListLoading, //
-  } = useGetLoungeProjects({ page: 1, size: 10 });
+  } = useGetLoungeProjectList({ page: 1, size: 10 });
 
   const {
     data: userProfile,

@@ -4,11 +4,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import {
-  usePostLoungeProject,
-  usePutLoungeProject,
-} from '@/services/lounge/loungeMutations';
-import { useGetLoungeProjectsDetail } from '@/services/lounge/loungeQueries';
+import { usePostMyPost, usePutMyPost } from '@/services/post/postMutation';
+import { useGetPostDetail } from '@/services/post/postQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { PtypeList, progressList } from '@/constants';
@@ -20,7 +17,7 @@ import {
   useTechStackList,
 } from '@/hooks';
 import { ContactMethodDisplayKey, Progress } from '@/types';
-import { GetLoungeProjectDetail } from '@/types/lounge/loungeDto';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Controller,
@@ -45,10 +42,10 @@ import { loungeFormSchema } from '@/components/lounge/form/loungeFormSchema';
 
 export interface FormValues {
   recruitmentCount: number;
-  meetingType: Progress;
-  contactMethod: ContactMethodDisplayKey;
+  meetingType: Progress | '';
+  contactMethod: ContactMethodDisplayKey | '';
   contactDetail: string;
-  recruitmentType: string;
+  recruitmentType: string | '';
   startDate: string;
   endDate: string;
   positions: number[];
@@ -57,10 +54,12 @@ export interface FormValues {
   projectDescription: string;
 }
 
-const changeDataToFieldValues = (data?: GetLoungeProjectDetail) => {
+const changeDataToFieldValues = (
+  data?: LoungeDto.GetProjectDetail,
+): FormValues => {
   return {
     recruitmentCount: data?.recruitmentCount || 0,
-    meetingType: data?.meetingType || 'ALL',
+    meetingType: data?.meetingType || '',
     contactMethod: data?.contactMethod || '',
     contactDetail: data?.contactDetail || '',
     recruitmentType: data?.ptype || '',
@@ -76,18 +75,24 @@ const changeDataToFieldValues = (data?: GetLoungeProjectDetail) => {
 
 export default function LoungeForm() {
   const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const modifyProjectId = searchParams.get('modifyProject');
 
+  const queryClient = useQueryClient();
+
   const { showToast } = useDialogContext();
 
-  const queryClient = useQueryClient();
   const { data: jobList } = useGetJobList();
-  const { data: projectsDetail } = useGetLoungeProjectsDetail(
+
+  const { data: projectsDetail } = useGetPostDetail<LoungeDto.GetProjectDetail>(
     Number(modifyProjectId || 0),
   );
-  const { mutateAsync: postProject } = usePostLoungeProject();
-  const { mutateAsync: putProject } = usePutLoungeProject();
+  const { mutateAsync: postProject } =
+    usePostMyPost<LoungeDto.PostProjectParams>();
+
+  const { mutateAsync: putProject } =
+    usePutMyPost<LoungeDto.PostProjectParams>();
 
   const { techStackList } = useTechStackList();
 
@@ -123,14 +128,14 @@ export default function LoungeForm() {
       ...data,
       recruitmentCount: Number(data.recruitmentCount),
       projectDescription: descriptionWithHandledImage,
-    };
+    } as LoungeDto.PostProjectParams;
 
     if (modifyProjectId) {
       try {
-        await putProject({ projectId: Number(modifyProjectId), params });
+        await putProject({ postId: Number(modifyProjectId), params });
         showToast('프로젝트를 수정했습니다.');
         queryClient.invalidateQueries({
-          queryKey: ['useGetLoungeProjects', {}],
+          queryKey: ['', {}],
         });
         navigate('/lounge');
       } catch (err) {
@@ -143,7 +148,7 @@ export default function LoungeForm() {
       await postProject(params);
       showToast('프로젝트를 등록했습니다.');
       queryClient.invalidateQueries({
-        queryKey: ['useGetLoungeProjects', {}],
+        queryKey: ['', {}],
       });
       navigate('/lounge');
     } catch (err) {

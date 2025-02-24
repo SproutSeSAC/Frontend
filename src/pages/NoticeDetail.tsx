@@ -6,27 +6,21 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
-import {
-  useDeleteNotice,
-  usePostNoticeComment,
-  usePostNoticeScrap,
-} from '@/services/notice/noticeMutations';
-import {
-  useGetNoticeCommentList,
-  useGetNoticeDetail,
-} from '@/services/notice/noticeQueries';
+import { useDeleteMyPost } from '@/services/post/postMutation';
+import { useGetPostDetail } from '@/services/post/postQueries';
 
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import {
   useDialogContext,
-  useHandleComment,
   useHandleImage,
-  useHandleOnScrap,
   useHandlePostActions,
+  useHandleScrap,
 } from '@/hooks';
+import { NoticeDto } from '@/types';
 import { findCurrNotice, getColorByRole } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
+import LoopLoading from '@/components/common/LoopLoading';
 import BackButton from '@/components/common/button/BackButton';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import CommentTemplate from '@/components/common/post-template/CommentTemplate';
@@ -36,23 +30,20 @@ import NoticeApplicationInfoTemplate from '@/components/notice/NoticeApplication
 import NoticeModal from '@/components/notice/modal/NoticeModal';
 
 export default function NoticeDetail() {
-  const { postId } = useParams<{ postId: string }>();
+  const { postId: id } = useParams();
 
-  const noticeId = +postId!;
+  const postId = +id!;
 
   const { showDialog } = useDialogContext();
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { data: noticeDetail } = useGetNoticeDetail(noticeId);
-
-  const { mutateAsync: postNoticeComment } = usePostNoticeComment(noticeId);
-
-  const { data: commentList } = useGetNoticeCommentList(noticeId);
+  const { data: noticeDetail, isLoading: isNoticeDetailLoading } =
+    useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
 
   const { deletePostImages } = useHandleImage();
 
-  const { mutateAsync: deleteNotice } = useDeleteNotice({
+  const { mutateAsync: deleteNotice } = useDeleteMyPost({
     onSuccess: () => {
       if (noticeDetail?.content) {
         deletePostImages(noticeDetail.content);
@@ -60,20 +51,10 @@ export default function NoticeDetail() {
     },
   });
 
-  const { handleSubmitComment } = useHandleComment({
-    postComment: postNoticeComment,
-    invalidateQueryKeys: ['useGetNoticeCommentList'],
-  });
-
-  const { mutateAsync: postNoticeScrap } = usePostNoticeScrap();
-
-  const getScrapResult = useCallback(async () => {
-    return postNoticeScrap({ noticeId: noticeDetail?.id || noticeId });
-  }, [postNoticeScrap, noticeDetail?.id, noticeId]);
-
-  const { onScrapClick } = useHandleOnScrap({
-    getScrapResult,
-    invalidateQueryKeys: ['useGetNoticeDetail'],
+  const { onScrapClick } = useHandleScrap({
+    postId,
+    isScraped: !!noticeDetail?.isScraped,
+    invalidateQueryKeys: ['useGetPostDetail'],
   });
 
   const navigate = useNavigate();
@@ -82,15 +63,15 @@ export default function NoticeDetail() {
     postType: '공지사항을',
     requiredActions: {
       delete: {
-        action: () => {
-          deleteNotice({ noticeId });
+        action: async () => {
+          await deleteNotice({ postId });
           navigate('/notice');
         },
       },
       edit: {
         action: () => {
           const state = noticeDetail;
-          navigate(`/notice?tab=EDIT&modifyNotice=${noticeId}`, { state });
+          navigate(`/notice?tab=EDIT&modifyNotice=${postId}`, { state });
         },
       },
     },
@@ -102,11 +83,7 @@ export default function NoticeDetail() {
       noticeDetail &&
       findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
     ) {
-      const {
-        sessions,
-        isPhoneNumberRequired,
-        participantCapacity, //
-      } = noticeDetail;
+      const { sessions, participantCapacity } = noticeDetail;
 
       if ((sessions?.length || 0) > 0 && participantCapacity) {
         if (sessions?.[0]?.currentStatus === null) {
@@ -119,7 +96,6 @@ export default function NoticeDetail() {
                   <NoticeModal
                     participantCapacity={participantCapacity}
                     sessions={sessions ?? []}
-                    isPhoneNumberRequired={isPhoneNumberRequired ?? false}
                   />
                 ),
               });
@@ -143,91 +119,85 @@ export default function NoticeDetail() {
   const onBackClick = () => navigate('/notice');
 
   return (
-    <main className="flex w-full">
+    <div className="flex w-full">
       <BackButton onClick={onBackClick} />
 
-      <div className="w-full">
-        <section className="w-full px-6 pb-[45px] pt-5">
-          <header className="flex items-center justify-between">
-            <h1 className="text-[32px] font-semibold">
-              {noticeDetail?.title || '-'}
-            </h1>
-            <FavoriteButton
-              isFavorite={noticeDetail?.isScraped ?? false}
-              onClick={onScrapClick}
-              size={24}
-            />
-          </header>
+      {isNoticeDetailLoading ? (
+        <div className="ml-2 flex h-[80vh] w-full items-center justify-center">
+          <LoopLoading />
+        </div>
+      ) : (
+        <div className="w-full">
+          <section className="w-full px-6 pb-[45px] pt-5">
+            <header className="flex items-center justify-between">
+              <h1 className="text-[32px] font-semibold">
+                {noticeDetail?.title || '-'}
+              </h1>
+              <FavoriteButton
+                isFavorite={noticeDetail?.isScraped ?? false}
+                onClick={onScrapClick}
+                size={24}
+              />
+            </header>
 
-          <div className="mt-12 flex gap-2">
-            {noticeDetail?.writer.role && (
-              <Tag
-                color={getColorByRole(noticeDetail?.writer.role)}
-                size="big"
-                text={rolesObj[noticeDetail?.writer.role]}
-                emphasisText
-                className="px-[10px] py-[5px]"
-              />
-            )}
-            {noticeDetail?.noticeType && (
-              <Tag
-                color="gray"
-                size="big"
-                text={noticeCategoryDisplay[noticeDetail?.noticeType]}
-                className="px-[10px] py-[5px]"
-              />
-            )}
-            {noticeDetail?.writer.userId === userProfile.userId && (
-              <div className="group relative ml-auto flex items-center justify-center">
-                <button className="px-2">
-                  <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
-                </button>
-                <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
-                  <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
-                    {actions.map(action => (
-                      <li key={action.label}>
-                        <button
-                          onClick={action.onClick}
-                          className={action.className}
-                        >
-                          {action.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+            <div className="mt-12 flex gap-2">
+              {noticeDetail?.writer.role && (
+                <Tag
+                  color={getColorByRole(noticeDetail?.writer.role)}
+                  size="big"
+                  text={rolesObj[noticeDetail?.writer.role]}
+                  emphasisText
+                  className="px-[10px] py-[5px]"
+                />
+              )}
+              {noticeDetail?.noticeType && (
+                <Tag
+                  color="gray"
+                  size="big"
+                  text={noticeCategoryDisplay[noticeDetail?.noticeType]}
+                  className="px-[10px] py-[5px]"
+                />
+              )}
+              {noticeDetail?.writer.userId === userProfile.userId && (
+                <div className="group relative ml-auto flex items-center justify-center">
+                  <button className="px-2">
+                    <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
+                  </button>
+                  <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
+                    <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
+                      {actions.map(action => (
+                        <li key={action.label}>
+                          <button
+                            onClick={action.onClick}
+                            className={action.className}
+                          >
+                            {action.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {noticeDetail?.noticeType &&
-            findCurrNotice(noticeDetail?.noticeType)?.needExtraInfo && (
-              <NoticeApplicationInfoTemplate notice={noticeDetail} />
-            )}
+            {noticeDetail?.noticeType &&
+              findCurrNotice(noticeDetail?.noticeType)?.needExtraInfo && (
+                <NoticeApplicationInfoTemplate notice={noticeDetail} />
+              )}
 
-          <PostDetailsTemplate
-            nickname={noticeDetail?.writer.userName || '-'}
-            createdAt={noticeDetail?.createdAt}
-            viewCount={noticeDetail?.viewCount || 0}
-            description={noticeDetail?.content || '-'}
-            actions={applySession()}
-            imageNameSegment={noticeDetail?.writer.profileUrl}
-          />
-        </section>
-
-        <CommentTemplate
-          commentList={(commentList || []).map(
-            ({ content, createdAt, ...rest }) => ({
-              id: rest.commentId,
-              content,
-              createdAt,
-              writer: rest.userName,
-              imgUrl: rest.userProfileUrl,
-            }),
-          )}
-          onSubmit={handleSubmitComment}
-        />
-      </div>
-    </main>
+            <PostDetailsTemplate
+              nickname={noticeDetail?.writer.userName || '-'}
+              createdAt={noticeDetail?.createdAt}
+              viewCount={noticeDetail?.viewCount || 0}
+              description={noticeDetail?.content || '-'}
+              actions={applySession()}
+              imageNameSegment={noticeDetail?.writer.profileUrl}
+            />
+          </section>
+          <CommentTemplate postId={postId} />
+        </div>
+      )}
+    </div>
   );
 }

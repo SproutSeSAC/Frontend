@@ -20,7 +20,7 @@ export { useGetStoreList } from '@/hooks/store/useGetStoreList';
 export { usePageBlocker } from '@/hooks/post/usePageBlocker';
 export { useSubmitNotice } from '@/hooks/post/useSubmitNotice';
 export { useEditNotice } from '@/hooks/post/useEditNotice';
-export { useHandleOnScrap } from '@/hooks/post/useHandleOnScrap';
+export { useHandleScrap } from '@/hooks/post/useHandleScrap';
 export { useHandleComment } from '@/hooks/post/useHandleComment';
 export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
 

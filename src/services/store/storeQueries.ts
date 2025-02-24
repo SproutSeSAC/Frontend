@@ -13,14 +13,7 @@ import {
   GetMealPostDetail,
   GetMealPostList,
 } from '@/types/store/storeMealPostDto';
-
-export const extractValidParams = (searchParams: URLSearchParams) => {
-  return Object.fromEntries(
-    Array.from(searchParams.entries()).map(([key, value]) => {
-      return [key, value];
-    }),
-  );
-};
+import { extractValidParams } from '@/utils';
 
 export const useGetInfiniteStoreList = (campusId: number) => {
   const [searchParams] = useSearchParams();
