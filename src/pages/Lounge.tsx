@@ -33,6 +33,10 @@ const initialProjectList = {
 };
 
 export default function Lounge() {
+  const onClick = () => {
+    throw Error();
+  };
+
   const {
     searchRef,
     currFilter,
@@ -76,6 +80,7 @@ export default function Lounge() {
 
   return (
     <>
+      <button onClick={onClick}>클릭!!!!</button>
       <div className="mt-6 flex items-center gap-8">
         <SearchInput
           name="search"
@@ -159,7 +164,7 @@ export default function Lounge() {
         ))}
       </ul>
 
-      {projects.length === 0 && (
+      {projects.length === 0 && !isLoading && (
         <EmptyContent message="모집중인 프로젝트가 없습니다." />
       )}
 
