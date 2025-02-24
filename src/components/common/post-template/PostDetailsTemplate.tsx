@@ -28,7 +28,7 @@ export default function PostDetailsTemplate({
 }: PostDetailsTemplateProps) {
   return (
     <>
-      <header className="border-b-lightGrey mt-12 flex items-center justify-between border-b pb-6">
+      <header className="mt-12 flex items-center justify-between border-b border-b-lightGray pb-6">
         <div>
           <div className="flex items-center gap-2">
             <UserImage imageNameSegment={imageNameSegment} />

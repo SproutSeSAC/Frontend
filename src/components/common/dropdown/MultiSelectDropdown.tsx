@@ -109,7 +109,7 @@ export default function MultiSelectDropdown({
       >
         {hasFullCheck && (
           <label
-            className={`hover:bg-lightGrey mt-2 flex cursor-pointer items-center rounded-lg px-3 py-1.5 ${selectedOptions.length === options.length ? 'text-mainGray' : 'text-black'} ${optionClassName}`}
+            className={`mt-2 flex cursor-pointer items-center rounded-lg px-3 py-1.5 hover:bg-lightGray ${selectedOptions.length === options.length ? 'text-mainGray' : 'text-black'} ${optionClassName}`}
           >
             <input
               type="checkbox"

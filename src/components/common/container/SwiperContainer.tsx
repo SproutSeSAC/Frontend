@@ -22,7 +22,7 @@ export default function SwiperContainer<T extends { id: number }>({
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex h-[265px] items-center justify-between">
       <button
         onClick={() => {
           swiperRef.current?.slidePrev();
@@ -49,11 +49,11 @@ export default function SwiperContainer<T extends { id: number }>({
         navigation
         scrollbar
         slidesPerView="auto"
-        className="!ml-0 w-full"
-        wrapperClass="max-w-0"
+        className="!ml-0 h-full w-full"
+        wrapperClass="max-w-0 h-full "
       >
         {slideList.map((item: T) => (
-          <SwiperSlide className="min-w-[275px]" key={JSON.stringify(item.id)}>
+          <SwiperSlide className="h-full min-w-[275px]" key={item.id}>
             {children(item)}
           </SwiperSlide>
         ))}

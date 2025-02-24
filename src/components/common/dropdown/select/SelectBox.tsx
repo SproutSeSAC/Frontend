@@ -151,7 +151,7 @@ export default function SelectBox<
 
       <article className={defaultLabel === '기술스택' ? '' : 'relative'}>
         <ul
-          className={`${open ? 'border-lightGrey max-h-64 border' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
+          className={`${open ? 'max-h-64 border border-lightGray' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>

@@ -6,7 +6,7 @@ import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
-import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
@@ -30,7 +30,7 @@ export default function Home() {
   const {
     data: loungeList,
     isLoading: isGetLoungeListLoading, //
-  } = useGetLoungeProjects({ page: 1, size: 10 });
+  } = useGetLoungeProjectList({ page: 1, size: 10 });
 
   const {
     data: userProfile = initialUserProfile,
@@ -68,9 +68,6 @@ export default function Home() {
         <section>
           <div className="mb-[14px] flex items-center justify-between">
             <Title title="주요 일정" />
-            <Link to="/schedule" className={linkButtonStyle}>
-              더보기
-            </Link>
           </div>
           <Calendar type="small" className="h-[509px]" />
         </section>

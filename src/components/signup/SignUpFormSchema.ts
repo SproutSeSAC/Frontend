@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-// Jotai 상태 파일 가져오기
-
 export type RegisterSchemaType = z.infer<typeof SignUpFormSchema>;
 
 export enum Role {

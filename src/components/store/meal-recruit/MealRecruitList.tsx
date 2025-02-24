@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 
 import { useGetInfiniteMealPostList } from '@/services/store/storeQueries';
 
@@ -14,12 +14,12 @@ export default function MealRecruitList() {
   const { showDialog } = useDialogContext();
   const mealPostObserveRef = useRef(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetInfiniteMealPostList();
-
-  const mealPosts = useMemo(() => {
-    return data ? data.pages.flatMap(({ mealPostList }) => mealPostList) : [];
-  }, [data]);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage, //
+  } = useGetInfiniteMealPostList();
 
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
@@ -39,50 +39,49 @@ export default function MealRecruitList() {
   };
 
   return (
-    <section className="relative z-10 flex cursor-default flex-col gap-5">
-      <div className="relative max-w-[75vw]">
-        {mealPosts.length > 2 && (
-          <div className="pointer-events-none absolute right-0 top-0 z-20 h-[74px] w-[215px] bg-gradient-to-r from-[#f5f5f700] to-bg" />
+    <section className="relative z-10 mb-5 w-full">
+      <div className="relative w-fit max-w-[calc(100vw-192px)] pr-14">
+        {data?.pages.length === 0 ? (
+          <div className="relative flex min-h-[74px] w-[360px] flex-col items-start rounded-xl border border-lightGray-active bg-white px-6 py-4">
+            <span className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-black scrollbar-hide">
+              한끼팟 만들기
+            </span>
+            <span className="text-sm font-normal tracking-tight text-darkGray-active">
+              함께 식사할 사람을 찾아봐요!
+            </span>
+          </div>
+        ) : (
+          <ScrollContainer gap={0}>
+            {data?.pages.map(page => (
+              <Fragment key={page.currentPage}>
+                {page.mealPostList.map(post => (
+                  <li key={post.id} className="mr-5">
+                    <MealRecruitCard post={post} />
+                  </li>
+                ))}
+
+                {/* 옵저버 */}
+                {hasNextPage && page.mealPostList.length % 5 === 0 && (
+                  <div ref={mealPostObserveRef} />
+                )}
+              </Fragment>
+            ))}
+          </ScrollContainer>
         )}
-        <ScrollContainer gap={7}>
-          {mealPosts.length === 0 && (
-            <div className="relative flex min-h-[74px] max-w-[360px] flex-col items-start rounded-xl border border-lightGray-active bg-white px-6 py-4">
-              <div className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-black scrollbar-hide">
-                한끼팟 만들기
-              </div>
-              <div className="text-sm font-normal tracking-tight text-darkGray-active">
-                함께 식사할 사람을 찾아봐요!
-              </div>
-            </div>
-          )}
-          {mealPosts.map(post => (
-            <div
-              key={post.id}
-              className="relative z-10 w-[331px] max-w-[331px] flex-shrink-0 pr-5"
-            >
-              <MealRecruitCard post={post} />
-            </div>
-          ))}
-          <button
-            className={`${
-              mealPosts.length > 2
-                ? 'absolute -right-20 top-1/2 -translate-y-1/2 transform'
-                : 'relative ml-3'
-            } z-10 flex h-[74px] flex-col items-center justify-center gap-4`}
-            onClick={handleShowDialog}
-          >
-            <div className="h-[30px] w-fit rounded-full bg-mainGray-active text-white">
-              <BsPlus size={30} />
-            </div>
-          </button>
-        </ScrollContainer>
+
+        <button
+          onClick={handleShowDialog}
+          className="absolute right-0 top-6 z-40 h-[30px] w-fit rounded-full bg-mainGray-active text-white"
+        >
+          <BsPlus size={30} />
+        </button>
       </div>
+
       {isFetchingNextPage && (
         <div className="m-auto">
           <LoopLoading size={40} />
         </div>
       )}
-      <div ref={mealPostObserveRef} />
     </section>
   );
 }

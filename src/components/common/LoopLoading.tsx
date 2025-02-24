@@ -22,7 +22,7 @@ export default function LoopLoading({ size = 200 }: LoopLoadingProps) {
           r="45"
           strokeWidth="11"
           fill="none"
-          className="stroke-lightGrey"
+          className="stroke-lightGray"
         />
         <circle
           cx="50"

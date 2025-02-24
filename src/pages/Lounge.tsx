@@ -2,14 +2,15 @@ import { useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetLoungeProjects } from '@/services/lounge/loungeQueries';
+import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { progressList, sortList } from '@/constants';
 import { useFilterData, useTechStackList } from '@/hooks';
-import { LoungeProjectFilters } from '@/types';
+import { LoungeProjectFilter, Progress, SortDisplayKey } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
+import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
 import SquareButton from '@/components/common/button/SquareButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
@@ -18,10 +19,17 @@ import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import LoungeForm from '@/components/lounge/form/LoungeForm';
 
-const initialState: LoungeProjectFilters = {
+const initialState: LoungeProjectFilter = {
   page: 1,
-  size: 21,
-  modify: false,
+  size: 20,
+};
+
+const initialProjectList = {
+  projects: [],
+  totalPages: 0,
+  currentPage: 0,
+  pageSize: 0,
+  nextPage: null,
 };
 
 export default function Lounge() {
@@ -37,7 +45,11 @@ export default function Lounge() {
   const [searchParams] = useSearchParams();
   const pType = searchParams.get('pType');
 
-  const { data, isLoading } = useGetLoungeProjects(currFilter);
+  const {
+    data: { projects = [], totalPages, currentPage } = initialProjectList,
+    isLoading,
+  } = useGetLoungeProjectList(currFilter);
+
   const { data: jobList } = useGetJobList();
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
@@ -96,7 +108,6 @@ export default function Lounge() {
               defaultLabel="기술스택"
               defaultTabValue="백엔드"
               options={techStackList}
-              isReset={!currFilter.modify}
               onChangeValue={value => {
                 const newValue = value.map(item => item.id);
                 handleChangeFilter({ techStack: newValue });
@@ -120,8 +131,8 @@ export default function Lounge() {
             defaultLabel="진행방식"
             options={progressList || []}
             onChangeValue={value => {
-              const newValue = value.map(item => item.key);
-              handleChangeFilter({ meetingType: newValue[0], modify: true });
+              const newValue = value.map(item => item.key) as Progress[];
+              handleChangeFilter({ meetingType: newValue[0] });
             }}
             boxShape="buttonShape"
             selectedOption={selectedProgressOption}
@@ -132,33 +143,40 @@ export default function Lounge() {
           defaultLabel="정렬"
           options={sortList}
           onChangeValue={value => {
-            const newValue = value.map(item => item.key);
-            handleChangeFilter({ sort: newValue[0], modify: true });
+            const newValue = value.map(item => item.key) as SortDisplayKey[];
+            handleChangeFilter({ sort: newValue[0] });
           }}
           boxShape="buttonShape"
           selectedOption={selectedSortOption}
         />
       </div>
 
-      {data?.projects.length === 0 && !isLoading ? (
+      <ul className="mb-[90px] grid grid-cols-3 gap-6">
+        {projects.map(project => (
+          <li key={project.id} className="[&>a]:!w-full">
+            <LoungePostCard card={project} />
+          </li>
+        ))}
+      </ul>
+
+      {projects.length === 0 && (
         <EmptyContent message="모집중인 프로젝트가 없습니다." />
-      ) : (
-        <>
-          <ul className="grid grid-cols-3 gap-6">
-            {data?.projects.map(card => (
-              <li key={card.id} className="[&>a]:!w-full">
-                <LoungePostCard card={card} />
-              </li>
-            ))}
-          </ul>
-          <Pagination
-            totalPages={data?.totalPages || 0}
-            currentPage={data?.currentPage || 0 || 1}
-            onPageChange={(pageNumber: number) => {
-              handleChangeFilter({ page: pageNumber, modify: true });
-            }}
-          />
-        </>
+      )}
+
+      {isLoading && (
+        <div className="flex w-full justify-center py-10">
+          <LoopLoading />
+        </div>
+      )}
+
+      {projects.length !== 0 && (
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={(pageNumber: number) => {
+            handleChangeFilter({ page: pageNumber });
+          }}
+        />
       )}
     </>
   );

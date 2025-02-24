@@ -4,6 +4,7 @@ import { ko } from 'date-fns/locale';
 export const formatDate = (
   date?: string | number | Date,
   formatStr:
+    | 'yy.MM.dd'
     | 'yyyy.MM.dd'
     | 'yyyy년 MM월 dd일'
     | 'yyyy.MM.dd HH:mm'

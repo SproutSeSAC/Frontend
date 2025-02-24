@@ -1,9 +1,9 @@
 import { LIMITLESS_CAPACITY_NUM } from '@/constants';
-import { MeetingType, NoticeDetail } from '@/types';
+import { MeetingType, NoticeDto } from '@/types';
 import { formatDate } from '@/utils';
 
 interface NoticeApplicationInfoTemplateProps {
-  notice: NoticeDetail;
+  notice: NoticeDto.GetNoticeDetail;
 }
 export const noticeDisplay: { [key in keyof MeetingType]: string } = {
   ONLINE: '온라인',

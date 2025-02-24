@@ -17,11 +17,11 @@ export namespace NoticeDto {
   };
   export type GetNoticeDetail = NoticeDetail;
   export type GetNoticeComment = { comments: NoticeComment[] };
-
   export type PostNotice = NoticeFormSchemaType;
 }
 
 interface NoticeCommonFields {
+  postId: number;
   title: string;
   content: string;
   noticeType: NoticeCategoryDisplayKey;
@@ -101,7 +101,6 @@ interface NoticeSessionParticipantsStatus {
     {
       userId: number;
       status: SessionStatus;
-      phoneNumber: string;
       userName: string;
       nickName: string;
       profileImageUrl: string;
