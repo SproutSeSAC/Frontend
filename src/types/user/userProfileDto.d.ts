@@ -1,4 +1,5 @@
 import { Domain, Job, TechStack } from '@/types/specifications';
+import { UserCampus, UserCourse } from '@/types/user';
 
 export namespace UserProfileDto {
   export type Post = SignUpValue;
@@ -19,18 +20,6 @@ type SignUpValue = {
   phoneNumber: string;
   serviceTerms: boolean;
   personalInformationTerms: boolean;
-};
-
-type UserCourse = {
-  courseId: number;
-  courseTitle: string;
-  courseStartDate: string;
-  courseEndDate: string;
-};
-
-type UserCampus = {
-  id: number;
-  campusName: string;
 };
 
 type UserProfile = {

@@ -1,8 +1,10 @@
+import { useHandleCalendar } from '@/hooks/calendar/useHandleCalendar';
+
 import { useHandleAcl } from '@/hooks';
 import { UserCourse } from '@/types';
 import { FaPlus } from 'react-icons/fa6';
 
-import AclUser from '@/components/calendar/AclUser';
+import AdminUser from '@/components/calendar/AdminUser';
 import CalendarCreateButton from '@/components/calendar/CalendarCreateButton';
 import TableDataCell from '@/components/common/table/TableDataCell';
 
@@ -13,21 +15,21 @@ interface CalendarAclTableItemProps {
 
 export default function CalendarAclTableItem({
   index,
-  course,
+  course: { courseId, courseTitle },
 }: CalendarAclTableItemProps) {
+  const { createCalendar, isCreateCalendarPending } = useHandleCalendar({
+    courseId,
+  });
+
   const {
     courseCalendarAcl,
     isGrantAclPending,
-
-    courseAclInfo,
-    onGrantAclClick,
+    isLoading,
     adminList,
     courseCalendar,
-    isLoading,
-
-    createCalendar,
-    isCreateCalendarPending,
-  } = useHandleAcl(course);
+    courseAclInfo,
+    onGrantAclClick,
+  } = useHandleAcl({ courseId, calendarId: '' });
 
   return (
     <tr className="group border-t hover:bg-lightGray [&:last-child>td]:border-b-0">
@@ -48,8 +50,8 @@ export default function CalendarAclTableItem({
             </div>
           ) : (
             <CalendarCreateButton
-              courseTitle={course.courseTitle}
-              courseId={course.courseId}
+              courseTitle={courseTitle}
+              courseId={courseId}
               adminList={adminList}
               createCalendar={createCalendar}
               isCreateCalendarPending={isCreateCalendarPending}
@@ -61,7 +63,7 @@ export default function CalendarAclTableItem({
       <TableDataCell
         className={`${courseCalendarAcl ? '' : 'text-mainGray'} h-full overflow-hidden pr-8 leading-5 tracking-tight`}
       >
-        {course.courseTitle}
+        {courseTitle}
       </TableDataCell>
 
       {/* 캘린더 권한 부여된 유저 */}
@@ -74,7 +76,11 @@ export default function CalendarAclTableItem({
             {courseCalendarAcl && (
               <ul className="flex flex-wrap gap-x-6 gap-y-1">
                 {courseAclInfo?.hasAclAdminList?.map(admin => (
-                  <AclUser key={admin.email} admin={admin} />
+                  <AdminUser
+                    key={admin.email}
+                    admin={admin}
+                    accessRole={admin.accessRole}
+                  />
                 ))}
               </ul>
             )}
@@ -96,7 +102,7 @@ export default function CalendarAclTableItem({
               ) : (
                 <ul className="flex flex-wrap gap-x-6 gap-y-1">
                   {courseAclInfo?.hasNotAclAdminList?.map(admin => (
-                    <AclUser key={admin.email} admin={admin} />
+                    <AdminUser key={admin.nickname} admin={admin} />
                   ))}
                 </ul>
               ))}

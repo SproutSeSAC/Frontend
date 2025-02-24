@@ -18,21 +18,18 @@ type CalendarId = {
 
 export type AdminEmail = {
   email: string;
+  name: string;
   nickname: string;
   roleType: keyof HasAdminRole;
 };
 
-export type AclEmail = {
-  email: string;
-  nickname: string;
+export type AclEmail = AdminEmail & {
   accessRole: AccessRole;
-  roleType: keyof HasAdminRole;
 };
 
 export type CourseCalendarAcl = {
   isCreated: boolean;
   courseId: number;
-  courseTitle: string;
   calendarId?: string;
   hasAclAdminList?: AclEmail[];
   hasNotAclAdminList?: AdminEmail[];

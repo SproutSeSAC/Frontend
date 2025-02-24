@@ -1,16 +1,14 @@
-export { useTermsAndPolicy } from '@/hooks/useTermsAndPolicy';
-
 /* common */
 export { useDialogContext } from '@/hooks/common/useDialogContext';
 export { useCollapsibleSideView } from '@/hooks/common/useCollapsibleSideView';
-export { useUpdateProfile } from '@/hooks/useUpdateProfile';
 export { useFilterData } from '@/hooks/common/useFilterData';
 export { useTechStackList } from '@/hooks/common/useTechStackList';
 export { useObserver } from '@/hooks/common/useObserver';
 export { useHandleImage } from '@/hooks/common/useHandleImage';
 
-/* signup */
-export { useHandleSignUp } from '@/hooks/signup/useHandleSignUp';
+/* profile */
+export { useUpdateProfile } from '@/hooks/profile/useUpdateProfile';
+export { useHandleSignUp } from '@/hooks/profile/useHandleSignUp';
 
 /* store */
 export { useStoreMap } from '@/hooks/store/useStoreMap';
@@ -24,7 +22,7 @@ export { useHandleScrap } from '@/hooks/post/useHandleScrap';
 export { useHandleComment } from '@/hooks/post/useHandleComment';
 export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
 
-/* schedule */
-export { useHandleAcl } from '@/hooks/schedule/useHandleAcl';
-export { useCalendarList } from '@/hooks/schedule/useCalendarList';
-export { useCalendarEvents } from '@/hooks/schedule/useCalendarEvents';
+/* calendar */
+export { useHandleAcl } from '@/hooks/calendar/useHandleAcl';
+export { useCalendarList } from '@/hooks/calendar/useCalendarList';
+export { useCalendarEvents } from '@/hooks/calendar/useCalendarEvents';

@@ -7,6 +7,7 @@ export namespace AdminEmailListByCourseDto {
 type AdminEmailByCourse = {
   id: number;
   email: string;
+  name: string;
   nickname: string;
   roleType: keyof HasAdminRole;
 };

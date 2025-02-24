@@ -48,11 +48,11 @@ export default function CalendarCreateButton({
               최고 관리자를 비롯하여 아래 유저에게는 캘린더 권한이 부여됩니다.
             </p>
             <ul className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-4">
-              {adminList?.map(({ roleType, email, nickname }) => (
+              {adminList?.map(({ roleType, email, name }) => (
                 <li key={email} className="flex">
                   <span className="tracking-tighter">
-                    {nickname}
-                    {userProfile?.nickname === nickname && (
+                    {name}
+                    {userProfile?.name === name && (
                       <span className="mb-1 inline-block text-sm">(나)</span>
                     )}
                   </span>
