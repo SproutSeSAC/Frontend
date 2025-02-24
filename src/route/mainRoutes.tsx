@@ -2,8 +2,6 @@ import { lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
-import SessionsDetail from '@/pages/SessionsDetail';
-
 const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
 const Notice = lazy(() => import('@/pages/Notice'));
 const NoticeDetail = lazy(() => import('@/pages/NoticeDetail'));
@@ -19,6 +17,9 @@ const Store = lazy(() => import('@/pages/Store'));
 const StoreDetail = lazy(() => import('@/pages/StoreDetail'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
 const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
+const SessionsDetail = lazy(() => import('@/pages/SessionsDetail'));
+const SessionLayout = lazy(() => import('@/layouts/SessionLayout'));
+const SessionsApplicants = lazy(() => import('@/pages/SessionsApplicants'));
 
 const mainRoutes: RouteObject[] = [
   {
@@ -54,7 +55,17 @@ const mainRoutes: RouteObject[] = [
       },
       {
         path: 'application-status-for-sessions',
-        element: <SessionsDetail />,
+        element: <SessionLayout />,
+        children: [
+          {
+            index: true,
+            element: <SessionsDetail />,
+          },
+          {
+            path: 'post/:postId',
+            element: <SessionsApplicants />,
+          },
+        ],
       },
       {
         path: 'stores',
