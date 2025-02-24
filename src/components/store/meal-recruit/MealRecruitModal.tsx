@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { usePostMeal } from '@/services/store/storeMutations';
+import { usePostMyPost } from '@/services/post/postMutation';
 
 import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
 import { useDialogContext } from '@/hooks';
@@ -46,7 +46,8 @@ export default function MealRecruitModal() {
     resolver: zodResolver(mealRecruitSchema),
   });
   const { control, handleSubmit } = methods;
-  const { mutateAsync } = usePostMeal();
+
+  const { mutateAsync: postMealRecruit } = usePostMyPost();
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
@@ -70,20 +71,21 @@ export default function MealRecruitModal() {
       };
 
       try {
-        await mutateAsync(params);
+        await postMealRecruit(params);
 
         showToast('한끼팟을 생성했습니다.');
 
-        queryClient.invalidateQueries({
+        await queryClient.fetchQuery({
           queryKey: ['useGetInfiniteMealPostList'],
         });
+
         hideDialog();
       } catch (err) {
         console.error(err);
         showToast('한끼팟을 생성하지 못했습니다.');
       }
     },
-    [hideDialog, mutateAsync, queryClient, showToast],
+    [hideDialog, postMealRecruit, queryClient, showToast],
   );
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(

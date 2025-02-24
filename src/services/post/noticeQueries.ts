@@ -4,10 +4,8 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { SessionStatus } from '@/constants/serviceConstant';
 import { NoticeDto, NoticeFilter } from '@/types';
 import { isInThisWeek } from '@/utils';
-import { AxiosResponse } from 'axios';
 
 import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
 
@@ -81,60 +79,6 @@ export const useGetThisWeekNoticeList = () => {
   return useQuery({
     queryKey: ['useGetThisWeekNoticeList'],
     queryFn: getThisWeekNotice,
-    retry: false,
-  });
-};
-
-export const useGetNoticeDetail = (noticeId: number) => {
-  return useQuery({
-    queryKey: ['useGetNoticeDetail', noticeId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<NoticeDto.GetNoticeDetail>(
-        `/notices/${noticeId}`,
-      );
-      return data;
-    },
-  });
-};
-
-export const useGetNoticeCommentList = (noticeId: number) => {
-  const getComment = async () => {
-    const { data }: AxiosResponse<NoticeDto.GetNoticeComment> =
-      await axiosInstance.get(`/notices/${noticeId}/comments`);
-    return data?.comments;
-  };
-  return useQuery({
-    queryKey: ['useGetNoticeCommentList', noticeId],
-    queryFn: getComment,
-  });
-};
-
-export const useGetSessionStatus = ({
-  sessionId,
-  page = 1,
-  size = 10,
-  searchParticipantStatus = 'WAIT',
-}: {
-  sessionId: number;
-  page?: number;
-  size?: number;
-  searchParticipantStatus?: SessionStatus;
-}) => {
-  const getSessionStatus = async () => {
-    const { data } = await axiosInstance.get(`/notices/sessions/${sessionId}`, {
-      params: {
-        sessionId,
-        page,
-        size,
-        searchParticipantStatus,
-      },
-    });
-    return data;
-  };
-  return useQuery({
-    queryKey: ['useGetSessionStatus', sessionId],
-    queryFn: getSessionStatus,
-    enabled: !!Number(sessionId),
     retry: false,
   });
 };

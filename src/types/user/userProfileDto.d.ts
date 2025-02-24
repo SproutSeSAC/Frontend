@@ -59,17 +59,20 @@ type UserProfileCard = {
   profile: {
     name: string;
     nickname: string;
+    phoneNumber: string | null;
     profileUrl: string;
   };
   study: {
     email: string;
     campus: {
       id: number;
-      name: string;
-    };
+      campusName: string;
+    }[];
     course: {
       id: number;
-      name: string;
-    };
+      courseName: string;
+    }[];
   };
 };
+
+export {};

@@ -5,6 +5,7 @@ interface EditButtonProps {
   label: string;
   className?: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 export default function EditButton({
@@ -12,12 +13,13 @@ export default function EditButton({
   label,
   className,
   onClick,
+  disabled,
 }: EditButtonProps) {
   return (
     <button
       onClick={onClick}
       type="button"
-      className={`p-1 ${className}`}
+      className={`${disabled ? '' : 'cursor-pointer'} text-darkGray ${className}`}
       aria-label={label}
     >
       <FiEdit className={`size-[${size}px]`} />

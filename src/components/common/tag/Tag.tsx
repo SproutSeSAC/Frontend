@@ -34,7 +34,7 @@ export default function Tag({
   const styleByColor = {
     green: 'bg-mainGreen text-white ',
     black: 'bg-black text-mainGray',
-    gray: 'bg-lightGrey-hover text-black',
+    gray: 'bg-lightGray-hover text-black',
     'gray-light': 'bg-bg',
     blue: emphasisText
       ? 'bg-[#E8EFFE] text-[#332FD0]'

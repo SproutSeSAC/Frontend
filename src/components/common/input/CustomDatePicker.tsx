@@ -117,7 +117,7 @@ export default function CustomDatePicker({
         <DatePicker
           id={`date-picker-${id}`}
           autoComplete="off"
-          className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-mainGray focus:outline-none ${errorMsg ? 'border-red-500' : 'border-lightGrey'} ${className}`}
+          className={`flex h-full w-full flex-1 items-center rounded-2xl border bg-white py-4 !pl-11 pr-[15px] text-lg placeholder:text-mainGray focus:outline-none ${errorMsg ? 'border-red-500' : 'border-lightGray'} ${className}`}
           renderCustomHeader={CustomDatePickerHeader}
           preventOpenOnFocus
           closeOnScroll

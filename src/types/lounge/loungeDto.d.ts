@@ -1,30 +1,70 @@
 import { StatusBase } from '@/constants/serviceConstant';
-import { Option, Progress, Ptype } from '@/types';
+import {
+  ContactMethodDisplayKey,
+  DetailPostTechStack,
+  Option,
+  Progress,
+  Ptype,
+} from '@/types';
 
-export interface Lounge {
-  isScraped: boolean;
-  id: number;
-  title: string;
-  description: string;
+export namespace LoungeDto {
+  export type GetProjectList = GetLoungeProjectList;
+  export type GetProjectDetail = GetLoungeProjectDetail;
+  export type PostProjectParams = PostLoungeProjectParams;
+  export type PutProjectParams = Partial<PutLoungeProjectParams>;
+  export type GetEndingTomorrowList = GetEndingTomorrowProject[];
+  export type GetProjectComment = GetLoungeProjectComment[];
+}
+
+interface LoungeCommonFields {
   recruitmentCount: number;
   meetingType: Progress;
-  contactMethod: string;
+  contactMethod: ContactMethodDisplayKey;
+  contactDetail: string;
+}
+
+interface LoungeProjectDisplay extends LoungeCommonFields {
+  id: number;
+  postId: number;
+  isScraped: boolean;
+  title: string;
+  description: string;
   recruitmentStart: string;
   recruitmentEnd: string;
   viewCount: number;
-  contactDetail: string;
   positionNames: string[];
+  techStacks: { name: string; imageUrl }[];
   ptype: Ptype;
 }
-export type PutLoungeProject = {
-  projectId: number;
-  params: PostLoungeProject;
-};
-export interface PostLoungeProject
-  extends Pick<
-    Lounge,
-    'recruitmentCount' | 'meetingType' | 'contactMethod' | 'contactDetail'
-  > {
+
+interface GetLoungeProjectList {
+  projects: LoungeProjectDisplay[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  nextPage: number | null;
+}
+
+interface GetLoungeProjectDetail extends LoungeCommonFields {
+  id: number;
+  title: string;
+  writerId: number;
+  writerNickName: string;
+  imgUrl: string;
+  description: string;
+  recruitmentStart: string;
+  recruitmentEnd: string;
+  isScraped: boolean;
+  viewCount: number;
+  projectStatus: StatusBase;
+  createdAt: string;
+  position: (Option & { isActive: boolean })[];
+  ptype: Ptype;
+  techStack: DetailPostTechStack[];
+}
+
+interface PostLoungeProjectParams extends LoungeCommonFields {
   recruitmentType: string;
   startDate: string;
   endDate: string;
@@ -34,57 +74,12 @@ export interface PostLoungeProject
   projectDescription: string;
 }
 
-export interface GetLoungeProjects {
-  techStack?: number[];
-  position?: number[];
-  keyword?: string;
-  onlyScraped?: boolean;
-  meetingType?: string;
-  sort?: string;
-  search?: string;
-  page?: number;
-  size?: number;
+interface PutLoungeProjectParams {
+  projectId: number;
+  params: PostLoungeProjectParams;
 }
 
-export interface GetLoungeProject {
-  projects: Lounge[];
-  totalCount: number;
-  currentPage: number;
-  pageSize: number;
-  totalPages: number;
-  nextPage: number | null;
-}
-export interface GetLoungeProjectDetail {
-  id: number;
-  title: string;
-  writerId: number;
-  writerNickName: string;
-  description: string;
-  recruitmentCount: number;
-  contactMethod: ContactMethodType;
-  contactDetail: string;
-  recruitmentStart: string;
-  imgUrl: string;
-  isScraped: boolean;
-  recruitmentEnd: string;
-  viewCount: number;
-  projectStatus: StatusBase;
-  meetingType: Progress;
-  createdAt: string;
-  position: Option[];
-  ptype: Ptype;
-  techStack: DetailPostTechStack[];
-}
-
-export interface DetailPostTechStack {
-  id: number;
-  name: string;
-  isActive: boolean;
-  path: string;
-  jobName: string;
-}
-
-export interface GetLoungeProjectComment {
+interface GetLoungeProjectComment {
   id: number;
   content: string;
   createdAt: string;
@@ -93,10 +88,12 @@ export interface GetLoungeProjectComment {
   imgUrl: string | null;
 }
 
-export interface GetEndingTomorrowProjects {
+interface GetEndingTomorrowProject {
   projectId: number;
   title: string;
   content: string;
   userNickname: string;
   imgUrl: string;
 }
+
+export {};

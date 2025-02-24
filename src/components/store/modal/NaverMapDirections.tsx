@@ -1,3 +1,4 @@
+// NOTE: 삭제 확인
 // import { useEffect } from 'react';
 
 // import { campusList } from '@/constants/serviceConstant';

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { usePostNoticeSessions } from '@/services/notice/noticeMutations';
+import { usePostNoticeSessions } from '@/services/post/noticeMutations';
 
 import { useDialogContext } from '@/hooks';
 import { NoticeSession } from '@/types';

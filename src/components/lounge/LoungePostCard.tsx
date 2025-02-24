@@ -2,15 +2,12 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import {
-  usePostIncrementViewCount,
-  usePostScrapProject,
-} from '@/services/lounge/loungeMutations';
+import { usePostIncrementViewCount } from '@/services/post/loungeMutations';
 
 import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
-import { useHandleOnScrap } from '@/hooks';
+import { useHandleScrap } from '@/hooks';
 import { Ptype } from '@/types';
-import { Lounge } from '@/types/lounge/loungeDto';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { formatDate } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
@@ -18,7 +15,7 @@ import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
 
 interface LoungePostCardProps {
-  card: Lounge;
+  card: LoungeDto.GetProjectList['projects'][0];
 }
 
 const getTagColor = (tag: Ptype) => {
@@ -31,45 +28,52 @@ const getTagColor = (tag: Ptype) => {
 };
 
 export default function LoungePostCard({ card }: LoungePostCardProps) {
+  const {
+    id,
+    postId,
+    ptype,
+    positionNames,
+    techStacks,
+    isScraped,
+    viewCount,
+    title,
+    recruitmentStart,
+    recruitmentEnd,
+    recruitmentCount,
+    meetingType,
+  } = card;
+
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
-  const { mutateAsync: postScrapProject } = usePostScrapProject();
 
-  const getScrapResult = useCallback(async () => {
-    return postScrapProject({ projectId: card.id });
-  }, [card.id, postScrapProject]);
-
-  const { onScrapClick } = useHandleOnScrap({
-    getScrapResult,
-    invalidateQueryKeys: ['useGetLoungeProjects'],
+  const { onScrapClick } = useHandleScrap({
+    postId,
+    isScraped,
+    invalidateQueryKeys: ['useGetLoungeProjectList'],
   });
 
   const onViewCount = useCallback(async () => {
-    try {
-      await postViewCount({ projectId: card.id });
-    } catch (err) {
-      console.error(err);
-    }
-  }, [card.id, postViewCount]);
+    await postViewCount({ projectId: id });
+  }, [id, postViewCount]);
 
   return (
     <Link
-      to={`/lounge/post/${card.id}`}
-      className="flex w-[275px] max-w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-lightGray bg-white p-4"
+      to={`/lounge/post/${postId}`}
+      className="flex h-full w-[275px] flex-col items-start justify-between rounded-lg border border-solid border-lightGray bg-white p-4"
       onClick={onViewCount}
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getTagColor(card.ptype)}
+          color={getTagColor(ptype)}
           size="medium"
-          text={ptypeDisplay[card.ptype]}
+          text={ptypeDisplay[ptype]}
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />
-            <span>{card.viewCount}</span>
+            <span>{viewCount}</span>
           </div>
           <FavoriteButton
-            isFavorite={card.isScraped}
+            isFavorite={isScraped}
             onClick={onScrapClick}
             size={20}
           />
@@ -80,12 +84,18 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         className="mt-3 line-clamp-2 overflow-hidden text-ellipsis whitespace-normal font-medium"
         style={{ wordBreak: 'break-word' }}
       >
-        {card.title}
+        {title}
       </h4>
 
       <ul className="my-4 flex gap-2">
-        <li className="size-5 rounded bg-mainGray-hover" />
-        <li className="size-5 rounded bg-mainGray-hover" />
+        {techStacks?.map(techStack => (
+          <img
+            key={techStack.name}
+            src={techStack.imageUrl}
+            alt={techStack.name}
+            className="size-5"
+          />
+        ))}
       </ul>
 
       <div className="flex flex-col gap-2 text-xs">
@@ -95,8 +105,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           </span>
 
           <span>
-            {formatDate(card.recruitmentStart)} ~{' '}
-            {formatDate(card.recruitmentEnd)}
+            {formatDate(recruitmentStart)} ~ {formatDate(recruitmentEnd)}
           </span>
         </div>
 
@@ -105,7 +114,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
             모집
           </span>
 
-          <span>3/{card.recruitmentCount}</span>
+          <span>{recruitmentCount}</span>
         </div>
 
         <div className="flex">
@@ -114,7 +123,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           </span>
 
           <ul className="flex flex-1 flex-wrap gap-1 overflow-hidden">
-            {card.positionNames.map(tag => (
+            {positionNames?.map(tag => (
               <Tag
                 key={tag}
                 text={tag}
@@ -131,7 +140,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
             유형
           </span>
 
-          <span>{progressDisplay[card.meetingType]}</span>
+          <span>{progressDisplay[meetingType]}</span>
         </div>
       </div>
     </Link>

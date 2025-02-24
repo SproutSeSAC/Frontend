@@ -13,15 +13,25 @@ export const minutes: Option[] = Array.from({ length: 6 }, (_, i) => ({
 }));
 
 // 인원수 선택 option
-export const recruitmentCountList = Array.from({ length: 10 }, (_, index) => {
-  if (index === 9) {
+export const recruitmentCountList: Option[] = Array.from(
+  { length: 10 },
+  (_, index) => {
+    if (index === 9) {
+      return {
+        id: index + 1,
+        name: `${index + 1}명 이상`,
+      };
+    }
     return {
       id: index + 1,
-      name: `${index + 1}명 이상`,
+      name: `${index + 1}명`,
     };
-  }
-  return {
-    id: index + 1,
-    name: `${index + 1}명`,
-  };
-});
+  },
+);
+
+// 내가 쓴 테이블 포스트 타입 option
+export const myPostTypeOptionList: Option[] = [
+  { id: 1, name: '한끼팟', key: 'MEAL' },
+  { id: 2, name: '프로젝트', key: 'PROJECT' },
+  { id: 3, name: '스터디', key: 'STUDY' },
+];

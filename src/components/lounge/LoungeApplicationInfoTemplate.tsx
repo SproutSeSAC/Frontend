@@ -1,43 +1,41 @@
 import { progressDisplay } from '@/constants';
-import { ContactMethodDisplayKey, Option, Progress } from '@/types';
-import { DetailPostTechStack } from '@/types/lounge/loungeDto';
+import { LoungeDto } from '@/types/lounge/loungeDto';
 import { formatDate } from '@/utils';
 
 import Tag from '@/components/common/tag/Tag';
 import ContactMethodDetail from '@/components/lounge/detail/ContactMethodDetail';
 
-interface LoungeApplicationInfoProps {
-  startPeriod?: string;
-  endPeriod?: string;
-  personRecruited?: number;
-  position?: Option[];
-  contactMethod?: ContactMethodDisplayKey;
-  contactDetail?: string;
-  meetingType?: Progress;
-  techStack?: DetailPostTechStack[];
-}
-
 export default function LoungeApplicationInfoTemplate({
-  startPeriod,
-  endPeriod,
-  personRecruited,
+  recruitmentStart,
+  recruitmentEnd,
+  recruitmentCount,
   position,
   contactMethod,
   contactDetail,
   meetingType,
   techStack,
-}: LoungeApplicationInfoProps) {
+}: Pick<
+  LoungeDto.GetProjectDetail,
+  | 'recruitmentStart'
+  | 'recruitmentEnd'
+  | 'recruitmentCount'
+  | 'position'
+  | 'contactMethod'
+  | 'contactDetail'
+  | 'meetingType'
+  | 'techStack'
+>) {
   const loungeApplicationInfo = [
     {
       type: '기간',
       data:
-        startPeriod && endPeriod
-          ? `${formatDate(startPeriod)} ~ ${formatDate(endPeriod)}`
+        recruitmentStart && recruitmentEnd
+          ? `${formatDate(recruitmentStart)} ~ ${formatDate(recruitmentEnd)}`
           : '-',
     },
     {
       type: '모집',
-      data: personRecruited,
+      data: recruitmentCount,
     },
     {
       type: '직무',
@@ -58,9 +56,12 @@ export default function LoungeApplicationInfoTemplate({
       type: '스택',
       data: techStack && (
         <ul className="flex w-full flex-1 flex-wrap gap-1">
-          {techStack.map(({ id, path, name }) => (
-            <img key={id} src={path} alt={name} className="size-10" />
-          ))}
+          {techStack
+            ?.sort((a, b) => a.jobName.localeCompare(b.jobName))
+            ?.sort((a, b) => a.name.localeCompare(b.name))
+            .map(({ id, path, name }) => (
+              <img key={id} src={path} alt={name} className="size-10" />
+            ))}
         </ul>
       ),
     },

@@ -33,9 +33,9 @@ export default function LoungeTabNavigation() {
       onChangeValue={handleChangeValue}
     >
       <div
-        className={`box-border cursor-pointer justify-center whitespace-pre px-4 pb-[19px] ${pType === 'EDIT' ? 'border-b-2 border-black' : 'text-mainGray'}`}
+        className={`box-border cursor-pointer justify-center whitespace-pre ${pType === 'EDIT' ? 'border-b-2 border-black' : 'text-mainGray'}`}
       >
-        <button type="button" onClick={handleChange}>
+        <button type="button" onClick={handleChange} className="px-4 pb-[19px]">
           {modifyProjectId ? '모집수정' : '모집하기'}
         </button>
       </div>

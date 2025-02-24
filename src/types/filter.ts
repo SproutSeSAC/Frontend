@@ -1,6 +1,5 @@
 import { SessionStatus } from '@/constants/serviceConstant';
-import { GetLoungeProjects } from '@/types/lounge/loungeDto';
-import { NoticeCategoryDisplayKey, NoticeTabDisplayKey } from '@/types/notice';
+import { SortDisplayKey } from '@/types/lounge';
 
 export interface Option {
   id: number;
@@ -8,24 +7,10 @@ export interface Option {
   key?: string;
 }
 
-/* Lounge 필터 */
-export interface LoungeProjectFilters extends GetLoungeProjects {
-  modify?: boolean;
-}
-
 export type PaginationFilter = {
   page: number;
   size: number;
-  sort?: string[];
-};
-
-/* Notice 필터 */
-export type NoticeFilter = PaginationFilter & {
-  noticeType?: NoticeCategoryDisplayKey;
-  roleType?: NoticeTabDisplayKey;
-  keyword?: string;
-  onlyScraped?: boolean;
-  offset?: boolean;
+  sort?: SortDisplayKey;
 };
 
 export type NoticeParticipantParams = PaginationFilter & {

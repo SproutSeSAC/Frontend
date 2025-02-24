@@ -2,13 +2,12 @@ export const getCookie = (name: string) => {
   const cookies = Object.fromEntries(
     document.cookie.split(';').map(cookie => cookie.trim().split('=')),
   );
-
   return cookies[name];
 };
 
 export const setCookie = (name: string, value: string, day: number) => {
   const date = new Date();
-  date.setDate(date.getTime() + day * 60 * 60 * 24 * 1000);
+  date.setTime(date.getTime() + day * 60 * 60 * 24 * 1000);
 
   document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
 };
