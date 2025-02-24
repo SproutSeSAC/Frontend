@@ -19,10 +19,16 @@ function SessionCard({ session, showToast }: SessionCardProps) {
   const [noticeData, setNoticeData] = useState<Session | null>(null);
   const [hasFetched, setHasFetched] = useState(false);
   const navigate = useNavigate();
-
-  // ✅ 참가자 리스트 페이지로 이동하는 함수
   const handleNavigateToApplicants = () => {
-    navigate(`/application-status-for-sessions/post/${session.id}`);
+    navigate(`/application-status-for-sessions/post/${session.id}`, {
+      state: {
+        title: session.title,
+        date: session.date,
+        startTime: session.startTime ? formatDate(new Date(session.startTime), "HH:mm") : "시간 미정",
+        endTime: session.endTime ? formatDate(new Date(session.endTime), "HH:mm") : "시간 미정",
+        participantCapacity: session.participantCapacity ?? "제한 없음", 
+      },
+    });
   };
 
   const fetchData = useCallback(() => {
@@ -69,22 +75,23 @@ function SessionCard({ session, showToast }: SessionCardProps) {
     const pattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*$/;
     return pattern.test(url);
   };
-
+  
   const openSurveyLink = () => {
-    if (!noticeData?.satisfactionSurvey) return;
-
-    let surveyUrl = noticeData.satisfactionSurvey.trim();
-    if (!surveyUrl.startsWith('http')) {
-      surveyUrl = `https://${surveyUrl}`;
+    if (!session.satisfactionSurvey) {
+      showToast('만족도 조사 링크가 제공되지 않았습니다.', 1000);
+      return;
     }
-
-    if (isValidUrl(surveyUrl)) {
-      window.open(surveyUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      showToast('잘못된 URL입니다.', 1000);
+  
+    let surveyUrl = session.satisfactionSurvey.trim();
+  
+    if (!isValidUrl(surveyUrl)) {
+      showToast('만족도 조사 링크가 유효하지 않습니다.', 1000);
+      return;
     }
+    
+    window.open(surveyUrl, '_blank', 'noopener,noreferrer');
   };
-
+  
   const getSessionStatus = (status?: SessionStatus): string => {
     const statusMap: Record<SessionStatus, string> = {
       WAIT: "대기",
@@ -96,36 +103,54 @@ function SessionCard({ session, showToast }: SessionCardProps) {
   };
 
   const getNoticeStatus = () => {
-    if (userProfile && isSuperAdmin(userProfile.role)) {
-      return noticeData?.status === "ACTIVE" ? "모집 중" : "모집 종료";
+    if (!userProfile) return getSessionStatus("UNKNOWN");
+  
+    const now = new Date();
+  
+    if (isSuperAdmin(userProfile.role)) {
+      if (!session.applicationStartDateTime || !session.applicationEndDateTime) {
+        return "모집 종료";
+      }
+  
+      const startDate = new Date(session.applicationStartDateTime);
+      const endDate = new Date(session.applicationEndDateTime);
+  
+      return now >= startDate && now <= endDate ? "모집 중" : "모집 종료";
     }
-
+  
+    const sessionEndDateTime = session.endTime ? new Date(session.endTime) : new Date(session.date);
+  
+    if (sessionEndDateTime < now) {
+      return "종료";
+    }
+  
     if (!noticeData?.sessions?.length) {
       return getSessionStatus("UNKNOWN");
     }
-
+  
     const validSessionStatus = noticeData.sessions.find(
-      (session) => session.currentStatus
+      (s) => s.currentStatus
     )?.currentStatus;
-
+  
     return getSessionStatus(validSessionStatus || "UNKNOWN");
   };
 
   const getStatusStyle = (status: string) => {
-    const statusStyles: Record<string, { bg: string; text: string; border: string }> = {
-      "모집 중": { bg: "bg-mainGreen/20", text: "text-mainGreen", border: "border-lightGreen-hover" },
-      "모집 종료": { bg: "bg-darkGray/20", text: "text-darkGray-hover", border: "border-lightGreen-hover" },
-      "대기": { bg: "bg-yellow-500/20", text: "text-yellow-500", border: "border-yellow-500/20" },
-      "승인": { bg: "bg-mainGreen/20", text: "text-darkGreen", border: "border-mainGreen-hover/20" },
-      "반려": { bg: "bg-red-500/20", text: "text-red-500", border: "border-red-500/20" },
-      "알 수 없는 상태": { bg: "bg-darkGray/20", text: "text-darkGray-hover", border: "border-lightGreen-hover" },
+    const statusStyles: Record<string, { bg: string; text: string; }> = {
+      "모집 중": { bg: "bg-red-400/15", text: "text-red-400" },
+      "모집 종료": { bg: "bg-darkGray/20", text: "text-darkGray-hover" },
+      "종료": { bg: "bg-darkGray/20", text: "text-darkGray-hover" },
+      "대기": { bg: "bg-red-400/15", text: "text-red-400" },
+      "승인": { bg: "bg-mainGreen/20", text: "text-darkGreen" },
+      "반려": { bg: "bg-mainBlue/30", text: "text-mainBlue-active" },
+      "알 수 없는 상태": { bg: "bg-darkGray/20", text: "text-darkGray-hover" },
     };
 
     return statusStyles[status] || statusStyles["알 수 없는 상태"];
   };
 
   const noticeStatus = getNoticeStatus();
-  const { bg, text, border } = getStatusStyle(noticeStatus);  
+  const { bg, text } = getStatusStyle(noticeStatus);  
 
   const handleCancelParticipant = async (selectedParticipantId: number) => {
     try {
@@ -141,7 +166,6 @@ function SessionCard({ session, showToast }: SessionCardProps) {
       }
   
       const noticeId = matchedParticipant.id;
-  
       const noticeResponse = await axiosInstance.get(`/notices/${noticeId}`);
       const noticeData = noticeResponse.data;
   
@@ -158,36 +182,43 @@ function SessionCard({ session, showToast }: SessionCardProps) {
         showToast("선택한 참가자의 세션을 찾을 수 없습니다.", 1000);
         return;
       }
+  
       await cancelParticipant(matchedSession.sessionId, matchedParticipant.participantId);
       showToast("특강/행사 신청이 성공적으로 취소되었습니다.", 1000);
-    } catch (error) {
+  
+      setHasFetched(false);
+      fetchData(); 
+    } catch {
       showToast("참여 신청 취소 중 오류가 발생했습니다.", 1000);
     }
   };
+  
+
   const isValidDate = (date: string | Date | null): boolean => {
     return date instanceof Date && !Number.isNaN(date.getTime());
   };
-
+  
+  if (noticeStatus === "알 수 없는 상태") {
+    return null;
+  }
+  
   return (
-    <div className={`group cursor-default relative w-[25vw] min-w-[300px] h-[30vh] max-w-[370px] max-h-[261px] bg-white rounded-lg border ${border} overflow-hidden hover:shadow-card`}>
-      {/* 모집 상태 */}
+    <div className={`group cursor-default relative w-[25vw] min-w-[300px] h-[30vh] max-w-[370px] max-h-[261px] bg-white rounded-lg border border-gray-100 overflow-hidden hover:shadow-card`}>
+
       <div className={`absolute left-[8%] top-[10%] flex items-center justify-center min-w-[80px] w-[23%] h-[14%] px-[2%] py-[1%] ${bg} rounded-lg`}>
         <div className={`${text} text-base whitespace-nowrap`}>{noticeStatus}</div>
       </div>
 
-      {/* 삭제 버튼 (관리자가 아닌 경우) */}
       {!isSuperAdmin(userProfile?.role) && (
         <div className="absolute right-[3%] top-[5%]">
           <TrashButton onConfirmClick={() => handleCancelParticipant(session.participantId)} />
         </div>
       )}
 
-      {/* 특강 제목 */}
       <div className="absolute left-[8%] top-[32%] w-[80%] text-black overflow-x-auto whitespace-nowrap scrollbar-hide text-xl font-medium">
         {noticeData ? noticeData.title : session.title}
         </div>
   
-        {/* 특강 정보 */}
         <div className="absolute left-[8%] top-[50%] flex flex-col gap-2 text-darkGray text-sm font-normal">
           <div className='overflow-x-auto whitespace-nowrap scrollbar-hide'>{session.meetingType === 'ONLINE' ? '링크' : '장소'} |{' '}
           {session.location}</div>
@@ -195,38 +226,38 @@ function SessionCard({ session, showToast }: SessionCardProps) {
           <div>
             시간 |{' '}
             {session.startTime && session.endTime && isValidDate(session.startTime) && isValidDate(session.endTime)
-              ? `${formatDate(session.startTime, 'HH:mm')} ~ ${formatDate(session.endTime, 'HH:mm')}`
-              : '시간 미정'}
+          ? `${formatDate(session.startTime, 'HH:mm')} ~ ${formatDate(session.endTime, 'HH:mm')}`
+          : '시간 미정'}
+
           </div>
         </div>
 
-      {/* 참가자 확인 버튼 */}
-      <div
-        className="absolute min-w-[90px] right-[8%] top-[75%] flex cursor-pointer items-center justify-center w-[25%] h-[15%] px-[2%] py-[1%] bg-darkGray hover:bg-darkGray-hover active:bg-darkGray-active rounded-lg"
-        tabIndex={0}
-        role="button"
-        onClick={() => {
-          if (userProfile && isSuperAdmin(userProfile.role)) {
-            handleNavigateToApplicants();
-          } else {
-            openSurveyLink();
-          }
-        }}
-        onKeyDown={e => {
-          if (e.key === 'Enter' || e.key === ' ') {
+        <div
+          className="absolute min-w-[90px] right-[8%] top-[75%] flex cursor-pointer items-center justify-center w-[25%] h-[15%] px-[2%] py-[1%] bg-darkGray hover:bg-darkGray-hover active:bg-darkGray-active rounded-lg"
+          tabIndex={0}
+          role="button"
+          onClick={() => {
             if (userProfile && isSuperAdmin(userProfile.role)) {
               handleNavigateToApplicants();
             } else {
               openSurveyLink();
             }
-          }
-        }}
+          }}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              if (userProfile && isSuperAdmin(userProfile.role)) {
+                handleNavigateToApplicants();
+              } else {
+                openSurveyLink();
+              }
+            }
+          }}
       >
         <div className="text-white text-sm font-normal whitespace-nowrap">
           {userProfile && isSuperAdmin(userProfile.role) ? '참여자 조회' : '만족도 조사'}
         </div>
-      </div>
     </div>
+  </div>
   );
 }
 

@@ -107,4 +107,18 @@ interface ParticipantListModalProps {
   sessionId: number;
 }
 
+export interface Applicant {
+  noticeParticipantId: number;
+  userId: number;
+  userName: string;
+  nickName: string;
+  phoneNumber: string;
+  email: string;
+  profileImageUrl: string;
+  status: "WAIT" | "PARTICIPANT" | "REJECT";
+  campuses: { id: number; name: string }[];
+  courses: { id: number; name: string }[];
+  applicationTime?: string;
+}
+
 export type ParticipantDetailsData = ParticipantDetail[];

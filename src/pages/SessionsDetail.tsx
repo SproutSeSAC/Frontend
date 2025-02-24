@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
 import {
-  initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 import {
@@ -9,8 +8,7 @@ import {
   fetchParticipantDetail,
 } from '@/services/session/sessionQueries';
 
-import { isTrainee, formatDate, isSuperAdmin } from '@/utils';
-import { FormProvider, useForm } from 'react-hook-form';
+import { formatDate, isSuperAdmin } from '@/utils';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -20,9 +18,7 @@ import SearchInput from '@/components/common/input/SearchInput';
 import SessionCard from '@/components/session/SessionCard';
 
 export default function SessionsDetail() {
-  const methods = useForm();
   const { data: userProfile } = useGetUserProfile();
-  const { data: { role } = initialUserProfile } = useGetUserProfile();
   const [searchTerm, setSearchTerm] = useState('');
   const { sessions, isLoading } = useFetchSessionsByType();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -71,27 +67,16 @@ export default function SessionsDetail() {
 
   return (
         <>
-          <div className="mb-6 flex w-full max-w-[1090px] items-center gap-4">
-            {isSuperAdmin(userProfile?.role) ? (
-              <div className="h-[28.43px] justify-start items-end gap-[30.57px] inline-flex"> 
-                <div className="w-[63.25px] flex-col justify-start items-center gap-[4.22px] inline-flex">
-                  <div className="w-[4.22px] h-[4.22px] bg-mainGreen rounded-full" />
-                  <div className="text-mainGreen text-[16.87px]">전체</div>
-                </div>
-                <div className="text-darkGray-active text-[16.87px]">모집중</div>
-                <div className="text-darkGray-active text-[16.87px]">모집완료</div>
-                <div className="text-darkGray-active text-[16.87px]">만들기</div>
-              </div>
-            ) : (
+          <div className="mb-6 flex w-full max-w-[95%] items-center gap-4">
+            {isSuperAdmin(userProfile?.role) && (
               <>
                 <div
-                  className="flex items-center gap-5"
-                  style={{ flexBasis: '60%' }}
+                  className="flex mr-4 flex-grow justify-end gap-5"
                 >
                   <SearchInput
                     name="search"
                     placeholder="찾으시는 이벤트의 내용을 입력해 주세요"
-                    width="w-full"
+                    width="w-[40vw]"
                     height="h-12"
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
@@ -118,7 +103,7 @@ export default function SessionsDetail() {
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform"
                 />
               ) : (
-              <div className="grid w-[80vw] grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid w-[95%] grid-cols-1 lg:grid-cols-3 gap-6">
                 {filteredSessions.flatMap(session =>
                   session.sessions?.map(subSession => (
                 <SessionCard
@@ -137,6 +122,8 @@ export default function SessionsDetail() {
                     currentStatus: subSession.currentStatus || 'UNKNOWN',
                     applicationStartDateTime: session.applicationStartDateTime ? new Date(session.applicationStartDateTime) : null,
                     applicationEndDateTime: session.applicationEndDateTime ? new Date(session.applicationEndDateTime) : null,
+                    participantCapacity: session.participantCapacity,
+                    satisfactionSurvey: session.satisfactionSurvey
                   }}
                   showToast={showToast}
                 />

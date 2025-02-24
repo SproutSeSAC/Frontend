@@ -11,6 +11,8 @@ export interface SessionCardProps {
     participantId: number;
     applicationStartDateTime: date;
     applicationEndDateTime: date;
+    participantCapacity: number;
+    satisfactionSurvey: string;
   };
   showToast: (message: string, duration?: number) => void;
 }
@@ -46,4 +48,11 @@ export interface Session {
     participantCount: number;
     currentStatus: SessionStatus;
   }>;
+  allList?: {
+    id: number;
+    title: string;
+    participantId: number;
+    startDateTime: string;
+    endDateTime: string;
+  }[];
 }

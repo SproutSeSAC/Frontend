@@ -13,51 +13,53 @@ export const fetchParticipantTitle =
     return res.data;
   };
 
-export const fetchParticipantDetail = async (): Promise<
-  ParticipantDetail[]
-> => {
-  const res: AxiosResponse<ParticipantDetail[]> = await axiosInstance.get(
-    '/mypage/getParticipant',
-  );
-  return res.data;
-};
+  export const fetchParticipantDetail = async (): Promise<ParticipantDetail[]> => {
+    const res = await axiosInstance
+      .get('/mypage/getParticipant')
+      .then((response) => {
+        if (!response.data || !Array.isArray(response.data.allList)) {
+          return Promise.reject(new Error("Invalid response structure"));
+        }
+  
+        return response.data.allList.map((item: any) => ({
+          id: item.id,
+          participantId: item.participantId,
+          title: item.title,
+          startDateTime: item.startDateTime,
+          endDateTime: item.endDateTime,
+        }));
+      })
+      .catch(() => {
+        return [];
+      });
+  
+    return res;
+  };
+  
+  
 
 export const fetchParticipants = async (sessionId: number) => {
   try {
     const response = await axiosInstance.get(`/notices/sessions/${sessionId}`);
 
-    // 데이터 유효성 검사 및 안전한 매핑
     if (!response.data || !response.data.content) {
       throw new Error("Invalid response structure");
     }
 
-    return response.data.content.map(
-      (item: {
-        noticeParticipantId: number;
-        userId: number;
-        userName: string;
-        nickName: string;
-        phoneNumber: string;
-        email: string;
-        profileImageUrl: string;
-        status: "WAIT" | "PARTICIPANT" | "REJECT";
-        campuses?: { id: number; name: string }[];
-        courses?: { id: number; name: string }[];
-      }) => ({
-        id: item.noticeParticipantId,
-        userId: item.userId,
-        name: item.userName,
-        nickName: item.nickName,
-        phoneNumber: item.phoneNumber || "정보 없음",
-        email: item.email || "정보 없음",
-        profileImageUrl: item.profileImageUrl || "",
-        status: item.status,
-        campuses: item.campuses || [],
-        courses: item.courses || [],
-      })
-    );
-  } catch (error) {
-    console.error("Error fetching participants:", error);
+    return response.data.content.map((item: any) => ({
+      noticeParticipantId: item.noticeParticipantId,
+      userId: item.userId,
+      userName: item.userName,
+      nickName: item.nickName,
+      phoneNumber: item.phoneNumber || "정보 없음",
+      email: item.email || "정보 없음",
+      profileImageUrl: item.profileImageUrl || "",
+      status: item.status,
+      campuses: item.campuses || [],
+      courses: item.courses || [],
+      applicationTime: item.applicationTime || "-",
+    }));
+  } catch {
     return [];
   }
 };
