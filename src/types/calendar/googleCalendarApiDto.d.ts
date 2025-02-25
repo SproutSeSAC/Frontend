@@ -1,14 +1,16 @@
-import { AdminEmailListByCourseDto } from '@/types/calendar/adminEmailListByCourseDto';
 import { Event } from '@/types/calendar/googleCalendar';
 import { HasSuperAdminRole } from '@/types/user';
+
+// acl
+// currentRoleAndEmail: { roleType: keyof HasSuperAdminRole; email: string };
+// emailListToBeAuthorized: AdminEmailListByCourseDto.Get;
 
 export namespace GoogleCalendarApiDto {
   export type GetCalendarList = CalendarList;
   export type GetCalenderEvents = CalenderEvents;
   export type GetAclList = Acl[];
   export type PostCalendar = {
-    currentRoleAndEmail: { roleType: keyof HasSuperAdminRole; email: string };
-    emailListToBeAuthorized: AdminEmailListByCourseDto.Get;
+    currentRole: keyof HasSuperAdminRole;
     summary: string;
     courseId: number;
     description?: string;

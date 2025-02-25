@@ -64,7 +64,7 @@ export default function HeaderMenu() {
         <li>
           <button
             type="button"
-            className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-mainGray"
+            className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-lightGray"
             onClick={onLogOutClick}
           >
             로그아웃

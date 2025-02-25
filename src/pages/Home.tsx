@@ -11,6 +11,7 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 import { useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { isSuperAdmin } from '@/utils';
 import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
@@ -38,6 +39,12 @@ export default function Home() {
 
   const { data: isWaitingAcl } = useGetIsWaitingAcl(
     userProfile?.courseList || [],
+    {
+      queryKey: ['useGetIsWaitingAcl'],
+      enabled:
+        isSuperAdmin(userProfile?.role) &&
+        (userProfile?.courseList || []).length > 0,
+    },
   );
 
   const { showToast } = useDialogContext();

@@ -1,4 +1,4 @@
-import { useHandleCalendar } from '@/hooks/calendar/useHandleCalendar';
+import { useCourseData } from '@/hooks/course/useCourseData';
 
 import { useHandleAcl } from '@/hooks';
 import { UserCourse } from '@/types';
@@ -17,19 +17,18 @@ export default function CalendarAclTableItem({
   index,
   course: { courseId, courseTitle },
 }: CalendarAclTableItemProps) {
-  const { createCalendar, isCreateCalendarPending } = useHandleCalendar({
-    courseId,
-  });
+  const {
+    adminList,
+    courseCalendar: { calendarId },
+  } = useCourseData({ courseId });
 
   const {
     courseCalendarAcl,
     isGrantAclPending,
-    isLoading,
-    adminList,
-    courseCalendar,
+    isCalendarAclLoading,
     courseAclInfo,
     onGrantAclClick,
-  } = useHandleAcl({ courseId, calendarId: '' });
+  } = useHandleAcl({ courseId, calendarId, adminList });
 
   return (
     <tr className="group border-t hover:bg-lightGray [&:last-child>td]:border-b-0">
@@ -39,22 +38,21 @@ export default function CalendarAclTableItem({
 
       {/* 캘린더 생성 상태 */}
       <TableDataCell className="max-w-[0px] overflow-hidden truncate">
-        {isLoading && (
+        {isCalendarAclLoading && (
           <div className="h-8 w-16 rounded-xl bg-lightGray-active" />
         )}
 
-        {!isLoading &&
-          (courseCalendar?.calendarId ? (
-            <div className="w-fit px-2 text-sm tracking-tighter text-darkGray">
-              생성완료
+        {!isCalendarAclLoading &&
+          (calendarId ? (
+            <div className="w-fit px-2">
+              <span className="text-sm tracking-tighter text-darkGray">
+                생성완료
+              </span>
             </div>
           ) : (
             <CalendarCreateButton
               courseTitle={courseTitle}
               courseId={courseId}
-              adminList={adminList}
-              createCalendar={createCalendar}
-              isCreateCalendarPending={isCreateCalendarPending}
             />
           ))}
       </TableDataCell>
@@ -115,14 +113,8 @@ export default function CalendarAclTableItem({
         <button
           type="button"
           onClick={() => {
-            if (
-              courseCalendar?.calendarId &&
-              courseAclInfo.hasNotAclAdminList
-            ) {
-              onGrantAclClick(
-                courseCalendar?.calendarId,
-                courseAclInfo.hasNotAclAdminList,
-              );
+            if (calendarId && courseAclInfo.hasNotAclAdminList) {
+              onGrantAclClick(calendarId, courseAclInfo.hasNotAclAdminList);
             }
           }}
           disabled={

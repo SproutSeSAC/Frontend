@@ -11,7 +11,7 @@ import { hasSuperAdmin, updateQueryParams } from '@/utils';
 import CalendarAclTable from '@/components/calendar/CalendarAclTable';
 import TabNavigation from '@/components/common/TabNavigation';
 
-const ADMIN_TAB = 'adminTab';
+const TAB = 'tab';
 
 type TabType = 'calendar-acl' | 'course-management';
 
@@ -20,13 +20,12 @@ export default function AdminPage() {
 
   const tabList: { text: string; type: TabType }[] = [
     { text: '일정관리 권한', type: 'calendar-acl' },
-    { text: '강의 관리', type: 'course-management' },
   ];
 
-  const adminTabName = searchParams.get(ADMIN_TAB) as TabType;
+  const tabName = searchParams.get(TAB) as TabType;
 
   const handleChangeValue = (type: TabType) => {
-    updateQueryParams(searchParams, setSearchParams, ADMIN_TAB, type);
+    updateQueryParams(searchParams, setSearchParams, TAB, type);
   };
 
   const navigate = useNavigate();
@@ -43,14 +42,12 @@ export default function AdminPage() {
     <MainView>
       <Header title="관리자 페이지" />
       <TabNavigation<TabType>
-        selectValue={adminTabName ?? 'calendar-acl'}
+        selectValue={tabName ?? 'calendar-acl'}
         tabList={tabList}
         onChangeValue={handleChangeValue}
       />
 
-      {(adminTabName === 'calendar-acl' || adminTabName === null) && (
-        <CalendarAclTable />
-      )}
+      {(tabName === 'calendar-acl' || tabName === null) && <CalendarAclTable />}
     </MainView>
   );
 }

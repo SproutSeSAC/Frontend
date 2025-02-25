@@ -10,7 +10,7 @@ export const useCourseData = ({ courseId }: { courseId: number }) => {
   } = useGetAdminEmailListByCourse(courseId);
 
   const {
-    data: courseCalendar, //
+    data: courseCalendar = { calendarId: '' },
     isLoading: isCourseCalendarLoading,
   } = useGetCourseCalendarStatus(courseId);
 

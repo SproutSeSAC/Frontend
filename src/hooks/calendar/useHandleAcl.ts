@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useDialogContext } from '@/hooks/common/useDialogContext';
-import { useCourseData } from '@/hooks/course/useCourseData';
 
 import { useGrantAcl } from '@/services/schedule/calendarMutations';
 import { useGetCalendarAcl } from '@/services/schedule/calendarQueries';
@@ -11,13 +10,17 @@ import { useGetCalendarAcl } from '@/services/schedule/calendarQueries';
 import { SUPER_ADMIN_EMAIL } from '@/constants';
 import { AdminEmail, CourseCalendarAcl } from '@/types';
 
+interface UseHandleAclProps {
+  courseId: number;
+  calendarId: string;
+  adminList: AdminEmail[];
+}
+
 export const useHandleAcl = ({
   courseId,
   calendarId,
-}: {
-  courseId: number;
-  calendarId: string;
-}) => {
+  adminList,
+}: UseHandleAclProps) => {
   const { hideDialog, loadingAlert } = useDialogContext();
 
   const queryClient = useQueryClient();
@@ -31,7 +34,7 @@ export const useHandleAcl = ({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['useGetCalendarAcl'],
+        queryKey: ['useGetCalendarAcl', courseId],
       });
       hideDialog();
     },
@@ -44,30 +47,25 @@ export const useHandleAcl = ({
   };
 
   const {
-    adminList,
-    courseCalendar,
-    isAdminListLoading,
-    isCourseCalendarLoading,
-  } = useCourseData({ courseId });
-
-  const {
     data: courseCalendarAcl,
     isLoading: isCalendarAclLoading, //
   } = useGetCalendarAcl(courseId, calendarId);
 
   const getHasAclAdminList = useCallback(() => {
     return courseCalendarAcl?.map(acl => {
-      const admin = adminList?.find(({ email }) => email === acl.email);
+      const superAdminObj = {
+        roleType: 'SUPER_ADMIN' as const,
+        email: SUPER_ADMIN_EMAIL,
+        nickname: '새싹 관리자',
+        name: '관리자',
+      };
+
+      const admin = [...adminList, superAdminObj]?.find(
+        ({ email }) => email === acl.email,
+      );
 
       if (!admin) return acl;
-
-      const isSuperAdmin = acl.email === SUPER_ADMIN_EMAIL;
-      return {
-        ...acl,
-        nickname: isSuperAdmin ? '관리자' : admin?.nickname,
-        name: isSuperAdmin ? '관리자' : admin?.name,
-        roleType: isSuperAdmin ? 'SUPER_ADMIN' : admin?.roleType,
-      };
+      return { ...acl, ...admin };
     });
   }, [adminList, courseCalendarAcl]);
 
@@ -80,22 +78,18 @@ export const useHandleAcl = ({
 
   const courseAclInfo: CourseCalendarAcl = {
     courseId,
-    isCreated: !!courseCalendar?.calendarId,
-    calendarId: courseCalendar?.calendarId,
+    isCreated: !!calendarId,
+    calendarId,
     hasAclAdminList: getHasAclAdminList(),
     hasNotAclAdminList: getHasNotAclAdminList(),
   };
-
-  const isLoading =
-    isAdminListLoading || isCourseCalendarLoading || isCalendarAclLoading;
 
   return {
     adminList,
     courseCalendarAcl,
     courseAclInfo,
     onGrantAclClick,
-    isLoading,
+    isCalendarAclLoading,
     isGrantAclPending,
-    courseCalendar,
   };
 };

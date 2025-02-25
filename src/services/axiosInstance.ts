@@ -63,6 +63,7 @@ axiosInstance.interceptors.response.use(
       };
 
       switch (error.response.status) {
+        case 400:
         case 401:
           return handleNewAccessToken();
 
@@ -125,9 +126,9 @@ axiosCalendarInstance.interceptors.response.use(
           return handleCalendarToken();
 
         default:
-          alert(
-            `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
-          );
+        // alert(
+        //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
+        // );
       }
     }
     return Promise.reject(error);

@@ -1,5 +1,5 @@
 import { Domain, Job, TechStack } from '@/types/specifications';
-import { UserCampus, UserCourse } from '@/types/user';
+import { RoleKey, UserCampus, UserCourse } from '@/types/user';
 
 export namespace UserProfileDto {
   export type Post = SignUpValue;

@@ -78,7 +78,6 @@ export const useGetEventsByCalendar = (
   });
 };
 
-// DB 교육과정별 담당 매니저 이메일 리스트
 export const useGetAdminEmailListByCourse = (
   courseId?: number,
   options?: UseQueryOptions<AdminEmailListByCourseDto.Get>,
@@ -86,6 +85,7 @@ export const useGetAdminEmailListByCourse = (
   const getManagerEmailListByCourse = async () => {
     const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
       await axiosInstance.get(`/user/calendar/${courseId}/email`);
+
     return res.data;
   };
 
@@ -99,7 +99,6 @@ export const useGetAdminEmailListByCourse = (
   });
 };
 
-// DB 생성된 교육과정 캘린더 데이터 가져오기
 export const useGetCourseCalendarStatus = (
   courseId?: number,
   options?: UseQueryOptions<CourseCalendarDto.Get>,
@@ -119,33 +118,32 @@ export const useGetCourseCalendarStatus = (
   });
 };
 
-export const getCalendarAcl = async (calendarId?: string) => {
-  const aclRes: AxiosResponse<{ items: Acl[] }> =
-    await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
-
-  const result = aclRes.data.items
-    .filter(
-      ({ scope: { value } }) =>
-        !value.includes('@public') && !value.includes('@group'),
-    )
-    .map(({ role, scope }) => ({
-      email: scope.value,
-      accessRole: role,
-    })) as AclEmail[];
-
-  return result;
-};
-
-// 구글 캘린더별 acl 데이터 가져오기
 export const useGetCalendarAcl = (
   courseId: number,
   calendarId?: string,
   options?: UseQueryOptions<AclEmail[]>,
 ) => {
+  const getCalendarAcl = async () => {
+    const aclRes: AxiosResponse<{ items: Acl[] }> =
+      await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+
+    const result = aclRes.data.items
+      .filter(
+        ({ scope: { value } }) =>
+          !value.includes('@public') && !value.includes('@group'),
+      )
+      .map(({ role, scope }) => ({
+        email: scope.value,
+        accessRole: role,
+      })) as AclEmail[];
+
+    return result;
+  };
+
   return useQuery<AclEmail[]>({
     queryKey: ['useGetCalendarAcl', courseId],
-    queryFn: () => getCalendarAcl(calendarId),
-    enabled: !!calendarId,
+    queryFn: getCalendarAcl,
+    enabled: !!calendarId && !!courseId,
 
     refetchOnWindowFocus: false,
     throwOnError: false,
@@ -157,8 +155,6 @@ export const useGetIsWaitingAcl = (
   courseList: UserCourse[],
   options?: UseQueryOptions<boolean>,
 ) => {
-  // 여기서 그냥 권한이 있는지 없는지만 확인
-  // 1. 나의 교육과정의 캘린더 상태 가져오기
   const getCourseCalendarIdList = async () => {
     const requests = courseList.map(({ courseId }) =>
       axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
@@ -240,15 +236,14 @@ export const useGetIsWaitingAcl = (
   };
 
   return useQuery<boolean>({
-    queryKey: ['useGetIsWaitingAcl'],
     queryFn: getIsWaitingAcl,
     enabled: courseList.length > 0,
     retry: false,
     ...options,
+    queryKey: ['useGetIsWaitingAcl'],
   });
 };
 
-// DB에 저장된 나의 모든 교육과정 캘린더들 ID 정보
 export const useGetCourseCalendarStatusList = (
   courseList: {
     courseId: number;

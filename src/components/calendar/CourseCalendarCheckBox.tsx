@@ -2,8 +2,8 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
-import { Calendar } from '@/types';
-import { hasAdmin } from '@/utils';
+import { Calendar, RoleKey } from '@/types';
+import { hasAdmin, isTrainee } from '@/utils';
 import { useAtom } from 'jotai';
 
 import AclInfoButton from '@/components/calendar/AclInfoButton';
@@ -38,33 +38,42 @@ export default function CourseCalendarCheckBox({
     }
   };
 
-  return (
-    <div
-      key={calendar.courseId}
-      className="flex items-start justify-between [&>label]:items-start"
-    >
-      <Checkbox
-        id={calendar.courseTitle}
-        text={calendar.summary || calendar.courseTitle}
-        checked={!!currentCalendarIds?.includes(calendar.id)}
-        onChange={() => onCheckBoxChange(calendar.id)}
-        textClassName={
-          calendar.summary ? '!text-black' : '!text-mainGray-active'
-        }
-        checkBoxColor={calendar.backgroundColor}
-        disabled={!calendar.summary}
-      />
+  const getDisabledByRole = (role: RoleKey) => {
+    if (isTrainee(role)) {
+      return !calendar.calendarId;
+    }
+    return !calendar.summary;
+  };
 
-      {/* NOTE: 교육과정 정보에 캘린더 아이디가 저장됐는지 확인. */}
-      {/* 매니저만 권한 확인후 나의 캘린더에 추가하는 용 */}
-      {/* 권한이 없을 때도 있음. */}
-      {hasAdmin(userProfile?.role) && calendar.calendarId && (
-        <AclInfoButton
-          courseId={calendar.courseId}
-          calendarId={calendar.calendarId}
-          accessRole={calendar.accessRole}
+  const disabled = userProfile?.role && getDisabledByRole(userProfile?.role);
+
+  return (
+    userProfile?.role && (
+      <div
+        key={calendar.courseId}
+        className="flex items-start justify-between [&>label]:items-start"
+      >
+        <Checkbox
+          id={calendar.courseTitle}
+          text={calendar.summary || calendar.courseTitle}
+          checked={!!currentCalendarIds?.includes(calendar.id)}
+          onChange={() => onCheckBoxChange(calendar.id)}
+          textClassName={`line-clamp-2 ${
+            disabled ? '!text-mainGray-active' : '!text-black'
+          }`}
+          inputClassName="mt-1"
+          checkBoxColor={calendar.backgroundColor}
+          disabled={disabled}
         />
-      )}
-    </div>
+
+        {hasAdmin(userProfile?.role) && calendar.calendarId && (
+          <AclInfoButton
+            courseId={calendar.courseId}
+            calendarId={calendar.calendarId}
+            accessRole={calendar.accessRole}
+          />
+        )}
+      </div>
+    )
   );
 }

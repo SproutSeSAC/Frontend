@@ -28,6 +28,7 @@ export default function Schedule() {
         title={`${userProfile?.name} 스프님 새싹 일정`}
         highlight="새싹"
       />
+
       <div className="flex h-full gap-6">
         <CalendarCheckBoxList
           courseCalendarList={courseCalendarList}

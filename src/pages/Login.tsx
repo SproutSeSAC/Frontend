@@ -21,9 +21,13 @@ export default function Login() {
 
   const handleTestAdminLogin = async () => {
     try {
-      const response = await axiosInstance.get('test/getAdminCookie', {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.get(
+        'test/getAdminCookie',
+
+        {
+          withCredentials: true,
+        },
+      );
 
       const { access_token: accessToken, refresh_token: refreshToken } =
         response.data;
@@ -32,6 +36,7 @@ export default function Login() {
         alert('로그인에 실패했습니다.');
         return;
       }
+
       setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
       setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
 

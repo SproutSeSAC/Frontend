@@ -33,10 +33,6 @@ const initialProjectList = {
 };
 
 export default function Lounge() {
-  const onClick = () => {
-    throw Error();
-  };
-
   const {
     searchRef,
     currFilter,
@@ -80,7 +76,6 @@ export default function Lounge() {
 
   return (
     <>
-      <button onClick={onClick}>클릭!!!!</button>
       <div className="mt-6 flex items-center gap-8">
         <SearchInput
           name="search"

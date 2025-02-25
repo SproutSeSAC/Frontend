@@ -4,9 +4,6 @@ import CalendarAclTableItem from '@/components/calendar/CalendarAclTableItem';
 import LoopLoading from '@/components/common/LoopLoading';
 import TableHeaderCell from '@/components/common/table/TableHeaderCell';
 
-// NOTE: SUPER_ADMIN & CAMPUS_LEADER 만 들어갈 수 있는 페이지
-// NOTE: 캘린더 생성 후 새로고침하지 않아도 바로 데이터 적용되도록
-
 export default function CalendarAclTable() {
   const { data: userProfile } = useGetUserProfile();
 
@@ -32,12 +29,8 @@ export default function CalendarAclTable() {
 
       <thead>
         <tr className="text-left">
-          {headerCellList.map(cell => (
-            <TableHeaderCell
-              key={cell.name}
-              name={cell.name}
-              className={cell.className}
-            />
+          {headerCellList.map(({ name, className }) => (
+            <TableHeaderCell key={name} name={name} className={className} />
           ))}
         </tr>
       </thead>
