@@ -28,15 +28,11 @@ export const useSubmitNotice = () => {
   const confirmBtn = {
     name: '확인',
     onClick: async () => {
-      hideDialog();
       await queryClient.invalidateQueries({
         queryKey: ['useGetInfiniteNoticeList'],
         exact: false,
       });
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetThisWeekNoticeList'],
-        exact: false,
-      });
+      hideDialog();
       navigate('/notice');
     },
   };
@@ -112,6 +108,7 @@ export const useSubmitNotice = () => {
           alert({
             dimClick: false,
             text: '공지사항이 성공적으로 등록되었습니다!',
+            subTextColor: 'green',
             subText: `${currNotice?.name} 일정이 교육과정 캘린더에 추가되었습니다!`,
             buttonList: [confirmBtn],
           });

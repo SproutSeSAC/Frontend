@@ -100,7 +100,6 @@ export const useGetUserProfileCard = (
     queryFn: getUserProfileCard,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    initialData: initialUserProfileCard,
     ...options,
   });
 };

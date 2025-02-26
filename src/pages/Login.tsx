@@ -1,14 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 
-import { getCalendarToken } from '@/services/auth/authQueries';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import Logo2 from '@/assets/images/sprout-logo2.png';
-import {
-  ACCESS_TOKEN_KEY,
-  CALENDAR_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-} from '@/constants';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants';
 import Logo from '@/layouts/Logo';
 import { setCookie } from '@/utils';
 import { FcGoogle } from 'react-icons/fc';
@@ -21,13 +16,9 @@ export default function Login() {
 
   const handleTestAdminLogin = async () => {
     try {
-      const response = await axiosInstance.get(
-        'test/getUserCookie?email=jellieee951@gmail.com',
-
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axiosInstance.get('test/getAdminCookie', {
+        withCredentials: true,
+      });
 
       const { access_token: accessToken, refresh_token: refreshToken } =
         response.data;
@@ -39,13 +30,6 @@ export default function Login() {
 
       setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
       setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
-
-      const calendarToken = await getCalendarToken();
-
-      if (calendarToken.status === 200) {
-        const newCalendarAccessToken = calendarToken.data.access_token;
-        setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
-      }
 
       navigate('/');
     } catch (error) {
