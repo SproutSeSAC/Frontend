@@ -20,16 +20,16 @@ export default function CalendarCheckBoxList({
 }: CalendarCheckBoxListProps) {
   const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
 
-  const onCheckBoxChange = (id: string) => {
-    if (currentCalendarIds?.includes(id)) {
+  const onCheckBoxChange = (calendarId: string) => {
+    if (currentCalendarIds?.includes(calendarId)) {
       const filteredIds = currentCalendarIds.filter(
-        currentId => currentId !== id,
+        currentId => currentId !== calendarId,
       );
       setCurrentCalendarIds(filteredIds);
     } else {
       const ids = currentCalendarIds?.length
-        ? [...currentCalendarIds, id]
-        : [id];
+        ? [...currentCalendarIds, calendarId]
+        : [calendarId];
       setCurrentCalendarIds(ids);
     }
   };
@@ -64,6 +64,7 @@ export default function CalendarCheckBoxList({
                 <CourseCalendarCheckBox
                   key={calendar.courseId}
                   calendar={calendar}
+                  onChange={() => onCheckBoxChange(calendar.calendarId)}
                 />
               ))}
           </ul>

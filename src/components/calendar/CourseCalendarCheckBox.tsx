@@ -4,7 +4,7 @@ import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { Calendar, RoleKey } from '@/types';
 import { hasAdmin, isTrainee } from '@/utils';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 
 import AclInfoButton from '@/components/calendar/AclInfoButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
@@ -15,28 +15,16 @@ interface CalendarCheckBoxProps {
     courseTitle: string;
     calendarId: string;
   };
+  onChange: (calendarId: string) => void;
 }
 
 export default function CourseCalendarCheckBox({
   calendar,
+  onChange,
 }: CalendarCheckBoxProps) {
-  const [currentCalendarIds, setCurrentCalendarIds] = useAtom(calendarIdsAtom);
+  const currentCalendarIds = useAtomValue(calendarIdsAtom);
 
   const { data: userProfile } = useGetUserProfile();
-
-  const onCheckBoxChange = (id: string) => {
-    if (currentCalendarIds?.includes(id)) {
-      const filteredIds = currentCalendarIds.filter(
-        currentId => currentId !== id,
-      );
-      setCurrentCalendarIds(filteredIds);
-    } else {
-      const ids = currentCalendarIds?.length
-        ? [...currentCalendarIds, id]
-        : [id];
-      setCurrentCalendarIds(ids);
-    }
-  };
 
   const getDisabledByRole = (role: RoleKey) => {
     if (isTrainee(role)) {
@@ -56,8 +44,8 @@ export default function CourseCalendarCheckBox({
         <Checkbox
           id={calendar.courseTitle}
           text={calendar.summary || calendar.courseTitle}
-          checked={!!currentCalendarIds?.includes(calendar.id)}
-          onChange={() => onCheckBoxChange(calendar.id)}
+          checked={!!currentCalendarIds?.includes(calendar.calendarId)}
+          onChange={() => onChange(calendar.calendarId)}
           textClassName={`line-clamp-2 ${
             disabled ? '!text-mainGray-active' : '!text-black'
           }`}
