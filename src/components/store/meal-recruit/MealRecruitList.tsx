@@ -41,7 +41,7 @@ export default function MealRecruitList() {
   return (
     <section className="relative z-10 mb-5 w-full">
       <div className="relative w-fit max-w-[calc(100vw-192px)] pr-14">
-        {data?.pages.length === 0 ? (
+        {!hasNextPage && data?.pages[0].mealPostList.length === 0 ? (
           <div className="relative flex min-h-[74px] w-[360px] flex-col items-start rounded-xl border border-lightGray-active bg-white px-6 py-4">
             <span className="w-[240px] max-w-[240px] overflow-x-auto whitespace-nowrap text-base font-normal text-black scrollbar-hide">
               한끼팟 만들기

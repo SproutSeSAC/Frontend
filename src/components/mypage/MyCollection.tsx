@@ -16,6 +16,7 @@ import {
   myPostType,
   myPostTypeOptionList,
 } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { Collection, Option } from '@/types';
 import { formatDate } from '@/utils';
 import { BiChevronDown, BiExpandVertical } from 'react-icons/bi';
@@ -25,6 +26,7 @@ import TrashButton from '@/components/common/button/TrashButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
 import TableHeaderCell from '@/components/common/table/TableHeaderCell';
+import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import FavoritePostCard from '@/components/user/FavoritePostCard';
 
 export const ITEMS_PER_PAGE = 6;
@@ -33,15 +35,20 @@ export default function MyCollection() {
   const queryClient = useQueryClient();
 
   const [currentPage, setCurrentPage] = useState(1);
+
   const [currCollection, setCurrCollection] =
     useState<Collection>('내가 쓴 게시글');
+
   const [isLatest, setIsLatest] = useState(true);
+
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
   const [selectedCategoryOptionList, setSelectedCategoryOptionList] =
     useState<Option[]>(myPostTypeOptionList);
   const [checkedPostIdList, setCheckedPostIdList] = useState<number[]>([]);
 
-  const { data: myPostList } = useGetMyPostList();
+  const { data: myPostList, isLoading: isMyPostListLoading } =
+    useGetMyPostList();
 
   const filteredAndOrderedPostList = useMemo(() => {
     const filteredList = myPostList?.filter(post => {
@@ -121,6 +128,15 @@ export default function MyCollection() {
     });
   };
 
+  const { showDialog } = useDialogContext();
+
+  const handleShowDialog = async (id: number) => {
+    await showDialog({
+      key: 'MEAL-RECRUIT-CARD-TYPE',
+      element: <MealRecruitCardModal id={id} isParticipant />,
+    });
+  };
+
   return (
     <div className="flex min-h-[500px] flex-col rounded-lg bg-white py-5 shadow-card">
       <header className="flex items-center justify-between gap-3 pl-4 pr-5">
@@ -141,13 +157,7 @@ export default function MyCollection() {
         <TrashButton className="px-1.5 py-2" />
       </header>
 
-      {currCollection === '내가 찜한 글' ? (
-        <ul className="flex gap-4 p-8">
-          {myScrapedPostList?.map(card => (
-            <FavoritePostCard key={card.postScrapId} />
-          ))}
-        </ul>
-      ) : (
+      {!isMyPostListLoading && (
         <table className="my-4 border-separate border-spacing-y-3">
           <colgroup>
             <col width="3%" />
@@ -212,7 +222,7 @@ export default function MyCollection() {
               paginationList?.length !== 0 &&
               paginationList
                 ?.slice(0, 6)
-                ?.map(({ postId, postType, createdAt, title }) => (
+                ?.map(({ postId, postType, createdAt, title, linkedId }) => (
                   <tr key={postId} className="hover:bg-gray4 group">
                     <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
                       <Checkbox
@@ -229,12 +239,25 @@ export default function MyCollection() {
                     <TableDataCell>{myPostType[postType]}</TableDataCell>
 
                     <TableDataCell className="max-w-[0px] overflow-hidden truncate">
-                      <Link
-                        to={`/lounge/post/${postId}`}
-                        className="text-blue-600 underline"
-                      >
-                        {title}
-                      </Link>
+                      {postType === 'PROJECT' && (
+                        <Link
+                          to={`/lounge/post/${postId}`}
+                          className="text-blue-600 underline"
+                        >
+                          {title}
+                        </Link>
+                      )}
+                      {postType === 'MEAL' && (
+                        <button
+                          type="button"
+                          className="text-blue-600 underline"
+                          onClick={() => {
+                            handleShowDialog(linkedId);
+                          }}
+                        >
+                          {title}
+                        </button>
+                      )}
                     </TableDataCell>
 
                     <TableDataCell className="pr-5 text-end [&>button]:px-2">
@@ -248,8 +271,8 @@ export default function MyCollection() {
 
             {/* {currCollection === '내가 쓴 댓글' &&
               myCommentList?.length !== 0 &&
-              myCommentList?.map(({ postId, content }) => (
-                <tr key={postId} className="hover:bg-gray4 group">
+              myCommentList?.map(({ postId, content, commentId }) => (
+                <tr key={commentId} className="hover:bg-gray4 group">
                   <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
                     <Checkbox
                       id="체크박스"
@@ -259,7 +282,7 @@ export default function MyCollection() {
                   </TableDataCell>
 
                   <TableDataCell>
-                    {formatDate(new Date(), 'yyyy.MM.dd')}
+                    {formatDate(new Date(), 'yy.MM.dd')}
                   </TableDataCell>
 
                   <TableDataCell className="text-center">
@@ -282,6 +305,14 @@ export default function MyCollection() {
               ))} */}
           </tbody>
         </table>
+      )}
+
+      {currCollection === '내가 찜한 글' && (
+        <ul className="flex gap-4 p-8">
+          {myScrapedPostList?.map(card => (
+            <FavoritePostCard key={card.postScrapId} />
+          ))}
+        </ul>
       )}
 
       {filteredAndOrderedPostList?.length !== 0 && (
