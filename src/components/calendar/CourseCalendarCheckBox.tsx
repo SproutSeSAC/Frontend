@@ -66,13 +66,14 @@ export default function CourseCalendarCheckBox({
           disabled={disabled}
         />
 
-        {hasAdmin(userProfile?.role) && calendar.calendarId && (
-          <AclInfoButton
-            courseId={calendar.courseId}
-            calendarId={calendar.calendarId}
-            accessRole={calendar.accessRole}
-          />
-        )}
+        {hasAdmin(userProfile?.role) &&
+          calendar.calendarId &&
+          !calendar.accessRole && (
+            <AclInfoButton
+              courseId={calendar.courseId}
+              calendarId={calendar.calendarId}
+            />
+          )}
       </div>
     )
   );

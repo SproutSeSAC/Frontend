@@ -1,7 +1,7 @@
 import {
   useGetAdminEmailListByCourse,
   useGetCourseCalendarStatus,
-} from '@/services/schedule/calendarQueries';
+} from '@/services/calendar/calendarQueries';
 
 export const useCourseData = ({ courseId }: { courseId: number }) => {
   const {

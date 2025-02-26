@@ -98,6 +98,8 @@ export const useGetUserProfileCard = (
   return useQuery<UserProfileDto.GetCard>({
     queryKey: ['useGetUserProfileCard'],
     queryFn: getUserProfileCard,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     initialData: initialUserProfileCard,
     ...options,
   });

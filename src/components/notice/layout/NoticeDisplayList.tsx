@@ -39,10 +39,10 @@ export default function NoticeDisplayList({
     >
       {noticeDisplayList
         ?.slice(0, 3)
-        ?.map(({ roleType, noticeId, title: noticeTitle }) => (
-          <li key={noticeId}>
+        ?.map(({ roleType, postId, title: noticeTitle }) => (
+          <li key={postId}>
             <TitleLinkWithRoleTag
-              to={`/notice/post/${noticeId}` || `${noticeId}`}
+              to={`/notice/post/${postId}`}
               roleType={roleType}
               title={noticeTitle}
             />

@@ -18,6 +18,9 @@ export const useGetJobList = (
     queryKey: ['jobList'],
     queryFn: getJobList,
     initialData: [],
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
@@ -35,6 +38,9 @@ export const useGetDomainList = (
     queryKey: ['domainList'],
     queryFn: getDomainList,
     initialData: [],
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
@@ -52,6 +58,9 @@ export const useGetTechStackList = (
     queryKey: ['techStackList'],
     queryFn: getTechStackList,
     initialData: [],
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };

@@ -22,6 +22,7 @@ export type FullCalendarEvent = {
   rrule?: RruleOptions;
   exdate?: string[];
   calendarId: string;
+  url?: string;
 };
 
 export type RruleOptions = {

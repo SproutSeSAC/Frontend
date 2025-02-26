@@ -7,7 +7,7 @@ import {
 import {
   useGetCalendarList,
   useGetCourseCalendarStatusList,
-} from '@/services/schedule/calendarQueries';
+} from '@/services/calendar/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
@@ -36,38 +36,28 @@ export const useCalendarList = () => {
     isLoading: isCourseCalendarStatusLoading,
   } = useGetCourseCalendarStatusList(userProfile?.courseList || []);
 
+  // 교육과정 캘린더
   const courseCalendarList = useMemo(() => {
-    if (isCalendarDataLoading || isCourseCalendarStatusLoading) return [];
-
     const findCourseCalendar = (calendarId: string) =>
       allCalendarList?.find(({ id }) => id === calendarId);
 
     return courseCalendarStatusList.map(courseCalendar => {
       const createdCalendarDetails: Calendar =
         findCourseCalendar(courseCalendar.calendarId) ?? {};
-
       return { ...courseCalendar, ...createdCalendarDetails };
     });
-  }, [
-    allCalendarList,
-    courseCalendarStatusList,
-    isCalendarDataLoading,
-    isCourseCalendarStatusLoading,
-  ]);
+  }, [allCalendarList, courseCalendarStatusList]);
 
   // 개인 캘린더
   const personalCalendarList = useMemo(() => {
-    if (isCalendarDataLoading) return [];
-
     const courseCalendarIdList = courseCalendarStatusList.map(
       ({ calendarId }) => calendarId,
     );
-
     return allCalendarList?.filter(
       ({ id, accessRole }) =>
         accessRole === 'owner' && !courseCalendarIdList?.includes(id),
     );
-  }, [allCalendarList, courseCalendarStatusList, isCalendarDataLoading]);
+  }, [allCalendarList, courseCalendarStatusList]);
 
   useEffect(() => {
     if (!getCookie(CALENDAR_TOKEN_KEY)) {
@@ -79,7 +69,7 @@ export const useCalendarList = () => {
 
   useEffect(() => {
     const courseCalendarIdList = courseCalendarList
-      .filter(detail => detail?.accessRole === 'owner')
+      .filter(detail => detail?.accessRole)
       .map(({ calendarId }) => calendarId);
 
     if (courseCalendarIdList?.length !== 0) {
@@ -88,9 +78,10 @@ export const useCalendarList = () => {
   }, [setCurrShowingCalendarIds, courseCalendarList]);
 
   return {
-    isCalendarDataLoading,
     allCalendarList,
     courseCalendarList,
     personalCalendarList,
+    isCalendarDataLoading,
+    isCourseCalendarStatusLoading,
   };
 };

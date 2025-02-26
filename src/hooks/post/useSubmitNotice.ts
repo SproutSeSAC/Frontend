@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useCreateEventsForMultipleCalendars } from '@/services/calendar/calendarMutations';
 import { usePostMyPost } from '@/services/post/postMutation';
-import { useCreateEventsForMultipleCalendars } from '@/services/schedule/calendarMutations';
 
 import { useCalendarList, useDialogContext, useHandleImage } from '@/hooks';
 import { GoogleCalendarApiDto, NoticeDto } from '@/types';
@@ -46,8 +46,10 @@ export const useSubmitNotice = () => {
     title: string;
     targetCourseIdList: number[];
     meetingPlace?: string;
+    linkedPost: string;
   }) => {
-    const { sessions, title, meetingPlace, targetCourseIdList } = data;
+    const { sessions, title, meetingPlace, targetCourseIdList, linkedPost } =
+      data;
 
     const eventsFromSession: GoogleCalendarApiDto.PostEvent[] = sessions.map(
       ({ sessionEndDateTime, sessionStartDateTime }, index) => ({
@@ -61,6 +63,7 @@ export const useSubmitNotice = () => {
           timeZone: 'Asia/Seoul',
         },
         location: meetingPlace,
+        description: linkedPost,
       }),
     );
 
@@ -68,12 +71,9 @@ export const useSubmitNotice = () => {
       targetCourseIdList.includes(courseId),
     );
 
-    const events = targetCalendar.map(({ calendarId, courseTitle }) => ({
+    const events = targetCalendar.map(({ calendarId }) => ({
       calendarId,
-      events: eventsFromSession.map(event => ({
-        ...event,
-        description: courseTitle,
-      })),
+      events: eventsFromSession,
     }));
 
     return mutateCreateEvent(events);
@@ -88,7 +88,7 @@ export const useSubmitNotice = () => {
           buttonList: [confirmBtn],
         });
       },
-      onSuccess: async (_, data: NoticeDto.PostNotice) => {
+      onSuccess: async (successResData, data: NoticeDto.PostNotice) => {
         const currNotice = findCurrNotice(data.noticeType);
 
         if (!currNotice?.needExtraInfo) {
@@ -107,6 +107,7 @@ export const useSubmitNotice = () => {
             title,
             targetCourseIdList,
             meetingPlace,
+            linkedPost: `/notice/post/${(successResData as { second: number })?.second}`,
           });
           alert({
             dimClick: false,

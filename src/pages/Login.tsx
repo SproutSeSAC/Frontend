@@ -22,7 +22,7 @@ export default function Login() {
   const handleTestAdminLogin = async () => {
     try {
       const response = await axiosInstance.get(
-        'test/getAdminCookie',
+        'test/getUserCookie?email=jellieee951@gmail.com',
 
         {
           withCredentials: true,

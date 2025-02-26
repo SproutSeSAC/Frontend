@@ -59,6 +59,9 @@ export const useGetLoungeProjectList = (params: LoungeProjectFilter) => {
       return data;
     },
     enabled: !isEditing,
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };
 

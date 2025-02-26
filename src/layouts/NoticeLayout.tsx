@@ -7,8 +7,8 @@ import SideView from '@/layouts/SideView';
 
 import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
+import NoticeDisplayList from '@/components/notice/layout/NoticeDisplayList';
 import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
-import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function NoticeLayout() {
   const { pathname } = useLocation();

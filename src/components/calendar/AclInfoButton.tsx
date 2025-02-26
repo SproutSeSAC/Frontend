@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useInsertCalendar } from '@/services/schedule/calendarMutations';
-import { useGetCalendarAcl } from '@/services/schedule/calendarQueries';
+import { useInsertCalendar } from '@/services/calendar/calendarMutations';
+import { useGetCalendarAcl } from '@/services/calendar/calendarQueries';
 
 import { useDialogContext } from '@/hooks';
-import { AccessRole } from '@/types';
 import { BiInfoCircle } from 'react-icons/bi';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -12,27 +13,41 @@ import SquareButton from '@/components/common/button/SquareButton';
 interface AclInfoButtonProps {
   courseId: number;
   calendarId: string;
-  accessRole: AccessRole;
 }
 
 export default function AclInfoButton({
   courseId,
   calendarId,
-  accessRole,
 }: AclInfoButtonProps) {
   const queryClient = useQueryClient();
 
   const { hideDialog, alert } = useDialogContext();
 
-  const { data: aclList } = useGetCalendarAcl(courseId, calendarId);
+  const {
+    data: aclList,
+    isError,
+    error,
+    isLoading,
+  } = useGetCalendarAcl(courseId, calendarId);
 
   const { mutateAsync: insertCalendar } = useInsertCalendar({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['useGetCalendarList'],
       });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetCalendarAcl', courseId],
+      });
     },
   });
+
+  useEffect(() => {
+    if (isError && error.response?.status === 403) {
+      queryClient.setQueryData(['useGetCalendarAcl', courseId], {
+        status: 'forbidden',
+      });
+    }
+  }, [isError, error, queryClient, courseId]);
 
   const alertText = {
     hasNotAcl: {
@@ -46,11 +61,11 @@ export default function AclInfoButton({
     },
   };
 
-  const hasAclRole = accessRole === 'owner' || accessRole === 'writer';
+  // 권한 없음
+  const hasNotAcl = !aclList?.length;
 
-  const hasNotAcl = !aclList && !hasAclRole;
-
-  const hasAclButNotInMyCalendarList = aclList?.length !== 0 && !hasAclRole;
+  // 권한이 있지만 내 캘린더 목록에 추가하지 않아 캘린더 데이터를 못가져올 때
+  const hasAclButNotInMyCalendarList = !!aclList?.length;
 
   const onInfoClick = () => {
     alert({
@@ -64,21 +79,24 @@ export default function AclInfoButton({
             onClick={hideDialog}
             type="button"
           />
-          <SquareButton
-            name="나의 캘린더에 추가"
-            onClick={() => {
-              insertCalendar(calendarId);
-              hideDialog();
-            }}
-            type="button"
-          />
+          {hasAclButNotInMyCalendarList && (
+            <SquareButton
+              name="나의 캘린더에 추가"
+              onClick={() => {
+                insertCalendar(calendarId);
+                hideDialog();
+              }}
+              type="button"
+            />
+          )}
         </div>
       ),
     });
   };
 
   return (
-    (hasNotAcl || hasAclButNotInMyCalendarList) && (
+    (hasNotAcl || hasAclButNotInMyCalendarList) &&
+    !isLoading && (
       <button type="button" onClick={onInfoClick} className="group text-[15px]">
         <BiInfoCircle
           className={`inline size-[20px] ${hasNotAcl ? 'text-red-400' : 'text-mainGreen'}`}

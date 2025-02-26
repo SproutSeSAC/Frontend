@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import '@/calendar.css';
 import { FullCalendarEvent } from '@/types';
 import { DayCellContentArg, EventSourceInput } from '@fullcalendar/core';
@@ -62,6 +64,8 @@ export default function Calendar({
     [],
   );
 
+  const navigate = useNavigate();
+
   return (
     <div
       className={`${type}-calendar w-full rounded-[20px] bg-white p-4 ${className}`}
@@ -81,6 +85,10 @@ export default function Calendar({
           dayCellContent={({ dayNumberText }) =>
             `${dayNumberText.slice(0, -1)}`
           }
+          eventClick={event => {
+            event.jsEvent.preventDefault();
+            navigate(event.event.url);
+          }}
         />
       ) : (
         <>

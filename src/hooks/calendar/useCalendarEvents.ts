@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { useGetEventsByCalendar } from '@/services/schedule/calendarQueries';
+import { useGetEventsByCalendar } from '@/services/calendar/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
@@ -46,7 +46,7 @@ export const useCalendarEvents = () => {
 
   const createdCourseCalendarIdList = useMemo(() => {
     return courseCalendarList
-      .filter(calendar => calendar.accessRole === 'owner')
+      .filter(calendar => calendar.accessRole)
       .map(({ calendarId }) => calendarId);
   }, [courseCalendarList]);
 

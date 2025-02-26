@@ -4,8 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useDialogContext } from '@/hooks/common/useDialogContext';
 
-import { useGrantAcl } from '@/services/schedule/calendarMutations';
-import { useGetCalendarAcl } from '@/services/schedule/calendarQueries';
+import { useGrantAcl } from '@/services/calendar/calendarMutations';
+import { useGetCalendarAcl } from '@/services/calendar/calendarQueries';
 
 import { SUPER_ADMIN_EMAIL } from '@/constants';
 import { AdminEmail, CourseCalendarAcl } from '@/types';

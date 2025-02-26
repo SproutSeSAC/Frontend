@@ -18,8 +18,6 @@ export default function ControllerTargetCourses() {
 
   const { alert, hideDialog } = useDialogContext();
 
-  // const { hasNotAclCalendarList } = useGetUserAclList();
-
   const { courseCalendarList } = useCalendarList();
 
   const navigate = useNavigate();
@@ -34,9 +32,8 @@ export default function ControllerTargetCourses() {
       ({ courseId }) => courseIds?.includes(courseId),
     );
 
-    // 캘린더 비생성 확인 Alert
     const isNotCreatedCalendarCourseTitle = selectedCourseCalendarList
-      .filter(calendar => calendar.accessRole !== 'owner')
+      .filter(calendar => !calendar.calendarId)
       .map(({ courseTitle }) => courseTitle);
 
     if (isNotCreatedCalendarCourseTitle.length > 0) {
@@ -44,12 +41,42 @@ export default function ControllerTargetCourses() {
         text: `${isNotCreatedCalendarCourseTitle.join(', ')} 캘린더가 아직 생성되어 있지 않습니다!`,
         subText: '일정 관리 페이지에서 캘린더를 먼저 생성해주세요.',
         subTextColor: 'green',
-        className: 'max-w-[600px]',
+        className: '!max-w-[500px]',
         buttonList: [
           {
             name: '나가기',
             color: 'gray',
             onClick: () => hideDialog(),
+          },
+          {
+            name: '바로 이동하기',
+            onClick: () => {
+              hideDialog();
+              navigate('/admin');
+            },
+          },
+        ],
+      });
+    }
+
+    // 캘린더 권한 확인 Alert
+    const hasNotAclCourse = selectedCourseCalendarList
+      .filter(calendar => calendar.calendarId)
+      .filter(item => !item.accessRole)
+      .map(({ courseTitle }) => courseTitle);
+
+    if (hasNotAclCourse.length > 0) {
+      return alert({
+        text: `<${hasNotAclCourse.join(', ')}> 교육과정을 선택할 수 없습니다.`,
+        subText:
+          '나의 캘린더 목록에 추가되지 않았거나 캘린더 권한이 부여되지 않았습니다. 일정관리페이지에서 확인 후 조치를 취하실 수 있습니다.',
+        subTextColor: 'green',
+        className: '!max-w-[500px]',
+        buttonList: [
+          {
+            name: '확인',
+            color: 'gray',
+            onClick: hideDialog,
           },
           {
             name: '바로 이동하기',
@@ -61,27 +88,6 @@ export default function ControllerTargetCourses() {
         ],
       });
     }
-
-    // 캘린더 권한 확인 Alert
-    // const hasNotAclCourse = hasNotAclCalendarList?.find(({ courseId }) =>
-    //   courseIds.includes(courseId),
-    // );
-
-    // if (hasNotAclCourse) {
-    //   return alert({
-    //     text: `${hasNotAclCourse.courseTitle} 교육과정 캘린더에 일정관리 권한이 부여되지 않았습니다.`,
-    //     subText:
-    //       '잠시만 기다려주시면 바로 관리자가 확인 후 권한을 부여해드리겠습니다.',
-    //     subTextColor: 'green',
-    //     className: 'max-w-[600px]',
-    //     buttonList: [
-    //       {
-    //         name: '확인',
-    //         onClick: hideDialog,
-    //       },
-    //     ],
-    //   });
-    // }
     return onChange(courseIds);
   };
 

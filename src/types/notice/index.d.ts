@@ -68,10 +68,6 @@ export type NoticeFilter = PaginationFilter & {
   offset?: boolean;
 };
 
-/* Notice Request Params */
-export type NoticeIdParams = {
-  noticeId: string;
-};
 export type NoticeSessionParams = {
   sessionId: number;
   participantId?: number;

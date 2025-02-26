@@ -13,7 +13,7 @@ import {
   UserCourse,
 } from '@/types';
 import { getCookie } from '@/utils';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export const useGetCalendarList = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalendarList>,
@@ -28,7 +28,9 @@ export const useGetCalendarList = (
     queryKey: ['useGetCalendarList'],
     queryFn: getCalendarList,
     enabled: !!getCookie(CALENDAR_TOKEN_KEY),
-
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false,
     ...options,
   });
 };
@@ -93,6 +95,7 @@ export const useGetAdminEmailListByCourse = (
     queryKey: ['useGetAdminEmailListByCourse', courseId],
     queryFn: getManagerEmailListByCourse,
     enabled: !!courseId,
+    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,
@@ -114,6 +117,9 @@ export const useGetCourseCalendarStatus = (
     queryKey: ['useGetCourseCalendarStatus', courseId],
     queryFn: getCalendarIdByCourse,
     enabled: !!courseId,
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
@@ -121,7 +127,7 @@ export const useGetCourseCalendarStatus = (
 export const useGetCalendarAcl = (
   courseId: number,
   calendarId?: string,
-  options?: UseQueryOptions<AclEmail[]>,
+  options?: UseQueryOptions<unknown, AxiosError, AclEmail[]>,
 ) => {
   const getCalendarAcl = async () => {
     const aclRes: AxiosResponse<{ items: Acl[] }> =
@@ -140,11 +146,12 @@ export const useGetCalendarAcl = (
     return result;
   };
 
-  return useQuery<AclEmail[]>({
+  return useQuery<unknown, AxiosError, AclEmail[]>({
     queryKey: ['useGetCalendarAcl', courseId],
     queryFn: getCalendarAcl,
     enabled: !!calendarId && !!courseId,
-
+    retry: false,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     throwOnError: false,
     ...options,
@@ -236,11 +243,13 @@ export const useGetIsWaitingAcl = (
   };
 
   return useQuery<boolean>({
+    queryKey: ['useGetIsWaitingAcl'],
     queryFn: getIsWaitingAcl,
     enabled: courseList.length > 0,
     retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
-    queryKey: ['useGetIsWaitingAcl'],
   });
 };
 
@@ -275,6 +284,9 @@ export const useGetCourseCalendarStatusList = (
     queryKey: ['useGetCourseCalendarStatusList'],
     queryFn: getCourseCalendarStatusList,
     enabled: courseList.length > 0,
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };

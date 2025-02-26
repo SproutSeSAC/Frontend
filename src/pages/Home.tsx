@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useGetUserProfile } from '@/services/auth/authQueries';
+import { useGetIsWaitingAcl } from '@/services/calendar/calendarQueries';
 import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
-import { useGetIsWaitingAcl } from '@/services/schedule/calendarQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
@@ -20,8 +20,8 @@ import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
 import SwiperContainer from '@/components/common/container/SwiperContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
+import NoticeDisplayList from '@/components/notice/layout/NoticeDisplayList';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
-import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function Home() {
   const [isFirstLogin, setIsFirstLogin] = useAtom(initialLogin);

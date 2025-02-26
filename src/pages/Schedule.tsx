@@ -15,7 +15,8 @@ export default function Schedule() {
   const {
     courseCalendarList,
     personalCalendarList,
-    isCalendarDataLoading, //
+    isCalendarDataLoading,
+    isCourseCalendarStatusLoading,
   } = useCalendarList();
 
   const { fullCalendarEvents } = useCalendarEvents();
@@ -29,13 +30,15 @@ export default function Schedule() {
         highlight="새싹"
       />
 
-      <div className="flex h-full gap-6">
-        <CalendarCheckBoxList
-          courseCalendarList={courseCalendarList}
-          personalCalendarList={personalCalendarList || []}
-        />
-        <Calendar type="big" events={fullCalendarEvents} />
-      </div>
+      {!isCalendarDataLoading && !isCourseCalendarStatusLoading && (
+        <div className="flex h-full gap-6">
+          <CalendarCheckBoxList
+            courseCalendarList={courseCalendarList}
+            personalCalendarList={personalCalendarList || []}
+          />
+          <Calendar type="big" events={fullCalendarEvents} />
+        </div>
+      )}
     </MainView>
   );
 }
