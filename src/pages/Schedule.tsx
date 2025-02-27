@@ -6,44 +6,39 @@ import MainView from '@/layouts/MainView';
 
 import LoadingPage from '@/pages/LoadingPage';
 
-import Calendar from '@/components/schedule/Calendar';
-import CalendarCheckBoxList from '@/components/schedule/CalendarCheckBoxList';
+import Calendar from '@/components/calendar/Calendar';
+import CalendarCheckBoxList from '@/components/calendar/CalendarCheckBoxList';
 
 export default function Schedule() {
-  const { data: userProfile, isLoading: isUserProfileLoading } =
-    useGetUserProfile();
+  const { data: userProfile, isLoading } = useGetUserProfile();
 
-  const { allCourseCalendarList, personalCalendarList, isCalendarDataLoading } =
-    useCalendarList();
+  const {
+    courseCalendarList,
+    personalCalendarList,
+    isCalendarDataLoading,
+    isCourseCalendarStatusLoading,
+  } = useCalendarList();
 
-  const { fullCalendarSideViewEvents, fullCalendarEvents } =
-    useCalendarEvents();
+  const { fullCalendarEvents } = useCalendarEvents();
 
-  if (isCalendarDataLoading || isUserProfileLoading) return <LoadingPage />;
+  if (isCalendarDataLoading || isLoading) return <LoadingPage />;
 
   return (
-    <MainView className="h-screen !min-h-[900px]">
+    <MainView className="mb-40 h-screen !min-h-[900px]">
       <Header
         title={`${userProfile?.name} 스프님 새싹 일정`}
         highlight="새싹"
       />
-      <div className="flex flex-1 gap-6 overflow-auto">
-        <div className="flex max-w-[340px] flex-col gap-6">
-          <Calendar
-            type="small"
-            events={fullCalendarEvents}
-            sideViewEvents={fullCalendarSideViewEvents}
-          />
 
+      {!isCalendarDataLoading && !isCourseCalendarStatusLoading && (
+        <div className="flex h-full gap-6">
           <CalendarCheckBoxList
-            allCourseCalendarList={allCourseCalendarList}
-            personalCalendarList={personalCalendarList}
-            userRole={userProfile?.role}
+            courseCalendarList={courseCalendarList}
+            personalCalendarList={personalCalendarList || []}
           />
+          <Calendar type="big" events={fullCalendarEvents} />
         </div>
-
-        <Calendar type="big" events={fullCalendarEvents} />
-      </div>
+      )}
     </MainView>
   );
 }

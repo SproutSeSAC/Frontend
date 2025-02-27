@@ -13,19 +13,21 @@ export default function ErrorPage() {
 
   return (
     <Layout>
-      <MainView>
-        <Warning className="mb-[1%] h-[50%] max-h-[117px] max-w-[131px] object-cover" />
+      <MainView className="!p-0">
+        <div className="mb-10 mt-[60px] flex size-full flex-col items-center justify-center rounded-l-[80px] bg-white shadow-card">
+          <Warning className="mb-[1%] h-[50%] max-h-[117px] max-w-[131px] object-cover" />
 
-        <h2 className="mb-[1%] text-[40px] font-semibold">
-          일시적인 오류입니다.
-        </h2>
-        <p className="text-lg">잠시 후에 다시 시도해 주세요.</p>
+          <h2 className="mb-[1%] text-[40px] font-semibold">
+            일시적인 오류입니다.
+          </h2>
+          <p className="text-lg">잠시 후에 다시 시도해 주세요.</p>
 
-        <SquareButton
-          name="홈으로"
-          onClick={onGoHomeClick}
-          className="mt-[2%] px-8 text-lg font-bold"
-        />
+          <SquareButton
+            name="홈으로"
+            onClick={onGoHomeClick}
+            className="mt-[2%] px-8 text-lg font-bold"
+          />
+        </div>
       </MainView>
     </Layout>
   );

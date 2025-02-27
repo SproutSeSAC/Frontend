@@ -31,7 +31,7 @@ export default function Alert({
     >
       <p className="text-center text-lg font-semibold">{text}</p>
       <p
-        className={`mb-5 break-all text-center text-[15px] ${subTextColor === 'gray' ? 'text-mainGray' : 'text-mainGreen'}`}
+        className={`mb-5 mt-2 break-all text-center text-[15px] ${subTextColor === 'gray' ? 'text-mainGray' : 'text-mainGreen'}`}
       >
         {subText}
       </p>

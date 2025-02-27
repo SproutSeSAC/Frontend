@@ -1,15 +1,15 @@
 import { Event } from '@/types/calendar/googleCalendar';
+import { HasSuperAdminRole } from '@/types/user';
 
 export namespace GoogleCalendarApiDto {
   export type GetCalendarList = CalendarList;
   export type GetCalenderEvents = CalenderEvents;
   export type GetAclList = Acl[];
-
   export type PostCalendar = {
-    userRole: RoleKey;
+    currentRole: keyof HasSuperAdminRole;
     summary: string;
     courseId: number;
-    authorizedEmails: AuthorizedEmailsByRole;
+    description?: string;
   };
   export type PostEvent = Partial<
     Pick<Event, 'summary' | 'description' | 'location'>

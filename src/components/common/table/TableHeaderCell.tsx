@@ -34,7 +34,7 @@ export default function TableHeaderCell({
           <div>
             <span>{name}</span>
             {Icon && (
-              <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
+              <Icon className="ml-1 inline size-6 cursor-pointer px-1 text-mainGray" />
             )}
           </div>
         ))}

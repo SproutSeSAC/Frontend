@@ -2,8 +2,8 @@ import { Event } from '@/types/calendar/googleCalendar';
 
 export * from '@/types/calendar/googleCalendarApiDto';
 export * from '@/types/calendar/googleCalendar';
-export * from '@/types/calendar/sproutCalendarDto';
-export * from '@/types/calendar/managerEmailListByCourseDto';
+export * from '@/types/calendar/courseCalendarDto';
+export * from '@/types/calendar/adminEmailListByCourseDto';
 
 export type CalendarListCategory = '교육과정 캘린더' | '개인 캘린더';
 
@@ -22,6 +22,7 @@ export type FullCalendarEvent = {
   rrule?: RruleOptions;
   exdate?: string[];
   calendarId: string;
+  url?: string;
 };
 
 export type RruleOptions = {
