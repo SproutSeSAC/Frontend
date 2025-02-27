@@ -24,7 +24,7 @@ export default function SquareButton({
   const styleByColor = {
     mainGreen: 'bg-mainGreen text-white',
     gray: 'bg-mainGray text-black',
-    lightGreen: 'bg-lightGreen-active text-text',
+    lightGreen: 'bg-lightGreen-active text-darkGray-active',
   };
 
   const colorStyle = styleByColor[color];

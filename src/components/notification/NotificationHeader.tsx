@@ -1,6 +1,5 @@
-import { IoIosInformation } from 'react-icons/io';
-
 import Icon from '@/components/common/Icon';
+import InfoHoverBox from '@/components/common/InfoHoverBox';
 
 interface NotificationHeaderProps {
   handleClose: () => void;
@@ -23,13 +22,7 @@ export default function NotificationHeader({
         <div className="w-full flex-1 py-3 text-center text-lg font-semibold text-black">
           알림
         </div>
-        <div className="group relative flex cursor-pointer items-center justify-center rounded-lg bg-bg">
-          <IoIosInformation className="size-8 text-xl text-darkGray" />
-          <span className="absolute right-0 top-14 z-10 hidden w-[185px] rounded-lg bg-black px-5 py-6 text-base leading-6 text-white opacity-70 group-hover:block">
-            알림은 최대 20개까지 <br />
-            표시됩니다.
-          </span>
-        </div>
+        <InfoHoverBox text="알림은 최대 20개까지 표시됩니다." />
       </div>
     </div>
   );

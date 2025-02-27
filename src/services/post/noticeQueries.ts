@@ -71,7 +71,7 @@ export const useGetThisWeekNoticeList = () => {
 
     const thisWeekNotice = data.notices
       .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
-      .slice(0, 3);
+      .slice(0, 4);
 
     return thisWeekNotice;
   };

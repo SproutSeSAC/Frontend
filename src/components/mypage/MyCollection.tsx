@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
-  // useGetMyCommentList,
+  useGetMyCommentList, // useGetMyCommentList,
   useGetMyPostList,
   useGetMyScrapedPostList,
 } from '@/services/post/myPostQueries';
@@ -79,7 +79,9 @@ export default function MyCollection() {
     },
   });
 
-  // const { data: myCommentList } = useGetMyCommentList();
+  const { data: myCommentList } = useGetMyCommentList();
+
+  console.log(myCommentList);
 
   const { data: myScrapedPostList } = useGetMyScrapedPostList();
 
