@@ -2,8 +2,6 @@ import { UseQueryOptions, useQueries, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { AxiosResponse } from 'axios';
-
 export type CourseListData = {
   courseList: {
     id: number;
@@ -24,7 +22,7 @@ export const useGetCourseList = (
   options?: UseQueryOptions<CourseListData['courseList']>,
 ) => {
   const getCourseList = async () => {
-    const res: AxiosResponse<CourseListData> = await axiosInstance.get(
+    const res = await axiosInstance.get<CourseListData>(
       `/course/list/${campusId}`,
     );
     return res.data.courseList;
@@ -46,7 +44,7 @@ export const useGetCourseListByCampus = (
   options?: UseQueryOptions<CourseListData['courseList']>,
 ) => {
   const getCourseList = async (campusId: number) => {
-    const res: AxiosResponse<CourseListData> = await axiosInstance.get(
+    const res = await axiosInstance.get<CourseListData>(
       `/course/list/${campusId}`,
     );
     return res.data.courseList;
@@ -68,8 +66,7 @@ export const useGetCampusList = (
   options?: UseQueryOptions<CampusListData['campusList']>,
 ) => {
   const getCampusList = async () => {
-    const res: AxiosResponse<CampusListData> =
-      await axiosInstance.get('/campus/list');
+    const res = await axiosInstance.get<CampusListData>('/campus/list');
     return res.data.campusList;
   };
 

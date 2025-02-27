@@ -3,14 +3,14 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { SpecificationsDto } from '@/types';
-import { AxiosResponse } from 'axios';
 
 export const useGetJobList = (
   options?: UseQueryOptions<SpecificationsDto.GetJobList['jobList']>,
 ) => {
   const getJobList = async () => {
-    const response: AxiosResponse<SpecificationsDto.GetJobList> =
-      await axiosInstance.get('/specifications/jobList');
+    const response = await axiosInstance.get<SpecificationsDto.GetJobList>(
+      '/specifications/jobList',
+    );
     return response.data.jobList;
   };
 
@@ -29,8 +29,9 @@ export const useGetDomainList = (
   options?: UseQueryOptions<SpecificationsDto.GetDomainList['domainList']>,
 ) => {
   const getDomainList = async () => {
-    const response: AxiosResponse<SpecificationsDto.GetDomainList> =
-      await axiosInstance.get('/specifications/domainList');
+    const response = await axiosInstance.get<SpecificationsDto.GetDomainList>(
+      '/specifications/domainList',
+    );
     return response.data.domainList;
   };
 
@@ -49,8 +50,9 @@ export const useGetTechStackList = (
   options?: UseQueryOptions<SpecificationsDto.GetTechStack['techStackList']>,
 ) => {
   const getTechStackList = async () => {
-    const response: AxiosResponse<SpecificationsDto.GetTechStack> =
-      await axiosInstance.get('/specifications/techStackList');
+    const response = await axiosInstance.get<SpecificationsDto.GetTechStack>(
+      '/specifications/techStackList',
+    );
     return response.data.techStackList;
   };
 

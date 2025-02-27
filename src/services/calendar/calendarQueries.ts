@@ -13,14 +13,16 @@ import {
   UserCourse,
 } from '@/types';
 import { getCookie } from '@/utils';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 export const useGetCalendarList = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalendarList>,
 ) => {
   const getCalendarList = async () => {
-    const res: AxiosResponse<GoogleCalendarApiDto.GetCalendarList> =
-      await axiosCalendarInstance.get('/users/me/calendarList');
+    const res =
+      await axiosCalendarInstance.get<GoogleCalendarApiDto.GetCalendarList>(
+        '/users/me/calendarList',
+      );
     return res.data;
   };
 
@@ -40,13 +42,15 @@ export const useGetCalendarEvents = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalenderEvents>,
 ) => {
   const getCalendarEvents = async () => {
-    const res: AxiosResponse<GoogleCalendarApiDto.GetCalenderEvents> =
-      await axiosCalendarInstance.get(`/calendars/${calendarId}/events`);
+    const res =
+      await axiosCalendarInstance.get<GoogleCalendarApiDto.GetCalenderEvents>(
+        `/calendars/${calendarId}/events`,
+      );
     return res.data;
   };
 
   return useQuery({
-    queryKey: ['calendarEvents', calendarId],
+    queryKey: ['useGetCalendarEvents', calendarId],
     queryFn: getCalendarEvents,
     enabled: !!calendarId,
     refetchOnMount: false,
@@ -60,8 +64,10 @@ export const useGetEventsByCalendar = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalenderEvents>,
 ) => {
   const getCalendarEvents = async (calendarId: string) => {
-    const res: AxiosResponse<GoogleCalendarApiDto.GetCalenderEvents> =
-      await axiosCalendarInstance.get(`/calendars/${calendarId}/events`);
+    const res =
+      await axiosCalendarInstance.get<GoogleCalendarApiDto.GetCalenderEvents>(
+        `/calendars/${calendarId}/events`,
+      );
 
     return { ...res.data, calendarId };
   };
@@ -69,7 +75,7 @@ export const useGetEventsByCalendar = (
   return useQueries({
     queries: calendarIds.map(calendarId => {
       return {
-        queryKey: ['eventsByCalenderId', calendarId],
+        queryKey: ['useGetEventsByCalendar', calendarId],
         queryFn: () => getCalendarEvents(calendarId),
         enabled: !!calendarId,
         refetchOnMount: false,
@@ -85,8 +91,9 @@ export const useGetAdminEmailListByCourse = (
   options?: UseQueryOptions<AdminEmailListByCourseDto.Get>,
 ) => {
   const getManagerEmailListByCourse = async () => {
-    const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
-      await axiosInstance.get(`/user/calendar/${courseId}/email`);
+    const res = await axiosInstance.get<AdminEmailListByCourseDto.Get>(
+      `/user/calendar/${courseId}/email`,
+    );
 
     return res.data;
   };
@@ -107,7 +114,7 @@ export const useGetCourseCalendarStatus = (
   options?: UseQueryOptions<CourseCalendarDto.Get>,
 ) => {
   const getCalendarIdByCourse = async () => {
-    const res: AxiosResponse<CourseCalendarDto.Get[]> = await axiosInstance.get(
+    const res = await axiosInstance.get<CourseCalendarDto.Get[]>(
       `/user/calendar/${courseId}`,
     );
     return res.data?.[0] || {};
@@ -130,8 +137,9 @@ export const useGetCalendarAcl = (
   options?: UseQueryOptions<unknown, AxiosError, AclEmail[]>,
 ) => {
   const getCalendarAcl = async () => {
-    const aclRes: AxiosResponse<{ items: Acl[] }> =
-      await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+    const aclRes = await axiosCalendarInstance.get<{ items: Acl[] }>(
+      `/calendars/${calendarId}/acl`,
+    );
 
     const result = aclRes.data.items
       .filter(
@@ -179,8 +187,9 @@ export const useGetIsWaitingAcl = (
   const getAdminListByCourse: (
     courseId: number,
   ) => Promise<AdminEmail[]> = async (courseId: number) => {
-    const res: AxiosResponse<AdminEmailListByCourseDto.Get> =
-      await axiosInstance.get(`/user/calendar/${courseId}/email`);
+    const res = await axiosInstance.get<AdminEmailListByCourseDto.Get>(
+      `/user/calendar/${courseId}/email`,
+    );
     return res.data;
   };
 
@@ -188,8 +197,9 @@ export const useGetIsWaitingAcl = (
     calendarId: string,
   ) => Promise<{ email: string }[]> = async (calendarId: string) => {
     try {
-      const aclRes: AxiosResponse<{ items: Acl[] }> =
-        await axiosCalendarInstance.get(`/calendars/${calendarId}/acl`);
+      const aclRes = await axiosCalendarInstance.get<{ items: Acl[] }>(
+        `/calendars/${calendarId}/acl`,
+      );
 
       const result = aclRes.data.items
         .filter(

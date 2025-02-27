@@ -8,7 +8,7 @@ import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
 
-import { useDialogContext } from '@/hooks';
+import { useCalendarEvents, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { isSuperAdmin } from '@/utils';
@@ -46,6 +46,8 @@ export default function Home() {
         (userProfile?.courseList || []).length > 0,
     },
   );
+  const { fullCalendarSideViewEvents, fullCalendarEvents } =
+    useCalendarEvents();
 
   const { showToast } = useDialogContext();
 
@@ -80,7 +82,12 @@ export default function Home() {
           <div className="mb-[14px] flex items-center justify-between">
             <Title title="주요 일정" />
           </div>
-          <Calendar type="small" className="h-[509px]" />
+          <Calendar
+            type="small"
+            className="h-[509px]"
+            events={fullCalendarEvents}
+            sideViewEvents={fullCalendarSideViewEvents}
+          />
         </section>
 
         <section>
@@ -90,11 +97,16 @@ export default function Home() {
               더보기
             </Link>
           </div>
-          <div className="flex h-[509px] w-full flex-col justify-between overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
-            <span className="mb-4 font-semibold">마감임박</span>
-            <NoticeDisplayList title="마감임박" />
-            <span className="my-4 border-t pt-4 font-semibold">NEW</span>
-            <NoticeDisplayList title="NEW" />
+          <div className="flex h-[509px] w-full flex-col justify-between gap-4 overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
+            <div className="flex h-full flex-col border-b">
+              <span className="text-darkGray-active">마감임박</span>
+              <NoticeDisplayList title="마감임박" />
+            </div>
+
+            <div className="flex h-full flex-col">
+              <span className="mb-5 text-darkGray-active">NEW</span>
+              <NoticeDisplayList title="NEW" />
+            </div>
           </div>
         </section>
       </div>

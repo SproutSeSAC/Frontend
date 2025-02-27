@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '@/calendar.css';
 import { FullCalendarEvent } from '@/types';
+import { formatDate } from '@/utils';
 import { DayCellContentArg, EventSourceInput } from '@fullcalendar/core';
 import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -112,10 +113,10 @@ export default function Calendar({
 
           {sideViewEvents && sideViewEvents.length !== 0 ? (
             <ul className="flex w-full flex-col justify-center gap-4">
-              {sideViewEvents.map(({ id, start, title }) => (
+              {sideViewEvents.map(({ id, start, end, title }) => (
                 <SmallCalendarBottomEvent
                   key={id}
-                  date={new Date(start).toLocaleDateString()}
+                  date={`${formatDate(start, 'MM.dd HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
                   title={title}
                 />
               ))}

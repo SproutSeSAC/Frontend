@@ -3,7 +3,6 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { UserProfileDto } from '@/types';
-import { AxiosResponse } from 'axios';
 
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
@@ -52,8 +51,7 @@ export const useGetUserProfile = (
   options?: UseQueryOptions<UserProfileDto.Get>,
 ) => {
   const getUserProfile = async () => {
-    const res: AxiosResponse<UserProfileDto.Get> =
-      await axiosInstance.get('/user/check');
+    const res = await axiosInstance.get<UserProfileDto.Get>('/user/check');
 
     const courseList = res.data.courseList.sort((a, b) =>
       a.courseTitle.localeCompare(b.courseTitle),
@@ -90,8 +88,8 @@ export const useGetUserProfileCard = (
   options?: UseQueryOptions<UserProfileDto.GetCard>,
 ) => {
   const getUserProfileCard = async () => {
-    const res: AxiosResponse<UserProfileDto.GetCard> =
-      await axiosInstance.get('/mypage/getCard');
+    const res =
+      await axiosInstance.get<UserProfileDto.GetCard>('/mypage/getCard');
     return res.data;
   };
 
