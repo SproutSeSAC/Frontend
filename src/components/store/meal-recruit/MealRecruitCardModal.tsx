@@ -93,22 +93,19 @@ export default function MealRecruitCardModal({
           <ul className="mt-3 flex flex-col gap-3">
             {(data?.members || []).map(member => {
               return (
-                <li key={member.userId} className="flex gap-2.5">
+                <li key={member.userId} className="flex items-center gap-2.5">
                   <UserImage
                     className="size-10"
                     imageNameSegment={member.imgUrl}
                   />
-                  <div className="w-full">
-                    <div className="flex items-center justify-between gap-9">
-                      <span className="text-sm">{member.nickname}</span>
-                      {member.isOwner && (
-                        <div className="flex items-center justify-between gap-1 rounded bg-[#FEFAE0] px-1.5 py-1 text-xs text-[#FF6D28]">
-                          <FaCrown />
-                          <span>모임장</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-xs text-mainGray">디자인</div>
+                  <div className="flex w-full items-center justify-between gap-9">
+                    <span className="text-sm">{member.nickname}</span>
+                    {member.isOwner && (
+                      <div className="flex items-center justify-between gap-1 rounded bg-[#FEFAE0] px-1.5 py-1 text-xs text-[#FF6D28]">
+                        <FaCrown />
+                        <span>모임장</span>
+                      </div>
+                    )}
                   </div>
                 </li>
               );
