@@ -30,24 +30,29 @@ export default function AdminPage() {
 
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetUserProfile();
+  const { data } = useGetUserProfile();
 
   useEffect(() => {
-    if (!hasSuperAdmin(data?.role) && !isLoading) {
+    if (data?.role && !hasSuperAdmin(data.role)) {
       navigate(-1);
     }
-  }, [navigate, data?.role, isLoading]);
+  }, [navigate, data?.role]);
 
   return (
-    <MainView>
-      <Header title="관리자 페이지" />
-      <TabNavigation<TabType>
-        selectValue={tabName ?? 'calendar-acl'}
-        tabList={tabList}
-        onChangeValue={handleChangeValue}
-      />
+    data?.role &&
+    hasSuperAdmin(data.role) && (
+      <MainView>
+        <Header title="관리자 페이지" />
+        <TabNavigation<TabType>
+          selectValue={tabName ?? 'calendar-acl'}
+          tabList={tabList}
+          onChangeValue={handleChangeValue}
+        />
 
-      {(tabName === 'calendar-acl' || tabName === null) && <CalendarAclTable />}
-    </MainView>
+        {(tabName === 'calendar-acl' || tabName === null) && (
+          <CalendarAclTable />
+        )}
+      </MainView>
+    )
   );
 }

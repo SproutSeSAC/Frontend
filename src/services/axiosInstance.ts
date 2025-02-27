@@ -71,6 +71,7 @@ axiosInstance.interceptors.response.use(
           return redirectToLogin();
 
         default:
+        // NOTE: 에러처리
         // alert(
         //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
         // );
@@ -126,6 +127,7 @@ axiosCalendarInstance.interceptors.response.use(
           return handleCalendarToken();
 
         default:
+        // NOTE: 에러처리
         // alert(
         //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
         // );

@@ -1,10 +1,6 @@
 import { Event } from '@/types/calendar/googleCalendar';
 import { HasSuperAdminRole } from '@/types/user';
 
-// acl
-// currentRoleAndEmail: { roleType: keyof HasSuperAdminRole; email: string };
-// emailListToBeAuthorized: AdminEmailListByCourseDto.Get;
-
 export namespace GoogleCalendarApiDto {
   export type GetCalendarList = CalendarList;
   export type GetCalenderEvents = CalenderEvents;

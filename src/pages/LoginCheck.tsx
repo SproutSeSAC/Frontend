@@ -27,10 +27,8 @@ export default function LoginCheck() {
         setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
         setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
       }
-
       try {
         const response = await loginCheck();
-
         if (response.status === 200) {
           navigate('/');
         }

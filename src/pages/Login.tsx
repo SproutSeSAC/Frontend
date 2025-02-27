@@ -16,7 +16,7 @@ export default function Login() {
 
   const handleTestAdminLogin = async () => {
     try {
-      const response = await axiosInstance.get('test/getAdminCookie', {
+      const response = await axiosInstance.get('/test/getAdminCookie', {
         withCredentials: true,
       });
 
