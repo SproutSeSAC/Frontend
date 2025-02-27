@@ -63,7 +63,6 @@ axiosInstance.interceptors.response.use(
       };
 
       switch (error.response.status) {
-        case 400:
         case 401:
           return handleNewAccessToken();
 
