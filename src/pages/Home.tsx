@@ -2,10 +2,8 @@ import { useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
+import { useGetUserProfile } from '@/services/auth/authQueries';
+import { useGetIsWaitingAcl } from '@/services/calendar/calendarQueries';
 import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
@@ -13,16 +11,17 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 import { useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { isSuperAdmin } from '@/utils';
 import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
+import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
 import SwiperContainer from '@/components/common/container/SwiperContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
-import Calendar from '@/components/schedule/Calendar';
+import NoticeDisplayList from '@/components/notice/layout/NoticeDisplayList';
 import MyCourseProgressCard from '@/components/user/MyCourseProgressCard';
-import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function Home() {
   const [isFirstLogin, setIsFirstLogin] = useAtom(initialLogin);
@@ -33,12 +32,20 @@ export default function Home() {
   } = useGetLoungeProjectList({ page: 1, size: 10 });
 
   const {
-    data: userProfile = initialUserProfile,
+    data: userProfile,
     isLoading: isGetUserProfileLoading, //
     isFetched,
   } = useGetUserProfile();
 
-  const { name } = userProfile;
+  const { data: isWaitingAcl } = useGetIsWaitingAcl(
+    userProfile?.courseList || [],
+    {
+      queryKey: ['useGetIsWaitingAcl'],
+      enabled:
+        isSuperAdmin(userProfile?.role) &&
+        (userProfile?.courseList || []).length > 0,
+    },
+  );
 
   const { showToast } = useDialogContext();
 
@@ -47,8 +54,12 @@ export default function Home() {
       showToast('새싹 회원이 되신 것을 환영합니다!');
       setIsFirstLogin(false);
     }
+
+    if (isWaitingAcl) {
+      showToast('권한 대기중인 매니저가 있습니다.');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFirstLogin]);
+  }, [isFirstLogin, isWaitingAcl]);
 
   if ((!isFetched && isGetUserProfileLoading) || isGetLoungeListLoading)
     return <LoadingPage />;
@@ -57,7 +68,7 @@ export default function Home() {
 
   return (
     <MainView className="pb-20">
-      <Header title={`${name} 스프님, 환영합니다!`} />
+      <Header title={`${userProfile?.name} 스프님, 환영합니다!`} />
 
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
         <section className="relative flex h-full flex-col">

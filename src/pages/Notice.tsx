@@ -9,6 +9,7 @@ import { useFilterData, useObserver } from '@/hooks';
 import { NoticeDisplay, NoticeFilter, NoticeTabDisplayKey } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
+import LoopLoading from '@/components/common/LoopLoading';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import NoticePostCard from '@/components/notice/NoticePostCard';
@@ -99,6 +100,12 @@ export default function Notice() {
         })}
         <div ref={observeRef} />
       </div>
+
+      {isLoading && (
+        <div className="flex w-full justify-center py-10">
+          <LoopLoading />
+        </div>
+      )}
 
       {noticeList.length === 0 && !isLoading && (
         <EmptyContent

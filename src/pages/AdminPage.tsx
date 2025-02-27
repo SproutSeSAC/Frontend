@@ -2,19 +2,16 @@ import { useEffect } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { isSuperAdmin, updateQueryParams } from '@/utils';
+import { hasSuperAdmin, updateQueryParams } from '@/utils';
 
-import CalendarAclTable from '@/components/adminpage/CalendarAclTable';
+import CalendarAclTable from '@/components/calendar/CalendarAclTable';
 import TabNavigation from '@/components/common/TabNavigation';
 
-const ADMIN_TAB = 'adminTab';
+const TAB = 'tab';
 
 type TabType = 'calendar-acl' | 'course-management';
 
@@ -23,37 +20,39 @@ export default function AdminPage() {
 
   const tabList: { text: string; type: TabType }[] = [
     { text: '일정관리 권한', type: 'calendar-acl' },
-    { text: '강의 관리', type: 'course-management' },
   ];
 
-  const adminTabName = searchParams.get(ADMIN_TAB) as TabType;
+  const tabName = searchParams.get(TAB) as TabType;
 
   const handleChangeValue = (type: TabType) => {
-    updateQueryParams(searchParams, setSearchParams, ADMIN_TAB, type);
+    updateQueryParams(searchParams, setSearchParams, TAB, type);
   };
-
-  const { data: { role } = initialUserProfile } = useGetUserProfile();
 
   const navigate = useNavigate();
 
+  const { data } = useGetUserProfile();
+
   useEffect(() => {
-    if (!isSuperAdmin(role)) {
+    if (data?.role && !hasSuperAdmin(data.role)) {
       navigate(-1);
     }
-  }, [navigate, role]);
+  }, [navigate, data?.role]);
 
   return (
-    <MainView>
-      <Header title="관리자 페이지" />
-      <TabNavigation<TabType>
-        selectValue={adminTabName ?? 'calendar-acl'}
-        tabList={tabList}
-        onChangeValue={handleChangeValue}
-      />
+    data?.role &&
+    hasSuperAdmin(data.role) && (
+      <MainView>
+        <Header title="관리자 페이지" />
+        <TabNavigation<TabType>
+          selectValue={tabName ?? 'calendar-acl'}
+          tabList={tabList}
+          onChangeValue={handleChangeValue}
+        />
 
-      {(adminTabName === 'calendar-acl' || adminTabName === null) && (
-        <CalendarAclTable />
-      )}
-    </MainView>
+        {(tabName === 'calendar-acl' || tabName === null) && (
+          <CalendarAclTable />
+        )}
+      </MainView>
+    )
   );
 }

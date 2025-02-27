@@ -1,7 +1,7 @@
 import { HasAdminRole, HasSuperAdminRole, Role } from '@/types';
 
 /** Role 확인용 */
-export const isSuperAdmin = (role: keyof Role) => {
+export const isSuperAdmin = (role?: keyof Role) => {
   return role === 'SUPER_ADMIN';
 };
 

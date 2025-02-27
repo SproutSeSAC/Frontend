@@ -7,6 +7,7 @@ interface CheckboxProps {
   textClassName?: string;
   inputClassName?: string;
   checkBoxColor?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -18,6 +19,7 @@ interface CheckboxProps {
  * @param textClassName - 체크박스 라벨 클래스네임
  * @param inputClassName - 체크박스 클래스네임
  * @param checkBoxColor - 체크박스 체크시 색상
+ * @param disabled - 체크박스이 disabled이어야 할때
  */
 export default function Checkbox({
   id,
@@ -28,6 +30,7 @@ export default function Checkbox({
   textClassName = '',
   inputClassName = '',
   checkBoxColor = '',
+  disabled,
 }: CheckboxProps) {
   return (
     <label htmlFor={id} className="flex w-fit items-center">
@@ -36,12 +39,15 @@ export default function Checkbox({
         id={id}
         name={id}
         checked={checked}
+        disabled={disabled}
         onChange={onChange}
-        className={`mr-2 mt-1 h-4 w-4 cursor-pointer appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-mainBlue checked:bg-[url('./assets/images/check.png')] checked:bg-contain ${inputClassName}`}
+        className={`mr-2 size-4 cursor-pointer appearance-none rounded-sm border border-[#B0BABF] bg-[#F6F8F9] bg-center bg-no-repeat checked:border-none checked:bg-mainBlue checked:bg-[url('./assets/images/check.png')] checked:bg-contain ${inputClassName}`}
         style={{ backgroundColor: checked ? checkBoxColor : '' }}
       />
       {text && (
-        <span className={`mr-1 flex-1 text-[#646567] ${textClassName}`}>
+        <span
+          className={`mr-1 flex-1 leading-[22px] text-[#646567] ${textClassName}`}
+        >
           {text}
         </span>
       )}

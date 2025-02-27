@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { useGetEventsByCalendar } from '@/services/schedule/calendarQueries';
+import { useGetEventsByCalendar } from '@/services/calendar/calendarQueries';
 
 import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
@@ -14,7 +14,7 @@ import { useAtomValue } from 'jotai';
 export const useCalendarEvents = () => {
   const currShowingCalendarIds = useAtomValue(calendarIdsAtom);
 
-  const { allCalendarList, allCourseCalendarList } = useCalendarList();
+  const { allCalendarList, courseCalendarList } = useCalendarList();
 
   const getCalendarColor = useMemo(() => {
     return (calendarSummary: string) =>
@@ -45,10 +45,10 @@ export const useCalendarEvents = () => {
   const eventsByCalendar = useGetEventsByCalendar(currShowingCalendarIds || []);
 
   const createdCourseCalendarIdList = useMemo(() => {
-    return allCourseCalendarList
-      .filter(calendar => calendar.accessRole === 'owner')
+    return courseCalendarList
+      .filter(calendar => calendar.accessRole)
       .map(({ calendarId }) => calendarId);
-  }, [allCourseCalendarList]);
+  }, [courseCalendarList]);
 
   const createdCourseCalendarEventList = useGetEventsByCalendar(
     createdCourseCalendarIdList,

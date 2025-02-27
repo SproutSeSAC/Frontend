@@ -7,8 +7,8 @@ import {
   useUpdateUserProfile,
 } from '@/services/auth/authMutations';
 import {
-  initialUserProfile,
-  useGetUserProfile,
+  initialUserProfileCard,
+  useGetUserProfileCard,
 } from '@/services/auth/authQueries';
 
 import { useDialogContext, useHandleImage } from '@/hooks';
@@ -28,18 +28,23 @@ export default function UserNameImageModal() {
 
   const { hideDialog } = useDialogContext();
 
-  const { data: { nickname, profileImageUrl } = initialUserProfile } =
-    useGetUserProfile();
+  const {
+    data: { profile: { nickname, profileUrl } } = initialUserProfileCard,
+  } = useGetUserProfileCard();
 
   const { mutateAsync: mutateProfile } = useUpdateUserProfile({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetUserProfileCard'],
+      });
     },
   });
 
   const { mutateAsync: mutateProfileImage } = useUpdateProfileImage({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['useGetUserProfile'] });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetUserProfileCard'],
+      });
     },
   });
 
@@ -57,8 +62,8 @@ export default function UserNameImageModal() {
   } = useHandleImage();
 
   const resetProfileImage = async () => {
-    if (profileImageUrl !== '') {
-      deleteImageFromS3(profileImageUrl);
+    if (profileUrl !== '') {
+      deleteImageFromS3(profileUrl);
       await mutateProfileImage({ profileUrl: '' });
     }
   };
@@ -70,8 +75,8 @@ export default function UserNameImageModal() {
     if (nickname !== formData.nickname) {
       await mutateProfile({ nickname: formData.nickname });
     }
-    if (profileImageUrl !== '') {
-      deleteImageFromS3(profileImageUrl);
+    if (profileUrl !== '') {
+      deleteImageFromS3(profileUrl);
     }
     const file = formData.profileImageFiles?.[0];
     if (file) {
@@ -93,7 +98,7 @@ export default function UserNameImageModal() {
         >
           <UserImage
             previewUrl={previewUrl}
-            imageNameSegment={previewUrl ? undefined : profileImageUrl}
+            imageNameSegment={previewUrl ? undefined : profileUrl}
             className="mx-auto mb-6 size-[220px] border shadow-card"
           >
             <CameraInput

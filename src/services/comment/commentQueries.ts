@@ -16,6 +16,9 @@ export const useGetCommentByPostList = (postId: number) => {
           new Date(b.createAt).getTime() - new Date(a.createAt).getTime(),
       );
     },
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -28,5 +31,8 @@ export const useGetCommentDetail = (commentId: number) => {
       );
       return data;
     },
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };

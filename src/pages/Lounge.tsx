@@ -159,7 +159,7 @@ export default function Lounge() {
         ))}
       </ul>
 
-      {projects.length === 0 && (
+      {projects.length === 0 && !isLoading && (
         <EmptyContent message="모집중인 프로젝트가 없습니다." />
       )}
 
