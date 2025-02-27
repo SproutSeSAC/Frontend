@@ -16,25 +16,29 @@ export default function TableHeaderCell({
   children,
 }: TableHeaderCellProps) {
   const checkboxStyle =
-    name === '체크박스' && '[&>label>input]:mr-0 [&>label>input]:size-5 pl-6';
+    name === '체크박스' && '[&>label>input]:mr-0 [&>label>input]:size-5';
 
   return (
-    <th
-      className={`relative border-b border-mainGray px-1 pb-5 font-medium ${checkboxStyle} ${className}`}
-    >
+    <th className={`relative pb-4 font-normal ${checkboxStyle} ${className}`}>
       {name !== '체크박스' &&
         (onClick ? (
-          <button type="button" onClick={onClick}>
+          <button
+            type="button"
+            onClick={onClick}
+            className="flex w-full items-center justify-center pl-3"
+          >
             <span>{name}</span>
             {Icon && (
-              <Icon className="ml-1 inline size-6 cursor-pointer stroke-2 px-1 text-mainGray" />
+              <Icon className="inline size-5 cursor-pointer stroke-2 px-0.5 text-mainGray" />
             )}
           </button>
         ) : (
-          <div>
-            <span>{name}</span>
+          <div
+            className={`flex w-full items-center ${name === '삭제' ? 'justify-center' : 'pl-1.5'}`}
+          >
+            <span className="block">{name}</span>
             {Icon && (
-              <Icon className="ml-1 inline size-6 cursor-pointer px-1 text-mainGray" />
+              <Icon className="inline size-5 cursor-pointer px-0.5 text-mainGray" />
             )}
           </div>
         ))}

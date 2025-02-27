@@ -53,7 +53,7 @@ export default function ApplicationListOfSessionsCard() {
   ];
 
   return (
-    <div className="mt-2.5 flex h-[172px] w-full items-center justify-center rounded-[20px] bg-white px-6 py-5">
+    <div className="mt-2.5 flex h-[200px] w-full items-center justify-center rounded-[20px] bg-white p-6">
       {1 ? (
         <span className="text-mainGray-hover">
           특강 / 행사 신청 내역이 없어요!
@@ -67,7 +67,7 @@ export default function ApplicationListOfSessionsCard() {
                 text={hasAdminRolesObj[role]}
                 emphasisText
                 color={getColorByRole(role)}
-                className="!px-2 !py-1"
+                className="!px-2 !py-1.5"
               />
               <span className="w-full overflow-hidden truncate">{title}</span>
               <XButton

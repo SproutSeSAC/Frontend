@@ -34,6 +34,7 @@ type UserProfile = {
   role: RoleKey;
   userId: number;
   profileImageUrl: string;
+  phoneNumber: '';
 };
 
 type UpdateableUserProfile = Partial<{

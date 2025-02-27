@@ -1,5 +1,5 @@
 import { useDialogContext } from '@/hooks';
-import { BsTrash } from 'react-icons/bs';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 import SquareButton from '@/components/common/button/SquareButton';
 
@@ -50,7 +50,7 @@ export default function TrashButton({
       onClick={onDeleteClick}
       disabled={disabled}
     >
-      <BsTrash className="h-full w-full" />
+      <FaRegTrashAlt className="h-full w-full" />
     </button>
   );
 }

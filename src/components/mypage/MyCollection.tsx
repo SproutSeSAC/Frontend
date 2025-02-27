@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
-  useGetMyCommentList, // useGetMyCommentList,
   useGetMyPostList,
   useGetMyScrapedPostList,
 } from '@/services/post/myPostQueries';
@@ -29,23 +28,21 @@ import TableHeaderCell from '@/components/common/table/TableHeaderCell';
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import FavoritePostCard from '@/components/user/FavoritePostCard';
 
-export const ITEMS_PER_PAGE = 6;
+export const ITEMS_PER_PAGE = 3;
 
 export default function MyCollection() {
   const queryClient = useQueryClient();
-
-  const [currentPage, setCurrentPage] = useState(1);
 
   const [currCollection, setCurrCollection] =
     useState<Collection>('내가 쓴 게시글');
 
   const [isLatest, setIsLatest] = useState(true);
-
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-
   const [selectedCategoryOptionList, setSelectedCategoryOptionList] =
     useState<Option[]>(myPostTypeOptionList);
   const [checkedPostIdList, setCheckedPostIdList] = useState<number[]>([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: myPostList, isLoading: isMyPostListLoading } =
     useGetMyPostList();
@@ -79,10 +76,6 @@ export default function MyCollection() {
     },
   });
 
-  const { data: myCommentList } = useGetMyCommentList();
-
-  console.log(myCommentList);
-
   const { data: myScrapedPostList } = useGetMyScrapedPostList();
 
   const changeCollection = (contentType: Collection) => {
@@ -98,6 +91,7 @@ export default function MyCollection() {
           checkedPostIdList.length !== 0 ? [] : postList,
         );
       },
+      className: 'pl-6',
     },
     {
       name: '작성일',
@@ -112,7 +106,7 @@ export default function MyCollection() {
     { name: '글제목' },
     {
       name: '삭제',
-      className: 'text-end pr-7',
+      className: 'pr-6',
     },
   ];
 
@@ -140,97 +134,96 @@ export default function MyCollection() {
   };
 
   return (
-    <div className="flex min-h-[500px] flex-col rounded-lg bg-white py-5 shadow-card">
-      <header className="flex items-center justify-between gap-3 pl-4 pr-5">
-        <ul className="flex flex-1 gap-2">
-          {myCollectionList.map(collection => (
-            <li key={collection}>
-              <button
-                type="button"
-                aria-label={collection}
-                onClick={() => changeCollection(collection)}
-                className={`${currCollection === collection && 'rounded-lg bg-mainGreen font-semibold text-white underline'} cursor-pointer px-4 py-2`}
-              >
-                {collection}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <TrashButton className="px-1.5 py-2" />
-      </header>
+    <>
+      <ul className="mb-4 mt-6 flex items-center gap-3">
+        {myCollectionList.map(collection => (
+          <li key={collection}>
+            <button
+              type="button"
+              aria-label={collection}
+              onClick={() => changeCollection(collection)}
+              className={`${currCollection === collection ? 'bg-mainGray-hover text-white underline' : 'bg-white text-darkGray-active'} cursor-pointer rounded-lg border border-mainGray-hover px-4 py-[10px] text-sm font-medium`}
+            >
+              {collection}
+            </button>
+          </li>
+        ))}
+      </ul>
 
-      {!isMyPostListLoading && (
-        <table className="my-4 border-separate border-spacing-y-3">
-          <colgroup>
-            <col width="3%" />
-            <col width="12%" />
-            <col width="12%" />
-            <col width="45%" />
-            <col width="10%" />
-          </colgroup>
+      {/* 내가 쓴 게시글, 내가 쓴 댓글 */}
+      <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white py-6 shadow-card">
+        {!isMyPostListLoading && paginationList?.length !== 0 && (
+          <table>
+            <colgroup>
+              <col width="3%" />
+              <col width="13%" />
+              <col width="15%" />
+              <col width="60%" />
+              <col width="8%" />
+            </colgroup>
 
-          <thead>
-            <tr className="text-left">
-              {headerCellList.map(
-                ({ name, icon, onClick, onChange, className }) => (
-                  <TableHeaderCell
-                    key={name}
-                    name={name}
-                    className={className}
-                    icon={icon}
-                    onClick={onClick}
-                  >
-                    {name === '체크박스' && onChange && (
-                      <Checkbox
-                        id={name}
-                        checked={checkedPostIdList.length === ITEMS_PER_PAGE}
-                        onChange={onChange}
-                      />
-                    )}
-                    {name === '분류' && isCategoryOpen && (
-                      <ul className="absolute -left-2 top-8 flex flex-col gap-y-2 rounded-xl border border-mainGray bg-white px-4 py-3 shadow-card">
-                        {myPostTypeOptionList.map(option => (
-                          <li key={option.id} className="flex items-center">
-                            <Checkbox
-                              id={option.key || '분류'}
-                              checked={selectedCategoryOptionList.some(
-                                ({ key }) => key === option.key,
-                              )}
-                              onChange={() => {
-                                setSelectedCategoryOptionList(prev => {
-                                  if (
-                                    prev.find(({ key }) => key === option.key)
-                                  )
-                                    return prev.filter(
-                                      ({ key }) => key !== option.key,
-                                    );
-                                  return [...prev, option];
-                                });
-                              }}
-                            />
-                            <span className="pt-1">{option.name}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </TableHeaderCell>
-                ),
-              )}
-            </tr>
-          </thead>
+            <thead>
+              <tr className="text-center">
+                {headerCellList.map(
+                  ({ name, icon, onClick, onChange, className }) => (
+                    <TableHeaderCell
+                      key={name}
+                      name={name}
+                      className={className}
+                      icon={icon}
+                      onClick={onClick}
+                    >
+                      {name === '체크박스' && onChange && (
+                        <Checkbox
+                          id={name}
+                          checked={checkedPostIdList.length === ITEMS_PER_PAGE}
+                          onChange={onChange}
+                          inputClassName="!rounded-lg"
+                        />
+                      )}
+                      {name === '분류' && isCategoryOpen && (
+                        <ul className="absolute -left-2 top-8 flex flex-col gap-y-2 rounded-xl border border-mainGray bg-white px-4 py-3 shadow-card">
+                          {myPostTypeOptionList.map(option => (
+                            <li key={option.id} className="flex items-center">
+                              <Checkbox
+                                id={option.key || '분류'}
+                                checked={selectedCategoryOptionList.some(
+                                  ({ key }) => key === option.key,
+                                )}
+                                onChange={() => {
+                                  setSelectedCategoryOptionList(prev => {
+                                    if (
+                                      prev.find(({ key }) => key === option.key)
+                                    )
+                                      return prev.filter(
+                                        ({ key }) => key !== option.key,
+                                      );
+                                    return [...prev, option];
+                                  });
+                                }}
+                              />
+                              <span className="pt-1">{option.name}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </TableHeaderCell>
+                  ),
+                )}
+              </tr>
+            </thead>
 
-          <tbody>
-            {currCollection === '내가 쓴 게시글' &&
-              paginationList?.length !== 0 &&
-              paginationList
-                ?.slice(0, 6)
-                ?.map(({ postId, postType, createdAt, title, linkedId }) => (
+            <tbody>
+              {paginationList
+                .slice(0, 6)
+                .map(({ postId, postType, createdAt, title, linkedId }) => (
                   <tr key={postId} className="hover:bg-gray4 group">
                     <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
                       <Checkbox
                         id={postType}
                         checked={!!checkedPostIdList.includes(postId)}
                         onChange={() => onCheckboxChange(postId)}
+                        inputClassName="!rounded-lg"
                       />
                     </TableDataCell>
 
@@ -240,11 +233,11 @@ export default function MyCollection() {
 
                     <TableDataCell>{myPostType[postType]}</TableDataCell>
 
-                    <TableDataCell className="max-w-[0px] overflow-hidden truncate">
+                    <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-3 text-start">
                       {postType === 'PROJECT' && (
                         <Link
                           to={`/lounge/post/${postId}`}
-                          className="text-blue-600 underline"
+                          className="underline"
                         >
                           {title}
                         </Link>
@@ -252,7 +245,7 @@ export default function MyCollection() {
                       {postType === 'MEAL' && (
                         <button
                           type="button"
-                          className="text-blue-600 underline"
+                          className="underline"
                           onClick={() => {
                             handleShowDialog(linkedId);
                           }}
@@ -262,7 +255,7 @@ export default function MyCollection() {
                       )}
                     </TableDataCell>
 
-                    <TableDataCell className="pr-5 text-end [&>button]:px-2">
+                    <TableDataCell className="pr-6 [&>button]:px-2">
                       <TrashButton
                         className="px-1.5 py-2"
                         onConfirmClick={() => onDeleteConfirmClick([postId])}
@@ -270,52 +263,18 @@ export default function MyCollection() {
                     </TableDataCell>
                   </tr>
                 ))}
+            </tbody>
+          </table>
+        )}
 
-            {/* {currCollection === '내가 쓴 댓글' &&
-              myCommentList?.length !== 0 &&
-              myCommentList?.map(({ postId, content, commentId }) => (
-                <tr key={commentId} className="hover:bg-gray4 group">
-                  <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
-                    <Checkbox
-                      id="체크박스"
-                      checked={!!checkedPostIdList.includes(postId)}
-                      onChange={() => onCheckboxChange(postId)}
-                    />
-                  </TableDataCell>
-
-                  <TableDataCell>
-                    {formatDate(new Date(), 'yy.MM.dd')}
-                  </TableDataCell>
-
-                  <TableDataCell className="text-center">
-                    {postId}
-                  </TableDataCell>
-
-                  <TableDataCell>댓글</TableDataCell>
-
-                  <TableDataCell className="max-w-[0px] overflow-hidden truncate">
-                    {content}
-                  </TableDataCell>
-
-                  <TableDataCell className="pr-5 text-end [&>button]:px-2">
-                    <TrashButton
-                      className="px-1.5 py-2"
-                      onConfirmClick={() => onDeleteConfirmClick([postId])}
-                    />
-                  </TableDataCell>
-                </tr>
-              ))} */}
-          </tbody>
-        </table>
-      )}
-
-      {currCollection === '내가 찜한 글' && (
-        <ul className="flex gap-4 p-8">
-          {myScrapedPostList?.map(card => (
-            <FavoritePostCard key={card.postScrapId} />
-          ))}
-        </ul>
-      )}
+        {currCollection === '내가 찜한 글' && (
+          <ul className="flex gap-4 p-8">
+            {myScrapedPostList?.map(card => (
+              <FavoritePostCard key={card.postScrapId} />
+            ))}
+          </ul>
+        )}
+      </div>
 
       {filteredAndOrderedPostList?.length !== 0 && (
         <Pagination
@@ -326,6 +285,6 @@ export default function MyCollection() {
           onPageChange={(pageNum: number) => setCurrentPage(pageNum)}
         />
       )}
-    </div>
+    </>
   );
 }

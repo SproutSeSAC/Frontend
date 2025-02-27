@@ -8,7 +8,7 @@ interface Props {
 export default function TableDataCell({ children, className }: Props) {
   return (
     <td
-      className={`border-b border-lightGray-active px-1.5 py-4 [&:first-child]:group-hover:rounded-l-lg [&:last-child]:group-hover:rounded-r-lg ${className}`}
+      className={`py-2 text-center text-[15px] text-darkGray [&:first-child]:group-hover:rounded-l-lg [&:last-child]:group-hover:rounded-r-lg ${className}`}
     >
       {children}
     </td>
