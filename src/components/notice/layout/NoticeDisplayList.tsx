@@ -22,11 +22,14 @@ export default function NoticeDisplayList({
 
   const { data = { pages: [{ notices: [] }] } } = useGetInfiniteNoticeList({
     page: 1,
-    size: 3,
+    size: 20,
   });
 
+  // const { data: closeSoonNoticeList, isLoading: isCloseSoonNoticeList } =
+  //   useGetCloseSoonNoticeList();
+
   const noticeObj: { [key in NoticeTitle]: NoticeDisplay[] } = {
-    공지사항: data.pages[0].notices,
+    공지사항: data.pages[0].notices.slice(0, 4),
     마감임박: [],
     NEW: thisWeekNoticeList,
   }; // NOTE: 데이터 작업 예정
@@ -50,8 +53,8 @@ export default function NoticeDisplayList({
         ))}
     </ul>
   ) : (
-    <span className="h-full text-mainGray-active">
-      {title} 공지사항이 없습니다.
+    <span className="mt-20 flex items-center justify-center text-center text-mainGray-hover">
+      곧 새로운 소식이 올라올 예정이에요!
     </span>
   );
 }

@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import { SessionStatus } from '@/constants/serviceConstant';
-import { AxiosResponse } from 'axios';
 
 interface Participant {
   postParticipantid: number;
@@ -13,7 +12,7 @@ interface Participant {
 // 나의 세션 참가신청글
 export const useGetMyParticipationList = () => {
   const getMyParticipationList = async () => {
-    const { data }: AxiosResponse<Participant[]> = await axiosInstance.get(
+    const { data } = await axiosInstance.get<Participant[]>(
       `/mypage/getParticipant`,
     );
     return data;

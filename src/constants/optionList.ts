@@ -35,3 +35,10 @@ export const myPostTypeOptionList: Option[] = [
   { id: 2, name: '프로젝트', key: 'PROJECT' },
   { id: 3, name: '스터디', key: 'STUDY' },
 ];
+
+export const myCommentTypeOptionList: Option[] = [
+  { id: 1, name: '프로젝트', key: 'PROJECT' },
+  { id: 2, name: '스터디', key: 'STUDY' },
+  { id: 3, name: '공지사항', key: 'NOTICE' },
+  { id: 4, name: '맛집', key: 'STORE' },
+];

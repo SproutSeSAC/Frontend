@@ -22,17 +22,17 @@ export default function UserNameImageCard({ data }: UserNameImageProps) {
   };
 
   return (
-    <div className="relative flex items-center gap-7 rounded-xl bg-mainGreen px-6 py-10 shadow-card">
-      <UserImage imageNameSegment={profileUrl} className="size-[100px]" />
+    <div className="relative flex h-[200px] items-center justify-between gap-7 rounded-[20px] bg-white px-9 py-10">
+      <UserImage imageNameSegment={profileUrl} className="size-[70px]" />
 
-      <div className="flex flex-col gap-2">
-        <span className="text-2xl font-medium text-white">{name}</span>
-        <span className="text-lightGreen-active">{nickname}</span>
+      <div className="flex flex-1 flex-col gap-2">
+        <span className="font-medium">{name}</span>
+        <span className="text-darkGray">@{nickname}</span>
       </div>
 
       <EditButton
         label="프로필 수정 버튼"
-        className="absolute right-3 top-3 text-white"
+        className="pb-10"
         onClick={openModalClick}
       />
     </div>

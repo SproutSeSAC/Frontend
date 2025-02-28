@@ -71,7 +71,7 @@ export const useGetThisWeekNoticeList = () => {
 
     const thisWeekNotice = data.notices
       .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
-      .slice(0, 3);
+      .slice(0, 4);
 
     return thisWeekNotice;
   };
@@ -79,6 +79,22 @@ export const useGetThisWeekNoticeList = () => {
   return useQuery({
     queryKey: ['useGetThisWeekNoticeList'],
     queryFn: getThisWeekNotice,
+    retry: false,
+  });
+};
+
+export const useGetCloseSoonNoticeList = () => {
+  const getEndingSoonNoticeList = async () => {
+    const { data } = await axiosInstance.get<NoticeDto.GetCloseSoonNoticeList>(
+      `/notices/ending-tomorrow`,
+      { params: { size: 20 } },
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetCloseSoonNoticeList'],
+    queryFn: getEndingSoonNoticeList,
     retry: false,
   });
 };

@@ -25,7 +25,7 @@ export default function MealRecruitCardModal({
   const { hideDialog, showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
-  const { data } = useGetMealPostDetail(id);
+  const { data, isLoading } = useGetMealPostDetail(id);
 
   const { mutateAsync } = usePutMealPost();
 
@@ -38,68 +38,67 @@ export default function MealRecruitCardModal({
       });
       hideDialog();
     } catch (err) {
-      console.error(err);
       showToast('참여요청을 실패했습니다.');
       hideDialog();
     }
   }, [hideDialog, id, mutateAsync, queryClient, showToast]);
 
   return (
-    <Modal
-      className="main-w-[284px] px-8 py-10"
-      onToggleClick={hideDialog}
-      hideClose
-      title={
-        <div className="text-base font-semibold">{data?.title || '-'}</div>
-      }
-    >
-      <div className="mt-1 flex flex-col gap-2 rounded-lg bg-lightGray px-3 py-[17px] text-sm">
-        <div className="flex items-center">
-          <span className="meal-recruit-text-divider text-darkGray-active">
-            일정
-          </span>
+    !isLoading && (
+      <Modal
+        className="main-w-[284px] px-8 py-10"
+        onToggleClick={hideDialog}
+        hideClose
+        title={
+          <div className="text-base font-semibold">{data?.title || '-'}</div>
+        }
+      >
+        <div className="mt-1 flex flex-col gap-2 rounded-lg bg-lightGray px-3 py-[17px] text-sm">
+          <div className="flex items-center">
+            <span className="meal-recruit-text-divider text-darkGray-active">
+              일정
+            </span>
 
-          <span className="flex flex-1 gap-1 overflow-hidden">
-            {data
-              ? `${formatDate(data.appointmentTime, 'yyyy.MM.dd a h시 mm분')}`
-              : '-'}
-          </span>
+            <span className="flex flex-1 gap-1 overflow-hidden">
+              {data
+                ? `${formatDate(data.appointmentTime, 'yyyy.MM.dd a h시 mm분')}`
+                : '-'}
+            </span>
+          </div>
+
+          <div className="flex items-center">
+            <span className="meal-recruit-text-divider text-darkGray-active">
+              식당
+            </span>
+
+            <span className="flex flex-1 gap-1 overflow-hidden">
+              {data?.storeName || '-'}
+            </span>
+          </div>
+
+          <div className="flex items-center">
+            <span className="meal-recruit-text-divider text-darkGray-active">
+              위치
+            </span>
+
+            <span className="flex flex-1 gap-1 overflow-hidden">
+              {data?.meetingPlace || '-'}
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center">
-          <span className="meal-recruit-text-divider text-darkGray-active">
-            식당
-          </span>
+        <div className="mt-6">
+          <div className="text-sm text-darkGray-active">{`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}</div>
 
-          <span className="flex flex-1 gap-1 overflow-hidden">
-            {data?.storeName || '-'}
-          </span>
-        </div>
-
-        <div className="flex items-center">
-          <span className="meal-recruit-text-divider text-darkGray-active">
-            위치
-          </span>
-
-          <span className="flex flex-1 gap-1 overflow-hidden">
-            {data?.meetingPlace || '-'}
-          </span>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <div className="text-sm text-darkGray-active">{`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}</div>
-
-        <ul className="mt-3 flex flex-col gap-3">
-          {(data?.members || []).map(member => {
-            return (
-              <li key={member.userId} className="flex gap-2.5">
-                <UserImage
-                  className="size-10"
-                  imageNameSegment={member.imgUrl}
-                />
-                <div className="w-full">
-                  <div className="flex items-center justify-between gap-9">
+          <ul className="mt-3 flex flex-col gap-3">
+            {(data?.members || []).map(member => {
+              return (
+                <li key={member.userId} className="flex items-center gap-2.5">
+                  <UserImage
+                    className="size-10"
+                    imageNameSegment={member.imgUrl}
+                  />
+                  <div className="flex w-full items-center justify-between gap-9">
                     <span className="text-sm">{member.nickname}</span>
                     {member.isOwner && (
                       <div className="flex items-center justify-between gap-1 rounded bg-[#FEFAE0] px-1.5 py-1 text-xs text-[#FF6D28]">
@@ -108,31 +107,30 @@ export default function MealRecruitCardModal({
                       </div>
                     )}
                   </div>
-                  <div className="text-xs text-mainGray">디자인</div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
-      <div className="mt-6 flex gap-3">
-        <SquareButton
-          type="button"
-          className={`${isParticipant && 'flex-1'}`}
-          onClick={hideDialog}
-          color="gray"
-          name="나가기"
-        />
-        {!isParticipant && (
+        <div className="mt-6 flex gap-3">
           <SquareButton
             type="button"
-            name="참여하기"
-            className="w-full flex-1"
-            onClick={handleJoinClick}
+            className={`${isParticipant && 'flex-1'}`}
+            onClick={hideDialog}
+            color="gray"
+            name="나가기"
           />
-        )}
-      </div>
-    </Modal>
+          {!isParticipant && (
+            <SquareButton
+              type="button"
+              name="참여하기"
+              className="w-full flex-1"
+              onClick={handleJoinClick}
+            />
+          )}
+        </div>
+      </Modal>
+    )
   );
 }

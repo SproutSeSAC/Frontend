@@ -38,7 +38,7 @@ export default function Title({
 }: TitleProps) {
   const titleStyleObj: TitleStyleObj = {
     h1: 'text-2xl font-semibold',
-    h2: 'pl-2 text-xl font-semibold',
+    h2: 'text-xl font-semibold',
   };
 
   const titleStyle = titleStyleObj[`${DynamicTitleTag}`];

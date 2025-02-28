@@ -53,14 +53,16 @@ function Pagination({
         aria-label="이전 페이지로 이동"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="disabled:text-mainGray"
+        className="flex size-6 items-center justify-center rounded-full bg-[#e9e9e9]"
       >
-        <Icon name="ChevronLeft" className="size-5" />
+        <Icon name="ChevronLeft" className="size-2.5 text-darkGray-hover" />
       </button>
 
       {pageNumbers[0] > 1 && (
         <>
-          <button onClick={() => onPageChange(1)}>1</button>
+          <button onClick={() => onPageChange(1)} className="text-sm">
+            1
+          </button>
           {pageNumbers[0] !== 2 && <span>...</span>}
         </>
       )}
@@ -69,7 +71,7 @@ function Pagination({
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`${currentPage === page ? 'text-black' : 'text-mainGray'}`}
+          className={`${currentPage === page ? 'text-black' : 'text-mainGray'} text-sm`}
         >
           {page}
         </button>
@@ -80,10 +82,7 @@ function Pagination({
           {pageNumbers[pageNumbers.length - 1] !== totalPages - 1 && (
             <span>...</span>
           )}
-          <button
-            className="disabled:text-mainGray"
-            onClick={() => onPageChange(totalPages)}
-          >
+          <button className="text-sm" onClick={() => onPageChange(totalPages)}>
             {totalPages}
           </button>
         </>
@@ -94,9 +93,9 @@ function Pagination({
         aria-label="다음 페이지로 이동"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="disabled:text-mainGray"
+        className="flex size-6 items-center justify-center rounded-full bg-[#e9e9e9]"
       >
-        <Icon name="ChevronRight" className="size-5" />
+        <Icon name="ChevronRight" className="size-2.5 text-darkGray-hover" />
       </button>
     </div>
   );

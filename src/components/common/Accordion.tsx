@@ -28,7 +28,7 @@ export default function Accordion({
   return (
     <li className={`mb-2 rounded-md bg-white ${className}`}>
       <div className={`flex items-center justify-between ${titleClassName}`}>
-        <h3 className="font-medium">{title}</h3>
+        <h3 className="text-base font-normal text-darkGray-active">{title}</h3>
         <button
           type="button"
           aria-label={isOpen ? '아코디언 접기' : '아코디언 펼치기'}

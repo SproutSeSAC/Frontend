@@ -63,13 +63,12 @@ export const useCalendarEvents = () => {
   // 사이드뷰의 근시일 이벤트 목록
   const fullCalendarSideViewEvents: FullCalendarEvent[] = useMemo(() => {
     const eventList = getEventList(createdCourseCalendarEventList);
+    const courseEventList = changeFullCalendarEvents(eventList);
 
     const today = new Date();
     today.setDate(today.getDate() - 1);
 
-    const sideViewEventList = changeFullCalendarEvents(eventList);
-
-    return sideViewEventList
+    return courseEventList
       ?.filter(event => {
         const eventDate = new Date(event.start);
         return eventDate >= today;
