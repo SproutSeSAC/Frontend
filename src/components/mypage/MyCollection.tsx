@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
+  // useGetMyCommentList,
   useGetMyPostList,
   useGetMyScrapedPostList,
 } from '@/services/post/myPostQueries';
@@ -51,6 +52,8 @@ export default function MyCollection() {
 
   // const { data: myCommentList, isLoading: isMyCommentListLoading } =
   //   useGetMyCommentList();
+
+  // console.log(myCommentList);
 
   const filteredAndOrderedPostList = useMemo(() => {
     const filteredList = myPostList?.filter(post => {
@@ -168,11 +171,12 @@ export default function MyCollection() {
             </li>
           ))}
         </ul>
-        {currCollection === '내가 찜한 글' && (
-          <Link to="/notice" className="mt-3 text-darkGray">
-            더보기
-          </Link>
-        )}
+        {currCollection === '내가 찜한 글' &&
+          myScrapedPostList?.content.length !== 0 && (
+            <Link to="/notice" className="mt-3 text-darkGray">
+              더보기
+            </Link>
+          )}
       </div>
 
       {/* 내가 쓴 게시글, 내가 쓴 댓글 */}
@@ -331,13 +335,19 @@ export default function MyCollection() {
         </>
       )}
 
-      {!isMyScrapedPostListLoading && currCollection === '내가 찜한 글' && (
-        <ul className="flex gap-5">
-          {myScrapedPostList?.content?.map(card => (
-            <ScrapedPostCard key={card.postId} card={card} />
-          ))}
-        </ul>
-      )}
+      {!isMyScrapedPostListLoading &&
+        currCollection === '내가 찜한 글' &&
+        (myScrapedPostList?.content.length !== 0 ? (
+          <ul className="grid grid-cols-3 gap-5">
+            {myScrapedPostList?.content
+              ?.slice(0, 3)
+              ?.map(card => <ScrapedPostCard key={card.postId} card={card} />)}
+          </ul>
+        ) : (
+          <div className="w- flex h-[238px] items-center justify-center rounded-[20px] border bg-white p-3">
+            <span className="text-darkGray">아직 찜한 글이 없어요!</span>
+          </div>
+        ))}
     </>
   );
 }

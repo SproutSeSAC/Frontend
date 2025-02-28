@@ -4,6 +4,7 @@ interface FavoriteButtonProps {
   size?: number | string;
   isFavorite: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  disabled?: boolean;
 }
 
 /**
@@ -15,9 +16,10 @@ export default function FavoriteButton({
   size = 26,
   isFavorite,
   onClick,
+  disabled,
 }: FavoriteButtonProps) {
   return (
-    <button type="button" onClick={onClick}>
+    <button type="button" onClick={onClick} disabled={disabled}>
       {isFavorite ? (
         <BsHeartFill size={size} className="cursor-pointer text-mainGreen" />
       ) : (

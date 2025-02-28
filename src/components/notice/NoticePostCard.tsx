@@ -22,11 +22,12 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     return doc.body.textContent || '-';
   }, []);
 
-  const { onScrapClick } = useHandleScrap({
-    postId: notice.postId,
-    isScraped: notice.isScraped,
-    invalidateQueryKeys: ['useGetInfiniteNoticeList'],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId: notice.postId,
+      isScraped: notice.isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetInfiniteNoticeList'] }],
+    });
 
   return (
     <Link
@@ -50,6 +51,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
             isFavorite={notice.isScraped}
             onClick={onScrapClick}
             size={20}
+            disabled={isPostScrapPending || isDeleteScrapPending}
           />
         </div>
       </div>

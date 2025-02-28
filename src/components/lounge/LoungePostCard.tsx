@@ -45,11 +45,12 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
 
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
 
-  const { onScrapClick } = useHandleScrap({
-    postId,
-    isScraped,
-    invalidateQueryKeys: ['useGetLoungeProjectList'],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId,
+      isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetLoungeProjectList'] }],
+    });
 
   const onViewCount = useCallback(async () => {
     await postViewCount({ projectId: id });
@@ -76,6 +77,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
             isFavorite={isScraped}
             onClick={onScrapClick}
             size={20}
+            disabled={isPostScrapPending || isDeleteScrapPending}
           />
         </div>
       </div>

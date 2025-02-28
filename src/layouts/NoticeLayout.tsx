@@ -39,7 +39,7 @@ export default function NoticeLayout() {
           name="특강/행사 신청 내역 보기"
           className="mt-6 w-full !py-3 font-semibold"
           onClick={() => {
-            navigate('/application-status-for-sessions');
+            navigate('/admin/application-status-for-sessions');
           }}
         />
       </SideView>

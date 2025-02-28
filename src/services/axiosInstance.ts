@@ -57,9 +57,11 @@ axiosInstance.interceptors.response.use(
         const response = await getNewAccessToken();
         if (response?.status && response.status !== 200)
           return redirectToLogin();
+
         const newAccessToken = response.data.access_token;
         originalRequest.headers['Access-Token'] = newAccessToken;
         setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
+
         return axiosInstance(originalRequest);
       };
 

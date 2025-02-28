@@ -51,11 +51,12 @@ export default function NoticeDetail() {
     },
   });
 
-  const { onScrapClick } = useHandleScrap({
-    postId,
-    isScraped: !!noticeDetail?.isScraped,
-    invalidateQueryKeys: ['useGetPostDetail'],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId,
+      isScraped: !!noticeDetail?.isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetPostDetail', postId] }],
+    });
 
   const navigate = useNavigate();
 
@@ -137,6 +138,7 @@ export default function NoticeDetail() {
                 isFavorite={noticeDetail?.isScraped ?? false}
                 onClick={onScrapClick}
                 size={24}
+                disabled={isPostScrapPending || isDeleteScrapPending}
               />
             </header>
 

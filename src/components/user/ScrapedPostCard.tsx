@@ -1,6 +1,9 @@
 import { useCallback } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { serviceType } from '@/constants/serviceConstant';
+import { useHandleScrap } from '@/hooks';
 import { MyScrapedPost } from '@/types/mypage/myPostDto';
 import { getColorByPostType } from '@/utils';
 
@@ -19,35 +22,49 @@ export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {
     return doc.body.textContent || '-';
   }, []);
 
-  return (
-    <li className="h-[238px] w-full rounded-3xl border bg-white p-5">
-      <div className="mb-4 flex items-center justify-between">
-        <Tag
-          size="big"
-          color={getColorByPostType(card.postType)}
-          text={`#${serviceType[card.postType]}`}
-          className="py-1.5"
-        />
-        <FavoriteButton size={20} isFavorite onClick={() => {}} />
-      </div>
-      <h3 className="mb-2 tracking-tight">{card.title}</h3>
-      <p className="line-clamp-2 flex-1 tracking-tight text-mainGray-active">
-        {stripHTML(card.content)} Lorem ipsum dolor sit amet consectetur
-        adipisicing elit. Animi in totam sit, optio architecto vel eos assumenda
-        sunt impedit accusamus molestiae incidunt facere vitae quis reiciendis,
-        error itaque deleniti et!
-      </p>
+  const { onScrapClick, isDeleteScrapPending, isIdle } = useHandleScrap({
+    postId: card.postId,
+    isScraped: true,
+    invalidateQueryKeys: [{ queryKey: ['useGetMyScrapedPostList'] }],
+  });
 
-      <div className="mt-6 flex items-center gap-x-3">
-        <UserImage
-          className="size-12"
-          imageNameSegment={card.writer.profileImg}
-        />
-        <div className="flex flex-col">
-          <span className="text-sm">{card.writer.name}</span>
-          <span className="text-xs opacity-60">@{card.writer.nickname}</span>
+  return (
+    <li className="flex h-[238px] w-full flex-col justify-between rounded-3xl bg-white">
+      <Link
+        to={`/${card.postType.toLocaleLowerCase()}/post/${card.postId}`}
+        className="flex h-full flex-col justify-between p-5"
+      >
+        <div className="flex items-center justify-between">
+          <Tag
+            size="medium"
+            color={getColorByPostType(card.postType)}
+            text={`#${serviceType[card.postType]}`}
+            className="py-1.5"
+          />
+          <FavoriteButton
+            size={20}
+            isFavorite
+            onClick={onScrapClick}
+            disabled={isDeleteScrapPending || !isIdle}
+          />
         </div>
-      </div>
+        <h3 className="my-2 tracking-tight">{card.title}</h3>
+
+        <p className="line-clamp-2 h-14 py-1 tracking-tight text-mainGray-active">
+          {stripHTML(card.content)}
+        </p>
+
+        <div className="mt-3 flex items-center gap-x-3">
+          <UserImage
+            className="size-12"
+            imageNameSegment={card.writer.profileImg}
+          />
+          <div className="flex flex-col">
+            <span className="text-sm">{card.writer.name}</span>
+            <span className="text-xs opacity-60">@{card.writer.nickname}</span>
+          </div>
+        </div>
+      </Link>
     </li>
   );
 }

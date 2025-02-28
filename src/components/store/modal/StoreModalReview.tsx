@@ -54,7 +54,7 @@ export default function StoreModalReview({
   const { data: { profileImageUrl } = initialUserProfile } =
     useGetUserProfile();
 
-  const { control, handleSubmit, reset, getValues } = useForm<FormValues>({
+  const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
       rating: 0,
       review: '',
@@ -76,11 +76,10 @@ export default function StoreModalReview({
         showToast('댓글을 등록했어요!', 1000);
         reset();
         queryClient.invalidateQueries({
-          queryKey: ['useGetStoreDetail'],
+          queryKey: ['useGetStoreDetail', storeId],
         });
       } catch (err) {
-        console.error(err);
-        showToast('댓글을 등록하지 못했어요..');
+        showToast('댓글을 등록하지 못했어요.');
       }
     },
     [mutateAsync, queryClient, reset, showToast, storeId],
@@ -88,17 +87,13 @@ export default function StoreModalReview({
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
     err => {
-      console.error('hook form error >>', {
-        data: getValues(),
-        error: err,
-      });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
 
       if (firstErrorMessage) {
         showToast(firstErrorMessage);
       }
     },
-    [getValues, showToast],
+    [showToast],
   );
 
   return (

@@ -58,13 +58,12 @@ export default function StoreCard({
 
   const { showDialog } = useDialogContext();
 
-  console.log(storeData);
-
-  const { onScrapClick } = useHandleScrap({
-    postId: storeData.postId,
-    isScraped: false,
-    invalidateQueryKeys: [''],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId: storeData.postId,
+      isScraped: storeData?.isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
+    });
 
   const isOpen = useCallback((): boolean => {
     const parseTimeString = (timeString: string) => {
@@ -153,8 +152,9 @@ export default function StoreCard({
           {showFavoriteButton && (
             <FavoriteButton
               size={18}
-              isFavorite={storeData.isScrap}
+              isFavorite={storeData.isScraped}
               onClick={onScrapClick}
+              disabled={isPostScrapPending || isDeleteScrapPending}
             />
           )}
         </header>

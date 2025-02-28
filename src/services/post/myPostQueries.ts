@@ -18,10 +18,15 @@ export const useGetMyPostList = () => {
 
 export const useGetMyScrapedPostList = () => {
   const getMyScrapedPostList = async () => {
-    const { data } =
-      await axiosInstance.get<myPostDto.GetMyScrapedPostList>(
-        `/mypage/getScrap`,
-      );
+    const { data } = await axiosInstance.get<myPostDto.GetMyScrapedPostList>(
+      `/mypage/getScrap`,
+      {
+        params: {
+          page: 0,
+          size: 20,
+        },
+      },
+    );
     return data;
   };
   return useQuery({
