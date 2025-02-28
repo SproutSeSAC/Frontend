@@ -32,7 +32,6 @@ export const useGetCourseList = (
     queryKey: ['courseList', campusId],
     queryFn: getCourseList,
     enabled: !!campusId,
-    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,
@@ -73,7 +72,6 @@ export const useGetCampusList = (
   return useQuery<CampusListData['campusList']>({
     queryKey: ['useGetCampusList'],
     queryFn: getCampusList,
-    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,

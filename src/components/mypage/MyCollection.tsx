@@ -92,8 +92,6 @@ export default function MyCollection() {
   const { data: myScrapedPostList, isLoading: isMyScrapedPostListLoading } =
     useGetMyScrapedPostList();
 
-  console.log(myScrapedPostList);
-
   const changeCollection = (contentType: Collection) => {
     setCurrCollection(contentType);
   };

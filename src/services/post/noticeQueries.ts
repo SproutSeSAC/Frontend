@@ -79,7 +79,6 @@ export const useGetThisWeekNoticeList = () => {
   return useQuery({
     queryKey: ['useGetThisWeekNoticeList'],
     queryFn: getThisWeekNotice,
-    retry: false,
   });
 };
 
@@ -95,6 +94,5 @@ export const useGetCloseSoonNoticeList = () => {
   return useQuery({
     queryKey: ['useGetCloseSoonNoticeList'],
     queryFn: getEndingSoonNoticeList,
-    retry: false,
   });
 };

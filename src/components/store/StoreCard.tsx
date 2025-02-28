@@ -58,8 +58,10 @@ export default function StoreCard({
 
   const { showDialog } = useDialogContext();
 
+  console.log(storeData);
+
   const { onScrapClick } = useHandleScrap({
-    postId: 0, // NOTE: 수정
+    postId: storeData.postId,
     isScraped: false,
     invalidateQueryKeys: [''],
   });

@@ -1,6 +1,7 @@
 import { FoodFilterDisplayKey } from '@/types/lounge';
 
 export interface Store {
+  postId: number;
   id: number;
   name: string;
   workingDay: string;
