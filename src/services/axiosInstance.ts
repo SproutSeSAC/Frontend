@@ -18,6 +18,7 @@ import axios, {
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_API_URL,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
