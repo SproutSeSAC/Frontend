@@ -29,6 +29,8 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
     deleteComment,
   } = useHandleComment({ postId, reset });
 
+  console.log(postId);
+
   return (
     <section className="mb-24 mt-10">
       <header className="flex gap-2 text-2xl font-semibold">

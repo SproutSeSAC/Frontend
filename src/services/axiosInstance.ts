@@ -27,8 +27,6 @@ axiosInstance.interceptors.request.use(
     const accessToken = getCookie(ACCESS_TOKEN_KEY);
     const refreshToken = getCookie(REFRESH_TOKEN_KEY);
 
-    console.log(accessToken);
-
     if (accessToken) {
       headers.set('Access-Token', accessToken);
     }

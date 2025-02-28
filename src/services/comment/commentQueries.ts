@@ -6,7 +6,7 @@ import { CommentDetail } from '@/types/mypage/myPostDto';
 
 export const useGetCommentByPostList = (postId: number) => {
   return useQuery({
-    queryKey: ['useGetCommentByPostList'],
+    queryKey: ['useGetCommentByPostList', postId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<CommentDetail[]>(
         `/posts/${postId}/comments`,
