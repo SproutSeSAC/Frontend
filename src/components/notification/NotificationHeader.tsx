@@ -14,10 +14,10 @@ export default function NotificationHeader({
         <button
           type="button"
           aria-label="접어두기"
-          className="flex size-12 items-center justify-center rounded-lg border border-solid border-lightGray bg-white text-mainGray"
+          className="flex size-12 items-center justify-center rounded-lg border border-solid border-[#E9E9E9] bg-white text-mainGray"
           onClick={handleClose}
         >
-          <Icon name="ChevronRight" />
+          <Icon name="ChevronRight" className="fill-darkGray" />
         </button>
         <div className="w-full flex-1 py-3 text-center text-lg font-semibold text-black">
           알림
