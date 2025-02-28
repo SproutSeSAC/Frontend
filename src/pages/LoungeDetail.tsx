@@ -11,6 +11,7 @@ import { ptypeDisplay } from '@/constants';
 import { useHandleImage, useHandlePostActions, useHandleScrap } from '@/hooks';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 
+import LoopLoading from '@/components/common/LoopLoading';
 import BackButton from '@/components/common/button/BackButton';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import CommentTemplate from '@/components/common/post-template/CommentTemplate';
@@ -26,7 +27,7 @@ export default function LoungeDetail() {
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { data: postDetail } =
+  const { data: postDetail, isLoading: isPostDetailLoading } =
     useGetPostDetail<LoungeDto.GetProjectDetail>(postId);
 
   const { mutateAsync: deletePost } = useDeleteMyPost({
@@ -66,48 +67,56 @@ export default function LoungeDetail() {
 
   const postWriter = userProfile?.nickname === postDetail?.writerNickName;
 
+  // if (!isPostDetailLoading) return ;
+
   return (
     <div className="flex w-full">
       <BackButton />
 
       <div className="w-full">
-        <div className="w-full px-6 pb-[45px] pt-5">
-          <header className="flex items-center justify-between">
-            <h1 className="text-[32px] font-semibold">{postDetail?.title}</h1>
-            <FavoriteButton
-              isFavorite={postDetail?.isScraped ?? false}
-              onClick={onScrapClick}
-              size={24}
+        {!isPostDetailLoading ? (
+          <div className="w-full px-6 pb-[45px] pt-5">
+            <header className="flex items-center justify-between">
+              <h1 className="text-[32px] font-semibold">{postDetail?.title}</h1>
+              <FavoriteButton
+                isFavorite={postDetail?.isScraped ?? false}
+                onClick={onScrapClick}
+                size={24}
+              />
+            </header>
+            <Tag
+              color="green"
+              size="medium"
+              text={postDetail ? ptypeDisplay[postDetail.ptype] : ''}
+              className="mt-12 w-fit py-1"
             />
-          </header>
-          <Tag
-            color="green"
-            size="medium"
-            text={postDetail ? ptypeDisplay[postDetail.ptype] : ''}
-            className="mt-12 w-fit py-1"
-          />
 
-          {postDetail && (
-            <LoungeApplicationInfoTemplate
-              recruitmentStart={postDetail.recruitmentStart}
-              recruitmentEnd={postDetail.recruitmentEnd}
-              recruitmentCount={postDetail?.recruitmentCount || 0}
-              position={postDetail?.position || []}
-              contactMethod={postDetail.contactMethod}
-              contactDetail={postDetail.contactDetail}
-              meetingType={postDetail.meetingType}
-              techStack={postDetail?.techStack || []}
+            {postDetail && (
+              <LoungeApplicationInfoTemplate
+                recruitmentStart={postDetail.recruitmentStart}
+                recruitmentEnd={postDetail.recruitmentEnd}
+                recruitmentCount={postDetail?.recruitmentCount || 0}
+                position={postDetail?.position || []}
+                contactMethod={postDetail.contactMethod}
+                contactDetail={postDetail.contactDetail}
+                meetingType={postDetail.meetingType}
+                techStack={postDetail?.techStack || []}
+              />
+            )}
+            <PostDetailsTemplate
+              actions={postWriter ? actions : []}
+              imageNameSegment={postDetail?.imgUrl}
+              nickname={postDetail?.writerNickName || '-'}
+              createdAt={postDetail?.createdAt}
+              viewCount={postDetail?.viewCount}
+              description={postDetail?.description}
             />
-          )}
-          <PostDetailsTemplate
-            actions={postWriter ? actions : []}
-            imageNameSegment={postDetail?.imgUrl}
-            nickname={postDetail?.writerNickName || '-'}
-            createdAt={postDetail?.createdAt}
-            viewCount={postDetail?.viewCount}
-            description={postDetail?.description}
-          />
-        </div>
+          </div>
+        ) : (
+          <div className="flex h-[60vh] items-center justify-center">
+            <LoopLoading />
+          </div>
+        )}
 
         <CommentTemplate postId={postId} />
       </div>

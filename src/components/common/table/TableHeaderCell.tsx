@@ -21,6 +21,7 @@ export default function TableHeaderCell({
   return (
     <th className={`relative pb-4 font-normal ${checkboxStyle} ${className}`}>
       {name !== '체크박스' &&
+        name !== '분류' &&
         (onClick ? (
           <button
             type="button"
@@ -29,7 +30,7 @@ export default function TableHeaderCell({
           >
             <span>{name}</span>
             {Icon && (
-              <Icon className="inline size-5 cursor-pointer stroke-2 px-0.5 text-mainGray" />
+              <Icon className="inline size-5 cursor-pointer px-0.5 text-darkGray" />
             )}
           </button>
         ) : (
@@ -38,7 +39,7 @@ export default function TableHeaderCell({
           >
             <span className="block">{name}</span>
             {Icon && (
-              <Icon className="inline size-5 cursor-pointer px-0.5 text-mainGray" />
+              <Icon className="inline size-5 cursor-pointer px-0.5 text-darkGray" />
             )}
           </div>
         ))}

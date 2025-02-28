@@ -17,7 +17,6 @@ export const useGetJobList = (
   return useQuery<SpecificationsDto.GetJobList['jobList']>({
     queryKey: ['jobList'],
     queryFn: getJobList,
-    initialData: [],
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -38,8 +37,6 @@ export const useGetDomainList = (
   return useQuery<SpecificationsDto.GetDomainList['domainList']>({
     queryKey: ['domainList'],
     queryFn: getDomainList,
-    initialData: [],
-    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,
@@ -50,17 +47,15 @@ export const useGetTechStackList = (
   options?: UseQueryOptions<SpecificationsDto.GetTechStack['techStackList']>,
 ) => {
   const getTechStackList = async () => {
-    const response = await axiosInstance.get<SpecificationsDto.GetTechStack>(
+    const res = await axiosInstance.get<SpecificationsDto.GetTechStack>(
       '/specifications/techStackList',
     );
-    return response.data.techStackList;
+    return res.data.techStackList;
   };
 
   return useQuery<SpecificationsDto.GetTechStack['techStackList']>({
     queryKey: ['techStackList'],
     queryFn: getTechStackList,
-    initialData: [],
-    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,
