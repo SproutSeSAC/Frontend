@@ -25,6 +25,9 @@ export default function NoticeDisplayList({
     size: 20,
   });
 
+  // const { data: closeSoonNoticeList, isLoading: isCloseSoonNoticeList } =
+  //   useGetCloseSoonNoticeList();
+
   const noticeObj: { [key in NoticeTitle]: NoticeDisplay[] } = {
     공지사항: data.pages[0].notices.slice(0, 4),
     마감임박: [],

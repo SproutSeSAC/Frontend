@@ -82,3 +82,19 @@ export const useGetThisWeekNoticeList = () => {
     retry: false,
   });
 };
+
+export const useGetCloseSoonNoticeList = () => {
+  const getEndingSoonNoticeList = async () => {
+    const { data } = await axiosInstance.get<NoticeDto.GetCloseSoonNoticeList>(
+      `/notices/ending-tomorrow`,
+      { params: { size: 20 } },
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetCloseSoonNoticeList'],
+    queryFn: getEndingSoonNoticeList,
+    retry: false,
+  });
+};
