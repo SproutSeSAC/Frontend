@@ -5,11 +5,11 @@ interface TagProps {
   color?:
     | 'black'
     | 'green'
-    | 'gray'
     | 'blue'
     | 'yellow'
     | 'purple'
     | 'pink'
+    | 'gray'
     | 'gray-light';
   size?: 'small' | 'medium' | 'big';
   onDeleteClick?: () => void;
