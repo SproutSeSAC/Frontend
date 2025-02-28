@@ -4,12 +4,12 @@ export const NOTIFICATION_TYPE: Record<number, NotificationCardInfo> = {
   0: {
     borderColor: '#FFC3E0',
     alertType: '한끼팟',
-    // TODO 한끼팟 알림 메시지 백엔드에서 보내주는것인지 확인 필요
+    alertMessage: '에 새로운 스프가 참여했습니다.',
   },
   1: {
     borderColor: '#FFC3E0',
     alertType: '한끼팟',
-    // TODO 한끼팟 알림 메시지 백엔드에서 보내주는것인지 확인 필요
+    alertMessage: '에 신청한 스프가 취소했습니다.',
   },
   2: {
     borderColor: '#FF8196',
