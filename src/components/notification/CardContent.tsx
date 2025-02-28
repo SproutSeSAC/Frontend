@@ -6,7 +6,10 @@ import { useNotification } from '@/hooks/notification/useNotification';
 
 import { formatElapsedTime } from '@/utils/formatElapsedTime';
 
-import { NOTIFICATION_TYPE } from '@/constants/notification';
+import {
+  NOTIFICATION_ROUTE,
+  NOTIFICATION_TYPE,
+} from '@/constants/notification';
 import { Notification } from '@/types';
 import { BsX } from 'react-icons/bs';
 import { RiCheckFill } from 'react-icons/ri';
@@ -14,13 +17,6 @@ import { RiCheckFill } from 'react-icons/ri';
 interface CardContentProps {
   notification: Notification;
 }
-
-/**
- * TODO
- * 1. type에 따른 알림 카테고리, 라벨 색상 구분
- * 2. 링크로 이동하기
- * 3. SSE 연결
- */
 
 export default function CardContent({ notification }: CardContentProps) {
   const { id, content, isRead, createdAt, type, url } = notification;
@@ -30,6 +26,11 @@ export default function CardContent({ notification }: CardContentProps) {
   const handleDeleteNotification = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     deleteNotification(notification.id);
+  };
+
+  const getNotificationUrl = (notiType: number, urlId: string) => {
+    const routeUrl = NOTIFICATION_ROUTE[notiType];
+    return routeUrl?.replace('{id}', urlId);
   };
 
   return (
@@ -59,7 +60,7 @@ export default function CardContent({ notification }: CardContentProps) {
 
       {buttonText && (
         <Link
-          to={`/post/${url}`}
+          to={getNotificationUrl(type, url)}
           className="mt-[20px] flex items-center justify-self-end rounded-lg bg-mainGray-active px-[10px] py-2 text-white"
         >
           {buttonText}

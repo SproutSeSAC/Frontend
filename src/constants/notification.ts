@@ -77,3 +77,17 @@ export const NOTIFICATION_TYPE: Record<number, NotificationCardInfo> = {
     buttonText: '캘린더 권한 부여 이동',
   },
 };
+
+// TODO '/' 로 표시된 부분은 이동 경로 확인 후, 수정 필요
+export const NOTIFICATION_ROUTE: Record<number, string> = {
+  2: '/lounge/post/{id}',
+  3: '/notice/post/{id}',
+  4: '/',
+  6: '/notice/post/{id}',
+  7: '/notice/post/{id}',
+  8: '/notice/post/{id}',
+  9: '/',
+  10: '/',
+  11: '/',
+  12: '/',
+};
