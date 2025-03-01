@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
+
 import { useDialogContext } from '@/hooks';
 import { MealPosts } from '@/types/store/storeMealPostDto';
 import { formatDate } from '@/utils';
@@ -29,9 +31,11 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [tooltipStyle, setTooltipStyle] = useState({ top: 0, left: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
+  const { data: userProfile } = useGetUserProfile();
 
   const { id, isParticipant, targetMemberCount, currentMemberCount } = post;
-  const { title, appointmentTime, storeName, meetingPlace } = post;
+  const { title, appointmentTime, storeName, meetingPlace, ownerNickname } =
+    post;
   const { ownerProfileImageUrl } = post;
 
   const { showDialog } = useDialogContext();
@@ -44,7 +48,13 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
   const handleShowDialog = async () => {
     await showDialog({
       key: 'MEAL-RECRUIT-CARD-TYPE',
-      element: <MealRecruitCardModal id={id} isParticipant={isParticipant} />,
+      element: (
+        <MealRecruitCardModal
+          id={id}
+          isOwner={ownerNickname === userProfile?.nickname}
+          isParticipant={isParticipant}
+        />
+      ),
     });
   };
 
