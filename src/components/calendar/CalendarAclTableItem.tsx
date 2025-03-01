@@ -31,9 +31,9 @@ export default function CalendarAclTableItem({
   } = useHandleAcl({ courseId, calendarId, adminList });
 
   return (
-    <tr className="group border-t hover:bg-lightGray [&:last-child>td]:border-b-0">
-      <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
-        <span className="text-darkGray-active">{index + 1}</span>
+    <tr className="group border-t hover:bg-lightGray [&:last-child>td]:border-b-0 [&>td]:border-b [&>td]:py-4">
+      <TableDataCell className="pl-4 [&>label>input]:mr-0 [&>label>input]:size-5">
+        <span className="text-darkGray">{index + 1}</span>
       </TableDataCell>
 
       {/* 캘린더 생성 상태 */}
@@ -44,8 +44,8 @@ export default function CalendarAclTableItem({
 
         {!isCalendarAclLoading &&
           (calendarId ? (
-            <div className="w-fit px-2">
-              <span className="text-sm tracking-tighter text-darkGray">
+            <div className="w-full px-2">
+              <span className="text-center text-sm tracking-tighter text-darkGray">
                 생성완료
               </span>
             </div>
@@ -59,7 +59,7 @@ export default function CalendarAclTableItem({
 
       {/* 교육과정명 */}
       <TableDataCell
-        className={`${courseCalendarAcl ? '' : 'text-mainGray'} h-full overflow-hidden pr-8 leading-5 tracking-tight`}
+        className={`${courseCalendarAcl ? '' : 'text-mainGray'} h-full overflow-hidden pr-8 text-start leading-5 tracking-tight`}
       >
         {courseTitle}
       </TableDataCell>
@@ -67,12 +67,14 @@ export default function CalendarAclTableItem({
       {/* 캘린더 권한 부여된 유저 */}
       <TableDataCell>
         {courseAclInfo.isCreated && (
-          <>
+          <div className="flex justify-start">
             {!courseCalendarAcl && (
-              <span className="text-mainGray">권한대기중</span>
+              <span className="block w-full text-start text-mainGray">
+                권한대기중
+              </span>
             )}
             {courseCalendarAcl && (
-              <ul className="flex flex-wrap gap-x-6 gap-y-1">
+              <ul className="flex w-full flex-wrap gap-x-6 gap-y-1">
                 {courseAclInfo?.hasAclAdminList?.map(admin => (
                   <AdminUser
                     key={admin.email}
@@ -82,7 +84,7 @@ export default function CalendarAclTableItem({
                 ))}
               </ul>
             )}
-          </>
+          </div>
         )}
       </TableDataCell>
 
