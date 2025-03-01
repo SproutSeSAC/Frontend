@@ -38,9 +38,6 @@
     @apply bg-bg font-pretendard text-black;
 
     /* Swiper */
-    /* .swiper {
-      @apply flex;
-    } */
     .swiper-button-prev,
     .swiper-button-next {
       @apply hidden;
@@ -64,6 +61,7 @@
       @apply border-0;
     }
     .ql-editor {
+      word-break: break-word;
       @apply mt-2 text-base;
       img {
         @apply my-2 w-[70%];
