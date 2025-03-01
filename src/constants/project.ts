@@ -59,7 +59,7 @@ export const CONTACT_METHOD_MESSENGER = 'MESSENGER';
 export const contactMethodDisplay = {
   EMAIL: '이메일',
   PHONE: '휴대폰',
-  MESSENGER: '메신저',
+  MESSENGER: '오픈채팅방',
 } as const;
 export const contactMethodList: Array<{
   id: number;
@@ -68,7 +68,7 @@ export const contactMethodList: Array<{
 }> = [
   { id: 1, name: '이메일', key: CONTACT_METHOD_EMAIL },
   { id: 2, name: '휴대폰', key: CONTACT_METHOD_PHONE },
-  { id: 3, name: '메신저', key: CONTACT_METHOD_MESSENGER },
+  { id: 3, name: '오픈채팅방', key: CONTACT_METHOD_MESSENGER },
 ];
 
 // food type filter

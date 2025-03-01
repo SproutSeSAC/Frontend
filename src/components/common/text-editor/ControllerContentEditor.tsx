@@ -50,7 +50,9 @@ export default function ControllerContentEditor({
                 placeholder={`${type} 상세 내용을 작성해 주세요`}
                 value={value}
               />
-              {error?.message && <ErrorMsg msg={error.message} />}
+              {error?.message && (
+                <ErrorMsg msg={error.message} className="pl-2" />
+              )}
             </div>
           );
         }}

@@ -101,11 +101,11 @@ export default function StoreModalReview({
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="flex items-center gap-2">
           <UserImage
-            className="size-[30px]"
+            className="size-[35px]"
             imageNameSegment={profileImageUrl}
           />
           <div className="relative">
-            <div>{nickname}</div>
+            <span>@{nickname}</span>
             <Controller
               control={control}
               name="rating"
@@ -123,7 +123,7 @@ export default function StoreModalReview({
                     {error && (
                       <ErrorMsg
                         msg={error?.message || ''}
-                        className="w-30 absolute -right-24 top-4"
+                        className="absolute bottom-1 left-[110%] w-32"
                       />
                     )}
                   </>
@@ -139,13 +139,15 @@ export default function StoreModalReview({
             return (
               <div className="mb-4 flex flex-col">
                 <textarea
-                  className={`mt-2.5 w-full resize-none rounded border border-solid p-[15px] text-lg ${error ? 'border-[#FF3939]' : 'border-lightGray'}`}
+                  className={`mt-2 w-full resize-none rounded-xl border border-solid p-[15px] text-base focus:outline-none ${error ? 'border-[#FF3939]' : 'border-mainGray-active'}`}
                   placeholder="댓글을 작성해 주세요."
                   rows={5}
                   value={value}
                   onChange={onChange}
                 />
-                {error && <ErrorMsg msg={error?.message || ''} />}
+                {error && (
+                  <ErrorMsg msg={error?.message || ''} className="pl-2" />
+                )}
               </div>
             );
           }}
@@ -153,13 +155,6 @@ export default function StoreModalReview({
 
         <div className="flex justify-end gap-2">
           <SquareButton type="submit" name="등록하기" />
-          <button
-            onClick={() => {}}
-            type="button"
-            className="rounded-lg bg-lightGray px-4 py-2 tracking-tight text-white"
-          >
-            취소하기
-          </button>
         </div>
 
         <div className="mt-8 flex flex-col gap-8">
@@ -175,17 +170,14 @@ export default function StoreModalReview({
                 />
 
                 <div>
-                  <div>{`@${commentItem.nickname}`}</div>
+                  <span className="text-[15px]">{`@${commentItem.nickname}`}</span>
                   <StoreStarRating score={commentItem.rating} />
                 </div>
               </div>
 
-              <div>{commentItem.review}</div>
-              <div className="flex gap-10 text-darkGray-active">
-                <div className="flex gap-4">
-                  <div>{`${formatDate(commentItem.createdAt, 'yyyy-MM-dd HH:mm:ss')}`}</div>
-                </div>
-              </div>
+              <p>{commentItem.review}</p>
+
+              <span className="text-[15px] text-darkGray">{`${formatDate(commentItem.createdAt, 'yyyy.MM.dd HH:mm')}`}</span>
             </div>
           ))}
         </div>

@@ -56,9 +56,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
         {...props}
       />
 
-      {errorMsg && (
-        <ErrorMsg msg={errorMsg} className="absolute -bottom-[26px] left-2" />
-      )}
+      {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
     </div>
   );
 });
