@@ -5,10 +5,12 @@ import TextInput from '@/components/common/input/TextInput';
 
 interface ControllerPhoneNumberProps {
   name: string;
+  className?: string;
 }
 
 export default function ControllerPhoneNumber({
   name,
+  className = '',
 }: ControllerPhoneNumberProps) {
   const { control } = useFormContext();
 
@@ -19,9 +21,7 @@ export default function ControllerPhoneNumber({
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           const rawValue = event.target.value;
-
           const onlyNumericValue = rawValue.replace(/\D/g, '');
-
           if (onlyNumericValue.length <= 11) {
             onChange(formatPhoneNumber(onlyNumericValue));
           }
@@ -33,7 +33,7 @@ export default function ControllerPhoneNumber({
             placeholder="전화번호를 적어주세요. (숫자만 적어주세요)"
             value={value}
             onChange={handleChange}
-            className="h-[50px] !rounded-2xl px-4 py-[18px] placeholder:text-mainGray"
+            className={`h-[50px] !rounded-2xl px-4 py-[18px] placeholder:text-mainGray ${className}`}
             errorMsg={error?.message}
             maxLength={13}
           />

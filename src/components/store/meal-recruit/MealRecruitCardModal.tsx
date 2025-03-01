@@ -2,7 +2,10 @@ import { useCallback } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { usePutMealPost } from '@/services/store/storeMutations';
+import {
+  usePutMealPost,
+  usePutMealPostLeave,
+} from '@/services/store/storeMutations';
 import { useGetMealPostDetail } from '@/services/store/storeQueries';
 
 import { useDialogContext } from '@/hooks';
@@ -16,32 +19,58 @@ import UserImage from '@/components/user/UserImage';
 interface MealRecruitCardModalProps {
   id: number;
   isParticipant: boolean;
+  isOwner: boolean;
 }
 
 export default function MealRecruitCardModal({
   id,
   isParticipant,
+  isOwner,
 }: MealRecruitCardModalProps) {
   const { hideDialog, showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useGetMealPostDetail(id);
 
-  const { mutateAsync } = usePutMealPost();
+  const {
+    mutateAsync: joinMeal,
+    isPending: isJoinMealPending,
+    isIdle: isJoinIdle,
+  } = usePutMealPost();
+
+  const {
+    mutateAsync: leaveMeal,
+    isPending: isLeaveMealPending,
+    isIdle: isLeaveIdle,
+  } = usePutMealPostLeave();
 
   const handleJoinClick = useCallback(async () => {
     try {
-      await mutateAsync({ mealPostId: id });
-      showToast('참여요청을 성공하였습니다.');
-      queryClient.invalidateQueries({
+      await joinMeal({ mealPostId: id });
+      await queryClient.invalidateQueries({
         queryKey: ['useGetInfiniteMealPostList'],
       });
       hideDialog();
+      showToast('한끼팟 참여에 성공하였습니다.');
     } catch (err) {
-      showToast('참여요청을 실패했습니다.');
       hideDialog();
+      showToast('한끼팟 참여에 실패했습니다.');
     }
-  }, [hideDialog, id, mutateAsync, queryClient, showToast]);
+  }, [id, queryClient, hideDialog, showToast, joinMeal]);
+
+  const handleLeaveClick = useCallback(async () => {
+    try {
+      await leaveMeal({ mealPostId: id });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetInfiniteMealPostList'],
+      });
+      hideDialog();
+      showToast('한끼팟 나가기에 성공하였습니다.');
+    } catch (err) {
+      hideDialog();
+      showToast('한끼팟 나가기에 실패했습니다.');
+    }
+  }, [id, queryClient, hideDialog, showToast, leaveMeal]);
 
   return (
     !isLoading && (
@@ -78,7 +107,7 @@ export default function MealRecruitCardModal({
 
           <div className="flex items-center">
             <span className="meal-recruit-text-divider text-darkGray-active">
-              위치
+              만남 장소
             </span>
 
             <span className="flex flex-1 gap-1 overflow-hidden">
@@ -99,7 +128,7 @@ export default function MealRecruitCardModal({
                     imageNameSegment={member.imgUrl}
                   />
                   <div className="flex w-full items-center justify-between gap-9">
-                    <span className="text-sm">{member.nickname}</span>
+                    <span className="text-sm">@{member.nickname}</span>
                     {member.isOwner && (
                       <div className="flex items-center justify-between gap-1 rounded bg-[#FEFAE0] px-1.5 py-1 text-xs text-[#FF6D28]">
                         <FaCrown />
@@ -116,10 +145,10 @@ export default function MealRecruitCardModal({
         <div className="mt-6 flex gap-3">
           <SquareButton
             type="button"
-            className={`${isParticipant && 'flex-1'}`}
             onClick={hideDialog}
             color="gray"
             name="나가기"
+            className={isOwner ? 'flex-1' : ''}
           />
           {!isParticipant && (
             <SquareButton
@@ -127,6 +156,17 @@ export default function MealRecruitCardModal({
               name="참여하기"
               className="w-full flex-1"
               onClick={handleJoinClick}
+              disabled={isJoinMealPending || !isJoinIdle}
+            />
+          )}
+
+          {isParticipant && !isOwner && (
+            <SquareButton
+              type="button"
+              name="한끼팟 나가기"
+              className="w-full flex-1"
+              onClick={handleLeaveClick}
+              disabled={isLeaveMealPending || !isLeaveIdle}
             />
           )}
         </div>

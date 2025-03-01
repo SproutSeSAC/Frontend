@@ -2,17 +2,16 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import CalendarAclTableItem from '@/components/calendar/CalendarAclTableItem';
 import LoopLoading from '@/components/common/LoopLoading';
-import TableHeaderCell from '@/components/common/table/TableHeaderCell';
 
 export default function CalendarAclTable() {
   const { data: userProfile } = useGetUserProfile();
 
   const headerCellList = [
-    { name: '번호', className: 'pl-4' },
-    { name: '캘린더 상태' },
-    { name: '교육과정 캘린더' },
-    { name: '권한이 부여된 유저' },
-    { name: '권한 대기중인 유저' },
+    { name: '번호', className: 'pl-4 text-center' },
+    { name: '캘린더 상태', className: 'text-center' },
+    { name: '교육과정 캘린더', className: 'text-start' },
+    { name: '권한이 부여된 유저', className: 'text-start' },
+    { name: '권한 대기중인 유저', className: 'text-start' },
     { name: '권한 부여', className: 'text-end pr-4' },
   ];
 
@@ -28,9 +27,11 @@ export default function CalendarAclTable() {
       </colgroup>
 
       <thead>
-        <tr className="text-left">
+        <tr>
           {headerCellList.map(({ name, className }) => (
-            <TableHeaderCell key={name} name={name} className={className} />
+            <th key={name} className={`${className} pb-5 font-normal`}>
+              {name}
+            </th>
           ))}
         </tr>
       </thead>

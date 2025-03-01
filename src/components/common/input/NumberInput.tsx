@@ -42,9 +42,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           className={`h-[45px] w-full rounded-l-xl border p-2 outline-none disabled:rounded-l-none disabled:bg-[#eee] disabled:text-[#eee] ${className}`}
         />
 
-        {errorMsg && (
-          <ErrorMsg msg={errorMsg} className="absolute bottom-[-26px] left-2" />
-        )}
+        {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
       </>
     );
   },

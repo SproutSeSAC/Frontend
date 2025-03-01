@@ -68,7 +68,7 @@ export const campusList: Array<{
 ];
 
 // 서비스 종류
-export const serviceType = {
+export const postTypeObj = {
   MEAL: '한끼팟',
   NOTICE: '공지사항',
   PROJECT: '프로젝트',
@@ -76,4 +76,4 @@ export const serviceType = {
   STORE: '맛집',
 } as const;
 
-export type ServiceType = typeof serviceType;
+export type PostType = typeof postTypeObj;

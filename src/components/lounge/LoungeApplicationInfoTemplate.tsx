@@ -45,6 +45,7 @@ export default function LoungeApplicationInfoTemplate({
             <Tag
               key={id}
               text={name}
+              color="black"
               size="big"
               className="whitespace-nowrap rounded bg-black !px-2 !font-normal text-white"
             />

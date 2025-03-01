@@ -54,6 +54,9 @@ export const useCalendarEvents = () => {
     createdCourseCalendarIdList,
   );
 
+  const isCourseCalendarLoadingArr: boolean[] =
+    createdCourseCalendarEventList.map(item => item.isLoading);
+
   // 현재 선택된 캘린더의 이벤트 목록
   const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
     const eventList = getEventList(eventsByCalendar);
@@ -79,5 +82,6 @@ export const useCalendarEvents = () => {
   return {
     fullCalendarEvents,
     fullCalendarSideViewEvents,
+    isCourseCalendarLoadingArr,
   };
 };

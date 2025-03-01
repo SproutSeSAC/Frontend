@@ -108,7 +108,7 @@ export default function CustomDatePicker({
   placeholder,
 }: CustomDatePickerProps) {
   return (
-    <>
+    <div className="flex flex-col">
       <label htmlFor="date-picker" className="relative flex h-full w-full">
         <BsCalendar
           size={20}
@@ -133,12 +133,7 @@ export default function CustomDatePicker({
         />
       </label>
 
-      {errorMsg && (
-        <ErrorMsg
-          msg={errorMsg}
-          className="absolute bottom-[-26px] left-0 ml-2"
-        />
-      )}
-    </>
+      {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
+    </div>
   );
 }

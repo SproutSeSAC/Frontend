@@ -33,7 +33,7 @@ export const mealRecruitSchema = z.object({
   ]),
 
   meetingPlace: z.union([
-    z.string().min(1, '모일위치를 입력해 주세요.'),
-    z.undefined().refine(() => false, '모일위치를 입력해 주세요.'),
+    z.string().min(1, '모일 장소를 입력해 주세요.'),
+    z.undefined().refine(() => false, '모일 장소를 입력해 주세요.'),
   ]),
 });

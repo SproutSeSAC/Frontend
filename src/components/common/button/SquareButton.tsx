@@ -23,7 +23,7 @@ export default function SquareButton({
 }: SquareButtonProps) {
   const styleByColor = {
     mainGreen: 'bg-mainGreen text-white',
-    gray: 'bg-mainGray text-black',
+    gray: 'bg-mainGray text-darkGray-active',
     lightGreen: 'bg-lightGreen-active text-darkGray-active',
   };
 

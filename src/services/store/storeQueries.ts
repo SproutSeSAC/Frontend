@@ -61,7 +61,7 @@ export const useGetFilterCount = (campusId: number) => {
 
 export const useGetStoreDetail = (storeId: number) => {
   return useQuery({
-    queryKey: ['useGetStoreDetail'],
+    queryKey: ['useGetStoreDetail', storeId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<GetStoreDetailResponse>(
         `/store/${storeId}`,

@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { usePostIncrementViewCount } from '@/services/post/loungeMutations';
 
-import { PTYPE_STUDY, progressDisplay, ptypeDisplay } from '@/constants';
+import { progressDisplay, ptypeDisplay } from '@/constants';
 import { useHandleScrap } from '@/hooks';
-import { Ptype } from '@/types';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 import { formatDate } from '@/utils';
 import { BsEye } from 'react-icons/bs';
@@ -17,15 +16,6 @@ import Tag from '@/components/common/tag/Tag';
 interface LoungePostCardProps {
   card: LoungeDto.GetProjectList['projects'][0];
 }
-
-const getTagColor = (tag: Ptype) => {
-  switch (tag) {
-    case PTYPE_STUDY:
-      return 'blue';
-    default:
-      return 'green';
-  }
-};
 
 export default function LoungePostCard({ card }: LoungePostCardProps) {
   const {
@@ -45,11 +35,12 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
 
   const { mutateAsync: postViewCount } = usePostIncrementViewCount();
 
-  const { onScrapClick } = useHandleScrap({
-    postId,
-    isScraped,
-    invalidateQueryKeys: ['useGetLoungeProjectList'],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId,
+      isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetLoungeProjectList'] }],
+    });
 
   const onViewCount = useCallback(async () => {
     await postViewCount({ projectId: id });
@@ -62,11 +53,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
       onClick={onViewCount}
     >
       <div className="flex w-full items-center justify-between">
-        <Tag
-          color={getTagColor(ptype)}
-          size="medium"
-          text={ptypeDisplay[ptype]}
-        />
+        <Tag postType={ptype} size="medium" text={`#${ptypeDisplay[ptype]}`} />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />
@@ -76,6 +63,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
             isFavorite={isScraped}
             onClick={onScrapClick}
             size={20}
+            disabled={isPostScrapPending || isDeleteScrapPending}
           />
         </div>
       </div>

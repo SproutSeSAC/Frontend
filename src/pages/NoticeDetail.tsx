@@ -17,7 +17,7 @@ import {
   useHandleScrap,
 } from '@/hooks';
 import { NoticeDto } from '@/types';
-import { findCurrNotice, getColorByRole } from '@/utils';
+import { findCurrNotice } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -51,11 +51,12 @@ export default function NoticeDetail() {
     },
   });
 
-  const { onScrapClick } = useHandleScrap({
-    postId,
-    isScraped: !!noticeDetail?.isScraped,
-    invalidateQueryKeys: ['useGetPostDetail'],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId,
+      isScraped: !!noticeDetail?.isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetPostDetail', postId] }],
+    });
 
   const navigate = useNavigate();
 
@@ -137,28 +138,28 @@ export default function NoticeDetail() {
                 isFavorite={noticeDetail?.isScraped ?? false}
                 onClick={onScrapClick}
                 size={24}
+                disabled={isPostScrapPending || isDeleteScrapPending}
               />
             </header>
 
             <div className="mt-12 flex gap-2">
-              {noticeDetail?.writer.role && (
+              {noticeDetail?.writer?.role && (
                 <Tag
-                  color={getColorByRole(noticeDetail?.writer.role)}
+                  roleType={noticeDetail?.writer?.role}
                   size="big"
-                  text={rolesObj[noticeDetail?.writer.role]}
-                  emphasisText
+                  text={rolesObj[noticeDetail?.writer?.role]}
                   className="px-[10px] py-[5px]"
                 />
               )}
               {noticeDetail?.noticeType && (
                 <Tag
-                  color="gray"
                   size="big"
+                  color="gray"
                   text={noticeCategoryDisplay[noticeDetail?.noticeType]}
                   className="px-[10px] py-[5px]"
                 />
               )}
-              {noticeDetail?.writer.userId === userProfile.userId && (
+              {noticeDetail?.writer?.userId === userProfile?.userId && (
                 <div className="group relative ml-auto flex items-center justify-center">
                   <button className="px-2">
                     <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
@@ -187,12 +188,12 @@ export default function NoticeDetail() {
               )}
 
             <PostDetailsTemplate
-              nickname={noticeDetail?.writer.userName || '-'}
+              nickname={noticeDetail?.writer?.userName || '-'}
               createdAt={noticeDetail?.createdAt}
               viewCount={noticeDetail?.viewCount || 0}
               description={noticeDetail?.content || '-'}
               actions={applySession()}
-              imageNameSegment={noticeDetail?.writer.profileUrl}
+              imageNameSegment={noticeDetail?.writer?.profileUrl}
             />
           </section>
           <CommentTemplate postId={postId} />

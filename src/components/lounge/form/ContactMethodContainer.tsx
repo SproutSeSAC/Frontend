@@ -1,16 +1,16 @@
+import { useEffect } from 'react';
+
 import { contactMethodList } from '@/constants';
 import { ContactMethodDisplayKey } from '@/types';
-import { Control, Controller, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
+import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import TextInput from '@/components/common/input/TextInput';
-import { FormValues } from '@/components/lounge/form/LoungeForm';
 
-export default function ContactMethodContainer({
-  control,
-}: {
-  control: Control<FormValues>;
-}) {
+export default function ContactMethodContainer() {
+  const { control, setValue, clearErrors } = useFormContext();
+
   const contactMethod: ContactMethodDisplayKey | '' = useWatch({
     control,
     name: 'contactMethod',
@@ -19,8 +19,13 @@ export default function ContactMethodContainer({
   const placeholderByMethod: { [key in ContactMethodDisplayKey]: string } = {
     PHONE: '휴대폰 번호를 입력해주세요.',
     EMAIL: '이메일을 입력해주세요.',
-    MESSENGER: '메신저를 입력해주세요.',
+    MESSENGER: '오픈채팅방 링크를 입력해주세요.',
   };
+
+  useEffect(() => {
+    setValue('contactDetail', '');
+    clearErrors('contactDetail');
+  }, [clearErrors, contactMethod, setValue]);
 
   return (
     <div className={`${contactMethod && 'flex gap-2'}`}>
@@ -43,26 +48,35 @@ export default function ContactMethodContainer({
           );
         }}
       />
-      {contactMethod && (
-        <Controller
-          control={control}
-          name="contactDetail"
-          render={({ field: { onChange, value }, fieldState: { error } }) => {
-            return (
-              <div className={`flex w-full ${contactMethod && 'flex-1'}`}>
-                <TextInput
-                  name="contactDetail"
-                  placeholder={placeholderByMethod[contactMethod]}
-                  value={value}
-                  onChange={onChange}
-                  errorMsg={error?.message}
-                  className="h-full placeholder:text-mainGray"
-                />
-              </div>
-            );
-          }}
-        />
-      )}
+
+      {contactMethod &&
+        (contactMethod !== 'PHONE' ? (
+          <Controller
+            control={control}
+            name="contactDetail"
+            render={({ field: { onChange, value }, fieldState: { error } }) => {
+              return (
+                <div
+                  className={`flex h-full w-full ${contactMethod && 'flex-1'}`}
+                >
+                  <TextInput
+                    name="contactDetail"
+                    placeholder={placeholderByMethod[contactMethod]}
+                    value={value}
+                    onChange={onChange}
+                    errorMsg={error?.message}
+                    className="h-[57px] placeholder:text-mainGray"
+                  />
+                </div>
+              );
+            }}
+          />
+        ) : (
+          <ControllerPhoneNumber
+            name="contactDetail"
+            className="!h-[57px] !pl-2"
+          />
+        ))}
     </div>
   );
 }

@@ -58,11 +58,12 @@ export default function StoreCard({
 
   const { showDialog } = useDialogContext();
 
-  const { onScrapClick } = useHandleScrap({
-    postId: 0, // NOTE: 수정
-    isScraped: false,
-    invalidateQueryKeys: [''],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId: storeData.postId,
+      isScraped: storeData?.isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
+    });
 
   const isOpen = useCallback((): boolean => {
     const parseTimeString = (timeString: string) => {
@@ -151,8 +152,9 @@ export default function StoreCard({
           {showFavoriteButton && (
             <FavoriteButton
               size={18}
-              isFavorite={storeData.isScrap}
+              isFavorite={storeData.isScraped}
               onClick={onScrapClick}
+              disabled={isPostScrapPending || isDeleteScrapPending}
             />
           )}
         </header>
@@ -254,28 +256,28 @@ export default function StoreCard({
           {storeData.isZeropay && (
             <Tag
               text="# 제로페이"
-              color="gray-light"
+              color="grayLight"
               className="h-[27px] rounded-lg px-2.5 py-1"
             />
           )}
           {storeData.isLessThan10000Menu && (
             <Tag
               text="# 만원이하"
-              color="gray-light"
+              color="grayLight"
               className="h-[27px] rounded-lg px-2.5 py-1"
             />
           )}
           {storeData.isOverPerson && (
             <Tag
               text="# 5인 이상"
-              color="gray-light"
+              color="grayLight"
               className="h-[27px] rounded-lg px-2.5 py-1"
             />
           )}
           {storeData.walkTime <= 5 && (
             <Tag
               text="# 도보 5분 이내"
-              color="gray-light"
+              color="grayLight"
               className="h-[27px] rounded-lg px-2.5 py-1"
             />
           )}

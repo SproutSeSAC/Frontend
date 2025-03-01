@@ -13,8 +13,11 @@ import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation'
 export default function NoticeLayout() {
   const { pathname } = useLocation();
 
-  const { fullCalendarEvents, fullCalendarSideViewEvents } =
-    useCalendarEvents();
+  const {
+    fullCalendarEvents,
+    fullCalendarSideViewEvents,
+    isCourseCalendarLoadingArr,
+  } = useCalendarEvents();
 
   const navigate = useNavigate();
 
@@ -32,6 +35,7 @@ export default function NoticeLayout() {
           type="small"
           events={fullCalendarEvents}
           sideViewEvents={fullCalendarSideViewEvents}
+          isCourseCalendarLoadingArr={isCourseCalendarLoadingArr}
         />
         <SquareButton
           color="lightGreen"
@@ -39,7 +43,7 @@ export default function NoticeLayout() {
           name="특강/행사 신청 내역 보기"
           className="mt-6 w-full !py-3 font-semibold"
           onClick={() => {
-            navigate('/application-status-for-sessions');
+            navigate('/admin/application-status-for-sessions');
           }}
         />
       </SideView>

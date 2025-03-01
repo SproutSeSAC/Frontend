@@ -17,7 +17,6 @@ export const useGetJobList = (
   return useQuery<SpecificationsDto.GetJobList['jobList']>({
     queryKey: ['jobList'],
     queryFn: getJobList,
-    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,

@@ -123,7 +123,7 @@ export default function NoticeModal({
           {errors && (
             <ErrorMsg
               msg={errors?.sessionIdList?.message || ''}
-              className="absolute bottom-[-30px] left-0 ml-2"
+              className="pl-2"
             />
           )}
 

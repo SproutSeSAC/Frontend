@@ -49,6 +49,5 @@ export const useGetSessionStatus = ({
     queryKey: ['useGetSessionStatus', sessionId],
     queryFn: getSessionStatus,
     enabled: !!Number(sessionId),
-    retry: false,
   });
 };

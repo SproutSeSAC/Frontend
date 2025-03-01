@@ -2,7 +2,7 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { rolesObj } from '@/constants';
 import { AccessRole, AdminEmail } from '@/types';
-import { getColorByRole, hasAdmin, hasSuperAdmin, isSuperAdmin } from '@/utils';
+import { hasAdmin, hasSuperAdmin, isSuperAdmin } from '@/utils';
 import { BiUserPin } from 'react-icons/bi';
 import { FaCrown } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
@@ -41,20 +41,19 @@ export default function AdminUser({ admin, accessRole }: AdminUserProps) {
 
       {roleType && (
         <div className="absolute left-4 top-6 z-10 hidden flex-col items-start rounded-b-xl rounded-tr-xl bg-lightGreen-hover p-4 shadow-sm hover:flex peer-hover:flex">
-          <span className="peer cursor-pointer truncate text-[15px] tracking-tighter text-darkGray-hover">
-            {name}
-          </span>
-          <div className="my-2 flex">
+          <div className="my-2 flex gap-1">
+            <span className="peer cursor-pointer truncate text-[15px] tracking-tighter text-darkGray-hover">
+              {name}
+            </span>
             <Tag
               size="small"
-              color={getColorByRole(roleType)}
-              emphasisText
+              roleType={roleType}
               text={rolesObj[roleType]}
               className="mr-0.5 font-medium tracking-tighter"
             />
             <Tag
-              text={accessRole === 'owner' ? '소유자' : '관리자'}
-              color="gray-light"
+              text={accessRole === 'owner' ? '소유권한' : '일정변경권한'}
+              color="grayLight"
             />
           </div>
           <span className="flex items-center gap-0.5 px-1 tracking-tighter">

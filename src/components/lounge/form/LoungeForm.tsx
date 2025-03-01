@@ -174,7 +174,7 @@ export default function LoungeForm() {
             <CircleNumber number={1} />
             <Title as="h1" title="프로젝트 필수 정보" />
           </header>
-          <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
+          <div className="relative mt-8 grid grid-cols-2 gap-x-4 gap-y-5 text-lg">
             <LabeledSection
               label="모집 구분"
               className="col-span-2 [&>div]:w-1/2"
@@ -322,7 +322,7 @@ export default function LoungeForm() {
                 </div>
               }
             >
-              <ContactMethodContainer control={control} />
+              <ContactMethodContainer />
             </LabeledSection>
           </div>
         </section>

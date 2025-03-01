@@ -38,11 +38,12 @@ export default function LoungeDetail() {
     },
   });
 
-  const { onScrapClick } = useHandleScrap({
-    postId,
-    isScraped: !!postDetail?.isScraped,
-    invalidateQueryKeys: ['useGetPostDetail', postId],
-  });
+  const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
+    useHandleScrap({
+      postId,
+      isScraped: !!postDetail?.isScraped,
+      invalidateQueryKeys: [{ queryKey: ['useGetPostDetail', postId] }],
+    });
 
   const navigate = useNavigate();
 
@@ -67,8 +68,6 @@ export default function LoungeDetail() {
 
   const postWriter = userProfile?.nickname === postDetail?.writerNickName;
 
-  // if (!isPostDetailLoading) return ;
-
   return (
     <div className="flex w-full">
       <BackButton />
@@ -82,13 +81,14 @@ export default function LoungeDetail() {
                 isFavorite={postDetail?.isScraped ?? false}
                 onClick={onScrapClick}
                 size={24}
+                disabled={isPostScrapPending || isDeleteScrapPending}
               />
             </header>
             <Tag
               color="green"
-              size="medium"
+              size="big"
               text={postDetail ? ptypeDisplay[postDetail.ptype] : ''}
-              className="mt-12 w-fit py-1"
+              className="mt-12 w-fit"
             />
 
             {postDetail && (

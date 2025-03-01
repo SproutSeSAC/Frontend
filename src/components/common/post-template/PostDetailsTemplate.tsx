@@ -32,7 +32,7 @@ export default function PostDetailsTemplate({
         <div>
           <div className="flex items-center gap-2">
             <UserImage imageNameSegment={imageNameSegment} />
-            <span className="text-[22px]">{nickname}</span>
+            <span className="text-[22px]">@{nickname}</span>
           </div>
 
           <ul className="mt-3 flex items-center gap-10 text-lg text-darkGray-active">

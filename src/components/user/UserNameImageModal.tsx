@@ -6,12 +6,9 @@ import {
   useUpdateProfileImage,
   useUpdateUserProfile,
 } from '@/services/auth/authMutations';
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
 
 import { useDialogContext, useHandleImage } from '@/hooks';
+import { UserProfileDto } from '@/types';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -21,17 +18,26 @@ import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
 import UserImage from '@/components/user/UserImage';
 
-export default function UserNameImageModal() {
+interface UserNameImageModalProps {
+  profile: UserProfileDto.Get;
+}
+
+export default function UserNameImageModal({
+  profile,
+}: UserNameImageModalProps) {
   const [previewUrl, setPreviewUrl] = useState<string>();
 
   const queryClient = useQueryClient();
 
   const { hideDialog } = useDialogContext();
 
-  const { data: { nickname, profileImageUrl } = initialUserProfile } =
-    useGetUserProfile();
+  const { nickname, profileImageUrl } = profile;
 
-  const { mutateAsync: mutateProfile } = useUpdateUserProfile({
+  const {
+    mutateAsync: mutateProfile,
+    isPending: isUpdatePending,
+    isIdle: isUpdateIdle,
+  } = useUpdateUserProfile({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['useGetUserProfile'],
@@ -39,7 +45,11 @@ export default function UserNameImageModal() {
     },
   });
 
-  const { mutateAsync: mutateProfileImage } = useUpdateProfileImage({
+  const {
+    mutateAsync: mutateProfileImage,
+    isPending: isUpdateProfileImagePending,
+    isIdle: isUpdateImageIdle,
+  } = useUpdateProfileImage({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['useGetUserProfile'],
@@ -123,11 +133,13 @@ export default function UserNameImageModal() {
               name="기본 이미지 적용"
               onClick={resetProfileImage}
               className="bg-darkGray font-medium text-white"
+              disabled={isUpdateProfileImagePending || !isUpdateImageIdle}
             />
             <SquareButton
               type="submit"
               name="저장하기"
               className="font-medium text-white"
+              disabled={isUpdatePending || !isUpdateIdle}
             />
           </div>
         </form>

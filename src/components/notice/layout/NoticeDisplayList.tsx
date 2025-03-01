@@ -1,4 +1,5 @@
 import {
+  useGetCloseSoonNoticeList,
   useGetInfiniteNoticeList,
   useGetThisWeekNoticeList,
 } from '@/services/post/noticeQueries';
@@ -18,43 +19,58 @@ export default function NoticeDisplayList({
   title,
   className = '',
 }: NoticeInfoListProps) {
-  const { data: thisWeekNoticeList = [] } = useGetThisWeekNoticeList();
+  const {
+    data: thisWeekNoticeList = [],
+    isLoading: isInfiniteNoticListLoading,
+  } = useGetThisWeekNoticeList();
 
-  const { data = { pages: [{ notices: [] }] } } = useGetInfiniteNoticeList({
-    page: 1,
-    size: 20,
-  });
+  const {
+    data = {
+      pages: [{ notices: [] }],
+    },
+    isLoading: isInfiniteNoticeListLoading,
+  } = useGetInfiniteNoticeList({ page: 1, size: 4 });
 
-  // const { data: closeSoonNoticeList, isLoading: isCloseSoonNoticeList } =
-  //   useGetCloseSoonNoticeList();
+  const {
+    data: closeSoonNoticeList = [],
+    isLoading: isCloseSoonNoticeList, //
+  } = useGetCloseSoonNoticeList({ size: 4 });
+
+  const isLoading =
+    isCloseSoonNoticeList ||
+    isInfiniteNoticeListLoading ||
+    isInfiniteNoticListLoading;
 
   const noticeObj: { [key in NoticeTitle]: NoticeDisplay[] } = {
-    공지사항: data.pages[0].notices.slice(0, 4),
-    마감임박: [],
+    공지사항: data.pages[0].notices,
+    마감임박: closeSoonNoticeList,
     NEW: thisWeekNoticeList,
-  }; // NOTE: 데이터 작업 예정
+  };
 
   const noticeDisplayList = noticeObj[title];
 
-  return noticeDisplayList?.length !== 0 ? (
-    <ul
-      className={`flex h-full w-full flex-col justify-start gap-4 ${className}`}
-    >
-      {noticeDisplayList
-        ?.slice(0, 3)
-        ?.map(({ roleType, postId, title: noticeTitle }) => (
-          <li key={postId}>
-            <TitleLinkWithRoleTag
-              to={`/notice/post/${postId}`}
-              roleType={roleType}
-              title={noticeTitle}
-            />
-          </li>
-        ))}
-    </ul>
-  ) : (
-    <span className="mt-20 flex items-center justify-center text-center text-mainGray-hover">
-      곧 새로운 소식이 올라올 예정이에요!
-    </span>
+  return (
+    !isLoading &&
+    (noticeDisplayList?.length !== 0 ? (
+      <ul
+        className={`flex h-full w-full flex-col justify-start gap-4 ${className}`}
+      >
+        {noticeDisplayList
+          ?.slice(0, 4)
+          ?.map(({ roleType, noticeId, postId, title: noticeTitle }) => (
+            <li key={noticeId}>
+              <TitleLinkWithRoleTag
+                to={`/notice/post/${postId}`}
+                roleType={roleType}
+                title={noticeTitle}
+              />
+            </li>
+          ))}
+      </ul>
+    ) : (
+      <span className="mt-20 flex items-center justify-center text-center text-mainGray-hover">
+        곧 새로운 소식이 올라올 예정이에요!
+      </span>
+    ))
   );
 }

@@ -21,6 +21,7 @@ export { useEditNotice } from '@/hooks/post/useEditNotice';
 export { useHandleScrap } from '@/hooks/post/useHandleScrap';
 export { useHandleComment } from '@/hooks/post/useHandleComment';
 export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
+export { useHandlePostTable } from '@/hooks/post/useHandlePostTable';
 
 /* calendar */
 export { useHandleAcl } from '@/hooks/calendar/useHandleAcl';

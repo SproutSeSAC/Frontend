@@ -157,7 +157,7 @@ export default function SelectBox<
         </ul>
       </article>
 
-      {errorMsg && <ErrorMsg msg={errorMsg} className="absolute ml-2" />}
+      {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
     </OutsideClickContainer>
   );
 }
