@@ -12,12 +12,14 @@ import FullCalendar from '@fullcalendar/react';
 import rrulePlugin from '@fullcalendar/rrule';
 
 import SmallCalendarBottomEvent from '@/components/calendar/SmallCalendarBottomEvent';
+import LoopLoading from '@/components/common/LoopLoading';
 
 interface CalendarProps {
   type: 'big' | 'small';
   events?: FullCalendarEvent[];
   sideViewEvents?: FullCalendarEvent[];
   className?: string;
+  isCourseCalendarLoadingArr: boolean[];
 }
 
 export default function Calendar({
@@ -25,6 +27,7 @@ export default function Calendar({
   events,
   sideViewEvents,
   className = '',
+  isCourseCalendarLoadingArr,
 }: CalendarProps) {
   const renderDayCellContent = useCallback(
     (info: DayCellContentArg, cellEvents?: FullCalendarEvent[]) => {
@@ -47,14 +50,14 @@ export default function Calendar({
           <span className="text-sm font-normal">{date}</span>
 
           {eventDots?.length !== 0 && (
-            <ul className="absolute -bottom-[1px] flex w-full items-center justify-center gap-0.5">
+            <ul className="absolute -bottom-1 flex w-full items-center justify-center gap-[3px]">
               {eventDots
                 ?.slice(0, 3)
                 ?.map(({ id, backgroundColor }) => (
                   <li
                     key={id}
                     style={{ backgroundColor }}
-                    className="size-[5px] rounded-full"
+                    className="size-[6px] rounded-full"
                   />
                 ))}
             </ul>
@@ -111,20 +114,27 @@ export default function Calendar({
             }
           />
 
-          {sideViewEvents && sideViewEvents.length !== 0 ? (
-            <ul className="flex w-full flex-col justify-center gap-4">
-              {sideViewEvents.map(({ id, start, end, title }) => (
-                <SmallCalendarBottomEvent
-                  key={id}
-                  date={`${formatDate(start, 'MM.dd HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
-                  title={title}
-                />
-              ))}
-            </ul>
-          ) : (
-            <span className="w-full pt-2 text-mainGray-active">
-              일정이 없습니다.
-            </span>
+          {isCourseCalendarLoadingArr?.includes(false) &&
+            (sideViewEvents && sideViewEvents.length !== 0 ? (
+              <ul className="flex w-full flex-col justify-center gap-4 px-3 pt-2">
+                {sideViewEvents.map(({ id, start, end, title }) => (
+                  <SmallCalendarBottomEvent
+                    key={id}
+                    date={`${formatDate(start, 'MM.dd HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
+                    title={title}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <span className="w-full pt-2 text-mainGray-active">
+                일정이 없습니다.
+              </span>
+            ))}
+
+          {isCourseCalendarLoadingArr?.includes(true) && (
+            <div className="flex min-h-[140px] items-center justify-center rounded-xl border border-lightGray-active bg-white px-6 py-4">
+              <LoopLoading size={80} />
+            </div>
           )}
         </>
       )}

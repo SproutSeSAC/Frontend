@@ -13,8 +13,11 @@ import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation'
 export default function NoticeLayout() {
   const { pathname } = useLocation();
 
-  const { fullCalendarEvents, fullCalendarSideViewEvents } =
-    useCalendarEvents();
+  const {
+    fullCalendarEvents,
+    fullCalendarSideViewEvents,
+    isCourseCalendarLoadingArr,
+  } = useCalendarEvents();
 
   const navigate = useNavigate();
 
@@ -32,6 +35,7 @@ export default function NoticeLayout() {
           type="small"
           events={fullCalendarEvents}
           sideViewEvents={fullCalendarSideViewEvents}
+          isCourseCalendarLoadingArr={isCourseCalendarLoadingArr}
         />
         <SquareButton
           color="lightGreen"

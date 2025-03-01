@@ -46,8 +46,11 @@ export default function Home() {
         (userProfile?.courseList || []).length > 0,
     },
   );
-  const { fullCalendarSideViewEvents, fullCalendarEvents } =
-    useCalendarEvents();
+  const {
+    fullCalendarSideViewEvents,
+    fullCalendarEvents,
+    isCourseCalendarLoadingArr,
+  } = useCalendarEvents();
 
   const { showToast } = useDialogContext();
 
@@ -87,6 +90,7 @@ export default function Home() {
             className="h-[509px]"
             events={fullCalendarEvents}
             sideViewEvents={fullCalendarSideViewEvents}
+            isCourseCalendarLoadingArr={isCourseCalendarLoadingArr}
           />
         </section>
 
