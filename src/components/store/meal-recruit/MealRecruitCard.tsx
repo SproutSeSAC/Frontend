@@ -126,7 +126,7 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
                 <span>{storeName}</span>
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-gray1">위치 | </span>
+                <span className="text-gray1">만남 장소 | </span>
                 <span>{meetingPlace}</span>
               </p>
             </div>

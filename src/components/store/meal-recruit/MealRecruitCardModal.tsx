@@ -78,7 +78,7 @@ export default function MealRecruitCardModal({
 
           <div className="flex items-center">
             <span className="meal-recruit-text-divider text-darkGray-active">
-              위치
+              만남 장소
             </span>
 
             <span className="flex flex-1 gap-1 overflow-hidden">
@@ -99,7 +99,7 @@ export default function MealRecruitCardModal({
                     imageNameSegment={member.imgUrl}
                   />
                   <div className="flex w-full items-center justify-between gap-9">
-                    <span className="text-sm">{member.nickname}</span>
+                    <span className="text-sm">@{member.nickname}</span>
                     {member.isOwner && (
                       <div className="flex items-center justify-between gap-1 rounded bg-[#FEFAE0] px-1.5 py-1 text-xs text-[#FF6D28]">
                         <FaCrown />

@@ -81,7 +81,6 @@ export default function MealRecruitModal() {
 
         hideDialog();
       } catch (err) {
-        console.error(err);
         showToast('한끼팟을 생성하지 못했습니다.');
       }
     },
@@ -251,7 +250,7 @@ export default function MealRecruitModal() {
               }}
             />
           </LabeledSection>
-          <LabeledSection label="위치" className="col-span-2 gap-4">
+          <LabeledSection label="모임장소" className="col-span-2 gap-4">
             <Controller
               control={control}
               name="meetingPlace"
@@ -259,9 +258,9 @@ export default function MealRecruitModal() {
                 return (
                   <div className="flex flex-col">
                     <TextInput
-                      placeholder="모일 위치를 작성해주세요"
+                      placeholder="모일 장소를 작성해주세요"
                       className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="위치"
+                      name="만남 장소"
                       onChange={onChange}
                     />
 
