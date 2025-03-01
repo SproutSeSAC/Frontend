@@ -19,7 +19,7 @@ interface CalendarProps {
   events?: FullCalendarEvent[];
   sideViewEvents?: FullCalendarEvent[];
   className?: string;
-  isCourseCalendarLoadingArr: boolean[];
+  isCourseCalendarLoadingArr?: boolean[];
 }
 
 export default function Calendar({

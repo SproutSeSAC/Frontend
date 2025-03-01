@@ -7,7 +7,7 @@ import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
 export default function MyScrapedPostList() {
   const { data: myScrapedPostList, isLoading: isMyScrapedPostListLoading } =
-    useGetMyScrapedPostList();
+    useGetMyScrapedPostList('내가 찜한 글');
 
   return (
     <MainView>
