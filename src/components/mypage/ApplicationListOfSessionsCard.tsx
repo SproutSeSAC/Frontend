@@ -1,7 +1,6 @@
 import { hasAdminRolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { HasAdminRole } from '@/types';
-import { getColorByRole } from '@/utils';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import XButton from '@/components/common/button/XButton';
@@ -19,8 +18,7 @@ export default function ApplicationListOfSessionsCard() {
             <Tag
               size="medium"
               text="캠퍼스매니저"
-              emphasisText
-              color="pink"
+              roleType="CAMPUS_LEADER"
               className="!px-1"
             />
             <span className="max-w-[330px]">
@@ -65,8 +63,7 @@ export default function ApplicationListOfSessionsCard() {
               <Tag
                 size="medium"
                 text={hasAdminRolesObj[role]}
-                emphasisText
-                color={getColorByRole(role)}
+                roleType={role}
                 className="!px-2 !py-1.5"
               />
               <span className="w-full overflow-hidden truncate">{title}</span>

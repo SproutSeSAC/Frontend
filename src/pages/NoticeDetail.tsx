@@ -17,7 +17,7 @@ import {
   useHandleScrap,
 } from '@/hooks';
 import { NoticeDto } from '@/types';
-import { findCurrNotice, getColorByRole } from '@/utils';
+import { findCurrNotice } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -145,17 +145,16 @@ export default function NoticeDetail() {
             <div className="mt-12 flex gap-2">
               {noticeDetail?.writer.role && (
                 <Tag
-                  color={getColorByRole(noticeDetail?.writer.role)}
+                  roleType={noticeDetail?.writer.role}
                   size="big"
                   text={rolesObj[noticeDetail?.writer.role]}
-                  emphasisText
                   className="px-[10px] py-[5px]"
                 />
               )}
               {noticeDetail?.noticeType && (
                 <Tag
-                  color="gray"
                   size="big"
+                  color="gray"
                   text={noticeCategoryDisplay[noticeDetail?.noticeType]}
                   className="px-[10px] py-[5px]"
                 />

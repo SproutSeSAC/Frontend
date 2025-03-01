@@ -97,14 +97,14 @@ export default function Home() {
               더보기
             </Link>
           </div>
-          <div className="flex h-[509px] w-full flex-col justify-between gap-4 overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
-            <div className="flex h-full flex-col border-b">
-              <span className="text-darkGray-active">마감임박</span>
+          <div className="flex h-[509px] w-full flex-col justify-between gap-5 overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
+            <div className="flex h-full flex-col border-b pb-4">
+              <span className="mb-4 text-darkGray-active">마감임박</span>
               <NoticeDisplayList title="마감임박" />
             </div>
 
             <div className="flex h-full flex-col">
-              <span className="mb-5 text-darkGray-active">NEW</span>
+              <span className="mb-4 text-darkGray-active">NEW</span>
               <NoticeDisplayList title="NEW" />
             </div>
           </div>

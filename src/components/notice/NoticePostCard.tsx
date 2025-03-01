@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import { useHandleScrap } from '@/hooks';
 import { NoticeDisplay } from '@/types';
-import { formatDate, getColorByRole } from '@/utils';
+import { formatDate } from '@/utils';
 import { BsEye } from 'react-icons/bs';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -36,11 +36,10 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          color={getColorByRole(notice.roleType)}
+          roleType={notice.roleType}
           size="big"
           text={rolesObj[notice.roleType]}
-          emphasisText
-          className="px-[10px] py-[5px]"
+          className="text-base"
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-mainGray">

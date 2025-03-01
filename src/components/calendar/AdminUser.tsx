@@ -2,7 +2,7 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { rolesObj } from '@/constants';
 import { AccessRole, AdminEmail } from '@/types';
-import { getColorByRole, hasAdmin, hasSuperAdmin, isSuperAdmin } from '@/utils';
+import { hasAdmin, hasSuperAdmin, isSuperAdmin } from '@/utils';
 import { BiUserPin } from 'react-icons/bi';
 import { FaCrown } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
@@ -47,14 +47,13 @@ export default function AdminUser({ admin, accessRole }: AdminUserProps) {
           <div className="my-2 flex">
             <Tag
               size="small"
-              color={getColorByRole(roleType)}
-              emphasisText
+              roleType={roleType}
               text={rolesObj[roleType]}
               className="mr-0.5 font-medium tracking-tighter"
             />
             <Tag
               text={accessRole === 'owner' ? '소유자' : '관리자'}
-              color="gray-light"
+              color="grayLight"
             />
           </div>
           <span className="flex items-center gap-0.5 px-1 tracking-tighter">

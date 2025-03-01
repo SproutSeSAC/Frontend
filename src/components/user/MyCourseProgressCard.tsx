@@ -67,7 +67,7 @@ export default function MyCourseProgressCard() {
             <li key={text}>
               <Tag
                 text={text}
-                color="gray-light"
+                color="grayLight"
                 size="big"
                 className="px-[14px] py-[10px]"
               />
@@ -119,7 +119,7 @@ export default function MyCourseProgressCard() {
                     <Tag
                       text={domain}
                       size="big"
-                      color="gray-light"
+                      color="grayLight"
                       className="px-[14px] py-[10px] !font-normal"
                     />
                   </li>

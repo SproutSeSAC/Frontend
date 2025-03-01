@@ -2,10 +2,9 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { serviceType } from '@/constants/serviceConstant';
+import { postTypeObj } from '@/constants/serviceConstant';
 import { useHandleScrap } from '@/hooks';
 import { MyScrapedPost } from '@/types/mypage/myPostDto';
-import { getColorByPostType } from '@/utils';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
@@ -37,8 +36,8 @@ export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {
         <div className="flex items-center justify-between">
           <Tag
             size="medium"
-            color={getColorByPostType(card.postType)}
-            text={`#${serviceType[card.postType]}`}
+            postType={card.postType}
+            text={`#${postTypeObj[card.postType]}`}
             className="py-1.5"
           />
           <FavoriteButton

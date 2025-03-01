@@ -56,7 +56,7 @@ export default function NoticeDisplayList({
         className={`flex h-full w-full flex-col justify-start gap-4 ${className}`}
       >
         {noticeDisplayList
-          ?.slice(0, 3)
+          ?.slice(0, 4)
           ?.map(({ roleType, noticeId, postId, title: noticeTitle }) => (
             <li key={noticeId}>
               <TitleLinkWithRoleTag
