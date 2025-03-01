@@ -7,6 +7,7 @@ interface VerificationContainerProps {
   isVerified: boolean;
   onVerifyClick: () => void;
   buttonName: string;
+  buttonDisabled: boolean;
 }
 
 export default function VerificationContainer({
@@ -14,6 +15,7 @@ export default function VerificationContainer({
   isVerified,
   onVerifyClick,
   buttonName,
+  buttonDisabled,
 }: VerificationContainerProps) {
   return (
     <div
@@ -29,7 +31,7 @@ export default function VerificationContainer({
         type="button"
         className={`absolute right-0 top-12 mt-2 rounded-md border px-2 py-0.5 ${isVerified ? 'text-mainGray' : 'text-darkGray-active'}`}
         onClick={onVerifyClick}
-        disabled={isVerified}
+        disabled={isVerified || buttonDisabled}
       >
         {buttonName}
       </button>

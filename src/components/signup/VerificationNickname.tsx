@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { getVerifyNicknameResult } from '@/services/auth/authQueries';
 
 import { verificationNicknameAtom } from '@/atoms/verificationNicknameAtom';
@@ -14,6 +16,7 @@ export default function VerificationNickname() {
   const [isVerifiedNickname, setIsVerifiedNickname] = useAtom(
     verificationNicknameAtom,
   );
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
@@ -29,6 +32,7 @@ export default function VerificationNickname() {
   const onVerifyClick = async () => {
     if (watchedNickname === '') return;
 
+    setIsPending(true);
     const isValid = await trigger('nickname');
 
     if (isValid) {
@@ -48,6 +52,7 @@ export default function VerificationNickname() {
                 type="button"
               />
             ),
+            dimClick: false,
           });
         }
       } catch (error) {
@@ -59,6 +64,7 @@ export default function VerificationNickname() {
         });
       }
     }
+    setIsPending(false);
   };
 
   return (
@@ -66,12 +72,18 @@ export default function VerificationNickname() {
       onVerifyClick={onVerifyClick}
       isVerified={isVerifiedNickname}
       buttonName="중복 확인"
+      buttonDisabled={isPending}
     >
       <TextInput
-        disabled={isVerifiedNickname}
+        {...register('nickname', {
+          onChange: () => {
+            if (isVerifiedNickname) {
+              setIsVerifiedNickname(false);
+            }
+          },
+        })}
         placeholder="사용하실 닉네임을 입력해주세요"
         className="h-[50px] w-full pl-4"
-        {...register('nickname')}
         errorMsg={errors.nickname?.message as string}
       />
     </VerificationContainer>
