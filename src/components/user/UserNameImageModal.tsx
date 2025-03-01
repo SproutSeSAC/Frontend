@@ -33,7 +33,11 @@ export default function UserNameImageModal({
 
   const { nickname, profileImageUrl } = profile;
 
-  const { mutateAsync: mutateProfile } = useUpdateUserProfile({
+  const {
+    mutateAsync: mutateProfile,
+    isPending: isUpdatePending,
+    isIdle: isUpdateIdle,
+  } = useUpdateUserProfile({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['useGetUserProfile'],
@@ -41,7 +45,11 @@ export default function UserNameImageModal({
     },
   });
 
-  const { mutateAsync: mutateProfileImage } = useUpdateProfileImage({
+  const {
+    mutateAsync: mutateProfileImage,
+    isPending: isUpdateProfileImagePending,
+    isIdle: isUpdateImageIdle,
+  } = useUpdateProfileImage({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['useGetUserProfile'],
@@ -125,11 +133,13 @@ export default function UserNameImageModal({
               name="기본 이미지 적용"
               onClick={resetProfileImage}
               className="bg-darkGray font-medium text-white"
+              disabled={isUpdateProfileImagePending || !isUpdateImageIdle}
             />
             <SquareButton
               type="submit"
               name="저장하기"
               className="font-medium text-white"
+              disabled={isUpdatePending || !isUpdateIdle}
             />
           </div>
         </form>

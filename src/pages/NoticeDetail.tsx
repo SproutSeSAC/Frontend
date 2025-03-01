@@ -143,11 +143,11 @@ export default function NoticeDetail() {
             </header>
 
             <div className="mt-12 flex gap-2">
-              {noticeDetail?.writer.role && (
+              {noticeDetail?.writer?.role && (
                 <Tag
-                  roleType={noticeDetail?.writer.role}
+                  roleType={noticeDetail?.writer?.role}
                   size="big"
-                  text={rolesObj[noticeDetail?.writer.role]}
+                  text={rolesObj[noticeDetail?.writer?.role]}
                   className="px-[10px] py-[5px]"
                 />
               )}
@@ -159,7 +159,7 @@ export default function NoticeDetail() {
                   className="px-[10px] py-[5px]"
                 />
               )}
-              {noticeDetail?.writer.userId === userProfile.userId && (
+              {noticeDetail?.writer?.userId === userProfile?.userId && (
                 <div className="group relative ml-auto flex items-center justify-center">
                   <button className="px-2">
                     <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
@@ -188,12 +188,12 @@ export default function NoticeDetail() {
               )}
 
             <PostDetailsTemplate
-              nickname={noticeDetail?.writer.userName || '-'}
+              nickname={noticeDetail?.writer?.userName || '-'}
               createdAt={noticeDetail?.createdAt}
               viewCount={noticeDetail?.viewCount || 0}
               description={noticeDetail?.content || '-'}
               actions={applySession()}
-              imageNameSegment={noticeDetail?.writer.profileUrl}
+              imageNameSegment={noticeDetail?.writer?.profileUrl}
             />
           </section>
           <CommentTemplate postId={postId} />

@@ -136,7 +136,7 @@ export default function MyPage() {
         </div>
       </section>
 
-      <section className="mb-14">
+      <section className="mb-20 min-h-[350px]">
         <Title title={`${name}님이 작성한 글 모음`} />
         <MyCollection />
       </section>

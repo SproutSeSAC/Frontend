@@ -86,9 +86,9 @@ export default function LoungeDetail() {
             </header>
             <Tag
               color="green"
-              size="medium"
+              size="big"
               text={postDetail ? ptypeDisplay[postDetail.ptype] : ''}
-              className="mt-12 w-fit py-1"
+              className="mt-12 w-fit"
             />
 
             {postDetail && (
