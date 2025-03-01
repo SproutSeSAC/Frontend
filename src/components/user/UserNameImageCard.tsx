@@ -6,24 +6,24 @@ import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
 
 interface UserNameImageProps {
-  data: UserProfileDto.GetCard['profile'];
+  profile: UserProfileDto.Get;
 }
 
-export default function UserNameImageCard({ data }: UserNameImageProps) {
-  const { name, nickname, profileUrl } = data;
+export default function UserNameImageCard({ profile }: UserNameImageProps) {
+  const { name, nickname, profileImageUrl } = profile;
 
   const { showDialog } = useDialogContext();
 
   const openModalClick = () => {
     showDialog({
       key: 'USERNAME-IMAGE-CARD-TYPE',
-      element: <UserNameImageModal />,
+      element: <UserNameImageModal profile={profile} />,
     });
   };
 
   return (
     <div className="relative flex h-[200px] items-center justify-between gap-7 rounded-[20px] bg-white px-9 py-10">
-      <UserImage imageNameSegment={profileUrl} className="size-[70px]" />
+      <UserImage imageNameSegment={profileImageUrl} className="size-[70px]" />
 
       <div className="flex flex-1 flex-col gap-2">
         <span className="font-medium">{name}</span>

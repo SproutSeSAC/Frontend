@@ -2,9 +2,7 @@ import { Link } from 'react-router-dom';
 
 import {
   initialUserProfile,
-  initialUserProfileCard,
   useGetUserProfile,
-  useGetUserProfileCard,
 } from '@/services/auth/authQueries';
 
 import imgUrl from '@/assets/images/faq.png';
@@ -20,18 +18,9 @@ import MyCollection from '@/components/mypage/MyCollection';
 import UserNameImageCard from '@/components/user/UserNameImageCard';
 
 export default function MyPage() {
-  const { data: userProfileCard = initialUserProfileCard, isLoading } =
-    useGetUserProfileCard();
+  const { data = initialUserProfile, isLoading } = useGetUserProfile();
 
-  const {
-    data: {
-      courseList,
-      name,
-      phoneNumber,
-      campusList,
-      email,
-    } = initialUserProfile,
-  } = useGetUserProfile();
+  const { courseList, name, phoneNumber, campusList, email } = data;
 
   const userInfoList = [
     {
@@ -90,7 +79,7 @@ export default function MyPage() {
           <Title title="회원 정보 수정" className="mb-[14px]" />
 
           <div className="grid grid-cols-2 gap-x-9">
-            <UserNameImageCard data={userProfileCard.profile} />
+            <UserNameImageCard profile={data} />
 
             <ul className="relative flex h-[200px] flex-col justify-center gap-4 rounded-[20px] bg-white px-7 py-2 peer-hover:cursor-pointer">
               {userInfoList.map(({ value, label }) => (
