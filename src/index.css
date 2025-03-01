@@ -30,6 +30,11 @@
 
 @layer base {
   body {
+    input:-webkit-autofill {
+      background-color: white !important;
+      -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    }
+
     @apply bg-bg font-pretendard text-black;
 
     /* Swiper */

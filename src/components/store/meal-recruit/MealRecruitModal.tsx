@@ -47,7 +47,7 @@ export default function MealRecruitModal() {
   });
   const { control, handleSubmit } = methods;
 
-  const { mutateAsync: postMealRecruit } = usePostMyPost();
+  const { mutateAsync: postMealRecruit, isPending, isIdle } = usePostMyPost();
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
@@ -75,7 +75,7 @@ export default function MealRecruitModal() {
 
         showToast('한끼팟을 생성했습니다.');
 
-        await queryClient.fetchQuery({
+        await queryClient.invalidateQueries({
           queryKey: ['useGetInfiniteMealPostList'],
         });
 
@@ -90,17 +90,12 @@ export default function MealRecruitModal() {
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
     err => {
-      console.error('hook form error >>', {
-        data: methods.getValues(),
-        error: err,
-      });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
-
       if (firstErrorMessage) {
         showToast(firstErrorMessage);
       }
     },
-    [methods, showToast],
+    [showToast],
   );
 
   return (
@@ -281,7 +276,12 @@ export default function MealRecruitModal() {
         </div>
 
         <div className="flex justify-end">
-          <SquareButton name="저장하기" type="submit" className="self-end" />
+          <SquareButton
+            name="저장하기"
+            type="submit"
+            className="cursor-pointer self-end"
+            disabled={isPending || !isIdle}
+          />
         </div>
       </form>
     </Modal>

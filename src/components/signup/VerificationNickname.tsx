@@ -51,7 +51,6 @@ export default function VerificationNickname() {
           });
         }
       } catch (error) {
-        console.log(error);
         alert({
           text: '이미 사용중인 닉네임입니다!',
           children: (

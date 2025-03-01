@@ -4,6 +4,7 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import SquareButton from '@/components/common/button/SquareButton';
 
 interface TrashButtonProps {
+  text?: string;
   disabled?: boolean;
   className?: string;
   onConfirmClick?: () => void;
@@ -13,6 +14,7 @@ export default function TrashButton({
   disabled,
   className,
   onConfirmClick,
+  text = '',
 }: TrashButtonProps) {
   const { hideDialog, alert } = useDialogContext();
 
@@ -50,7 +52,7 @@ export default function TrashButton({
       onClick={onDeleteClick}
       disabled={disabled}
     >
-      <FaRegTrashAlt className="h-full w-full" />
+      {text || <FaRegTrashAlt className="h-full w-full" />}
     </button>
   );
 }
