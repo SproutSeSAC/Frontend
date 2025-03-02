@@ -23,7 +23,10 @@ export const getVerifyNicknameResult = (nickname: string) =>
 export const getCalendarToken = () => axiosInstance.get('/user/calendar');
 
 // 리프레시 토큰
-export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
+export const getNewAccessToken = () =>
+  axiosInstance.get('/login/refresh').catch(() => {
+    window.location.href = `${window.location.origin}/login`;
+  });
 
 export const initialUserProfile: UserProfileDto.Get = {
   userId: 0,

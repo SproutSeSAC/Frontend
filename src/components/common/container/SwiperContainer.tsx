@@ -33,7 +33,7 @@ export default function SwiperContainer<T extends { id: number }>({
             setSlide({ isBeginning, isEnd });
           }
         }}
-        className="flex w-[4vw] items-center justify-center py-5 text-darkGray disabled:text-mainGray"
+        className="flex w-[4vw] items-center justify-center py-5 text-darkGray disabled:text-[#e7e7e7]"
         disabled={slide.isBeginning}
       >
         <Icon name="ChevronLeft" className="size-14" />

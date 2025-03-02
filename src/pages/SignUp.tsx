@@ -224,7 +224,7 @@ export default function SignUp() {
                                       onChange([data[0]?.id]);
                                     }}
                                     errorMsg={errors.campusIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base"
+                                    selectBoxClassName="!h-[50px] !text-base !border-darkGray"
                                   />
                                 ) : (
                                   <MultiSelectDropdown
@@ -238,7 +238,7 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.campusIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base"
+                                    selectBoxClassName="!h-[50px] !text-base !border-darkGray"
                                   />
                                 );
                               }}
@@ -274,7 +274,7 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.courseIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden"
+                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden !border-darkGray"
                                     onSelectBoxClick={triggerCourseIdListError}
                                     hasFullCheck={!!options.length}
                                     optionClassName="text-start tracking-tight leading-5"
@@ -288,7 +288,7 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.courseIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden"
+                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden !border-darkGray"
                                     onSelectBoxClick={triggerCourseIdListError}
                                     optionClassName="text-start tracking-tight whitespace-pre-wrap leading-5"
                                   />
@@ -317,7 +317,7 @@ export default function SignUp() {
 
                                   return (
                                     <TechStackDropdown
-                                      defaultLabel="기술스택"
+                                      defaultLabel="기술 스택"
                                       defaultTabValue="백엔드"
                                       options={techStackList}
                                       initialSelectedOptions={selectedOptions}
@@ -329,7 +329,7 @@ export default function SignUp() {
                                         });
                                       }}
                                       isMarkTechStackList
-                                      selectBoxClassName="!h-[50px] !text-base"
+                                      selectBoxClassName="!h-[50px] !text-base !border-darkGray"
                                       errorMsg={err?.message}
                                     />
                                   );

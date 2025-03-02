@@ -188,7 +188,7 @@ export default function NoticeDetail() {
               )}
 
             <PostDetailsTemplate
-              nickname={noticeDetail?.writer?.userName || '-'}
+              name={noticeDetail?.writer?.userName || '-'}
               createdAt={noticeDetail?.createdAt}
               viewCount={noticeDetail?.viewCount || 0}
               description={noticeDetail?.content || '-'}

@@ -107,7 +107,7 @@ export default function MyCourseProgressCard() {
           </span>
         </div>
 
-        {/* 도메인 직무 기술스택 */}
+        {/* 도메인 직무 기술 스택 */}
         <div className="flex w-full flex-1 flex-col justify-between gap-1.5 pl-4">
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">도메인</span>
@@ -141,7 +141,7 @@ export default function MyCourseProgressCard() {
           </div>
 
           <div className="flex w-full items-center [&>div]:flex-1">
-            <span className="w-20 text-sm font-semibold">기술스택</span>
+            <span className="w-20 text-sm font-semibold">기술 스택</span>
             <ScrollContainer gap={3} isBlurRight>
               {techStackList
                 ?.sort((a, b) => a.id - b.id)

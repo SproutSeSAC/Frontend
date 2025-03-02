@@ -69,7 +69,7 @@ export default function Home() {
   if ((!isFetched && isGetUserProfileLoading) || isGetLoungeListLoading)
     return <LoadingPage />;
 
-  const linkButtonStyle = 'pr-[10px] tracking-tight text-darkGray-hover';
+  const linkButtonStyle = 'pr-[10px] tracking-tight text-darkGray';
 
   return (
     <MainView className="pb-20">
@@ -81,7 +81,7 @@ export default function Home() {
           <MyCourseProgressCard />
         </section>
 
-        <section>
+        <section className="w-full min-w-96">
           <div className="mb-[14px] flex items-center justify-between">
             <Title title="주요 일정" />
           </div>

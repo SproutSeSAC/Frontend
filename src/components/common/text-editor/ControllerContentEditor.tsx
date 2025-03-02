@@ -29,7 +29,7 @@ export default function ControllerContentEditor({
                 name="제목"
                 placeholder={`${type} 제목을 입력해주세요.`}
                 onChange={onChange}
-                className="!mr-0 h-full !rounded-2xl py-[18px] pl-3 pr-4 text-lg placeholder:text-mainGray"
+                className="!mr-0 h-full !rounded-2xl !border-mainGray py-[18px] pl-3 pr-4 text-lg placeholder:text-mainGray"
                 errorMsg={error?.message}
               />
             );

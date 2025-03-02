@@ -23,7 +23,14 @@ export const useSubmitNotice = () => {
   const navigate = useNavigate();
 
   const { mutateAsync: mutateCreateEvent, isPending: isCreateEventsPending } =
-    useCreateEventsForMultipleCalendars();
+    useCreateEventsForMultipleCalendars({
+      onSuccess: async (_, data) => {
+        const { calendarId } = data[0];
+        await queryClient.invalidateQueries({
+          queryKey: ['useGetEventsByCalendar', calendarId],
+        });
+      },
+    });
 
   const confirmBtn = {
     name: '확인',

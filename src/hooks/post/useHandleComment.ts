@@ -32,7 +32,8 @@ export const useHandleComment = ({ postId, reset }: UseHandleCommentProps) => {
 
   const queryClient = useQueryClient();
 
-  const { data: commentList = [] } = useGetCommentByPostList(postId);
+  const { data: commentList = [], isLoading: isCommentListLoading } =
+    useGetCommentByPostList(postId);
 
   const { data: { profileImageUrl: imgUrl } = initialUserProfile } =
     useGetUserProfile();
@@ -43,17 +44,20 @@ export const useHandleComment = ({ postId, reset }: UseHandleCommentProps) => {
     });
   };
 
-  const { mutateAsync: postComment } = usePostComment(postId, {
-    onSuccess: invalidateQueries,
-  });
+  const { mutateAsync: postComment, isPending: isPostCommentPending } =
+    usePostComment(postId, {
+      onSuccess: invalidateQueries,
+    });
 
-  const { mutateAsync: editComment } = usePatchComment({
-    onSuccess: invalidateQueries,
-  });
+  const { mutateAsync: editComment, isPending: isEditCommentPending } =
+    usePatchComment({
+      onSuccess: invalidateQueries,
+    });
 
-  const { mutateAsync: deleteComment } = useDeleteComment({
-    onSuccess: invalidateQueries,
-  });
+  const { mutateAsync: deleteComment, isPending: isDeleteCommentPending } =
+    useDeleteComment({
+      onSuccess: invalidateQueries,
+    });
 
   const { showToast } = useDialogContext();
 
@@ -95,12 +99,25 @@ export const useHandleComment = ({ postId, reset }: UseHandleCommentProps) => {
     }
   };
 
+  const onDeleteCommentClick = async (commentId: number) => {
+    try {
+      await deleteComment({ commentId });
+      showToast('댓글을 삭제했어요!');
+    } catch (err) {
+      showToast('댓글삭제를 실패했어요');
+    }
+  };
+
   return {
     commentList,
     onSubmit,
     onEditSubmit,
     isEditingComment,
     toggleEditingComment,
-    deleteComment,
+    onDeleteCommentClick,
+    isCommentListLoading,
+    isPostCommentPending,
+    isEditCommentPending,
+    isDeleteCommentPending,
   };
 };

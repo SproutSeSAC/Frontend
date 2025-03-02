@@ -140,24 +140,26 @@ export default function DomainJobTechStackModal() {
 
                   return (
                     <>
-                      <ScrollContainer gap={5}>
-                        {value.map(({ id, domain }) => (
-                          <li key={id} className="mb-3">
-                            <Tag
-                              text={domain}
-                              color="green"
-                              size="medium"
-                              onDeleteClick={() => {
-                                const filteredData = value.filter(
-                                  item => item.id !== id,
-                                );
-                                onChange(filteredData);
-                              }}
-                              className="h-[30px]"
-                            />
-                          </li>
-                        ))}
-                      </ScrollContainer>
+                      {value.length > 0 && (
+                        <ScrollContainer gap={5}>
+                          {value.map(({ id, domain }) => (
+                            <li key={id} className="mb-3">
+                              <Tag
+                                text={domain}
+                                color="green"
+                                size="medium"
+                                onDeleteClick={() => {
+                                  const filteredData = value.filter(
+                                    item => item.id !== id,
+                                  );
+                                  onChange(filteredData);
+                                }}
+                                className="h-[30px]"
+                              />
+                            </li>
+                          ))}
+                        </ScrollContainer>
+                      )}
 
                       <SingleSelectDropdown
                         defaultLabel="관심 도메인"
@@ -197,24 +199,26 @@ export default function DomainJobTechStackModal() {
                   }));
                   return (
                     <>
-                      <ScrollContainer gap={5}>
-                        {value?.map(({ id, job }) => (
-                          <li key={id} className="mb-3">
-                            <Tag
-                              text={job}
-                              color="green"
-                              size="medium"
-                              onDeleteClick={() => {
-                                const filteredData = value.filter(
-                                  item => item.id !== id,
-                                );
-                                onChange(filteredData);
-                              }}
-                              className="h-[30px]"
-                            />
-                          </li>
-                        ))}
-                      </ScrollContainer>
+                      {value.length > 0 && (
+                        <ScrollContainer gap={5}>
+                          {value?.map(({ id, job }) => (
+                            <li key={id} className="mb-3">
+                              <Tag
+                                text={job}
+                                color="green"
+                                size="medium"
+                                onDeleteClick={() => {
+                                  const filteredData = value.filter(
+                                    item => item.id !== id,
+                                  );
+                                  onChange(filteredData);
+                                }}
+                                className="h-[30px]"
+                              />
+                            </li>
+                          ))}
+                        </ScrollContainer>
+                      )}
 
                       <SingleSelectDropdown
                         defaultLabel="관심 직무"
@@ -246,7 +250,7 @@ export default function DomainJobTechStackModal() {
               render={({ field: { onChange }, formState: { errors } }) => {
                 return (
                   <TechStackDropdown
-                    defaultLabel="기술스택"
+                    defaultLabel="기술 스택"
                     defaultTabValue="백엔드"
                     options={allTechStackList}
                     initialSelectedOptions={initialTechStackOptions}
@@ -264,7 +268,7 @@ export default function DomainJobTechStackModal() {
             name="저장하기"
             type="submit"
             color={isValid ? 'mainGreen' : 'gray'}
-            className="mt-5 h-[58px]"
+            className="mt-10 h-[58px] text-base"
           />
         </form>
       </FormProvider>

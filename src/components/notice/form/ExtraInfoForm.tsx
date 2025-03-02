@@ -49,7 +49,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
                 name="만족도 조사"
                 placeholder="만족도 조사 링크를 적어주세요."
                 onChange={onChange}
-                className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-mainGray"
+                className="!h-full !rounded-2xl !border-mainGray px-4 py-[18px] text-lg placeholder:text-mainGray"
                 errorMsg={error?.message}
               />
             );

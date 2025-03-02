@@ -114,16 +114,19 @@ export default function Calendar({
             }
           />
 
-          {isCourseCalendarLoadingArr?.includes(false) &&
-            (sideViewEvents && sideViewEvents.length !== 0 ? (
+          {!isCourseCalendarLoadingArr?.includes(true) &&
+            sideViewEvents &&
+            ((sideViewEvents as FullCalendarEvent[]).length !== 0 ? (
               <ul className="flex w-full flex-col justify-center gap-4 px-3 pt-2">
-                {sideViewEvents.map(({ id, start, end, title }) => (
-                  <SmallCalendarBottomEvent
-                    key={id}
-                    date={`${formatDate(start, 'MM.dd HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
-                    title={title}
-                  />
-                ))}
+                {(sideViewEvents as FullCalendarEvent[]).map(
+                  ({ id, start, end, title }) => (
+                    <SmallCalendarBottomEvent
+                      key={id}
+                      date={`${formatDate(start, 'MM.dd HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
+                      title={title}
+                    />
+                  ),
+                )}
               </ul>
             ) : (
               <span className="w-full pt-2 text-mainGray-active">
@@ -132,7 +135,7 @@ export default function Calendar({
             ))}
 
           {isCourseCalendarLoadingArr?.includes(true) && (
-            <div className="flex min-h-[140px] items-center justify-center rounded-xl border border-lightGray-active bg-white px-6 py-4">
+            <div className="flex min-h-[120px] items-center justify-center rounded-xl bg-white px-6 py-4">
               <LoopLoading size={80} />
             </div>
           )}

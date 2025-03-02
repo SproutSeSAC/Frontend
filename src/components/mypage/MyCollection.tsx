@@ -145,7 +145,7 @@ export default function MyCollection() {
       {/* 내가 쓴 게시글, 내가 쓴 댓글 */}
       {currCollection !== '내가 찜한 글' && (
         <>
-          <div className="flex min-h-[230px] flex-col rounded-[20px] bg-white py-6 shadow-card">
+          <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white py-6">
             {!isMyPostListLoading && !isMyCommentListLoading && (
               <table>
                 <colgroup>
@@ -273,7 +273,11 @@ export default function MyCollection() {
                           <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-11 text-start">
                             {postType !== 'MEAL' && (
                               <Link
-                                to={`/${postType === 'PROJECT' ? 'lounge' : 'notice'}/post/${postId}`}
+                                to={
+                                  postType === 'PROJECT'
+                                    ? `/lounge/post/${postId}`
+                                    : `/notice/post/${linkedId}`
+                                }
                                 className="underline"
                               >
                                 {title}

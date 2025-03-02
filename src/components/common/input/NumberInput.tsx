@@ -39,7 +39,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           onBlur={() => toggleFocus && toggleFocus(false)}
           onKeyDown={onEnter}
           disabled={disabled}
-          className={`h-[45px] w-full rounded-l-xl border p-2 outline-none disabled:rounded-l-none disabled:bg-[#eee] disabled:text-[#eee] ${className}`}
+          className={`h-[45px] w-full rounded-l-xl border p-2 outline-none disabled:rounded-l-none disabled:bg-lightGray-active disabled:text-lightGray-active ${className}`}
         />
 
         {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}

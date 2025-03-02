@@ -12,7 +12,8 @@ interface PostDetailsTemplateProps {
     disabled?: boolean;
   }>;
   imageNameSegment?: string;
-  nickname: string;
+  name?: string;
+  nickname?: string;
   createdAt?: string;
   viewCount?: number;
   description?: string;
@@ -21,6 +22,7 @@ interface PostDetailsTemplateProps {
 export default function PostDetailsTemplate({
   actions,
   imageNameSegment,
+  name,
   nickname,
   createdAt,
   viewCount,
@@ -32,7 +34,9 @@ export default function PostDetailsTemplate({
         <div>
           <div className="flex items-center gap-2">
             <UserImage imageNameSegment={imageNameSegment} />
-            <span className="text-[22px]">@{nickname}</span>
+            <span className="text-[22px]">
+              {nickname ? `@${nickname}` : name}
+            </span>
           </div>
 
           <ul className="mt-3 flex items-center gap-10 text-lg text-darkGray-active">

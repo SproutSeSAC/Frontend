@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { usePostMyPost, usePutMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
@@ -79,8 +77,6 @@ export default function LoungeForm() {
   const [searchParams] = useSearchParams();
   const modifyProjectId = searchParams.get('modifyProject');
 
-  const queryClient = useQueryClient();
-
   const { showToast } = useDialogContext();
 
   const { data: jobList } = useGetJobList();
@@ -134,9 +130,6 @@ export default function LoungeForm() {
       try {
         await putProject({ postId: Number(modifyProjectId), params });
         showToast('프로젝트를 수정했습니다.');
-        queryClient.invalidateQueries({
-          queryKey: ['', {}],
-        });
         navigate('/lounge');
       } catch (err) {
         showToast('프로젝트 수정을 실패했습니다.');
@@ -147,9 +140,6 @@ export default function LoungeForm() {
     try {
       await postProject(params);
       showToast('프로젝트를 등록했습니다.');
-      queryClient.invalidateQueries({
-        queryKey: ['', {}],
-      });
       navigate('/lounge');
     } catch (err) {
       showToast('프로젝트 등록을 실패했습니다.');
@@ -299,7 +289,7 @@ export default function LoungeForm() {
 
                   return (
                     <TechStackDropdown
-                      defaultLabel="기술스택"
+                      defaultLabel="기술 스택"
                       defaultTabValue="백엔드"
                       errorMsg={error?.message}
                       initialSelectedOptions={selectedOption}
