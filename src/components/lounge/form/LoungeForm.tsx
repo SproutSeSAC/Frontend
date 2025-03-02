@@ -283,16 +283,12 @@ export default function LoungeForm() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
-                  const selectedOption = techStackList?.filter(position =>
-                    value.includes(position.id),
-                  );
-
                   return (
                     <TechStackDropdown
                       defaultLabel="기술 스택"
                       defaultTabValue="백엔드"
                       errorMsg={error?.message}
-                      initialSelectedOptions={selectedOption}
+                      value={value}
                       options={techStackList}
                       onChangeValue={data => {
                         const ids = data.map(item => item.id);

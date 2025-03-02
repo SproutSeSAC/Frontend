@@ -310,17 +310,12 @@ export default function SignUp() {
                                   field: { value },
                                   fieldState: { error: err },
                                 }) => {
-                                  const selectedOptions =
-                                    techStackList?.filter(techStack =>
-                                      value?.some(id => id === techStack.id),
-                                    ) || [];
-
                                   return (
                                     <TechStackDropdown
                                       defaultLabel="기술 스택"
                                       defaultTabValue="백엔드"
                                       options={techStackList}
-                                      initialSelectedOptions={selectedOptions}
+                                      value={value}
                                       onChangeValue={data => {
                                         const val = data.map(({ id }) => id);
                                         setValue('techStackIdList', val, {

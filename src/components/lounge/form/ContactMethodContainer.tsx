@@ -65,7 +65,7 @@ export default function ContactMethodContainer() {
                     value={value}
                     onChange={onChange}
                     errorMsg={error?.message}
-                    className="h-[57px] placeholder:text-mainGray"
+                    className="h-[57px] !border-mainGray"
                   />
                 </div>
               );
@@ -74,7 +74,7 @@ export default function ContactMethodContainer() {
         ) : (
           <ControllerPhoneNumber
             name="contactDetail"
-            className="!h-[57px] !pl-2"
+            className="!h-[57px] !border-mainGray !pl-2"
           />
         ))}
     </div>

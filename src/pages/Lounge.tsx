@@ -54,6 +54,11 @@ export default function Lounge() {
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
 
+  const selectedTechStackOption = useMemo(() => {
+    const { techStack } = currFilter;
+    return techStackList?.filter(({ id }) => techStack?.includes(id));
+  }, [currFilter, techStackList]);
+
   const selectedPositionOption = useMemo(() => {
     const { position } = currFilter;
     const selectedPosition = jobList
@@ -108,6 +113,7 @@ export default function Lounge() {
               defaultLabel="기술 스택"
               defaultTabValue="백엔드"
               options={techStackList}
+              value={selectedTechStackOption.map(({ id }) => id)}
               onChangeValue={value => {
                 const newValue = value.map(item => item.id);
                 handleChangeFilter({ techStack: newValue });

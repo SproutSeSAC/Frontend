@@ -11,9 +11,7 @@ import {
 import SquareButton from '@/components/common/button/SquareButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
-import TechStackDropdown, {
-  OptionItem,
-} from '@/components/common/dropdown/TechStackDropdown';
+import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';
@@ -105,14 +103,6 @@ export default function DomainJobTechStackModal() {
         return [];
     }
   };
-
-  const getTechStackOptions = () => {
-    return userTechStackList.map(({ jobName, techStack, ...rest }) => {
-      return { name: techStack, type: jobName, ...rest };
-    });
-  };
-
-  const initialTechStackOptions: OptionItem[] = getTechStackOptions();
 
   if (isLoading) return null;
 
@@ -247,13 +237,17 @@ export default function DomainJobTechStackModal() {
             <Controller
               control={control}
               name="updatedTechStackList"
-              render={({ field: { onChange }, formState: { errors } }) => {
+              render={({
+                field: { onChange, value },
+                formState: { errors },
+              }) => {
+                const currValue = value.map(({ id }) => id);
                 return (
                   <TechStackDropdown
                     defaultLabel="기술 스택"
                     defaultTabValue="백엔드"
+                    value={currValue}
                     options={allTechStackList}
-                    initialSelectedOptions={initialTechStackOptions}
                     onChangeValue={onChange}
                     isMarkTechStackList
                     errorMsg={errors.updatedTechStackList?.message}
