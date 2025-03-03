@@ -17,9 +17,8 @@ export const useCalendarEvents = () => {
   const { allCalendarList, courseCalendarList } = useCalendarList();
 
   const getCalendarColor = useMemo(() => {
-    return (calendarSummary: string) =>
-      allCalendarList?.find(({ summary }) => summary === calendarSummary)
-        ?.backgroundColor;
+    return (calendarId: string) =>
+      allCalendarList?.find(({ id }) => id === calendarId)?.backgroundColor;
   }, [allCalendarList]);
 
   const getEventList: (
@@ -31,12 +30,14 @@ export const useCalendarEvents = () => {
     eventsByCalendar => {
       return eventsByCalendar
         ?.map(({ isLoading, data }) => {
-          // 로딩 점검.
           if (isLoading || !data) return data;
-          const { calendarId, summary, items: eventList } = data;
+          const { calendarId, items: eventList } = data;
           return eventList.map(event => {
-            const backgroundColor = getCalendarColor(summary);
-            return { ...event, calendarId, backgroundColor };
+            if (calendarId) {
+              const backgroundColor = getCalendarColor(calendarId);
+              return { ...event, calendarId, backgroundColor };
+            }
+            return { ...event, calendarId };
           });
         })
         ?.flat()
