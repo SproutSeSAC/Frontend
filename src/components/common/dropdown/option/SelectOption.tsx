@@ -26,7 +26,7 @@ export default function SelectOption({
     <li key={option.id} className="rounded-lg first:mt-2 last:mb-2">
       {isMultiSelectOption ? (
         <label
-          className={`flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-start hover:bg-lightGray ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-start hover:bg-lightGray-active ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
         >
           <input
             type="checkbox"
@@ -39,7 +39,7 @@ export default function SelectOption({
       ) : (
         <button
           type="button"
-          className={`flex min-w-full cursor-pointer items-center whitespace-pre rounded-lg px-3 py-1.5 text-start hover:bg-lightGray ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`flex min-w-full cursor-pointer items-center whitespace-pre rounded-lg px-3 py-1.5 text-start hover:bg-lightGray-active ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
           onClick={() => onOptionClick(option)}
           disabled={isSelected}
         >

@@ -117,7 +117,7 @@ export default function Calendar({
           {!isCourseCalendarLoadingArr?.includes(true) &&
             sideViewEvents &&
             ((sideViewEvents as FullCalendarEvent[]).length !== 0 ? (
-              <ul className="flex w-full flex-col justify-center gap-4 px-3 pt-2">
+              <ul className="flex w-full flex-col justify-center gap-4 px-2 pt-2">
                 {(sideViewEvents as FullCalendarEvent[]).map(
                   ({ id, start, end, title }) => (
                     <SmallCalendarBottomEvent

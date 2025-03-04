@@ -69,6 +69,25 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
         }
       });
     })
+    .superRefine((sessions, ctx) => {
+      sessions.forEach((item, i) => {
+        const currentStart = new Date(item.sessionStartDateTime).getTime();
+
+        sessions.forEach((prevItem, j) => {
+          if (j >= i) return;
+
+          const prevStart = new Date(prevItem.sessionStartDateTime).getTime();
+
+          if (currentStart < prevStart) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `${i + 1}회차의 시작 시간이 ${j + 1}회차보다 이전일 수 없습니다.`,
+              path: [i, 'sessionEndDateTime'],
+            });
+          }
+        });
+      });
+    })
     .optional(), //
 
   meetingType: meetingTypeEnum.default('ONLINE').optional(),

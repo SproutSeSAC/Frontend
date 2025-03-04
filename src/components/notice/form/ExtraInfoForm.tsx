@@ -23,9 +23,9 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
       </LabeledSection>
 
       <LabeledSection label="신청 기간" className="col-span-2">
-        <div className="flex w-full items-center gap-2">
+        <div className="col-span-2 grid w-full grid-cols-[1fr_0.04fr_1fr] items-center gap-2">
           <ControllerDateTime name="applicationStartDateTime" />
-          <span className="text-xl">~</span>
+          <span className="text-center text-xl">~</span>
           <ControllerDateTime name="applicationEndDateTime" />
         </div>
       </LabeledSection>
@@ -49,7 +49,7 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
                 name="만족도 조사"
                 placeholder="만족도 조사 링크를 적어주세요."
                 onChange={onChange}
-                className="!h-full !rounded-2xl !border-mainGray px-4 py-[18px] text-lg placeholder:text-mainGray"
+                className="!h-full !rounded-2xl px-4 py-[18px] text-lg placeholder:text-mainGray"
                 errorMsg={error?.message}
               />
             );
