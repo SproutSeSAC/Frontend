@@ -4,7 +4,6 @@ import { axiosInstance } from '@/services/axiosInstance';
 
 import { CALENDAR_TOKEN_KEY } from '@/constants';
 import { UserProfileDto } from '@/types';
-import { deleteCookie } from '@/utils';
 
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
@@ -21,9 +20,17 @@ export const getVerifyNicknameResult = (nickname: string) =>
 
 // 캘린더 인증
 export const getCalendarToken = () =>
-  axiosInstance.get('/user/calendar').catch(async () => {
-    await deleteCookie(CALENDAR_TOKEN_KEY);
-  });
+  axiosInstance
+    .get('/user/calendar')
+    .then(res => {
+      const calendarAccessToken = res.data.access_token;
+      if (calendarAccessToken) {
+        sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
+      }
+    })
+    .catch(async error => {
+      console.log(error);
+    });
 
 // 리프레시 토큰
 export const getNewAccessToken = () =>

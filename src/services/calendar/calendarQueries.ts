@@ -12,7 +12,6 @@ import {
   GoogleCalendarApiDto,
   UserCourse,
 } from '@/types';
-import { getCookie } from '@/utils';
 import { AxiosError } from 'axios';
 
 export const useGetCalendarList = (
@@ -29,10 +28,10 @@ export const useGetCalendarList = (
   return useQuery({
     queryKey: ['useGetCalendarList'],
     queryFn: getCalendarList,
-    enabled: !!getCookie(CALENDAR_TOKEN_KEY),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: false,
+    enabled: !!sessionStorage.getItem(CALENDAR_TOKEN_KEY),
     ...options,
   });
 };
