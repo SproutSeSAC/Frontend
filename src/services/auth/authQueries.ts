@@ -2,7 +2,9 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { CALENDAR_TOKEN_KEY } from '@/constants';
 import { UserProfileDto } from '@/types';
+import { deleteCookie } from '@/utils';
 
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
@@ -14,13 +16,14 @@ export const getVerifyCodeResult = (code: string) =>
 // 닉네임 중복확인
 export const getVerifyNicknameResult = (nickname: string) =>
   axiosInstance.get(`/user/nickname/duplicate`, {
-    params: {
-      nickname,
-    },
+    params: { nickname },
   });
 
 // 캘린더 인증
-export const getCalendarToken = () => axiosInstance.get('/user/calendar');
+export const getCalendarToken = () =>
+  axiosInstance.get('/user/calendar').catch(async () => {
+    await deleteCookie(CALENDAR_TOKEN_KEY);
+  });
 
 // 리프레시 토큰
 export const getNewAccessToken = () =>

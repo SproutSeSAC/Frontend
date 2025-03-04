@@ -116,7 +116,7 @@ axiosCalendarInstance.interceptors.response.use(
     const handleCalendarToken = async () => {
       const response = await getCalendarToken();
       if (response?.status && response.status !== 200) return redirectToLogin();
-      const newCalendarAccessToken = response.data.access_token;
+      const newCalendarAccessToken = response?.data.access_token;
       setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
       return axiosCalendarInstance(originalRequest);
     };
@@ -127,6 +127,9 @@ axiosCalendarInstance.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           return handleCalendarToken();
+
+        case 403:
+          return [];
 
         default:
         // NOTE: 에러처리

@@ -7,7 +7,7 @@ import UserImage from '@/components/user/UserImage';
 interface PostDetailsTemplateProps {
   actions?: Array<{
     label: string;
-    onClick: () => void;
+    onClick?: () => void;
     className?: string;
     disabled?: boolean;
   }>;
