@@ -13,7 +13,6 @@ import { calendarIdsAtom } from '@/atoms/calendarAtom';
 
 import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
 import { Calendar } from '@/types';
-import { getCookie, setCookie } from '@/utils';
 import { useSetAtom } from 'jotai';
 
 export const useCalendarList = () => {
@@ -60,10 +59,9 @@ export const useCalendarList = () => {
   }, [allCalendarList, courseCalendarStatusList]);
 
   useEffect(() => {
-    if (!getCookie(CALENDAR_TOKEN_KEY)) {
-      getCalendarToken().then(res => {
-        setCookie(CALENDAR_TOKEN_KEY, res?.data?.access_token, 1);
-      });
+    const calendarAccessToken = sessionStorage.getItem(CALENDAR_TOKEN_KEY);
+    if (!calendarAccessToken) {
+      getCalendarToken();
     }
   }, []);
 

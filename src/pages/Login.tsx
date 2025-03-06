@@ -16,12 +16,9 @@ export default function Login() {
 
   const handleTestAdminLogin = async () => {
     try {
-      const response = await axiosInstance.get(
-        '/test/getUserCookie?email=talentforest0501@gmail.com',
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axiosInstance.get('/test/getAdminCookie', {
+        withCredentials: true,
+      });
 
       const { access_token: accessToken, refresh_token: refreshToken } =
         response.data;

@@ -8,6 +8,7 @@ import { FaPlus } from 'react-icons/fa6';
 import XButton from '@/components/common/button/XButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import CustomDatePicker from '@/components/common/input/CustomDatePicker';
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
@@ -15,7 +16,7 @@ interface ControllerSessionsProps {
   noticeType: NoticeCategoryDisplayValue;
 }
 
-type ErrorMsg = {
+type SessionErrorMsg = {
   [key: number]: {
     sessionEndDateTime?: { message: string };
   };
@@ -87,14 +88,14 @@ export default function ControllerSessions({
                   const startDate = new Date(sessionStartDateTime);
                   const endDate = new Date(sessionEndDateTime);
 
-                  const errorMsg = (error as ErrorMsg)?.[index]
+                  const errorMsg = (error as SessionErrorMsg)?.[index]
                     ?.sessionEndDateTime?.message;
 
                   return (
                     <LabeledSection
                       key={id}
                       label={`${noticeType} ${sessionList.length === 1 ? '' : `${index + 1}회차`} 일시`}
-                      className="col-span-2 mb-2 grid grid-cols-2 gap-x-8 gap-y-2 rounded-lg p-2.5 hover:bg-mainGray"
+                      className="grid grid-cols-2 rounded-lg p-2.5 hover:bg-mainGray"
                     >
                       {sessionList.length > 1 && (
                         <XButton
@@ -109,117 +110,126 @@ export default function ControllerSessions({
                         />
                       )}
 
-                      <div className="col-span-2 flex gap-4">
-                        {/* 날짜 선택 */}
-                        <CustomDatePicker
-                          id={`${id}`}
-                          currentDate={startDate || undefined}
-                          onChange={data => {
-                            if (data) {
-                              const startHours = startDate.getHours();
-                              const startMinutes = startDate.getMinutes();
-                              const startDateTime = formatDate(
-                                data.setHours(startHours, startMinutes, 0, 0),
-                                "yyyy-MM-dd'T'HH:mm:ss",
-                              );
-                              const endHours = endDate.getHours();
-                              const endMinutes = endDate.getMinutes();
-                              const endDateTime = formatDate(
-                                data.setHours(endHours, endMinutes, 0, 0),
-                                "yyyy-MM-dd'T'HH:mm:ss",
-                              );
+                      <div className="relative col-span-2 flex flex-col">
+                        <div className="grid grid-cols-3 gap-x-2">
+                          {/* 날짜 선택 */}
+                          <CustomDatePicker
+                            className={`col-span-1 h-[50px] ${errorMsg ? 'border-red-500' : ''}`}
+                            id={`${id}`}
+                            currentDate={startDate || undefined}
+                            onChange={data => {
+                              if (data) {
+                                const startHours = startDate.getHours();
+                                const startMinutes = startDate.getMinutes();
+                                const startDateTime = formatDate(
+                                  data.setHours(startHours, startMinutes, 0, 0),
+                                  "yyyy-MM-dd'T'HH:mm:ss",
+                                );
+                                const endHours = endDate.getHours();
+                                const endMinutes = endDate.getMinutes();
+                                const endDateTime = formatDate(
+                                  data.setHours(endHours, endMinutes, 0, 0),
+                                  "yyyy-MM-dd'T'HH:mm:ss",
+                                );
 
-                              const newValue = (
-                                currSessionList as SessionSchemaType[]
-                              )?.map((sessionItem, idx) =>
-                                index === idx
-                                  ? {
-                                      ...sessionItem,
-                                      sessionStartDateTime: startDateTime,
-                                      sessionEndDateTime: endDateTime,
-                                    }
-                                  : sessionItem,
-                              );
-                              onChange(newValue);
-                            }
-                          }}
-                          errorMsg={error?.message}
-                        />
+                                const newValue = (
+                                  currSessionList as SessionSchemaType[]
+                                )?.map((sessionItem, idx) =>
+                                  index === idx
+                                    ? {
+                                        ...sessionItem,
+                                        sessionStartDateTime: startDateTime,
+                                        sessionEndDateTime: endDateTime,
+                                      }
+                                    : sessionItem,
+                                );
+                                onChange(newValue);
+                              }
+                            }}
+                          />
 
-                        <div className="flex w-full items-center gap-1.5 [&>div]:w-full">
-                          {/* 시작 시간 */}
-                          <SingleSelectDropdown
-                            defaultLabel="시"
-                            options={hours}
-                            selectedOption={getCurrHour(startDate.getHours())}
-                            onChangeValue={data => {
-                              const hour = data[0].id;
-                              const startDateHour = startDate.setHours(hour);
-                              const newValue = changeSessionDate(
-                                'start',
-                                startDateHour,
-                                index,
-                              );
-                              onChange(newValue);
-                            }}
-                            errorMsg={errorMsg || undefined}
-                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
-                          />
-                          <SingleSelectDropdown
-                            defaultLabel="분"
-                            options={minutes}
-                            selectedOption={getCurrMin(startDate.getMinutes())}
-                            onChangeValue={data => {
-                              const min = data[0].id;
-                              const startDateMin = startDate.setMinutes(min);
-                              const newValue = changeSessionDate(
-                                'start',
-                                startDateMin,
-                                index,
-                              );
-                              onChange(newValue);
-                            }}
-                            errorMsg={errorMsg ? ' ' : undefined}
-                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
-                          />
-                          <span className="text-xl">~</span>
+                          <div className="col-span-2 grid grid-cols-[1fr_1fr_0.1fr_1fr_1fr] items-center gap-1.5">
+                            {/* 시작 시간 */}
+                            <SingleSelectDropdown
+                              defaultLabel="시"
+                              options={hours}
+                              selectedOption={getCurrHour(startDate.getHours())}
+                              onChangeValue={data => {
+                                const hour = data[0].id;
+                                const startDateHour = startDate.setHours(hour);
+                                const newValue = changeSessionDate(
+                                  'start',
+                                  startDateHour,
+                                  index,
+                                );
+                                onChange(newValue);
+                              }}
+                              selectBoxClassName={`!gap-1.5 w-full ${errorMsg ? 'border-red-500' : ''}`}
+                              optionClassName="hover:bg-darkGreen-active text-darkGray-active"
+                            />
+                            <SingleSelectDropdown
+                              defaultLabel="분"
+                              options={minutes}
+                              selectedOption={getCurrMin(
+                                startDate.getMinutes(),
+                              )}
+                              onChangeValue={data => {
+                                const min = data[0].id;
+                                const startDateMin = startDate.setMinutes(min);
+                                const newValue = changeSessionDate(
+                                  'start',
+                                  startDateMin,
+                                  index,
+                                );
+                                onChange(newValue);
+                              }}
+                              selectBoxClassName={`!gap-1.5 w-full ${errorMsg ? 'border-red-500' : ''}`}
+                              optionClassName="hover:bg-darkGreen-active text-darkGray-active"
+                            />
 
-                          {/* 종료 시간 */}
-                          <SingleSelectDropdown
-                            defaultLabel="시"
-                            options={hours}
-                            selectedOption={getCurrHour(endDate.getHours())}
-                            onChangeValue={data => {
-                              const hour = data[0].id;
-                              const endDateHour = endDate.setHours(hour);
-                              const newValue = changeSessionDate(
-                                'end',
-                                endDateHour,
-                                index,
-                              );
-                              onChange(newValue);
-                            }}
-                            errorMsg={errorMsg ? ' ' : undefined}
-                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
-                          />
-                          <SingleSelectDropdown
-                            defaultLabel="분"
-                            options={minutes}
-                            selectedOption={getCurrMin(endDate.getMinutes())}
-                            onChangeValue={data => {
-                              const min = data[0].id;
-                              const endDateMin = endDate.setMinutes(min);
-                              const newValue = changeSessionDate(
-                                'end',
-                                endDateMin,
-                                index,
-                              );
-                              onChange(newValue);
-                            }}
-                            errorMsg={errorMsg ? ' ' : undefined}
-                            optionClassName="hover:bg-darkGreen-active text-darkGray-active"
-                          />
+                            <span className="text-center text-xl">~</span>
+
+                            {/* 종료 시간 */}
+                            <SingleSelectDropdown
+                              defaultLabel="시"
+                              options={hours}
+                              selectedOption={getCurrHour(endDate.getHours())}
+                              onChangeValue={data => {
+                                const hour = data[0].id;
+                                const endDateHour = endDate.setHours(hour);
+                                const newValue = changeSessionDate(
+                                  'end',
+                                  endDateHour,
+                                  index,
+                                );
+                                onChange(newValue);
+                              }}
+                              selectBoxClassName={`!gap-1.5 w-full ${errorMsg ? 'border-red-500' : ''}`}
+                              optionClassName="hover:bg-darkGreen-active text-darkGray-active"
+                            />
+                            <SingleSelectDropdown
+                              defaultLabel="분"
+                              options={minutes}
+                              selectedOption={getCurrMin(endDate.getMinutes())}
+                              onChangeValue={data => {
+                                const min = data[0].id;
+                                const endDateMin = endDate.setMinutes(min);
+                                const newValue = changeSessionDate(
+                                  'end',
+                                  endDateMin,
+                                  index,
+                                );
+                                onChange(newValue);
+                              }}
+                              selectBoxClassName={`!gap-1.5 w-full ${errorMsg ? 'border-red-500' : ''}`}
+                              optionClassName="hover:bg-darkGreen-active text-darkGray-active"
+                            />
+                          </div>
                         </div>
+
+                        {errorMsg && (
+                          <ErrorMsg msg={errorMsg} className="self-end pr-2" />
+                        )}
                       </div>
                     </LabeledSection>
                   );

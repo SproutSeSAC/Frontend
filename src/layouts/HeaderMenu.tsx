@@ -35,7 +35,7 @@ export default function HeaderMenu() {
               await queryClient.invalidateQueries();
               deleteCookie(ACCESS_TOKEN_KEY);
               deleteCookie(REFRESH_TOKEN_KEY);
-              deleteCookie(CALENDAR_TOKEN_KEY);
+              sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
               navigate('/login');
               hideDialog();
             }}

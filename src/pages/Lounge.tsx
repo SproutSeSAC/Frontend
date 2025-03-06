@@ -54,6 +54,11 @@ export default function Lounge() {
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
 
+  const selectedTechStackOption = useMemo(() => {
+    const { techStack } = currFilter;
+    return techStackList?.filter(({ id }) => techStack?.includes(id));
+  }, [currFilter, techStackList]);
+
   const selectedPositionOption = useMemo(() => {
     const { position } = currFilter;
     const selectedPosition = jobList
@@ -94,9 +99,9 @@ export default function Lounge() {
           />
           <button
             onClick={handleResetFilter}
-            className="w-20 whitespace-nowrap rounded-lg bg-mainGray px-3.5 py-3 text-white"
+            className="whitespace-nowrap rounded-lg bg-darkGray px-3.5 py-3 text-white"
           >
-            초기화
+            필터 초기화
           </button>
         </div>
       </div>
@@ -105,9 +110,10 @@ export default function Lounge() {
         <div className="flex gap-4">
           {!isTechStackListLoading && (
             <TechStackDropdown
-              defaultLabel="기술스택"
+              defaultLabel="기술 스택"
               defaultTabValue="백엔드"
               options={techStackList}
+              value={selectedTechStackOption.map(({ id }) => id)}
               onChangeValue={value => {
                 const newValue = value.map(item => item.id);
                 handleChangeFilter({ techStack: newValue });

@@ -68,7 +68,7 @@ export default function NoticeDisplayList({
           ))}
       </ul>
     ) : (
-      <span className="mt-20 flex items-center justify-center text-center text-mainGray-hover">
+      <span className="mt-14 flex items-center justify-center text-center text-mainGray-hover">
         곧 새로운 소식이 올라올 예정이에요!
       </span>
     ))

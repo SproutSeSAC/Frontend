@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import CustomDatePicker from '@/components/common/input/CustomDatePicker';
+import ErrorMsg from '@/components/common/input/ErrorMsg';
 
 interface ControllerDateTimeProps {
   type?: 'date' | 'dateTime';
@@ -14,15 +15,18 @@ export default function ControllerDateTime({
   type = 'dateTime',
   name,
 }: ControllerDateTimeProps) {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   return (
-    <>
+    <div className="relative flex w-full flex-col">
       {type === 'date' && (
         <Controller
           control={control}
           name={name}
-          render={({ field: { onChange, value }, fieldState: { error } }) => {
+          render={({ field: { onChange, value } }) => {
             return (
               <CustomDatePicker
                 id={name}
@@ -33,7 +37,6 @@ export default function ControllerDateTime({
                     onChange(dateTime);
                   }
                 }}
-                errorMsg={error?.message || ''}
               />
             );
           }}
@@ -44,7 +47,7 @@ export default function ControllerDateTime({
         <Controller
           control={control}
           name={name}
-          render={({ field: { onChange, value }, fieldState: { error } }) => {
+          render={({ field: { onChange, value } }) => {
             const date = new Date(value);
 
             const hour = date.getHours();
@@ -56,7 +59,7 @@ export default function ControllerDateTime({
             );
 
             return (
-              <div className="relative flex h-full w-full items-center gap-1.5">
+              <div className="relative grid size-full grid-cols-[2fr_1fr_1fr] items-center gap-1.5">
                 <CustomDatePicker
                   id={name}
                   currentDate={value ? new Date(value) : undefined}
@@ -69,7 +72,7 @@ export default function ControllerDateTime({
                       onChange(dateTime);
                     }
                   }}
-                  errorMsg={error?.message || ''}
+                  className={`!h-[58px] ${errors[name]?.message ? 'border-red-500' : ''}`}
                 />
 
                 <SingleSelectDropdown
@@ -84,8 +87,7 @@ export default function ControllerDateTime({
                     );
                     return onChange(dateTime);
                   }}
-                  errorMsg={error?.message ? ' ' : undefined}
-                  selectBoxClassName="min-w-[95px]"
+                  selectBoxClassName={`min-w-[95px] h-[58px] !gap-0 ${errors[name]?.message ? 'border-red-500' : ''}`}
                   optionClassName="hover:bg-darkGreen-active text-darkGray-active"
                 />
                 <SingleSelectDropdown
@@ -100,8 +102,7 @@ export default function ControllerDateTime({
                     );
                     return onChange(dateTime);
                   }}
-                  errorMsg={error?.message ? ' ' : undefined}
-                  selectBoxClassName="min-w-[95px]"
+                  selectBoxClassName={`min-w-[95px] !gap-0 ${errors[name]?.message ? 'border-red-500' : ''}`}
                   optionClassName="hover:bg-darkGreen-active darkGray-activedarkGray-active"
                 />
               </div>
@@ -109,6 +110,13 @@ export default function ControllerDateTime({
           }}
         />
       )}
-    </>
+
+      {errors[name]?.message && (
+        <ErrorMsg
+          msg={errors[name]?.message as string}
+          className="absolute -bottom-6 right-0 pr-2"
+        />
+      )}
+    </div>
   );
 }

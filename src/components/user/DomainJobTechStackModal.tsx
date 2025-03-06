@@ -11,9 +11,7 @@ import {
 import SquareButton from '@/components/common/button/SquareButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
-import TechStackDropdown, {
-  OptionItem,
-} from '@/components/common/dropdown/TechStackDropdown';
+import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';
@@ -106,14 +104,6 @@ export default function DomainJobTechStackModal() {
     }
   };
 
-  const getTechStackOptions = () => {
-    return userTechStackList.map(({ jobName, techStack, ...rest }) => {
-      return { name: techStack, type: jobName, ...rest };
-    });
-  };
-
-  const initialTechStackOptions: OptionItem[] = getTechStackOptions();
-
   if (isLoading) return null;
 
   return (
@@ -140,24 +130,26 @@ export default function DomainJobTechStackModal() {
 
                   return (
                     <>
-                      <ScrollContainer gap={5}>
-                        {value.map(({ id, domain }) => (
-                          <li key={id} className="mb-3">
-                            <Tag
-                              text={domain}
-                              color="green"
-                              size="medium"
-                              onDeleteClick={() => {
-                                const filteredData = value.filter(
-                                  item => item.id !== id,
-                                );
-                                onChange(filteredData);
-                              }}
-                              className="h-[30px]"
-                            />
-                          </li>
-                        ))}
-                      </ScrollContainer>
+                      {value.length > 0 && (
+                        <ScrollContainer gap={5}>
+                          {value.map(({ id, domain }) => (
+                            <li key={id} className="mb-3">
+                              <Tag
+                                text={domain}
+                                color="green"
+                                size="medium"
+                                onDeleteClick={() => {
+                                  const filteredData = value.filter(
+                                    item => item.id !== id,
+                                  );
+                                  onChange(filteredData);
+                                }}
+                                className="h-[30px]"
+                              />
+                            </li>
+                          ))}
+                        </ScrollContainer>
+                      )}
 
                       <SingleSelectDropdown
                         defaultLabel="관심 도메인"
@@ -197,24 +189,26 @@ export default function DomainJobTechStackModal() {
                   }));
                   return (
                     <>
-                      <ScrollContainer gap={5}>
-                        {value?.map(({ id, job }) => (
-                          <li key={id} className="mb-3">
-                            <Tag
-                              text={job}
-                              color="green"
-                              size="medium"
-                              onDeleteClick={() => {
-                                const filteredData = value.filter(
-                                  item => item.id !== id,
-                                );
-                                onChange(filteredData);
-                              }}
-                              className="h-[30px]"
-                            />
-                          </li>
-                        ))}
-                      </ScrollContainer>
+                      {value.length > 0 && (
+                        <ScrollContainer gap={5}>
+                          {value?.map(({ id, job }) => (
+                            <li key={id} className="mb-3">
+                              <Tag
+                                text={job}
+                                color="green"
+                                size="medium"
+                                onDeleteClick={() => {
+                                  const filteredData = value.filter(
+                                    item => item.id !== id,
+                                  );
+                                  onChange(filteredData);
+                                }}
+                                className="h-[30px]"
+                              />
+                            </li>
+                          ))}
+                        </ScrollContainer>
+                      )}
 
                       <SingleSelectDropdown
                         defaultLabel="관심 직무"
@@ -243,13 +237,17 @@ export default function DomainJobTechStackModal() {
             <Controller
               control={control}
               name="updatedTechStackList"
-              render={({ field: { onChange }, formState: { errors } }) => {
+              render={({
+                field: { onChange, value },
+                formState: { errors },
+              }) => {
+                const currValue = value.map(({ id }) => id);
                 return (
                   <TechStackDropdown
-                    defaultLabel="기술스택"
+                    defaultLabel="기술 스택"
                     defaultTabValue="백엔드"
+                    value={currValue}
                     options={allTechStackList}
-                    initialSelectedOptions={initialTechStackOptions}
                     onChangeValue={onChange}
                     isMarkTechStackList
                     errorMsg={errors.updatedTechStackList?.message}
@@ -264,7 +262,7 @@ export default function DomainJobTechStackModal() {
             name="저장하기"
             type="submit"
             color={isValid ? 'mainGreen' : 'gray'}
-            className="mt-5 h-[58px]"
+            className="mt-10 h-[58px] text-base"
           />
         </form>
       </FormProvider>

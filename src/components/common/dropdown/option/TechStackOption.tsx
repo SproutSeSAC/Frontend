@@ -13,9 +13,9 @@ export default function TechStackOption({
 }: TechStackOptionProps) {
   return (
     <li
-      className={`w-fit rounded-lg border border-solid ${isSelected ? 'border-darkGray-active' : 'border-lightGray'} cursor-pointer`}
+      className={`w-fit rounded-lg border border-solid ${isSelected ? 'border-darkGray-active' : 'border-mainGray'} cursor-pointer`}
     >
-      <label className="flex w-full items-center gap-1.5 py-[5px] pl-[5px] pr-2.5">
+      <label className="flex w-full cursor-pointer items-center gap-1.5 py-[5px] pl-[5px] pr-2.5">
         <img src={option.iconImageUrl} alt={option.name} className="size-4" />
         <input
           type="checkbox"

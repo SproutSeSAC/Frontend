@@ -77,7 +77,7 @@ export const SignUpFormSchema = z
       return true;
     },
     {
-      message: '최소 하나의 기술스택을 선택해야 합니다.',
+      message: '최소 하나의 기술 스택을 선택해야 합니다.',
       path: ['techStackIdList'],
     },
   )

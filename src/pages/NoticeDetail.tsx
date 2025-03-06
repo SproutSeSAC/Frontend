@@ -84,10 +84,16 @@ export default function NoticeDetail() {
       noticeDetail &&
       findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
     ) {
-      const { sessions, participantCapacity } = noticeDetail;
+      const { sessions, participantCapacity, applicationEndDateTime } =
+        noticeDetail;
 
-      if ((sessions?.length || 0) > 0 && participantCapacity) {
-        if (sessions?.[0]?.currentStatus === null) {
+      if (
+        sessions &&
+        (sessions?.length || 0) > 0 &&
+        participantCapacity &&
+        applicationEndDateTime
+      ) {
+        if (sessions[0].currentStatus === null) {
           const actionToApply = {
             label: '참여하기',
             onClick: () => {
@@ -96,20 +102,21 @@ export default function NoticeDetail() {
                 element: (
                   <NoticeModal
                     participantCapacity={participantCapacity}
-                    sessions={sessions ?? []}
+                    sessions={sessions}
                   />
                 ),
               });
             },
-            className: 'bg-mainGreen',
+            className: 'bg-mainGreen text-white disabled:bg-mainGray-hover',
+            disabled:
+              new Date(applicationEndDateTime).getTime() < new Date().getTime(),
           };
           return [actionToApply];
         }
         const applicationComplete = {
           label: '신청 완료',
-          className: 'bg-darkGreen',
+          className: 'bg-mainGray-hover text-white',
           disabled: true,
-          onClick: () => {}, // NOTE: 마이페이지 신청내역으로 이동시키기
         };
         return [applicationComplete];
       }
@@ -188,7 +195,7 @@ export default function NoticeDetail() {
               )}
 
             <PostDetailsTemplate
-              nickname={noticeDetail?.writer?.userName || '-'}
+              name={noticeDetail?.writer?.userName || '-'}
               createdAt={noticeDetail?.createdAt}
               viewCount={noticeDetail?.viewCount || 0}
               description={noticeDetail?.content || '-'}

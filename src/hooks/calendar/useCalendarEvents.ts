@@ -17,23 +17,27 @@ export const useCalendarEvents = () => {
   const { allCalendarList, courseCalendarList } = useCalendarList();
 
   const getCalendarColor = useMemo(() => {
-    return (calendarSummary: string) =>
-      allCalendarList?.find(({ summary }) => summary === calendarSummary)
-        ?.backgroundColor;
+    return (calendarId: string) =>
+      allCalendarList?.find(({ id }) => id === calendarId)?.backgroundColor;
   }, [allCalendarList]);
 
-  const getEventList = useCallback(
-    (
-      events: UseQueryResult<GoogleCalendarApiDto.GetCalenderEvents, Error>[],
-    ) => {
-      return events
-        ?.map(calendar => {
-          const calendarId = calendar.data?.calendarId ?? '';
-          const summary = calendar?.data?.summary ?? '';
-
-          return calendar?.data?.items.map(item => {
-            const backgroundColor = getCalendarColor(summary);
-            return { ...item, calendarId, backgroundColor };
+  const getEventList: (
+    eventsByCalendar: UseQueryResult<
+      GoogleCalendarApiDto.GetCalenderEvents,
+      Error
+    >[],
+  ) => EventWithId[] = useCallback(
+    eventsByCalendar => {
+      return eventsByCalendar
+        ?.map(({ isLoading, data }) => {
+          if (isLoading || !data) return data;
+          const { calendarId, items: eventList } = data;
+          return eventList.map(event => {
+            if (calendarId) {
+              const backgroundColor = getCalendarColor(calendarId);
+              return { ...event, calendarId, backgroundColor };
+            }
+            return { ...event, calendarId };
           });
         })
         ?.flat()
@@ -44,32 +48,28 @@ export const useCalendarEvents = () => {
 
   const eventsByCalendar = useGetEventsByCalendar(currShowingCalendarIds || []);
 
-  const createdCourseCalendarIdList = useMemo(() => {
+  // 생성된 교육과정 캘린더 ID들
+  const courseCalendarIdList = useMemo(() => {
     return courseCalendarList
-      .filter(calendar => calendar.accessRole)
+      .filter(({ accessRole }) => accessRole)
       .map(({ calendarId }) => calendarId);
   }, [courseCalendarList]);
 
-  const createdCourseCalendarEventList = useGetEventsByCalendar(
-    createdCourseCalendarIdList,
-  );
-
-  const isCourseCalendarLoadingArr: boolean[] =
-    createdCourseCalendarEventList.map(item => item.isLoading);
+  const courseCalendarEventList = useGetEventsByCalendar(courseCalendarIdList);
 
   // 현재 선택된 캘린더의 이벤트 목록
   const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
+    if (eventsByCalendar.length === 0) return [];
+
     const eventList = getEventList(eventsByCalendar);
     return changeFullCalendarEvents(eventList);
   }, [eventsByCalendar, getEventList]);
 
   // 사이드뷰의 근시일 이벤트 목록
   const fullCalendarSideViewEvents: FullCalendarEvent[] = useMemo(() => {
-    const eventList = getEventList(createdCourseCalendarEventList);
-    const courseEventList = changeFullCalendarEvents(eventList);
-
+    const eventListByCalendar = getEventList(courseCalendarEventList);
+    const courseEventList = changeFullCalendarEvents(eventListByCalendar);
     const today = new Date();
-    today.setDate(today.getDate() - 1);
 
     return courseEventList
       ?.filter(event => {
@@ -77,7 +77,11 @@ export const useCalendarEvents = () => {
         return eventDate >= today;
       })
       ?.slice(0, 4);
-  }, [createdCourseCalendarEventList, getEventList]);
+  }, [courseCalendarEventList, getEventList]);
+
+  const isCourseCalendarLoadingArr: boolean[] =
+    (courseCalendarEventList.length === 0 && [true]) ||
+    courseCalendarEventList.map(item => item.isLoading);
 
   return {
     fullCalendarEvents,

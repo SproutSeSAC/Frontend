@@ -2,6 +2,7 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { CALENDAR_TOKEN_KEY } from '@/constants';
 import { UserProfileDto } from '@/types';
 
 // 로그인 검증
@@ -14,16 +15,28 @@ export const getVerifyCodeResult = (code: string) =>
 // 닉네임 중복확인
 export const getVerifyNicknameResult = (nickname: string) =>
   axiosInstance.get(`/user/nickname/duplicate`, {
-    params: {
-      nickname,
-    },
+    params: { nickname },
   });
 
 // 캘린더 인증
-export const getCalendarToken = () => axiosInstance.get('/user/calendar');
+export const getCalendarToken = () =>
+  axiosInstance
+    .get('/user/calendar')
+    .then(res => {
+      const calendarAccessToken = res.data.access_token;
+      if (calendarAccessToken) {
+        sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
+      }
+    })
+    .catch(async error => {
+      console.log(error);
+    });
 
 // 리프레시 토큰
-export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
+export const getNewAccessToken = () =>
+  axiosInstance.get('/login/refresh').catch(() => {
+    window.location.href = `${window.location.origin}/login`;
+  });
 
 export const initialUserProfile: UserProfileDto.Get = {
   userId: 0,
