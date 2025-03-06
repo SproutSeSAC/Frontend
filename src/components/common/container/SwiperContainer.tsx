@@ -43,6 +43,9 @@ export default function SwiperContainer<T extends { id: number }>({
         onSwiper={swiper => {
           swiperRef.current = swiper;
         }}
+        onSlideChange={swiper => {
+          setSlide({ isBeginning: swiper.isBeginning, isEnd: swiper.isEnd });
+        }}
         cssMode={false}
         spaceBetween={16}
         modules={[Navigation, Scrollbar]}

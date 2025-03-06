@@ -81,7 +81,7 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
           if (currentStart < prevStart) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `${i + 1}회차의 시작 시간이 ${j + 1}회차보다 이전일 수 없습니다.`,
+              message: `${i + 1}회차의 일시는 ${j + 1}회차보다 이후여야 합니다.`,
               path: [i, 'sessionEndDateTime'],
             });
           }

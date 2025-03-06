@@ -142,7 +142,6 @@ export default function MyCollection() {
           )}
       </div>
 
-      {/* 내가 쓴 게시글, 내가 쓴 댓글 */}
       {currCollection !== '내가 찜한 글' && (
         <>
           <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white py-6">
