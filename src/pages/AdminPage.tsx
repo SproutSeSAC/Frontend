@@ -19,7 +19,7 @@ export default function AdminPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const tabList: { text: string; type: TabType }[] = [
-    { text: '일정관리 권한', type: 'calendar-acl' },
+    { text: '캘린더 관리', type: 'calendar-acl' },
   ];
 
   const tabName = searchParams.get(TAB) as TabType;

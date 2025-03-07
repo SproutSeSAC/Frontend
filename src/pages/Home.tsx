@@ -11,7 +11,7 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 import { useCalendarEvents, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { isSuperAdmin } from '@/utils';
+import { hasSuperAdmin, isSuperAdmin } from '@/utils';
 import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
@@ -74,7 +74,16 @@ export default function Home() {
 
   return (
     <MainView className="pb-20">
-      <Header title={`${userProfile?.name} 스프님, 환영합니다!`} />
+      <Header title={`${userProfile?.name} 스프님, 환영합니다!`}>
+        {hasSuperAdmin(userProfile?.role) && (
+          <Link
+            to="/admin"
+            className="rounded-lg border border-mainGreen-active bg-lightGreen px-[14px] py-[8px] text-base tracking-tight text-mainGreen-active"
+          >
+            관리자로 전환
+          </Link>
+        )}
+      </Header>
 
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
         <section className="relative flex h-full flex-col">
