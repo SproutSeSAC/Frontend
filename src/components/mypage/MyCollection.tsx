@@ -21,6 +21,7 @@ import { formatDate } from '@/utils';
 import { useAtom } from 'jotai';
 import { BiExpandVertical } from 'react-icons/bi';
 
+import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
 import TrashButton from '@/components/common/button/TrashButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
@@ -335,19 +336,30 @@ export default function MyCollection() {
         </>
       )}
 
-      {!isMyScrapedPostListLoading &&
-        currCollection === '내가 찜한 글' &&
-        (myScrapedPostList?.content.length !== 0 ? (
-          <ul className="grid min-h-[230px] grid-cols-3 gap-5">
-            {myScrapedPostList?.content
-              ?.slice(0, 3)
-              ?.map(card => <ScrapedPostCard key={card.postId} card={card} />)}
-          </ul>
-        ) : (
-          <div className="flex h-[230px] items-center justify-center rounded-[20px] border bg-white p-3">
-            <span className="text-mainGray">아직 찜한 글이 없어요!</span>
-          </div>
-        ))}
+      {currCollection === '내가 찜한 글' && (
+        <>
+          {!isMyScrapedPostListLoading &&
+            (myScrapedPostList?.content.length !== 0 ? (
+              <ul className="grid min-h-[230px] grid-cols-3 gap-5">
+                {myScrapedPostList?.content
+                  ?.slice(0, 3)
+                  ?.map(card => (
+                    <ScrapedPostCard key={card.postId} card={card} />
+                  ))}
+              </ul>
+            ) : (
+              <div className="flex h-[230px] items-center justify-center rounded-[20px] border bg-white p-3">
+                <span className="text-mainGray">아직 찜한 글이 없어요!</span>
+              </div>
+            ))}
+
+          {isMyScrapedPostListLoading && (
+            <div className="flex h-[230px] items-center justify-center rounded-[20px] border bg-white p-3">
+              <LoopLoading size={90} />
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 }
