@@ -46,6 +46,7 @@ export default function Home() {
         (userProfile?.courseList || []).length > 0,
     },
   );
+
   const {
     fullCalendarSideViewEvents,
     fullCalendarEvents,

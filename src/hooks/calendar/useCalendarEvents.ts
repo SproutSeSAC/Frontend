@@ -79,9 +79,9 @@ export const useCalendarEvents = () => {
       ?.slice(0, 4);
   }, [courseCalendarEventList, getEventList]);
 
-  const isCourseCalendarLoadingArr: boolean[] =
-    (courseCalendarEventList.length === 0 && [true]) ||
-    courseCalendarEventList.map(item => item.isLoading);
+  const isCourseCalendarLoadingArr: boolean[] = courseCalendarEventList.map(
+    item => item.isLoading,
+  );
 
   return {
     fullCalendarEvents,

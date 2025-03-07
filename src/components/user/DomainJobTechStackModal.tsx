@@ -131,7 +131,7 @@ export default function DomainJobTechStackModal() {
                   return (
                     <>
                       {value.length > 0 && (
-                        <ScrollContainer gap={5}>
+                        <ScrollContainer className="gap-5">
                           {value.map(({ id, domain }) => (
                             <li key={id} className="mb-3">
                               <Tag
@@ -190,7 +190,7 @@ export default function DomainJobTechStackModal() {
                   return (
                     <>
                       {value.length > 0 && (
-                        <ScrollContainer gap={5}>
+                        <ScrollContainer className="gap-5">
                           {value?.map(({ id, job }) => (
                             <li key={id} className="mb-3">
                               <Tag

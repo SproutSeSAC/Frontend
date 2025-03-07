@@ -52,7 +52,7 @@ export default function MealRecruitList() {
               </span>
             </div>
           ) : (
-            <ScrollContainer gap={0}>
+            <ScrollContainer className="!max-w-fit">
               {data?.pages.map(page => (
                 <Fragment key={page.currentPage}>
                   {page.mealPostList.map(post => (

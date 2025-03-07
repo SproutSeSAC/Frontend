@@ -47,7 +47,7 @@ export default function CourseCalendarCheckBox({
           checked={!!currentCalendarIds?.includes(calendar.calendarId)}
           onChange={() => onChange(calendar.calendarId)}
           textClassName={`line-clamp-2 ${
-            disabled ? '!text-mainGray-active' : '!text-black'
+            disabled ? '!text-mainGray' : '!text-black'
           }`}
           inputClassName="mt-1"
           checkBoxColor={calendar.backgroundColor}

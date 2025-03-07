@@ -81,10 +81,13 @@ export const useGetThisWeekNoticeList = () => {
   });
 };
 
-export const useGetCloseSoonNoticeList = (params: { size: number }) => {
+export const useGetCloseSoonNoticeList = (params: {
+  size: number;
+  days: number;
+}) => {
   const getEndingSoonNoticeList = async () => {
     const { data } = await axiosInstance.get<NoticeDisplay[]>(
-      `/notices/ending-tomorrow`,
+      `/notices/ending-close`,
       { params },
     );
     return data;

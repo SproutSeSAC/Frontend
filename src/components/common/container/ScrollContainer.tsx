@@ -2,19 +2,19 @@ import { ReactNode } from 'react';
 
 interface ScrollContainerProps {
   children: ReactNode;
-  gap?: number;
+  className?: string;
   isBlurRight?: boolean;
 }
 
 export default function ScrollContainer({
   children,
-  gap = 4,
+  className,
   isBlurRight = false,
 }: ScrollContainerProps) {
   return (
     <div className="relative">
       <div className="overflow-x-scroll scrollbar-hide [&>ul>*]:flex-shrink-0">
-        <ul className={`inline-flex gap-${gap}`}>{children}</ul>
+        <ul className={`inline-flex max-w-0 ${className}`}>{children}</ul>
       </div>
 
       {/* 끝 흐림처리 */}

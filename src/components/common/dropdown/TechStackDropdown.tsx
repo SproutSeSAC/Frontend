@@ -114,7 +114,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
   return (
     <>
       {isMarkTechStackList && value.length !== 0 && (
-        <ScrollContainer gap={4}>
+        <ScrollContainer className="gap-4">
           {selectedOptions?.map(option => (
             <li
               key={option.id}
