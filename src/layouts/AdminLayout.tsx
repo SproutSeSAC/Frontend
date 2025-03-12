@@ -7,16 +7,15 @@ import NavigationBar from '@/layouts/NavigationBar';
 import ScrollToTop from '@/components/common/SrollToTop';
 import NotificationSideView from '@/components/notification/NotificationSideView';
 
-interface LayoutProps {
+interface AdminLayoutProps {
   children?: ReactNode;
-  type: 'trainee' | 'admin';
 }
 
-export default function Layout({ children, type }: LayoutProps) {
+export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="flex min-h-screen min-w-[1200px] bg-bg">
       <ScrollToTop />
-      <NavigationBar type={type} />
+      <NavigationBar type="admin" />
       {children || <Outlet />}
       <NotificationSideView />
     </div>

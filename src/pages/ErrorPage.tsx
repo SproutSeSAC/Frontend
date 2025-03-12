@@ -6,13 +6,17 @@ import MainView from '@/layouts/MainView';
 
 import SquareButton from '@/components/common/button/SquareButton';
 
-export default function ErrorPage() {
+interface ErrorPageProps {
+  type: 'admin' | 'trainee';
+}
+
+export default function ErrorPage({ type }: ErrorPageProps) {
   const navigate = useNavigate();
 
   const onGoHomeClick = () => navigate('/');
 
   return (
-    <Layout>
+    <Layout type={type}>
       <MainView className="!p-0">
         <div className="mb-10 mt-[60px] flex size-full flex-col items-center justify-center rounded-l-[80px] bg-white shadow-card">
           <Warning className="mb-[1%] h-[50%] max-h-[117px] max-w-[131px] object-cover" />

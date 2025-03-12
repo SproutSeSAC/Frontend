@@ -12,7 +12,9 @@ export default function SessionsDetail() {
 
   return (
     <MainView>
-      <Header title={isTrainee(role) ? '특강 신청 현황' : '내가 신청한 특강'} />
+      <Header
+        title={isTrainee(role) ? '내가 신청한 특강' : '특강 / 행사 신청 현황'}
+      />
     </MainView>
   );
 }

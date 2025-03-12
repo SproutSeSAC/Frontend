@@ -25,7 +25,7 @@ export const isJobCoordinator = (role: keyof Role) => {
   return role === 'JOB_COORDINATOR';
 };
 
-export const isTrainee = (role: keyof Role) => {
+export const isTrainee = (role?: keyof Role) => {
   return role === 'TRAINEE';
 };
 

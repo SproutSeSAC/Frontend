@@ -27,14 +27,14 @@ export default function Header({ title, highlight, children }: Props) {
   const { pathname } = useLocation();
   const [, setIsNotificationOpenOpen] = useAtom(notificationOpenAtom);
 
-  const homePathname = pathname === '/';
+  const homePathname = pathname === '/' || pathname === '/admin';
 
   const { data: { profileImageUrl } = initialUserProfile } =
     useGetUserProfile();
   const { data: notificationList } = useGetUnReadNotificationList();
 
   return (
-    <header className="mb-10 flex items-center justify-between">
+    <header className="mb-10 flex items-start justify-between">
       <section>
         <Title as="h1" title={title} highlight={highlight} className="mb-3" />
         {homePathname && (

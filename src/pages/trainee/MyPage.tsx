@@ -126,7 +126,7 @@ export default function MyPage() {
           <div className="mb-3 flex items-center justify-between">
             <Title title="특강 / 행사 신청 내역" />
             <Link
-              to="/application-status-for-sessions"
+              to="/notice/session-status"
               className="text-sm font-medium text-darkGray"
             >
               더보기

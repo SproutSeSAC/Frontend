@@ -7,7 +7,7 @@ import { axiosInstance } from '@/services/axiosInstance';
 import { NoticeDisplay, NoticeDto, NoticeFilter } from '@/types';
 import { isInThisWeek } from '@/utils';
 
-import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
+import { NOTICE_SEARCH_PARAMS } from '@/pages/trainee/Notice';
 
 export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
   const [searchParams] = useSearchParams();
