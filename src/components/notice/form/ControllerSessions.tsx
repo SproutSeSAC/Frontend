@@ -27,12 +27,7 @@ export type Session = SessionSchemaType & { id: number };
 export default function ControllerSessions({
   noticeType,
 }: ControllerSessionsProps) {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext();
-
-  console.log(errors);
+  const { control } = useFormContext();
 
   const sessionList: Session[] = useWatch({
     control,
