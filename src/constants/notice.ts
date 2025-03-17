@@ -25,7 +25,7 @@ export const noticeCategoryDisplay = {
   ETC: '기타',
 } as const;
 
-export const noticeTabList: NoticeTabList = [
+export const NOTICE_TAB_LIST: NoticeTabList = [
   { text: '전체', type: 'ALL' },
   { text: '캠퍼스 담당자', type: 'CAMPUS_LEADER' },
   { text: '운영 매니저', type: 'OPERATION_MANAGER' },

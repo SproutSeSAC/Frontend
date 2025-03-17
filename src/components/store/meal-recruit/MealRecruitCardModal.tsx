@@ -147,7 +147,7 @@ export default function MealRecruitCardModal({
             type="button"
             onClick={hideDialog}
             color="gray"
-            name="나가기"
+            name="닫기"
             className={isOwner ? 'flex-1' : ''}
           />
           {!isParticipant && (

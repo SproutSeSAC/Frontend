@@ -7,7 +7,7 @@ import { axiosInstance } from '@/services/axiosInstance';
 import { NoticeDisplay, NoticeDto, NoticeFilter } from '@/types';
 import { isInThisWeek } from '@/utils';
 
-import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
+import { NOTICE_SEARCH_PARAMS } from '@/pages/trainee/Notice';
 
 export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
   const [searchParams] = useSearchParams();
@@ -81,10 +81,13 @@ export const useGetThisWeekNoticeList = () => {
   });
 };
 
-export const useGetCloseSoonNoticeList = (params: { size: number }) => {
+export const useGetCloseSoonNoticeList = (params: {
+  size: number;
+  days: number;
+}) => {
   const getEndingSoonNoticeList = async () => {
     const { data } = await axiosInstance.get<NoticeDisplay[]>(
-      `/notices/ending-tomorrow`,
+      `/notices/ending-close`,
       { params },
     );
     return data;

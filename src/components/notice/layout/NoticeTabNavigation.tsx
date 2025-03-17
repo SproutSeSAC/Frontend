@@ -5,11 +5,11 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
-import { noticeTabList } from '@/constants/notice';
+import { NOTICE_TAB_LIST } from '@/constants';
 import { NoticeTabDisplayKey } from '@/types';
 import { isTrainee, updateQueryParams } from '@/utils';
 
-import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
+import { NOTICE_SEARCH_PARAMS } from '@/pages/trainee/Notice';
 
 import TabNavigation from '@/components/common/TabNavigation';
 
@@ -35,7 +35,7 @@ export default function NoticeTabNavigation() {
 
   return (
     <TabNavigation
-      tabList={noticeTabList}
+      tabList={NOTICE_TAB_LIST}
       selectValue={tabName ?? 'ALL'}
       onChangeValue={handleChangeValue}
     >

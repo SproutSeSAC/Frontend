@@ -129,7 +129,7 @@ export default function Calendar({
                 )}
               </ul>
             ) : (
-              <span className="w-full pt-2 text-mainGray-active">
+              <span className="flex items-center justify-center py-14 text-mainGray-hover">
                 일정이 없습니다.
               </span>
             ))}

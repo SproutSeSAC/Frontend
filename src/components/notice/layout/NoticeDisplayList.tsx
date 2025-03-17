@@ -34,7 +34,7 @@ export default function NoticeDisplayList({
   const {
     data: closeSoonNoticeList = [],
     isLoading: isCloseSoonNoticeList, //
-  } = useGetCloseSoonNoticeList({ size: 4 });
+  } = useGetCloseSoonNoticeList({ size: 4, days: 7 });
 
   const isLoading =
     isCloseSoonNoticeList ||

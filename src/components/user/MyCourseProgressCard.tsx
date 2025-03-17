@@ -111,7 +111,7 @@ export default function MyCourseProgressCard() {
         <div className="flex w-full flex-1 flex-col justify-between gap-1.5 pl-4">
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">도메인</span>
-            <ScrollContainer gap={3} isBlurRight>
+            <ScrollContainer className="gap-3" isBlurRight>
               {domainList
                 ?.sort((a, b) => a.id - b.id)
                 ?.map(({ id, domain }) => (
@@ -129,7 +129,7 @@ export default function MyCourseProgressCard() {
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">직무</span>
-            <ScrollContainer gap={4} isBlurRight>
+            <ScrollContainer className="gap-4" isBlurRight>
               {jobList
                 ?.sort((a, b) => a.id - b.id)
                 ?.map(({ job, id }) => (
@@ -142,7 +142,7 @@ export default function MyCourseProgressCard() {
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">기술 스택</span>
-            <ScrollContainer gap={3} isBlurRight>
+            <ScrollContainer className="gap-3" isBlurRight>
               {techStackList
                 ?.sort((a, b) => a.id - b.id)
                 ?.map(({ id, techStack, iconImageUrl }) => (

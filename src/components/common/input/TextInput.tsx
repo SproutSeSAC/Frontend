@@ -37,7 +37,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   return (
-    <div className="relative w-full">
+    <div className="relative flex w-full flex-col">
       <input
         type="text"
         ref={ref}
@@ -55,7 +55,6 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
         className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border-red-600' : 'border-mainGray'} ${className}`}
         {...props}
       />
-
       {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
     </div>
   );

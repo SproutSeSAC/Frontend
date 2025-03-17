@@ -25,12 +25,12 @@ export const isJobCoordinator = (role: keyof Role) => {
   return role === 'JOB_COORDINATOR';
 };
 
-export const isTrainee = (role: keyof Role) => {
+export const isTrainee = (role?: keyof Role) => {
   return role === 'TRAINEE';
 };
 
 /** 권한 확인용 */
-export const hasSuperAdmin = (role: keyof Role) => {
+export const hasSuperAdmin = (role?: keyof Role) => {
   const hasSuperAdminRoleList: (keyof HasSuperAdminRole)[] = [
     'SUPER_ADMIN',
     'CAMPUS_LEADER',
@@ -40,7 +40,7 @@ export const hasSuperAdmin = (role: keyof Role) => {
   );
 };
 
-export const hasAdmin = (role: keyof Role) => {
+export const hasAdmin = (role?: keyof Role) => {
   const hasAdminRoleList: (keyof HasAdminRole)[] = [
     'SUPER_ADMIN',
     'CAMPUS_LEADER',

@@ -11,13 +11,14 @@ import { initialLogin } from '@/atoms/initialLoginAtom';
 import { useCalendarEvents, useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { isSuperAdmin } from '@/utils';
+import { hasAdmin, isSuperAdmin } from '@/utils';
 import { useAtom } from 'jotai';
 
 import LoadingPage from '@/pages/LoadingPage';
 
 import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
+import RoleSwitchButton from '@/components/common/button/RoleSwitchButton';
 import SwiperContainer from '@/components/common/container/SwiperContainer';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import NoticeDisplayList from '@/components/notice/layout/NoticeDisplayList';
@@ -46,6 +47,7 @@ export default function Home() {
         (userProfile?.courseList || []).length > 0,
     },
   );
+
   const {
     fullCalendarSideViewEvents,
     fullCalendarEvents,
@@ -73,7 +75,11 @@ export default function Home() {
 
   return (
     <MainView className="pb-20">
-      <Header title={`${userProfile?.name} 스프님, 환영합니다!`} />
+      <Header title={`${userProfile?.name} 스프님, 환영합니다!`}>
+        {hasAdmin(userProfile?.role) && (
+          <RoleSwitchButton title="관리자로 전환" />
+        )}
+      </Header>
 
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
         <section className="relative flex h-full flex-col">
