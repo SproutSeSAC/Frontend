@@ -4,7 +4,7 @@ import {
   useGetThisWeekNoticeList,
 } from '@/services/post/noticeQueries';
 
-import { NoticeDisplay } from '@/types';
+import { HasAdminRole, NoticeDisplay } from '@/types';
 
 import TitleLinkWithRoleTag from '@/components/common/TitleLinkWithRoleTag';
 
@@ -41,7 +41,11 @@ export default function NoticeDisplayList({
     isInfiniteNoticeListLoading ||
     isInfiniteNoticListLoading;
 
-  const noticeObj: { [key in NoticeTitle]: NoticeDisplay[] } = {
+  const noticeObj: {
+    [key in NoticeTitle]: (NoticeDisplay & {
+      manager?: { role: keyof HasAdminRole };
+    })[];
+  } = {
     공지사항: data.pages[0].notices,
     마감임박: closeSoonNoticeList,
     NEW: thisWeekNoticeList,
@@ -57,15 +61,19 @@ export default function NoticeDisplayList({
       >
         {noticeDisplayList
           ?.slice(0, 4)
-          ?.map(({ roleType, noticeId, postId, title: noticeTitle }) => (
-            <li key={noticeId}>
-              <TitleLinkWithRoleTag
-                to={`/notice/post/${postId}`}
-                roleType={roleType}
-                title={noticeTitle}
-              />
-            </li>
-          ))}
+          ?.map(
+            ({ roleType, manager, noticeId, postId, title: noticeTitle }) => (
+              <li key={noticeId}>
+                <TitleLinkWithRoleTag
+                  to={`/notice/post/${postId}`}
+                  roleType={
+                    title === '마감임박' && manager ? manager.role : roleType
+                  }
+                  title={noticeTitle}
+                />
+              </li>
+            ),
+          )}
       </ul>
     ) : (
       <span className="mt-14 flex items-center justify-center text-center text-mainGray-hover">

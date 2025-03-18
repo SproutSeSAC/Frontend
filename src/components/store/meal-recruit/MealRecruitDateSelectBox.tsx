@@ -7,7 +7,7 @@ import SelectBox, {
 
 export default function MealRecruitDateSelectBox({
   dateOptions,
-  errorMas,
+  errorMsg,
   onChange,
 }: {
   dateOptions: {
@@ -15,7 +15,7 @@ export default function MealRecruitDateSelectBox({
     name: JSX.Element;
     value: Date;
   }[];
-  errorMas: string;
+  errorMsg: string;
   onChange: (...event: (Date | null)[]) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -41,15 +41,15 @@ export default function MealRecruitDateSelectBox({
         open={open}
         onClose={() => setOpen(false)}
         onSelectBoxClick={() => setOpen(prev => !prev)}
-        errorMsg={errorMas}
+        errorMsg={errorMsg}
         selectedOptionLabel={selectedOptions?.id}
         boxShape="buttonShape"
-        className={`${errorMas && 'border-red-500'} ${!selectedOptions?.id && 'text-mainGray'} relative flex w-full items-center gap-5 text-start ${selectedOptions ? 'text-black' : 'text-[#9ca3af]'} rounded-xl border border-solid border-mainGray bg-white px-4 py-[9px] text-lg`}
+        className={`${errorMsg ? 'border-red-500' : ''} relative flex w-full items-center gap-5 text-start ${selectedOptions ? 'text-black' : 'text-mainGray-hover'} rounded-xl border border-solid border-mainGray bg-white px-4 py-[9px] text-lg`}
       >
         {dateOptions.map((option, idx) => (
           <li
             key={option.id}
-            className={`mx-1 cursor-pointer px-4 py-[5px] hover:rounded-lg hover:bg-darkGreen-active ${idx === 0 && 'mt-4'} ${idx + 1 === dateOptions.length ? 'mb-4' : 'mb-[9px]'}`}
+            className={`mx-1 cursor-pointer px-4 py-[5px] hover:rounded-lg hover:bg-lightGreen-hover ${idx === 0 && 'mt-4'} ${idx + 1 === dateOptions.length ? 'mb-4' : 'mb-[9px]'}`}
           >
             <button
               type="button"
