@@ -54,7 +54,7 @@ export default function StoreDetail() {
           />
         </Header>
 
-        <section className="flex h-full w-full gap-8">
+        <section className="flex h-full w-full gap-0">
           <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
             <StoreFilterForm
               onReset={() => {

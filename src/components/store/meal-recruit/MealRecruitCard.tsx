@@ -109,6 +109,7 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
           </div>
           <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
             {currentMemberCount}/{targetMemberCount}명
+            {targetMemberCount === 10 ? '+' : ''}
           </div>
         </div>
       </div>

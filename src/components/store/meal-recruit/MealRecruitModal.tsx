@@ -102,13 +102,16 @@ export default function MealRecruitModal() {
       title={
         <>
           <div className="mb-4 text-2xl">한끼팟 만들기</div>
-          <div className="mt-3 text-base font-normal text-mainGray">
+          <div className="mt-3 text-base font-normal text-mainGray-active">
             다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
           </div>
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className="flex flex-col pb-10"
+      >
         <div className="relative mb-10 mt-4 grid grid-cols-2 gap-4 text-lg">
           <LabeledSection label="제목" className="col-span-2">
             <Controller
@@ -257,14 +260,12 @@ export default function MealRecruitModal() {
           </LabeledSection>
         </div>
 
-        <div className="flex justify-end">
-          <SquareButton
-            name="저장하기"
-            type="submit"
-            className="cursor-pointer self-end"
-            disabled={isPending || !isIdle}
-          />
-        </div>
+        <SquareButton
+          name="저장하기"
+          type="submit"
+          className="cursor-pointer self-end"
+          disabled={isPending || !isIdle}
+        />
       </form>
     </Modal>
   );

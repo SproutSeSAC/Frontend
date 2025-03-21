@@ -32,13 +32,13 @@ export default function StoreModalHeader({
         type="button"
         aria-label="모달 닫기"
         onClick={onClose}
-        className="text-[#d9d9d9]"
+        className="-ml-2 text-sm text-darkGray"
       >
         <Icon name="ChevronLeft" />
       </button>
 
       <FavoriteButton
-        size={20}
+        size={22}
         isFavorite={isScraped}
         onClick={onScrapClick}
         disabled={isDeleteScrapPending || isPostScrapPending}

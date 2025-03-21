@@ -26,29 +26,24 @@ function StoreStarRating({
   };
 
   const renderStars = (): JSX.Element[] => {
-    const result: JSX.Element[] = [];
-    for (let i = 0; i < 5; i += 1) {
-      result.push(
-        <div>
-          {isEditable ? (
-            <button
-              key={i + 1}
-              type="button"
-              onClick={() => handleClick(i)}
-              onKeyDown={e => handleKeyDown(i, e)}
-              className="cursor-pointer border-none bg-none p-0"
-            >
-              {i + 1 <= score ? <FaStar /> : <FaRegStar />}
-            </button>
-          ) : (
-            <span key={i + 1} className="cursor-default">
-              {i + 1 <= score ? <FaStar /> : <FaRegStar />}
-            </span>
-          )}
-        </div>,
-      );
-    }
-    return result;
+    return Array.from({ length: 5 }, (_, i) => (
+      <div key={i} className="flex items-center">
+        {isEditable ? (
+          <button
+            type="button"
+            onClick={() => handleClick(i)}
+            onKeyDown={e => handleKeyDown(i, e)}
+            className="cursor-pointer border-none bg-none p-0"
+          >
+            {i + 1 <= score ? <FaStar /> : <FaRegStar />}
+          </button>
+        ) : (
+          <span className="cursor-default">
+            {i + 1 <= score ? <FaStar /> : <FaRegStar />}
+          </span>
+        )}
+      </div>
+    ));
   };
 
   return <div className="flex text-yellow-400">{renderStars()}</div>;

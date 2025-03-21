@@ -29,7 +29,7 @@ function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
     <button
       type="button"
       aria-label="더 보기"
-      className="z-10 pb-5"
+      className="z-10 pb-1 pt-3"
       onClick={() => swiper?.slideNext()}
     >
       <Icon name="ChevronDown" opacity={0.4} />
@@ -61,7 +61,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative flex h-full flex-col justify-between">
       <div
         className="overflow-hidden"
         style={{ height: `${windowHeight - containerHeightOffset}px` }}
@@ -92,13 +92,14 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
           )}
         </Swiper>
       </div>
+
       {isLoading && (
         <div className="flex w-full justify-center">
           <LoopLoading size={60} />
         </div>
       )}
       {!hideNextButton && slideList.length > 0 && (
-        <div className="mt-10 flex w-full justify-center">
+        <div className="flex justify-center">
           <SlideNextButton swiper={swiperInstance} />
         </div>
       )}

@@ -123,12 +123,12 @@ export default function StoreCard({
         }}
       </StoreMenuImageSlider>
 
-      <section className={`flex flex-col gap-6 ${isModal ? 'mt-8' : 'mt-3'}`}>
+      <section className={`flex flex-col gap-6 ${isModal ? 'mt-6' : 'mt-3'}`}>
         <header className="flex items-center justify-between font-semibold">
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-[10px]">
               <h2 className="text-lg">{storeData.name || ''}</h2>
-              <span className="text-mainGray">
+              <span className="text-mainGray-active">
                 {storeData.foodType
                   ? foodFilterDisplay[storeData.foodType]
                   : '-'}
@@ -142,7 +142,7 @@ export default function StoreCard({
                     element: <StoreProposalEditModal />,
                   });
                 }}
-                className="flex items-center justify-center text-base font-semibold text-mainGray"
+                className="flex items-center justify-center text-base font-semibold text-mainGray-active"
               >
                 정보 수정 제안하기
                 <Icon name="ChevronRight" width={18} height={18} />
@@ -161,7 +161,7 @@ export default function StoreCard({
 
         <div className="flex flex-col gap-4">
           <section className="flex items-center gap-2.5">
-            <BsFillGeoAltFill className="text-mainGray" size={15} />
+            <BsFillGeoAltFill className="text-mainGray" size={16} />
             <div className="relative flex items-center gap-2.5">
               <span className="text-darkGray-active">
                 {storeData ? `${storeData.campusName}캠퍼스` : '-'}
@@ -183,7 +183,7 @@ export default function StoreCard({
                   <PiArrowSquareInThin size={18} />
                 </button>
                 {test && (
-                  <div className="absolute -right-[88px] -top-10 whitespace-normal rounded-md rounded-bl-none bg-mainGreen bg-opacity-90 p-2 text-white">
+                  <div className="absolute -right-[88px] -top-10 whitespace-normal rounded-md rounded-bl-none bg-mainGreen bg-opacity-90 px-3 py-2 font-medium text-white">
                     빠른 길찾기
                   </div>
                 )}

@@ -40,11 +40,7 @@ export default function Store() {
   const onOpenModal = async (storeId: number) => {
     await showDialog({
       key: 'STORE_MODAL',
-      element: (
-        <div className="fixed left-1/4 top-1/2 z-10 h-full -translate-x-[45%] -translate-y-1/2 transform">
-          <StoreModal onClose={hideDialog} storeId={storeId} />
-        </div>
-      ),
+      element: <StoreModal onClose={hideDialog} storeId={storeId} />,
     });
   };
 
