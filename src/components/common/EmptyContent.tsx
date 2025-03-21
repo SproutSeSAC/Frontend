@@ -19,7 +19,7 @@ export default function EmptyContent({
         alt="새싹 로고"
       />
       <div
-        className={`mt-6 ${(size === 'lg' || size === 'md') && 'text-lg'} ${size === 'sm' && 'text-base'}`}
+        className={`mt-6 leading-5 text-mainGray-active ${(size === 'lg' || size === 'md') && 'text-lg'} ${size === 'sm' && 'text-base'}`}
       >
         {message}
       </div>

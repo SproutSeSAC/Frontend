@@ -97,7 +97,7 @@ export default function StoreModalReview({
   );
 
   return (
-    <section className="pb-14">
+    <section>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="flex items-center gap-2">
           <UserImage

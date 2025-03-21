@@ -116,8 +116,11 @@ export default function MealRecruitCardModal({
           </div>
         </div>
 
-        <div className="mt-6">
-          <div className="text-sm text-darkGray-active">{`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}</div>
+        <div className="mb-12 mt-6">
+          <div className="text-sm text-darkGray-active">
+            {`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}
+            {data?.targetMemberCount === 10 ? '+' : ''}
+          </div>
 
           <ul className="mt-3 flex flex-col gap-3">
             {(data?.members || []).map(member => {
@@ -125,7 +128,7 @@ export default function MealRecruitCardModal({
                 <li key={member.userId} className="flex items-center gap-2.5">
                   <UserImage
                     className="size-10"
-                    imageNameSegment={member.imgUrl}
+                    imageNameSegment={member.profileImageUrl}
                   />
                   <div className="flex w-full items-center justify-between gap-9">
                     <span className="text-sm">@{member.nickname}</span>

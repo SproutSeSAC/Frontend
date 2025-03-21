@@ -17,13 +17,13 @@ export default forwardRef(function StoreListSlider(
   ref?: ForwardedRef<HTMLDivElement>,
 ) {
   return (
-    <div>
+    <div className="flex flex-1 flex-col">
       {storeList && storeList.length > 0 && (
         <VerticalSlider<Store>
           slideList={storeList}
           slideItemHeight={147}
-          spaceBetween={40}
-          containerHeightOffset={280}
+          spaceBetween={20}
+          containerHeightOffset={210}
           paginationHeightOffset={360}
           hideNextButton={!sideViewOpen}
           isLoading={isLoading}

@@ -25,80 +25,78 @@ export default function StoreListSliderCard({
     useHandleScrap({
       postId: slideItem.postId,
       isScraped: slideItem.isScraped,
-      invalidateQueryKeys: [{ queryKey: [] }], // NOTE
+      invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
     });
 
   return (
-    <article>
-      <div
-        className="flex w-full gap-[11px]"
-        onClick={() => {
+    <div
+      className="flex h-[147px] w-full gap-[11px] overflow-hidden"
+      onClick={() => {
+        setStoreDetails({
+          latitude: slideItem.latitude,
+          longitude: slideItem.longitude,
+          id: slideItem.id,
+          zoom: 20,
+        });
+        setIsZoomBehaviorFlag(true);
+      }}
+      key={slideItem.id}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => {
+        if (e.key === 'Enter') {
           setStoreDetails({
             latitude: slideItem.latitude,
             longitude: slideItem.longitude,
             id: slideItem.id,
             zoom: 20,
           });
-          setIsZoomBehaviorFlag(true);
-        }}
-        key={slideItem.id}
-        role="button"
-        tabIndex={0}
-        onKeyDown={e => {
-          if (e.key === 'Enter') {
-            setStoreDetails({
-              latitude: slideItem.latitude,
-              longitude: slideItem.longitude,
-              id: slideItem.id,
-              zoom: 20,
-            });
-          }
-        }}
-      >
-        <StoreMenuImage
-          width="w-[147px] min-w-[147px]"
-          height="h-[147px] min-h-[147px]"
-          src={slideItem.storeImageList[0]?.path}
-        />
+        }
+      }}
+    >
+      <StoreMenuImage
+        width="w-[147px] min-w-[147px]"
+        height="h-[147px] min-h-[147px]"
+        src={slideItem.storeImageList[0]?.path}
+      />
 
-        <div className="flex w-full flex-col gap-4">
-          <header className="font-semibold">
-            <div className="flex w-full items-start justify-between gap-0.5">
-              <h2>{slideItem.name || ''}</h2>
-              <div className="flex items-center gap-1">
-                <FavoriteButton
-                  size={18}
-                  isFavorite={slideItem.isScraped}
-                  onClick={onScrapClick}
-                  disabled={isDeleteScrapPending || isPostScrapPending}
-                />
-                <span className="text-sm text-mainGray">
-                  {slideItem.scrapCount || 0}
-                </span>
-              </div>
+      <div className="flex w-full flex-col gap-4">
+        <header className="font-semibold">
+          <div className="flex w-full items-start justify-between gap-0.5">
+            <h2>{slideItem.name || ''}</h2>
+            <div className="mt-1 flex items-center gap-1">
+              <FavoriteButton
+                size={18}
+                isFavorite={slideItem.isScraped}
+                onClick={onScrapClick}
+                disabled={isDeleteScrapPending || isPostScrapPending}
+              />
+              <span className="text-sm text-darkGray">
+                {slideItem.scrapCount || 0}
+              </span>
             </div>
-            <p className="text-xs text-darkGray-active">
-              {slideItem.foodType ? foodFilterDisplay[slideItem.foodType] : '-'}
-            </p>
-          </header>
+          </div>
+          <p className="pb-2 pt-1 text-xs text-darkGray-active">
+            {slideItem.foodType ? foodFilterDisplay[slideItem.foodType] : '-'}
+          </p>
+        </header>
 
-          {slideItem.storeMenuList.length > 0 && (
-            <div>
-              <h3 className="mb-1 text-xs font-semibold">대표 메뉴</h3>
-              <ul className="flex flex-col gap-1 text-[11px]">
-                {slideItem.storeMenuList.map(item => {
-                  return (
-                    <li key={item.id} className="flex gap-2">
-                      <span>{item.name}</span>
-                      <span>{item.price.toLocaleString()}원</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
-        </div>
+        {slideItem.storeMenuList.length > 0 && (
+          <div>
+            <h3 className="mb-1 text-xs font-semibold">대표 메뉴</h3>
+            <ul className="flex flex-col gap-1 text-[11px]">
+              {slideItem.storeMenuList.map(item => {
+                return (
+                  <li key={item.id} className="flex gap-2">
+                    <span>{item.name}</span>
+                    <span>{item.price.toLocaleString()}원</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </div>
-    </article>
+    </div>
   );
 }

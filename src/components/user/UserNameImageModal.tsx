@@ -132,7 +132,7 @@ export default function UserNameImageModal({
               type="button"
               name="기본 이미지 적용"
               onClick={resetProfileImage}
-              className="bg-darkGray font-medium text-white"
+              className="!bg-darkGray font-medium text-white"
               disabled={isUpdateProfileImagePending || !isUpdateImageIdle}
             />
             <SquareButton

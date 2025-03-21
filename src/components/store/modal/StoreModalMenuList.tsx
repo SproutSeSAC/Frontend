@@ -11,12 +11,12 @@ export default function StoreModalMenuList({
   menuList,
 }: StoreModalMenuListProps) {
   return (
-    <section className="flex flex-wrap gap-9">
+    <section className="grid grid-cols-3 gap-6">
       {menuList.length === 0 && (
         <EmptyContent
           message="메뉴 데이터가 없습니다."
           size="sm"
-          className="mt-8 flex w-full justify-center"
+          className="mt-8 flex w-full justify-center tracking-tight"
         />
       )}
       {menuList.map(menu => (

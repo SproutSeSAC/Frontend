@@ -33,7 +33,7 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
 
   return createPortal(
     <>
-      <div className="fixed left-[36%] top-0 z-20 m-[15px] h-[calc(100%-30px)] w-[420px] -translate-x-[36%] transform overflow-y-auto rounded bg-white px-7 pt-[15px] shadow-modal scrollbar-hide">
+      <div className="fixed left-[36%] top-[5%] z-20 m-[15px] h-[85vh] w-[420px] -translate-x-[40%] transform overflow-y-auto rounded-[20px] bg-white px-7 pb-16 pt-[15px] shadow-modal scrollbar-hide">
         {storeData && (
           <StoreModalHeader
             storeId={storeId}

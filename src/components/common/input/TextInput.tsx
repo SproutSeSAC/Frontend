@@ -52,7 +52,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function Input(
         disabled={disabled}
         minLength={minLength}
         maxLength={maxLength}
-        className={`mr-2 h-[45px] w-full rounded-xl border p-2 outline-none hover:placeholder-black ${errorMsg ? 'border-red-600' : 'border-mainGray'} ${className}`}
+        className={`mr-2 min-h-[45px] w-full rounded-xl border p-2 outline-none placeholder:text-mainGray-hover hover:placeholder:text-darkGray-hover ${errorMsg ? 'border-red-600' : 'border-mainGray'} ${className}`}
         {...props}
       />
       {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}

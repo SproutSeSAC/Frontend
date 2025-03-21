@@ -16,7 +16,7 @@ export default forwardRef(function StoreListSideView(
   { sideViewOpen, onClose, storeList, isLoading }: StoreListSideViewProps,
   ref?: ForwardedRef<HTMLDivElement>,
 ) {
-  const headerContent = <span className="mb-10 text-[27px]">식당 리스트</span>;
+  const headerContent = <span className="mb-10 text-[24px]">식당 리스트</span>;
 
   const mainContent = (
     <StoreListSlider
@@ -31,7 +31,7 @@ export default forwardRef(function StoreListSideView(
     <CollapsibleSideView
       sideViewOpen={sideViewOpen}
       onClose={onClose}
-      className="sticky top-0 mr-5 max-w-[284px] py-11"
+      className="sticky mr-5 max-w-[284px] pb-5 pt-11"
       headerContent={headerContent}
       mainContent={mainContent}
     />

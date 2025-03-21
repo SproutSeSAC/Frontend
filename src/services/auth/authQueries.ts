@@ -29,7 +29,7 @@ export const getCalendarToken = () =>
       }
     })
     .catch(async error => {
-      console.log(error);
+      console.log('calendarToken', error);
     });
 
 // 리프레시 토큰

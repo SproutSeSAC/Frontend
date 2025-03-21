@@ -14,17 +14,17 @@ export const minutes: Option[] = Array.from({ length: 6 }, (_, i) => ({
 
 // 인원수 선택 option
 export const recruitmentCountList: Option[] = Array.from(
-  { length: 10 },
+  { length: 9 },
   (_, index) => {
-    if (index === 9) {
+    if (index === 8) {
       return {
-        id: index + 1,
-        name: `${index + 1}명 이상`,
+        id: index + 2,
+        name: `${index + 2}명 이상`,
       };
     }
     return {
-      id: index + 1,
-      name: `${index + 1}명`,
+      id: index + 2,
+      name: `${index + 2}명`,
     };
   },
 );
