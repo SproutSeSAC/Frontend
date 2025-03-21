@@ -18,11 +18,13 @@ import axios, {
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_API_URL,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const headers = new AxiosHeaders(config.headers);
+
     const accessToken = getCookie(ACCESS_TOKEN_KEY);
     const refreshToken = getCookie(REFRESH_TOKEN_KEY);
 
@@ -53,24 +55,26 @@ axiosInstance.interceptors.response.use(
       originalRequest.retry = true;
 
       const handleNewAccessToken = async () => {
-        const response = await getNewAccessToken();
-        if (response?.status && response.status !== 200)
-          return redirectToLogin();
-        const newAccessToken = response.data.access_token;
+        const res = await getNewAccessToken();
+
+        if (res?.status !== 200) return redirectToLogin();
+
+        const newAccessToken = res.data.access_token;
         originalRequest.headers['Access-Token'] = newAccessToken;
         setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
+
         return axiosInstance(originalRequest);
       };
 
       switch (error.response.status) {
         case 401:
-        case 304:
           return handleNewAccessToken();
 
         case 404:
           return redirectToLogin();
 
         default:
+        // NOTE: 에러처리
         // alert(
         //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
         // );
@@ -87,9 +91,9 @@ export const axiosCalendarInstance = axios.create({
 
 axiosCalendarInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const calendarAccessToken = getCookie(CALENDAR_TOKEN_KEY);
-
     const headers = new AxiosHeaders(config.headers || {});
+
+    const calendarAccessToken = sessionStorage.getItem(CALENDAR_TOKEN_KEY);
 
     headers.set('Authorization', `Bearer ${calendarAccessToken}`);
 
@@ -111,10 +115,7 @@ axiosCalendarInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     const handleCalendarToken = async () => {
-      const response = await getCalendarToken();
-      if (response?.status && response.status !== 200) return redirectToLogin();
-      const newCalendarAccessToken = response.data.access_token;
-      setCookie(CALENDAR_TOKEN_KEY, newCalendarAccessToken, 1);
+      await getCalendarToken();
       return axiosCalendarInstance(originalRequest);
     };
 
@@ -125,10 +126,14 @@ axiosCalendarInstance.interceptors.response.use(
         case 401:
           return handleCalendarToken();
 
+        case 403:
+          return []; //
+
         default:
-          alert(
-            `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
-          );
+        // NOTE: 에러처리
+        // alert(
+        //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
+        // );
       }
     }
     return Promise.reject(error);

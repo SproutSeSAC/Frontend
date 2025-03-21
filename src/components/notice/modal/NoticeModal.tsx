@@ -78,13 +78,9 @@ export default function NoticeModal({
   const isNotValid = !sessionIdList;
 
   return (
-    <Modal
-      title="수업 선택하기"
-      onToggleClick={hideDialog}
-      className="p-[50px]"
-    >
+    <Modal title="수업 선택하기" onToggleClick={hideDialog} className="p-12">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
           <Controller
             control={control}
             name="sessionIdList"
@@ -123,7 +119,7 @@ export default function NoticeModal({
           {errors && (
             <ErrorMsg
               msg={errors?.sessionIdList?.message || ''}
-              className="absolute bottom-[-30px] left-0 ml-2"
+              className="pl-2"
             />
           )}
 
@@ -132,7 +128,7 @@ export default function NoticeModal({
             type="submit"
             disabled={isNotValid}
             color={isNotValid ? 'gray' : 'mainGreen'}
-            className="h-full self-end whitespace-nowrap px-3 py-[12px] text-xl"
+            className="h-full self-end whitespace-nowrap px-3 py-[12px] text-lg"
           />
         </form>
       </FormProvider>

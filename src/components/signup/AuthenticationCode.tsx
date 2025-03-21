@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { getVerifyCodeResult } from '@/services/auth/authQueries';
 
 import { authenticationCodeAtom } from '@/atoms/authenticationCodeAtom';
@@ -14,6 +16,7 @@ export default function AuthenticationCode() {
   const [isAuthenticationCode, setIsAuthenticationCode] = useAtom(
     authenticationCodeAtom,
   );
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
@@ -27,6 +30,8 @@ export default function AuthenticationCode() {
 
   const onVerifyCodeClick = async () => {
     if (watchedVerifyCode === '') return;
+
+    setIsPending(true);
 
     try {
       const response = await getVerifyCodeResult(watchedVerifyCode);
@@ -54,6 +59,7 @@ export default function AuthenticationCode() {
         ),
       });
     }
+    setIsPending(false);
   };
 
   return (
@@ -61,6 +67,7 @@ export default function AuthenticationCode() {
       isVerified={isAuthenticationCode}
       onVerifyClick={onVerifyCodeClick}
       buttonName="인증 확인"
+      buttonDisabled={isPending}
     >
       <TextInput
         disabled={isAuthenticationCode}

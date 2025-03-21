@@ -22,11 +22,11 @@ export default function ControllerParticipantCapacity() {
 
         return (
           <div
-            className={`relative flex items-center rounded-2xl border bg-white ${error?.message ? 'border-red-600' : 'border-lightGray'}`}
+            className={`relative flex items-center rounded-2xl border border-mainGray bg-white ${error?.message ? 'border-red-600' : 'border-lightGray'}`}
           >
             <button
               type="button"
-              className={`flex h-full min-w-[125px] items-center gap-2 rounded-l-2xl px-4 py-1.5 ${isLimited ? 'bg-[#fafafa] font-medium text-mainGreen' : 'text-mainGray'}`}
+              className={`flex h-full min-w-[125px] items-center gap-2 rounded-l-2xl px-4 py-1.5 ${isLimited ? 'bg-white font-medium text-mainGreen' : 'bg-lightGray-active text-mainGray'}`}
               onClick={() => {
                 onChange(
                   isLimited ? DEFAULT_CAPACITY_NUM : LIMITLESS_CAPACITY_NUM,

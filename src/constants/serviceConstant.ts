@@ -66,3 +66,14 @@ export const campusList: Array<{
     longitude: '127.0430027',
   },
 ];
+
+// 서비스 종류
+export const postTypeObj = {
+  MEAL: '한끼팟',
+  NOTICE: '공지사항',
+  PROJECT: '프로젝트',
+  STUDY: '스터디',
+  STORE: '맛집',
+} as const;
+
+export type PostType = typeof postTypeObj;

@@ -6,6 +6,8 @@ import { useGetNotificationList } from '@/services/notification/notificationQuer
 
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
+import DoubleCheck from '@/assets/icons/double-check.svg?react';
+import { NOTIFICATION_TYPE } from '@/constants/notification';
 import { useAtomValue } from 'jotai';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
@@ -30,6 +32,7 @@ export default function NotificationContent() {
           className="flex items-center justify-end gap-1 text-end font-normal"
           disabled={notificationList?.length === 0}
         >
+          <DoubleCheck />
           모두 읽음
         </button>
         <button
@@ -47,8 +50,18 @@ export default function NotificationContent() {
           return (
             <div
               key={item.id}
-              className={`block w-full rounded-lg border border-solid border-lightGray px-7 py-[22px] text-sm ${item.isRead && 'opacity-50'}`}
+              className={`relative rounded-lg border border-mainGray bg-white pb-6 pl-[22px] pr-4 pt-8 ${
+                item.isRead && 'opacity-50'
+              } `}
             >
+              <div
+                className="absolute left-0 top-0 h-full w-[7px] rounded-l-lg"
+                style={{
+                  backgroundColor: NOTIFICATION_TYPE[item.type].borderColor,
+                }}
+              >
+                {` `}
+              </div>
               <CardContent notification={item} />
             </div>
           );

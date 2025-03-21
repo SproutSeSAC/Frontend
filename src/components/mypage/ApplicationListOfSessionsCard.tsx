@@ -1,9 +1,6 @@
-import { Link } from 'react-router-dom';
-
 import { hasAdminRolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { HasAdminRole } from '@/types';
-import { getColorByRole } from '@/utils';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import XButton from '@/components/common/button/XButton';
@@ -21,8 +18,7 @@ export default function ApplicationListOfSessionsCard() {
             <Tag
               size="medium"
               text="캠퍼스매니저"
-              emphasisText
-              color="pink"
+              roleType="CAMPUS_LEADER"
               className="!px-1"
             />
             <span className="max-w-[330px]">
@@ -44,45 +40,41 @@ export default function ApplicationListOfSessionsCard() {
     });
   };
 
-  return (
-    <div className="rounded-xl bg-white px-6 py-4 shadow-card">
-      <div className="flex items-center justify-between">
-        <h4 className="font-medium">내가 신청한 특강</h4>
-        <Link
-          to="/application-status-for-sessions"
-          className="text-sm font-medium text-mainGray"
-        >
-          더보기
-        </Link>
-      </div>
+  // NOTE: 최대 4개 신청내역 불러오기
+  const list: { id: number; title: string; role: keyof HasAdminRole }[] = [
+    {
+      id: 1,
+      title:
+        '1세대에게 직접 배우는 안드로이드 앱 개발 1세대에게 직접 배우는 안드로이드 앱 개발',
+      role: 'CAMPUS_LEADER',
+    },
+  ];
 
-      <ul className="mt-2.5 w-full space-y-1.5">
-        {(
-          [
-            'CAMPUS_LEADER',
-            'EDU_MANAGER',
-            'JOB_COORDINATOR',
-          ] as (keyof HasAdminRole)[]
-        ).map(item => (
-          <li key={item} className="flex items-center gap-2">
-            <Tag
-              size="medium"
-              text={hasAdminRolesObj[item]}
-              emphasisText
-              color={getColorByRole(item)}
-              className="!px-1"
-            />
-            <span className="w-full overflow-hidden truncate">
-              1세대에게 직접 배우는 안드로이드 앱 개발 1세대에게 직접 배우는
-              안드로이드 앱 개발
-            </span>
-            <XButton
-              onDeleteClick={onCancelClick}
-              iconClassName="text-mainGray !size-6"
-            />
-          </li>
-        ))}
-      </ul>
+  return (
+    <div className="mt-2.5 flex h-[200px] w-full items-center justify-center rounded-[20px] bg-white p-6">
+      {1 ? (
+        <span className="text-mainGray-hover">
+          특강 / 행사 신청 내역이 없어요!
+        </span>
+      ) : (
+        <ul className="h-full w-full space-y-2">
+          {list.map(({ id, title, role }) => (
+            <li key={id} className="flex items-center gap-2">
+              <Tag
+                size="medium"
+                text={hasAdminRolesObj[role]}
+                roleType={role}
+                className="!px-2 !py-1.5"
+              />
+              <span className="w-full overflow-hidden truncate">{title}</span>
+              <XButton
+                onDeleteClick={onCancelClick}
+                iconClassName="text-mainGray !size-6"
+              />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

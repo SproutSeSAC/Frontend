@@ -20,6 +20,15 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
 
   const resetStoreDetails = useResetAtom(resetStoreDetailsAtom);
 
+  // const baseUrl = 'https://map.naver.com/p/directions';
+
+  // const campusUrl = `${campusLatitude},${campusLogtitude},${campusName},${campusPlaceId},PLACE_POI`;
+  // //  '/14141649.9914631,4523692.7589538,청년취업사관학교 성북캠퍼스,1214536397,PLACE_POI';
+
+  // const store = '127.0366171,37.6038403,장어세상,1525366157,PLACE_POI';
+
+  // const resultUrl = `${baseUrl}/${campusUrl}${store}/-/walk?c=18.00,0,0,0,dh`;
+
   const {
     modalOpen,
     setModalOpen,
@@ -61,10 +70,10 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
       <button
         type="button"
         aria-label="리스트로 돌아가기"
-        className="absolute right-3 top-0 rounded-lg bg-white p-2 text-mainGray"
+        className="absolute right-3 top-0 rounded-lg bg-white p-2.5"
         onClick={() => navigate('/stores')}
       >
-        <BsList size={16} />
+        <BsList size={18} />
       </button>
 
       {modalOpen.open && (

@@ -140,6 +140,7 @@ export default function SessionsDetail() {
                   onClose={() => setToastMessage(null)}
                 />
               </div>
-            )}</>
+            )}
+    </>
   );
 }

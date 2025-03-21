@@ -48,7 +48,10 @@ export default function StoreProposalEditModal() {
       }}
       title={<div className="mb-4 text-2xl">정보 수정 제안하기</div>}
     >
-      <form onSubmit={handleSubmit(onSubmit, onError)} className="w-[716px]">
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className="flex w-[716px] flex-col"
+      >
         <Controller
           control={control}
           name="text"
@@ -56,7 +59,7 @@ export default function StoreProposalEditModal() {
             return (
               <div className="flex flex-col">
                 <textarea
-                  className={`mt-10 h-20 resize-none rounded-2xl border border-solid border-mainGray px-4 py-[10px] text-base ${error && 'border-red-500'}`}
+                  className={`mt-5 h-40 resize-none rounded-2xl border border-solid border-mainGray px-4 py-[10px] text-base focus:outline-none ${error && 'border-red-500'}`}
                   placeholder="수정하려는 정보를 입력해주세요"
                   onChange={onChange}
                 />
@@ -69,13 +72,11 @@ export default function StoreProposalEditModal() {
           }}
         />
 
-        <div className="flex justify-end">
-          <SquareButton
-            name="제보하기"
-            type="submit"
-            className="mt-20 self-end"
-          />
-        </div>
+        <SquareButton
+          name="제보하기"
+          type="submit"
+          className="mt-10 self-end"
+        />
       </form>
     </Modal>
   );

@@ -13,6 +13,7 @@ export const changeFullCalendarEvents = (eventList: EventWithId[]) => {
     ?.map(event => {
       const start = event?.start?.dateTime || event?.start?.date;
       const end = event?.end?.dateTime || event?.end?.date;
+      const linkedId = event.description ? { url: event.description } : {};
 
       const defaultEvent = {
         title: event?.summary ?? '제목없음',
@@ -22,6 +23,7 @@ export const changeFullCalendarEvents = (eventList: EventWithId[]) => {
         backgroundColor: event?.backgroundColor,
         allDay: !event?.start?.dateTime && !event?.end?.dateTime,
         calendarId: event?.calendarId,
+        ...linkedId,
       };
 
       const exdate = recurringEvents

@@ -8,6 +8,9 @@ import {
 
 import Toast from '@/components/common/Toast';
 import Alert, { AlertProps } from '@/components/common/modal/Alert';
+import LoadingAlert, {
+  LoadingAlertProps,
+} from '@/components/common/modal/LoadingAlert';
 
 interface Dialog {
   key: string; // TODO : key 타입 명확하게 수정필요해 보임
@@ -35,6 +38,7 @@ interface DialogContextProviderActions {
   hideDialog: (key?: string) => Promise<void>;
   alert: (args: AlertType) => Promise<void>;
   showToast: (message: string, autoCloseDuration?: number) => void;
+  loadingAlert: (args: LoadingAlertProps) => Promise<void>;
 }
 
 /**
@@ -52,6 +56,9 @@ interface DialogContextProviderActions {
  * @param showToast - Toast 컴포넌트를 사용하여 메시지를 표시하는 함수입니다.
  *                    첫 번째 인자는 노출할 메시지이며, 두 번째 인자는
  *                    토스트를 몇 초 동안 표시할지를 결정합니다.
+ * @param loadingAlert - 데이터를 mutate하는 동안 표시할 로딩 표시 함수입니다.
+ *
+ *
  */
 
 export const DialogContext = createContext<DialogContextProviderActions>(
@@ -131,6 +138,23 @@ export default function DialogContextProvider({
     [hideDialog, showDialog],
   );
 
+  const loadingAlert = useCallback(
+    async ({ key, showDim = true, ...rest }: AlertType): Promise<void> => {
+      await showDialog({
+        key: key || 'loading_alert',
+        element: (
+          <>
+            <LoadingAlert {...rest} />
+            {showDim && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" />
+            )}
+          </>
+        ),
+      });
+    },
+    [showDialog],
+  );
+
   const removeToast = (id: number) => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
   };
@@ -148,8 +172,9 @@ export default function DialogContextProvider({
       hideDialog,
       alert,
       showToast,
+      loadingAlert,
     }),
-    [showDialog, hideDialog, alert, showToast],
+    [showDialog, hideDialog, alert, showToast, loadingAlert],
   );
 
   return (

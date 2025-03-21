@@ -23,9 +23,9 @@ export default function ExtraInfoForm({ noticeType }: ExtraInfoFormProps) {
       </LabeledSection>
 
       <LabeledSection label="신청 기간" className="col-span-2">
-        <div className="flex w-full items-center gap-2">
+        <div className="col-span-2 grid w-full grid-cols-[1fr_0.04fr_1fr] items-center gap-2">
           <ControllerDateTime name="applicationStartDateTime" />
-          <span className="text-xl">~</span>
+          <span className="text-center text-xl">~</span>
           <ControllerDateTime name="applicationEndDateTime" />
         </div>
       </LabeledSection>

@@ -33,8 +33,15 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
 
   return createPortal(
     <>
-      <div className="fixed left-[36%] top-0 z-20 m-[15px] h-[calc(100%-30px)] w-[420px] -translate-x-[36%] transform overflow-y-auto rounded bg-white px-7 pt-[15px] shadow-modal scrollbar-hide">
-        <StoreModalHeader onClose={onClose} storeId={storeId} />
+      <div className="fixed left-[36%] top-[5%] z-20 m-[15px] h-[85vh] w-[420px] -translate-x-[40%] transform overflow-y-auto rounded-[20px] bg-white px-7 pb-16 pt-[15px] shadow-modal scrollbar-hide">
+        {storeData && (
+          <StoreModalHeader
+            storeId={storeId}
+            onClose={onClose}
+            postId={storeData?.postId}
+            isScraped={storeData.isScraped}
+          />
+        )}
 
         <StoreCard
           isModal
@@ -42,7 +49,8 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
           width="w-full"
           height="h-[269px]"
           storeData={{
-            id: storeId || 0,
+            id: storeData?.postId || 0,
+            postId: storeData?.postId || 0,
             workingDay: storeData?.workingDay || '',
             storeImageList:
               storeData?.storeImageList.map(item => ({ path: item })) || [],
@@ -53,7 +61,7 @@ export default function StoreModal({ onClose, storeId }: StoreModalProps) {
             breakTime: storeData?.breakTime || '',
             isZeropay: storeData?.isZeropay ?? false,
             isOverPerson: storeData?.isOverPerson ?? false,
-            isScrap: storeData?.isScrap ?? false,
+            isScraped: storeData?.isScraped ?? false,
             storeMenuList: storeData?.storeMenuList || [],
             isLessThan10000Menu: storeData?.isLessThan10000Menu ?? false,
           }}

@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { usePostMyPost, usePutMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
@@ -79,8 +77,6 @@ export default function LoungeForm() {
   const [searchParams] = useSearchParams();
   const modifyProjectId = searchParams.get('modifyProject');
 
-  const queryClient = useQueryClient();
-
   const { showToast } = useDialogContext();
 
   const { data: jobList } = useGetJobList();
@@ -134,9 +130,6 @@ export default function LoungeForm() {
       try {
         await putProject({ postId: Number(modifyProjectId), params });
         showToast('프로젝트를 수정했습니다.');
-        queryClient.invalidateQueries({
-          queryKey: ['', {}],
-        });
         navigate('/lounge');
       } catch (err) {
         showToast('프로젝트 수정을 실패했습니다.');
@@ -147,9 +140,6 @@ export default function LoungeForm() {
     try {
       await postProject(params);
       showToast('프로젝트를 등록했습니다.');
-      queryClient.invalidateQueries({
-        queryKey: ['', {}],
-      });
       navigate('/lounge');
     } catch (err) {
       showToast('프로젝트 등록을 실패했습니다.');
@@ -174,7 +164,7 @@ export default function LoungeForm() {
             <CircleNumber number={1} />
             <Title as="h1" title="프로젝트 필수 정보" />
           </header>
-          <div className="relative mt-8 grid grid-cols-2 gap-4 text-lg">
+          <div className="relative mt-8 grid grid-cols-2 gap-x-4 gap-y-5 text-lg">
             <LabeledSection
               label="모집 구분"
               className="col-span-2 [&>div]:w-1/2"
@@ -293,16 +283,12 @@ export default function LoungeForm() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
-                  const selectedOption = techStackList?.filter(position =>
-                    value.includes(position.id),
-                  );
-
                   return (
                     <TechStackDropdown
-                      defaultLabel="기술스택"
+                      defaultLabel="기술 스택"
                       defaultTabValue="백엔드"
                       errorMsg={error?.message}
-                      initialSelectedOptions={selectedOption}
+                      value={value}
                       options={techStackList}
                       onChangeValue={data => {
                         const ids = data.map(item => item.id);
@@ -322,7 +308,7 @@ export default function LoungeForm() {
                 </div>
               }
             >
-              <ContactMethodContainer control={control} />
+              <ContactMethodContainer />
             </LabeledSection>
           </div>
         </section>

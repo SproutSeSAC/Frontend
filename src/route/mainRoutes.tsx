@@ -2,20 +2,29 @@ import { lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
+import ContentsManagement from '@/pages/admin/ContentsManagement';
+import CourseManagement from '@/pages/admin/CourseManagement';
+import UserManagement from '@/pages/admin/UserManagement';
+
+const MyScrapedPostList = lazy(
+  () => import('@/pages/trainee/MyScrapedPostList'),
+);
+const SessionsDetail = lazy(() => import('@/pages/SessionsDetail'));
+
 const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
-const Notice = lazy(() => import('@/pages/Notice'));
-const NoticeDetail = lazy(() => import('@/pages/NoticeDetail'));
+const Notice = lazy(() => import('@/pages/trainee/Notice'));
+const NoticeDetail = lazy(() => import('@/pages/trainee/NoticeDetail'));
 const Layout = lazy(() => import('@/layouts/Layout'));
 const LoungeLayout = lazy(() => import('@/layouts/LoungeLayout'));
-const Home = lazy(() => import('@/pages/Home'));
-const Lounge = lazy(() => import('@/pages/Lounge'));
-const LoungeDetail = lazy(() => import('@/pages/LoungeDetail'));
-const MyPage = lazy(() => import('@/pages/MyPage'));
+const Home = lazy(() => import('@/pages/trainee/Home'));
+const Lounge = lazy(() => import('@/pages/trainee/Lounge'));
+const LoungeDetail = lazy(() => import('@/pages/trainee/LoungeDetail'));
+const MyPage = lazy(() => import('@/pages/trainee/MyPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
-const Schedule = lazy(() => import('@/pages/Schedule'));
-const Store = lazy(() => import('@/pages/Store'));
-const StoreDetail = lazy(() => import('@/pages/StoreDetail'));
-const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const Schedule = lazy(() => import('@/pages/trainee/Schedule'));
+const Store = lazy(() => import('@/pages/trainee/Store'));
+const StoreDetail = lazy(() => import('@/pages/trainee/StoreDetail'));
+const AdminHome = lazy(() => import('@/pages/admin/AdminHome'));
 const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
 const SessionsDetail = lazy(() => import('@/pages/SessionsDetail'));
 const SessionLayout = lazy(() => import('@/layouts/SessionLayout'));
@@ -24,8 +33,8 @@ const SessionsApplicants = lazy(() => import('@/pages/SessionsApplicants'));
 const mainRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <Layout />,
-    ErrorBoundary: ErrorPage,
+    element: <Layout type="trainee" />,
+    ErrorBoundary: () => ErrorPage({ type: 'trainee' }),
     children: [
       {
         index: true,
@@ -46,26 +55,16 @@ const mainRoutes: RouteObject[] = [
         ],
       },
       {
-        path: 'admin',
-        element: <AdminPage />,
+        path: '/notice/session-status',
+        element: <SessionsDetail />,
       },
       {
         path: 'mypage',
         element: <MyPage />,
       },
-      {
-        path: 'application-status-for-sessions',
-        element: <SessionLayout />,
-        children: [
-          {
-            index: true,
-            element: <SessionsDetail />,
-          },
-          {
-            path: 'post/:postId',
-            element: <SessionsApplicants />,
-          },
-        ],
+      { 
+        path: 'mypage/scraped-posts',
+        element: <MyScrapedPostList />,
       },
       {
         path: 'stores',
@@ -90,6 +89,47 @@ const mainRoutes: RouteObject[] = [
           {
             path: 'post/:postId',
             element: <LoungeDetail />,
+          },
+        ],
+      },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    element: <Layout type="admin" />,
+    ErrorBoundary: () => ErrorPage({ type: 'admin' }),
+    children: [
+      {
+        index: true,
+        element: <AdminHome />,
+      },
+      {
+        path: 'user',
+        element: <UserManagement />,
+      },
+      {
+        path: 'course',
+        element: <CourseManagement />,
+      },
+      {
+        path: 'content',
+        element: <ContentsManagement />,
+      },
+      {
+        path: 'session-status',
+        element: <SessionLayout />,
+        children: [
+          {
+            index: true,
+            element: <SessionsDetail />,
+          },
+          {
+            path: 'post/:postId',
+            element: <SessionsApplicants />,
           },
         ],
       },

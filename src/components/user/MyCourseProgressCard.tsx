@@ -9,9 +9,9 @@ import sproutLogo from '@/assets/images/sprout-logo2.png';
 import { courseGrowthLevelList } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { getDDay, getDateProgress } from '@/utils';
-import { IoIosInformation } from 'react-icons/io';
 
 import CircularGauge from '@/components/common/CircularGauge';
+import InfoHoverBox from '@/components/common/InfoHoverBox';
 import EditButton from '@/components/common/button/EditButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
 import Tag from '@/components/common/tag/Tag';
@@ -67,18 +67,17 @@ export default function MyCourseProgressCard() {
             <li key={text}>
               <Tag
                 text={text}
-                color="gray-light"
+                color="grayLight"
                 size="big"
                 className="px-[14px] py-[10px]"
               />
             </li>
           ))}
-          <li className="group relative ml-auto flex h-[50px] w-10 cursor-pointer items-center justify-center rounded-lg bg-bg">
-            <IoIosInformation className="size-8 text-xl text-darkGray-active" />
-            <span className="absolute right-0 top-14 z-20 hidden w-56 rounded-lg bg-black px-5 py-4 text-sm leading-6 text-white opacity-70 group-hover:block">
-              다음 그래프는 진행률을 나타내며 수료율을 의미하지 않습니다
-            </span>
-          </li>
+
+          <InfoHoverBox
+            text="다음 그래프는 진행률을 나타내며 수료율을 의미하지 않습니다"
+            className="ml-auto size-7 [&>span]:w-64"
+          />
         </ul>
 
         {/* 레벨정보 */}
@@ -108,11 +107,11 @@ export default function MyCourseProgressCard() {
           </span>
         </div>
 
-        {/* 도메인 직무 기술스택 */}
+        {/* 도메인 직무 기술 스택 */}
         <div className="flex w-full flex-1 flex-col justify-between gap-1.5 pl-4">
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">도메인</span>
-            <ScrollContainer gap={3} isBlurRight>
+            <ScrollContainer className="gap-3" isBlurRight>
               {domainList
                 ?.sort((a, b) => a.id - b.id)
                 ?.map(({ id, domain }) => (
@@ -120,7 +119,7 @@ export default function MyCourseProgressCard() {
                     <Tag
                       text={domain}
                       size="big"
-                      color="gray-light"
+                      color="grayLight"
                       className="px-[14px] py-[10px] !font-normal"
                     />
                   </li>
@@ -130,7 +129,7 @@ export default function MyCourseProgressCard() {
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">직무</span>
-            <ScrollContainer gap={4} isBlurRight>
+            <ScrollContainer className="gap-4" isBlurRight>
               {jobList
                 ?.sort((a, b) => a.id - b.id)
                 ?.map(({ job, id }) => (
@@ -142,8 +141,8 @@ export default function MyCourseProgressCard() {
           </div>
 
           <div className="flex w-full items-center [&>div]:flex-1">
-            <span className="w-20 text-sm font-semibold">기술스택</span>
-            <ScrollContainer gap={3} isBlurRight>
+            <span className="w-20 text-sm font-semibold">기술 스택</span>
+            <ScrollContainer className="gap-3" isBlurRight>
               {techStackList
                 ?.sort((a, b) => a.id - b.id)
                 ?.map(({ id, techStack, iconImageUrl }) => (

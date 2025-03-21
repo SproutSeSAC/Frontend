@@ -30,12 +30,14 @@
 
 @layer base {
   body {
+    input:-webkit-autofill {
+      background-color: white !important;
+      -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    }
+
     @apply bg-bg font-pretendard text-black;
 
     /* Swiper */
-    /* .swiper {
-      @apply flex;
-    } */
     .swiper-button-prev,
     .swiper-button-next {
       @apply hidden;
@@ -43,7 +45,7 @@
 
     /* 이모지 컨테이너 CSS */
     #quill-editor {
-      @apply flex flex-row-reverse flex-wrap rounded-xl border border-lightGray bg-white pt-1;
+      @apply flex flex-row-reverse flex-wrap rounded-xl border border-mainGray bg-white pt-1;
     }
     #quill-editor > div:first-child {
       @apply flex flex-1 items-center justify-start border-b border-mainGray pt-1;
@@ -59,6 +61,7 @@
       @apply border-0;
     }
     .ql-editor {
+      word-break: break-word;
       @apply mt-2 text-base;
       img {
         @apply my-2 w-[70%];

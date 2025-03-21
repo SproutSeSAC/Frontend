@@ -4,10 +4,10 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { NoticeDto, NoticeFilter } from '@/types';
+import { NoticeDisplay, NoticeDto, NoticeFilter } from '@/types';
 import { isInThisWeek } from '@/utils';
 
-import { NOTICE_SEARCH_PARAMS } from '@/pages/Notice';
+import { NOTICE_SEARCH_PARAMS } from '@/pages/trainee/Notice';
 
 export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
   const [searchParams] = useSearchParams();
@@ -68,10 +68,9 @@ export const useGetThisWeekNoticeList = () => {
       `/notices`,
       { params: { page: 1, size: 20 } },
     );
-
     const thisWeekNotice = data.notices
       .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
-      .slice(0, 3);
+      .slice(0, 4);
 
     return thisWeekNotice;
   };
@@ -79,6 +78,23 @@ export const useGetThisWeekNoticeList = () => {
   return useQuery({
     queryKey: ['useGetThisWeekNoticeList'],
     queryFn: getThisWeekNotice,
-    retry: false,
+  });
+};
+
+export const useGetCloseSoonNoticeList = (params: {
+  size: number;
+  days: number;
+}) => {
+  const getEndingSoonNoticeList = async () => {
+    const { data } = await axiosInstance.get<NoticeDisplay[]>(
+      `/notices/ending-close`,
+      { params },
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetCloseSoonNoticeList'],
+    queryFn: getEndingSoonNoticeList,
   });
 };

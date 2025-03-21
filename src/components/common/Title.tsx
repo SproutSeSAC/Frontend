@@ -1,4 +1,4 @@
-import { ElementType } from 'react';
+import { ElementType, memo, useMemo } from 'react';
 
 interface TitleProps {
   as?: ElementType | string;
@@ -10,35 +10,38 @@ interface TitleProps {
 interface HighlightProps {
   text: string;
   highlight: string;
-  className?: string;
 }
 
 type TitleStyleObj = { [key: string]: string };
 
-const TitleWithHighlight = ({ text, highlight }: HighlightProps) => {
-  const regex = new RegExp(`(${highlight})`, 'gi');
-  const parts = text.split(regex);
+const TitleWithHighlight = memo(({ text, highlight }: HighlightProps) => {
+  const highlightedText = useMemo(() => {
+    const regex = new RegExp(`(${highlight})`, 'gi');
+    return text.split(regex).map((part: string) =>
+      part.toLowerCase() === highlight?.toLowerCase() ? (
+        <span key={part} className="text-mainGreen">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    );
+  }, [text, highlight]);
 
-  return parts.map((part: string) =>
-    part.toLowerCase() === highlight?.toLowerCase() ? (
-      <span key={part} className="text-mainGreen">
-        {part}
-      </span>
-    ) : (
-      part
-    ),
-  );
-};
+  return <span>{highlightedText}</span>;
+});
 
-export default function Title({
+TitleWithHighlight.displayName = 'TitleWithHighlight';
+
+function Title({
   as: DynamicTitleTag = 'h2',
   title,
   highlight,
-  className,
+  className = '',
 }: TitleProps) {
   const titleStyleObj: TitleStyleObj = {
     h1: 'text-2xl font-semibold',
-    h2: 'pl-2 text-xl font-semibold',
+    h2: 'text-xl font-semibold',
   };
 
   const titleStyle = titleStyleObj[`${DynamicTitleTag}`];
@@ -53,3 +56,5 @@ export default function Title({
     </DynamicTitleTag>
   );
 }
+
+export default memo(Title);

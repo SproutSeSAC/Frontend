@@ -2,26 +2,27 @@ import { FoodFilterDisplayKey } from '@/types/lounge';
 
 export interface Store {
   id: number;
+  postId: number;
   name: string;
-  workingDay: string;
   foodType: FoodFilterDisplayKey;
-  breakTime: string;
-  walkTime: number;
-  underPrice: boolean;
-  address: string;
   campusName: string;
+  address: string;
   contact: string;
+  workingDay: string;
+  breakTime: string;
   holiday: string;
   isZeropay: boolean;
+  walkTime: number;
   isOverPerson: boolean;
   longitude: string;
   latitude: string;
   scrapCount: number;
-  isScrap: boolean;
+  isScraped: boolean;
   storeImageList: StoreImage[];
   storeMenuList: StoreMenu[];
   isLessThan10000Menu: boolean;
 }
+
 export interface StoreMenu {
   id: number;
   name: string;
@@ -50,6 +51,7 @@ export interface GetStoreListResponse {
   totalPages: number;
   nextPage: number | null;
 }
+
 export interface GetFilterCountResponse {
   foodTypeCount: {
     foodType: FoodFilterDisplayKey;

@@ -23,8 +23,8 @@ export default function SquareButton({
 }: SquareButtonProps) {
   const styleByColor = {
     mainGreen: 'bg-mainGreen text-white',
-    gray: 'bg-mainGray text-black',
-    lightGreen: 'bg-lightGreen text-white',
+    gray: 'bg-mainGray text-darkGray-active',
+    lightGreen: 'bg-lightGreen-active text-darkGray-active',
   };
 
   const colorStyle = styleByColor[color];
@@ -32,7 +32,7 @@ export default function SquareButton({
   return (
     <button
       type={type === 'submit' ? 'submit' : 'button'}
-      className={`rounded-lg ${colorStyle} px-4 py-2 tracking-tight text-white ${className}`}
+      className={`rounded-lg ${colorStyle} px-4 py-2 tracking-tight ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

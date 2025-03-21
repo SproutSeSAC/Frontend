@@ -1,4 +1,5 @@
 import { Domain, Job, TechStack } from '@/types/specifications';
+import { RoleKey, UserCampus, UserCourse } from '@/types/user';
 
 export namespace UserProfileDto {
   export type Post = SignUpValue;
@@ -23,16 +24,8 @@ type SignUpValue = {
 
 type UserProfile = {
   email: string;
-  campusList: {
-    id: number;
-    campusName: string;
-  }[];
-  courseList: {
-    courseId: number;
-    courseTitle: string;
-    courseStartDate: string;
-    courseEndDate: string;
-  }[];
+  campusList: UserCampus[];
+  courseList: UserCourse[];
   name: string;
   domainList: Domain[];
   jobList: Job[];
@@ -41,6 +34,7 @@ type UserProfile = {
   role: RoleKey;
   userId: number;
   profileImageUrl: string;
+  phoneNumber: '';
 };
 
 type UpdateableUserProfile = Partial<{

@@ -2,7 +2,6 @@ type TabType = 'menu' | 'review' | 'directionsInfo' | 'storyTelling';
 
 const TAB_LIST = [
   { text: '메뉴', type: 'menu' },
-  // { text: '새싹정보', type: 'directionsInfo' },
   { text: '댓글후기', type: 'review' },
 ];
 
@@ -23,7 +22,11 @@ export default function StoreModalTabList({
             key={type}
             className={`box-border flex w-full cursor-pointer justify-center ${tab === type && 'border-b-2 border-mainGray'}`}
           >
-            <button type="button" onClick={() => setTab(type as TabType)}>
+            <button
+              type="button"
+              onClick={() => setTab(type as TabType)}
+              className="w-full py-3"
+            >
               {text}
             </button>
           </li>

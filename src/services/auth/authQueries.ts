@@ -2,8 +2,8 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
+import { CALENDAR_TOKEN_KEY } from '@/constants';
 import { UserProfileDto } from '@/types';
-import { AxiosResponse } from 'axios';
 
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
@@ -15,16 +15,28 @@ export const getVerifyCodeResult = (code: string) =>
 // 닉네임 중복확인
 export const getVerifyNicknameResult = (nickname: string) =>
   axiosInstance.get(`/user/nickname/duplicate`, {
-    params: {
-      nickname,
-    },
+    params: { nickname },
   });
 
 // 캘린더 인증
-export const getCalendarToken = () => axiosInstance.get('/user/calendar');
+export const getCalendarToken = () =>
+  axiosInstance
+    .get('/user/calendar')
+    .then(res => {
+      const calendarAccessToken = res.data.access_token;
+      if (calendarAccessToken) {
+        sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
+      }
+    })
+    .catch(async error => {
+      console.log('calendarToken', error);
+    });
 
 // 리프레시 토큰
-export const getNewAccessToken = () => axiosInstance.get('/login/refresh');
+export const getNewAccessToken = () =>
+  axiosInstance.get('/login/refresh').catch(() => {
+    window.location.href = `${window.location.origin}/login`;
+  });
 
 export const initialUserProfile: UserProfileDto.Get = {
   userId: 0,
@@ -45,6 +57,7 @@ export const initialUserProfile: UserProfileDto.Get = {
   nickname: '',
   role: 'TRAINEE',
   profileImageUrl: '',
+  phoneNumber: '',
 };
 
 // 나의 회원 정보 얻기
@@ -52,15 +65,20 @@ export const useGetUserProfile = (
   options?: UseQueryOptions<UserProfileDto.Get>,
 ) => {
   const getUserProfile = async () => {
-    const res: AxiosResponse<UserProfileDto.Get> =
-      await axiosInstance.get('/user/check');
-    return res.data;
+    const res = await axiosInstance.get<UserProfileDto.Get>('/user/check');
+
+    const courseList = res.data.courseList.sort((a, b) =>
+      a.courseTitle.localeCompare(b.courseTitle),
+    );
+    return { ...res.data, courseList };
   };
 
   return useQuery<UserProfileDto.Get>({
     queryKey: ['useGetUserProfile'],
     queryFn: getUserProfile,
-    initialData: initialUserProfile,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
@@ -84,15 +102,16 @@ export const useGetUserProfileCard = (
   options?: UseQueryOptions<UserProfileDto.GetCard>,
 ) => {
   const getUserProfileCard = async () => {
-    const res: AxiosResponse<UserProfileDto.GetCard> =
-      await axiosInstance.get('/mypage/getCard');
+    const res =
+      await axiosInstance.get<UserProfileDto.GetCard>('/mypage/getCard');
     return res.data;
   };
 
   return useQuery<UserProfileDto.GetCard>({
     queryKey: ['useGetUserProfileCard'],
     queryFn: getUserProfileCard,
-    initialData: initialUserProfileCard,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };

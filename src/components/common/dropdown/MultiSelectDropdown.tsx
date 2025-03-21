@@ -4,12 +4,14 @@ import { Option } from '@/types';
 
 import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import SelectOption from '@/components/common/dropdown/option/SelectOption';
+import DefaultLabelSelectBox from '@/components/common/dropdown/select/DefaultLabelSelectBox';
 import SelectBox, {
   MultiSelectProps,
   SelectBoxShape,
 } from '@/components/common/dropdown/select/SelectBox';
 
 interface MultiSelectDropdownProps {
+  isDefaultLabelSelectBox?: boolean;
   defaultLabel: string;
   value: number[];
   options: Option[];
@@ -23,6 +25,7 @@ interface MultiSelectDropdownProps {
 }
 
 /**
+ * @param isDefaultLabelSelectBox - 옵션 선택 상관없이 셀렉트박스에 보여져야하는 라벨인 경우 선택합니다. (ex 분류) 기본값은 false.
  * @param defaultLabel - 옵션에서 선택한 값이 없을 때 보여지는 디폴트 라벨입니다. (ex 관심 직무)'
  * @param value - 현재 선택된 옵션 id 리스트입니다.
  * @param options - 드롭다운 옵션 리스트입니다.
@@ -36,6 +39,7 @@ interface MultiSelectDropdownProps {
  */
 
 export default function MultiSelectDropdown({
+  isDefaultLabelSelectBox = false,
   defaultLabel,
   value,
   options,
@@ -96,41 +100,53 @@ export default function MultiSelectDropdown({
 
   return (
     <OutsideClickContainer onClose={setOpen}>
-      <SelectBox<MultiSelectProps>
-        defaultLabel={defaultLabel}
-        open={open}
-        onClose={onClose}
-        onSelectBoxClick={handlSelectBoxClick}
-        selectedOptions={selectedOptions}
-        errorMsg={errorMsg}
-        boxShape={boxShape}
-        onResetClick={onResetClick}
-        className={selectBoxClassName}
-      >
-        {hasFullCheck && (
-          <label
-            className={`mt-2 flex cursor-pointer items-center rounded-lg px-3 py-1.5 hover:bg-lightGray ${selectedOptions.length === options.length ? 'text-mainGray' : 'text-black'} ${optionClassName}`}
+      {(() => {
+        const ContainerComponent = isDefaultLabelSelectBox
+          ? DefaultLabelSelectBox
+          : SelectBox<MultiSelectProps>;
+
+        return (
+          <ContainerComponent
+            defaultLabel={defaultLabel}
+            open={open}
+            onClose={onClose}
+            onSelectBoxClick={handlSelectBoxClick}
+            selectedOptions={selectedOptions}
+            errorMsg={errorMsg}
+            boxShape={boxShape}
+            onResetClick={onResetClick}
+            className={selectBoxClassName}
           >
-            <input
-              type="checkbox"
-              checked={selectedOptions.length === options.length}
-              onChange={handleFullCheck}
-              className="mr-3 size-4 rounded border-gray-300"
-            />
-            <span>전체선택</span>
-          </label>
-        )}
-        {options.map(option => (
-          <SelectOption
-            key={option.id}
-            option={option}
-            isSelected={checkIsSelected(option)}
-            onOptionClick={handleCheckboxChange}
-            isMultiSelectOption
-            className={optionClassName}
-          />
-        ))}
-      </SelectBox>
+            {hasFullCheck && (
+              <label
+                className={`mt-2 flex cursor-pointer items-center rounded-lg px-3 py-1.5 hover:bg-lightGray ${
+                  selectedOptions.length === options.length
+                    ? 'text-mainGray'
+                    : 'text-black'
+                } ${optionClassName}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedOptions.length === options.length}
+                  onChange={handleFullCheck}
+                  className="mr-3 size-4 rounded border-gray-300"
+                />
+                <span>전체선택</span>
+              </label>
+            )}
+            {options.map(option => (
+              <SelectOption
+                key={option.id}
+                option={option}
+                isSelected={checkIsSelected(option)}
+                onOptionClick={handleCheckboxChange}
+                isMultiSelectOption
+                className={optionClassName}
+              />
+            ))}
+          </ContainerComponent>
+        );
+      })()}
     </OutsideClickContainer>
   );
 }

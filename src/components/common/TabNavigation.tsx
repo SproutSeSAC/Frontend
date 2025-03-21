@@ -11,6 +11,10 @@ interface TabNavigationProps<T> {
   selectValue: string;
   children?: ReactNode;
   tabClassName?: string;
+  selectedStyle?: {
+    point: 'dot' | 'border';
+    color: 'green' | 'black';
+  };
 }
 
 export default function TabNavigation<T>({
@@ -19,15 +23,25 @@ export default function TabNavigation<T>({
   selectValue,
   onChangeValue,
   tabClassName,
+  selectedStyle = { point: 'border', color: 'black' },
 }: TabNavigationProps<T>) {
+  const borderStyle = selectedStyle.point === 'border' ? 'border-b-2' : '';
+
+  const colorStyle =
+    selectedStyle.color === 'green'
+      ? 'border-mainGreen text-mainGreen'
+      : 'border-black text-black';
+
   return (
-    <nav className="flex justify-between border-b border-solid border-b-lightGray pt-4 text-lg font-semibold">
+    <nav
+      className={`flex items-end justify-between text-lg font-semibold ${selectedStyle.point === 'border' ? 'border-b' : ''}`}
+    >
       <ul className="flex flex-wrap justify-start gap-4">
         {tabList.map(({ text, type }) => (
           <li
             role="presentation"
             key={text}
-            className={`box-border flex cursor-pointer justify-center whitespace-nowrap px-5 pb-[19px] ${selectValue === type ? 'border-b-2 border-black' : 'text-mainGray'} ${tabClassName}`}
+            className={`relative flex cursor-pointer flex-col items-center justify-center whitespace-nowrap px-5 pb-[19px] pt-4 ${selectValue === type ? `${borderStyle} ${colorStyle}` : 'text-mainGray'} ${tabClassName}`}
             onClick={e => onChangeValue(type, e)}
             onKeyDown={e => {
               if (e.key === 'Escape' || e.key === ' ') {
@@ -35,7 +49,10 @@ export default function TabNavigation<T>({
               }
             }}
           >
-            {text}
+            {selectValue === type && selectedStyle.point === 'dot' && (
+              <div className="absolute -top-3 mb-2 aspect-square size-1.5 rounded-full bg-mainGreen" />
+            )}
+            <span>{text}</span>
           </li>
         ))}
       </ul>

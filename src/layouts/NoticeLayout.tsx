@@ -1,20 +1,25 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { useCalendarEvents } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import SideView from '@/layouts/SideView';
 
+import Calendar from '@/components/calendar/Calendar';
 import Title from '@/components/common/Title';
+import SquareButton from '@/components/common/button/SquareButton';
 import NoticeTabNavigation from '@/components/notice/layout/NoticeTabNavigation';
-import Calendar from '@/components/schedule/Calendar';
-import NoticeDisplayList from '@/components/user/NoticeDisplayList';
 
 export default function NoticeLayout() {
   const { pathname } = useLocation();
 
-  const { fullCalendarEvents, fullCalendarSideViewEvents } =
-    useCalendarEvents();
+  const {
+    fullCalendarEvents,
+    fullCalendarSideViewEvents,
+    isCourseCalendarLoadingArr,
+  } = useCalendarEvents();
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -30,11 +35,16 @@ export default function NoticeLayout() {
           type="small"
           events={fullCalendarEvents}
           sideViewEvents={fullCalendarSideViewEvents}
+          isCourseCalendarLoadingArr={isCourseCalendarLoadingArr}
         />
-        <Title title="공지사항" className="mb-[14px] mt-7" />
-        <NoticeDisplayList
-          title="공지사항"
-          className="!h-fit rounded-[20px] bg-white px-[15px] py-[22px]"
+        <SquareButton
+          color="lightGreen"
+          type="button"
+          name="특강/행사 신청 내역 보기"
+          className="mt-6 w-full !py-3 font-semibold"
+          onClick={() => {
+            navigate('/notice/session-status');
+          }}
         />
       </SideView>
     </>

@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import {
   ACCESS_TOKEN_KEY,
   CALENDAR_TOKEN_KEY,
@@ -18,6 +20,8 @@ export default function HeaderMenu() {
     { title: '공지사항', to: '/notice' },
   ];
 
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
 
   const onLogOutClick = () => {
@@ -27,10 +31,11 @@ export default function HeaderMenu() {
         <>
           <SquareButton
             name="확인"
-            onClick={() => {
+            onClick={async () => {
+              await queryClient.invalidateQueries();
               deleteCookie(ACCESS_TOKEN_KEY);
               deleteCookie(REFRESH_TOKEN_KEY);
-              deleteCookie(CALENDAR_TOKEN_KEY);
+              sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
               navigate('/login');
               hideDialog();
             }}
@@ -64,7 +69,7 @@ export default function HeaderMenu() {
         <li>
           <button
             type="button"
-            className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-mainGray"
+            className="w-full rounded-md px-3 py-1.5 text-start text-sm font-semibold tracking-tight text-red-500 hover:bg-lightGray"
             onClick={onLogOutClick}
           >
             로그아웃

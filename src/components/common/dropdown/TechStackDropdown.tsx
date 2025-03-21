@@ -1,6 +1,6 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 
-import { TechStackTab } from '@/types';
+import { Option, TechStackTab } from '@/types';
 
 import TabNavigation from '@/components/common/TabNavigation';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
@@ -18,13 +18,12 @@ export interface OptionItem {
 }
 
 interface MultiSelectDropdownProps {
+  value: number[];
   options: OptionItem[];
   onChangeValue: (value: OptionItem[]) => void;
   defaultTabValue?: string;
   defaultLabel?: string;
   errorMsg?: string;
-  initialSelectedOptions?: OptionItem[];
-  isReset?: boolean;
   isMarkTechStackList?: boolean;
   boxShape?: SelectBoxShape;
   selectBoxClassName?: string;
@@ -39,30 +38,29 @@ interface MultiSelectDropdownProps {
  * @param defaultLabel? - 드롭다운이 선택되지 않았을 때 버튼에 표시될 기본 레이블입니다. 기본값은 빈 문자열입니다.
  * @param errorMsg? - 에러메세지. 에러 메세지가 있을경우 에러메세지가 버튼 하단에 표시됩니다.
  * @param initialSelectedOptions? - 이미 선택된 옵션들
- * @param isReset? - 외부에서 컨트롤하는 reset 이벤트가 실행될때 선택된 옵션값을 reset 합니다.
  * @param isMarkTechStackList? - 선택한 옵션을 위에 표시할지 여부입니다.
  * @param boxShape - 라운지에서의 버튼 모양이거나 모집글에서의 input 모양 둘중 하나를 선택할 수 있습니다. props로 설정하지 않았을 시 기본값은 input 모양입니다.
  * @param selectBoxClassName - 셀렉트 박스 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  */
 
 const TechStackDropdown = memo(function TechStackDropdown({
+  value,
   options,
   onChangeValue,
   defaultTabValue = '',
   defaultLabel = '',
   errorMsg,
-  isReset,
-  initialSelectedOptions,
   isMarkTechStackList = false,
   boxShape = 'inputShape',
   selectBoxClassName = '',
 }: MultiSelectDropdownProps) {
-  const [open, setOpen] = useState(false);
   const [tabValue, setTabValue] = useState(defaultTabValue);
-  const [selectedOptions, setSelectedOptions] = useState<OptionItem[]>([]);
+  const [open, setOpen] = useState(false);
+
+  const selectedOptions = options.filter(({ id }) => value?.includes(id));
 
   const checkIsSelected = useCallback(
-    (option: OptionItem) => {
+    (option: Option) => {
       return selectedOptions.some(({ name }) => name === option.name);
     },
     [selectedOptions],
@@ -76,7 +74,6 @@ const TechStackDropdown = memo(function TechStackDropdown({
         ? selectedOptions.filter(({ name }) => name !== option.name)
         : [...selectedOptions, option];
 
-      setSelectedOptions(updatedOptions);
       onChangeValue(updatedOptions);
     },
     [checkIsSelected, onChangeValue, selectedOptions],
@@ -87,7 +84,6 @@ const TechStackDropdown = memo(function TechStackDropdown({
   }, []);
 
   const onResetClick = useCallback(() => {
-    setSelectedOptions([]);
     onChangeValue([]);
   }, [onChangeValue]);
 
@@ -111,28 +107,14 @@ const TechStackDropdown = memo(function TechStackDropdown({
     [options, tabValue],
   );
 
-  useEffect(() => {
-    if (isReset) {
-      setSelectedOptions([]);
-    }
-  }, [isReset]);
-
-  useEffect(() => {
-    if (initialSelectedOptions) {
-      setSelectedOptions(initialSelectedOptions);
-    }
-  }, [initialSelectedOptions]);
-
   const onClose = () => setOpen(false);
 
-  const handleSelectBoxClick = () => {
-    setOpen(prev => !prev);
-  };
+  const handleSelectBoxClick = () => setOpen(prev => !prev);
 
   return (
     <>
-      {isMarkTechStackList && (
-        <ScrollContainer gap={4}>
+      {isMarkTechStackList && value.length !== 0 && (
+        <ScrollContainer className="gap-4">
           {selectedOptions?.map(option => (
             <li
               key={option.id}

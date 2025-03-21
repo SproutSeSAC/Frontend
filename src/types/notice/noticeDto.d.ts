@@ -18,6 +18,7 @@ export namespace NoticeDto {
   export type GetNoticeDetail = NoticeDetail;
   export type GetNoticeComment = { comments: NoticeComment[] };
   export type PostNotice = NoticeFormSchemaType;
+  export type GetCloseSoonNoticeList = CloseSoonNotice[];
 }
 
 interface NoticeCommonFields {
@@ -106,4 +107,16 @@ interface NoticeSessionParticipantsStatus {
       profileImageUrl: string;
     },
   ];
+}
+
+interface CloseSoonNotice {
+  noticeId: number;
+  title: string;
+  applicationEndDate: string;
+  manager: {
+    userId: number;
+    name: string;
+    nickname: string;
+    role: HasAdminRole;
+  };
 }

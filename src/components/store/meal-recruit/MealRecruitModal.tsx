@@ -13,7 +13,6 @@ import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
-import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
@@ -21,8 +20,7 @@ import MealRecruitDateSelectBox from '@/components/store/meal-recruit/MealRecrui
 import { dateOptions } from '@/components/store/meal-recruit/mealRecruitDropdownOptions';
 import { mealRecruitSchema } from '@/components/store/meal-recruit/mealRecruitSchema';
 
-const defaultStyle =
-  'rounded-xl border border-solid !border-mainGray px-4 py-[13px] text-lg';
+const defaultStyle = 'h-full rounded-xl px-4 py-[13px] text-lg';
 
 interface FormValues extends Omit<PostMeal, 'appointmentTime'> {
   date: Date | null;
@@ -47,7 +45,7 @@ export default function MealRecruitModal() {
   });
   const { control, handleSubmit } = methods;
 
-  const { mutateAsync: postMealRecruit } = usePostMyPost();
+  const { mutateAsync: postMealRecruit, isPending, isIdle } = usePostMyPost();
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
@@ -75,13 +73,12 @@ export default function MealRecruitModal() {
 
         showToast('한끼팟을 생성했습니다.');
 
-        await queryClient.fetchQuery({
+        await queryClient.invalidateQueries({
           queryKey: ['useGetInfiniteMealPostList'],
         });
 
         hideDialog();
       } catch (err) {
-        console.error(err);
         showToast('한끼팟을 생성하지 못했습니다.');
       }
     },
@@ -90,17 +87,12 @@ export default function MealRecruitModal() {
 
   const onError: SubmitErrorHandler<FormValues> = useCallback(
     err => {
-      console.error('hook form error >>', {
-        data: methods.getValues(),
-        error: err,
-      });
       const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
-
       if (firstErrorMessage) {
         showToast(firstErrorMessage);
       }
     },
-    [methods, showToast],
+    [showToast],
   );
 
   return (
@@ -110,32 +102,30 @@ export default function MealRecruitModal() {
       title={
         <>
           <div className="mb-4 text-2xl">한끼팟 만들기</div>
-          <div className="mt-3 text-base font-normal text-mainGray">
+          <div className="mt-3 text-base font-normal text-mainGray-active">
             다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
           </div>
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className="flex flex-col pb-10"
+      >
         <div className="relative mb-10 mt-4 grid grid-cols-2 gap-4 text-lg">
-          <LabeledSection label="제목" className="col-span-2 gap-4">
+          <LabeledSection label="제목" className="col-span-2">
             <Controller
               control={control}
               name="title"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 return (
-                  <div className="flex flex-col">
-                    <TextInput
-                      placeholder="한끼팟 제목을 작성해주세요"
-                      className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="한끼팟 제목"
-                      onChange={onChange}
-                    />
-
-                    {error && (
-                      <ErrorMsg msg={error?.message || ''} className="ml-2" />
-                    )}
-                  </div>
+                  <TextInput
+                    placeholder="한끼팟 제목을 작성해주세요"
+                    className={defaultStyle}
+                    name="한끼팟 제목"
+                    onChange={onChange}
+                    errorMsg={error?.message}
+                  />
                 );
               }}
             />
@@ -149,7 +139,7 @@ export default function MealRecruitModal() {
                 return (
                   <MealRecruitDateSelectBox
                     dateOptions={dateOptions}
-                    errorMas={error?.message || ''}
+                    errorMsg={error?.message || ''}
                     onChange={date => onChange(date?.toLocaleDateString())}
                   />
                 );
@@ -176,7 +166,7 @@ export default function MealRecruitModal() {
                         onChangeValue={data => onChange(data[0].id)}
                         errorMsg={error?.message}
                         selectBoxClassName="h-[50px] border-mainGray rounded-xl"
-                        optionClassName="hover:bg-darkGreen-active text-darkGray-active"
+                        optionClassName="hover:bg-lightGreen-hover"
                       />
                     </div>
                   );
@@ -200,7 +190,7 @@ export default function MealRecruitModal() {
                         onChangeValue={data => onChange(data[0].id)}
                         errorMsg={error?.message}
                         selectBoxClassName="h-[50px] border-mainGray rounded-xl"
-                        optionClassName="hover:bg-darkGreen-active text-darkGray-active"
+                        optionClassName="hover:bg-lightGreen-hover"
                       />
                     </div>
                   );
@@ -214,18 +204,13 @@ export default function MealRecruitModal() {
               name="storeName"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 return (
-                  <div className="flex flex-col">
-                    <TextInput
-                      placeholder="식당 이름을 작성해주세요"
-                      className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="식당"
-                      onChange={onChange}
-                    />
-
-                    {error && (
-                      <ErrorMsg msg={error?.message || ''} className="ml-2" />
-                    )}
-                  </div>
+                  <TextInput
+                    placeholder="식당 이름을 작성해주세요"
+                    className={defaultStyle}
+                    name="식당"
+                    onChange={onChange}
+                    errorMsg={error?.message}
+                  />
                 );
               }}
             />
@@ -250,39 +235,37 @@ export default function MealRecruitModal() {
                     onChangeValue={data => onChange(data[0].id)}
                     errorMsg={error?.message}
                     selectBoxClassName="h-[50px] border-mainGray rounded-xl"
-                    optionClassName="hover:bg-darkGreen-active justify-center text-darkGray-active"
+                    optionClassName="hover:bg-lightGreen-hover justify-center"
                   />
                 );
               }}
             />
           </LabeledSection>
-          <LabeledSection label="위치" className="col-span-2 gap-4">
+          <LabeledSection label="모임장소" className="col-span-2">
             <Controller
               control={control}
               name="meetingPlace"
               render={({ field: { onChange }, fieldState: { error } }) => {
                 return (
-                  <div className="flex flex-col">
-                    <TextInput
-                      placeholder="모일 위치를 작성해주세요"
-                      className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="위치"
-                      onChange={onChange}
-                    />
-
-                    {error && (
-                      <ErrorMsg msg={error?.message || ''} className="ml-2" />
-                    )}
-                  </div>
+                  <TextInput
+                    placeholder="모일 장소를 작성해주세요"
+                    className={defaultStyle}
+                    name="만남 장소"
+                    errorMsg={error?.message}
+                    onChange={onChange}
+                  />
                 );
               }}
             />
           </LabeledSection>
         </div>
 
-        <div className="flex justify-end">
-          <SquareButton name="저장하기" type="submit" className="self-end" />
-        </div>
+        <SquareButton
+          name="저장하기"
+          type="submit"
+          className="cursor-pointer self-end"
+          disabled={isPending || !isIdle}
+        />
       </form>
     </Modal>
   );

@@ -98,7 +98,7 @@ export default function SelectBox<
   );
 
   const styleByBoxShape = {
-    inputShape: `w-full rounded-2xl bg-white px-4 py-[15px] text-start text-lg`,
+    inputShape: `w-full border border-mainGray rounded-2xl bg-white px-4 py-[15px] text-start text-lg`,
     buttonShape:
       'rounded-2xl border border-mainGray bg-bg px-3 py-1 text-darkGray-active',
   };
@@ -111,7 +111,7 @@ export default function SelectBox<
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex w-full items-center gap-4 rounded-2xl border [&>svg]:size-6 [&>svg]:min-w-[20px] [&>svg]:text-darkGray ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl [&>svg]:size-6 [&>svg]:min-w-[20px] [&>svg]:text-darkGray ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
         >
           {isSingleSelect(rest) && (
             <>
@@ -127,16 +127,13 @@ export default function SelectBox<
           {isMultiSelect(rest) && (
             <>
               <span
-                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-mainGray'} ${rest.selectedOptions?.length >= 1 && 'pr-6'}`}
+                className={`inline-block w-full truncate whitespace-pre ${boxShape === 'inputShape' && !rest.selectedOptions.length && 'text-darkGray'} ${rest.selectedOptions?.length >= 1 && 'pr-6'}`}
               >
                 {getSelectedOptionLabel(rest.selectedOptions, defaultLabel)}
               </span>
-              {rest.selectedOptions?.length === 0 &&
-                (open ? (
-                  <Icon name="ChevronUp" />
-                ) : (
-                  <Icon name="ChevronDown" />
-                ))}
+              {rest.selectedOptions?.length === 0 && (
+                <Icon name={open ? 'ChevronUp' : 'ChevronDown'} />
+              )}
             </>
           )}
         </button>
@@ -149,15 +146,15 @@ export default function SelectBox<
         )}
       </div>
 
-      <article className={defaultLabel === '기술스택' ? '' : 'relative'}>
+      <article className={defaultLabel === '기술 스택' ? '' : 'relative'}>
         <ul
-          className={`${open ? 'max-h-64 border border-lightGray' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
+          className={`${open ? 'max-h-56 border border-mainGray-hover' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white px-2 shadow-card transition-all duration-500 scrollbar-hide`}
         >
           {children}
         </ul>
       </article>
 
-      {errorMsg && <ErrorMsg msg={errorMsg} className="absolute ml-2" />}
+      {errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
     </OutsideClickContainer>
   );
 }
