@@ -94,7 +94,7 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
 
   meetingPlace: z
     .string()
-    .max(100, { message: '길이가 너무 깁니다.' })
+    .max(512, { message: '길이가 너무 깁니다.' })
     .optional(),
 
   participantCapacity: z
@@ -109,7 +109,7 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
 
   satisfactionSurvey: z
     .string()
-    .max(100, { message: '길이가 너무 깁니다.' })
+    .max(512, { message: '길이가 너무 깁니다.' })
     .optional(),
 })
   .refine(

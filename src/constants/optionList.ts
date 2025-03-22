@@ -18,8 +18,8 @@ export const recruitmentCountList: Option[] = Array.from(
   (_, index) => {
     if (index === 8) {
       return {
-        id: index + 2,
-        name: `${index + 2}명 이상`,
+        id: 10000,
+        name: '제한 없음',
       };
     }
     return {

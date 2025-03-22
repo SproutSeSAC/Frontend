@@ -2,23 +2,17 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import {
-  resetStoreDetailsAtom,
-  storeDetailsAtom,
-} from '@/atoms/storeDetailsAtom';
+import { storeDetailsAtom } from '@/atoms/storeDetailsAtom';
 
-import { usePageBlocker, useStoreMap } from '@/hooks';
+import { useStoreMap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
 import { useAtom } from 'jotai';
-import { useResetAtom } from 'jotai/utils';
 import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function StoreMap({ storeList }: { storeList: Store[] }) {
   const [storeDetails] = useAtom(storeDetailsAtom);
-
-  const resetStoreDetails = useResetAtom(resetStoreDetailsAtom);
 
   // const baseUrl = 'https://map.naver.com/p/directions';
 
@@ -51,18 +45,6 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
     }
   }, [addMarker, isMapReady, storeList]);
 
-  const { blocker } = usePageBlocker({
-    isBlockRefresh: false,
-    form: { isDirty: !!storeDetails.id },
-  });
-
-  useEffect(() => {
-    if (blocker.state === 'blocked') {
-      resetStoreDetails();
-      blocker.proceed();
-    }
-  }, [blocker, resetStoreDetails]);
-
   return (
     <div className="relative w-full pl-5">
       <div ref={storeMapRef} className="h-full w-full" />
@@ -70,7 +52,7 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
       <button
         type="button"
         aria-label="리스트로 돌아가기"
-        className="absolute right-3 top-0 rounded-lg bg-white p-2.5"
+        className="absolute right-3 top-3 rounded-lg bg-white p-2.5 shadow-card"
         onClick={() => navigate('/stores')}
       >
         <BsList size={18} />

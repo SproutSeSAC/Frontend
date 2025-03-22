@@ -118,8 +118,10 @@ export default function MealRecruitCardModal({
 
         <div className="mb-12 mt-6">
           <div className="text-sm text-darkGray-active">
-            {`참여중인 멤버 ${data?.currentMemberCount || 0}/${data?.targetMemberCount}명`}
-            {data?.targetMemberCount === 10 ? '+' : ''}
+            참여중인 멤버 {data?.currentMemberCount || 0}/
+            {data?.targetMemberCount === 10000
+              ? '∞'
+              : `${data?.targetMemberCount}명`}
           </div>
 
           <ul className="mt-3 flex flex-col gap-3">

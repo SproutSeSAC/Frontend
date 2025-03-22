@@ -108,8 +108,8 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
             {title}
           </div>
           <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
-            {currentMemberCount}/{targetMemberCount}명
-            {targetMemberCount === 10 ? '+' : ''}
+            {currentMemberCount}/
+            {targetMemberCount === 10000 ? '∞' : `${targetMemberCount}명`}
           </div>
         </div>
       </div>
