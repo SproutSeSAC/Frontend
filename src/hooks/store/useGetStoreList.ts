@@ -1,20 +1,15 @@
-import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetInfiniteStoreList } from '@/services/store/storeQueries';
 
 import { Store } from '@/types/store/storeDto';
 
 export const useGetStoreList = () => {
-  const { data: campusList } = useGetCampusList();
-
-  const campusId = campusList ? campusList[0]?.id : 0;
-
   const {
     data = { pages: [{ stores: [], totalPages: 0 }], pageParams: [] },
     fetchNextPage,
     hasNextPage,
     isFetching,
     isLoading,
-  } = useGetInfiniteStoreList(campusId);
+  } = useGetInfiniteStoreList();
 
   const excellentIndex = data?.pages.map(item => item.stores);
 

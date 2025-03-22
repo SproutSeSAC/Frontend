@@ -70,9 +70,7 @@ export default function Store() {
       <MealRecruitList />
 
       <div className="flex size-full flex-1 overflow-auto rounded-[20px] bg-white p-5">
-        <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
-          <StoreFilterForm onReset={() => setSearchKeyword('')} />
-        </aside>
+        <StoreFilterForm onReset={() => setSearchKeyword('')} />
 
         <div className="relative flex w-full flex-col overflow-auto overflow-x-hidden px-8 scrollbar-hide">
           <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">

@@ -10,6 +10,7 @@ export const formatDate = (
     | 'yyyy년 MM월 dd일'
     | 'yyyy.MM.dd HH:mm'
     | 'HH:mm'
+    | 'a h시 mm분'
     | 'yyyy년 M월 d일 EEEE'
     | 'yyyy.MM.dd a h시'
     | 'yyyy.MM.dd a h시 mm분'
@@ -25,6 +26,6 @@ export const formatDate = (
     return format(dateToFormat, formatStr, { locale: ko });
   } catch (error) {
     console.error('Error formatting date:', error);
-    return '';
+    return 'Invalid Date';
   }
 };
