@@ -1,12 +1,12 @@
 import {
-  storeDetailsAtom,
+  storeMapDetailsAtom,
   zoomBehaviorFlagAtom,
 } from '@/atoms/storeDetailsAtom';
 
 import { foodFilterDisplay } from '@/constants';
 import { useHandleScrap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import StoreMenuImage from '@/components/store/StoreMenuImage';
@@ -18,8 +18,8 @@ interface StoreListSliderCardProps {
 export default function StoreListSliderCard({
   slideItem,
 }: StoreListSliderCardProps) {
-  const [, setStoreDetails] = useAtom(storeDetailsAtom);
-  const [, setIsZoomBehaviorFlag] = useAtom(zoomBehaviorFlagAtom);
+  const setStoreMapDetails = useSetAtom(storeMapDetailsAtom);
+  const setIsZoomBehaviorFlag = useSetAtom(zoomBehaviorFlagAtom);
 
   const { onScrapClick, isDeleteScrapPending, isPostScrapPending } =
     useHandleScrap({
@@ -28,29 +28,28 @@ export default function StoreListSliderCard({
       invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
     });
 
+  const { latitude, longitude, id } = slideItem;
+
+  const mapDetails = {
+    latitude,
+    longitude,
+    id,
+    zoom: 20,
+  };
+
   return (
     <div
+      key={slideItem.id}
       className="flex h-[147px] w-full gap-[11px] overflow-hidden"
       onClick={() => {
-        setStoreDetails({
-          latitude: slideItem.latitude,
-          longitude: slideItem.longitude,
-          id: slideItem.id,
-          zoom: 20,
-        });
+        setStoreMapDetails(mapDetails);
         setIsZoomBehaviorFlag(true);
       }}
-      key={slideItem.id}
       role="button"
       tabIndex={0}
       onKeyDown={e => {
         if (e.key === 'Enter') {
-          setStoreDetails({
-            latitude: slideItem.latitude,
-            longitude: slideItem.longitude,
-            id: slideItem.id,
-            zoom: 20,
-          });
+          setStoreMapDetails(mapDetails);
         }
       }}
     >

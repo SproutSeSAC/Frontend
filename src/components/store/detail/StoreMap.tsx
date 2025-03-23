@@ -2,26 +2,17 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { storeDetailsAtom } from '@/atoms/storeDetailsAtom';
+import { storeMapDetailsAtom } from '@/atoms/storeDetailsAtom';
 
 import { useStoreMap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function StoreMap({ storeList }: { storeList: Store[] }) {
-  const [storeDetails] = useAtom(storeDetailsAtom);
-
-  // const baseUrl = 'https://map.naver.com/p/directions';
-
-  // const campusUrl = `${campusLatitude},${campusLogtitude},${campusName},${campusPlaceId},PLACE_POI`;
-  // //  '/14141649.9914631,4523692.7589538,청년취업사관학교 성북캠퍼스,1214536397,PLACE_POI';
-
-  // const store = '127.0366171,37.6038403,장어세상,1525366157,PLACE_POI';
-
-  // const resultUrl = `${baseUrl}/${campusUrl}${store}/-/walk?c=18.00,0,0,0,dh`;
+  const storeMapDetails = useAtomValue(storeMapDetailsAtom);
 
   const {
     modalOpen,
@@ -31,9 +22,9 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
     isMapReady,
     modalOpenInitValue,
   } = useStoreMap({
-    lat: Number(storeDetails.latitude || storeList[0]?.latitude) || 37.5665,
-    lng: Number(storeDetails.longitude || storeList[0]?.longitude) || 126.978,
-    zoom: storeDetails.zoom > 15 ? storeDetails.zoom : 15,
+    lat: Number(storeMapDetails.latitude || storeList[0]?.latitude),
+    lng: Number(storeMapDetails.longitude || storeList[0]?.longitude),
+    zoom: storeMapDetails.zoom > 15 ? storeMapDetails.zoom : 15,
   });
   const navigate = useNavigate();
 
@@ -61,7 +52,9 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
       {modalOpen.open && (
         <StoreModal
           onClose={() => setModalOpen(modalOpenInitValue)}
-          storeId={modalOpen.id}
+          storeData={
+            storeList.find(store => store.id === modalOpen.id) || storeList[0]
+          }
         />
       )}
 
