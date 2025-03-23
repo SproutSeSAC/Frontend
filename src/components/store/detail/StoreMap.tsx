@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
+// import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { storeMapDetailsAtom } from '@/atoms/storeDetailsAtom';
 
 import { useStoreMap } from '@/hooks';
@@ -13,6 +14,15 @@ import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function StoreMap({ storeList }: { storeList: Store[] }) {
   const storeMapDetails = useAtomValue(storeMapDetailsAtom);
+
+  const [searchParams] = useSearchParams();
+
+  // const campusId = searchParams.get('campusId') || 0;
+
+  // const { data: campusList } = useGetCampusList();
+
+  // const currCampus =
+  //   campusList?.find(campus => campus.id === +campusId) || campusList?.[0];
 
   const {
     modalOpen,
@@ -38,13 +48,17 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
 
   return (
     <div className="relative w-full pl-5">
-      <div ref={storeMapRef} className="h-full w-full" />
+      <div ref={storeMapRef} className="size-full" />
 
       <button
         type="button"
         aria-label="리스트로 돌아가기"
         className="absolute right-3 top-3 rounded-lg bg-white p-2.5 shadow-card"
-        onClick={() => navigate('/stores')}
+        onClick={() => {
+          const queryParams = Object.fromEntries(searchParams.entries());
+          const queryString = new URLSearchParams(queryParams).toString();
+          return navigate(`/stores?${queryString}`);
+        }}
       >
         <BsList size={18} />
       </button>

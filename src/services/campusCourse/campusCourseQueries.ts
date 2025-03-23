@@ -14,6 +14,9 @@ type CampusListData = {
   campusList: {
     id: number;
     name: string;
+    // longitude: string
+    // latitude: string
+    // placeId: number
   }[];
 };
 
