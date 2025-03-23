@@ -23,6 +23,8 @@ export default function Store() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchKeyword, setSearchKeyword] = useState('');
 
+  // const queryParams = Object.fromEntries(searchParams.entries());
+
   const observeRef = useRef(null);
 
   const { storeList, fetchNextPage, hasNextPage, isLoading } =
@@ -75,7 +77,11 @@ export default function Store() {
           <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
             <div className="text-xl font-semibold text-black">맛집 리스트</div>
             <button
-              onClick={() => navigate('/stores/detail-location')}
+              onClick={() => {
+                const queryParams = Object.fromEntries(searchParams.entries());
+                const queryString = new URLSearchParams(queryParams).toString();
+                navigate(`/stores/detail-location?${queryString}`);
+              }}
               className="text-sm font-normal text-darkGray-hover"
             >
               지도 보기

@@ -1,7 +1,8 @@
 import { MouseEvent, useCallback, useState } from 'react';
 
+import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
+
 import { foodFilterDisplay } from '@/constants';
-import { campusList } from '@/constants/serviceConstant';
 import { useDialogContext, useHandleScrap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
 import {
@@ -45,6 +46,8 @@ export default function StoreCard({
       invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
     });
 
+  const { data: campusList } = useGetCampusList();
+
   const isOpenForBusiness = useCallback((): boolean => {
     const parseTimeString = (timeString: string) => {
       const [open = '', close = ''] = timeString
@@ -80,7 +83,7 @@ export default function StoreCard({
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    const currCampus = campusList.find(
+    const currCampus = campusList?.find(
       campus => campus.name === storeData.campusName,
     );
     const baseUrl = 'https://map.naver.com/p/directions';
@@ -108,7 +111,7 @@ export default function StoreCard({
       {storeImageList.length === 1 ? (
         <StoreMenuImage
           src={storeImageList[0].path}
-          width="w-full min-w-[320px]"
+          width="w-full "
           height="h-[16.5rem]"
         />
       ) : (

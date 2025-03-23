@@ -46,7 +46,7 @@ export const useGetInfiniteStoreList = () => {
 
 export const useGetFilterCount = (campusId: number) => {
   return useQuery({
-    queryKey: ['useGetFilterCount'],
+    queryKey: ['useGetFilterCount', campusId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<GetFilterCountResponse>(
         '/store/filterCount',
