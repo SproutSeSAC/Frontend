@@ -36,34 +36,39 @@ export const campusList: Array<{
   key: CampusType;
   latitude: string;
   longitude: string;
+  placeId: string;
 }> = [
   {
     id: 1,
     name: '성북캠퍼스',
     key: CAMPUS_SEONGBUK,
-    latitude: '37.6043803',
-    longitude: '127.0366509',
+    longitude: '14141649.9914631',
+    latitude: '4523692.7589538',
+    placeId: '1214536397',
   },
   {
     id: 2,
     name: '도봉캠퍼스',
     key: CAMPUS_DOBONG,
-    latitude: '37.6544068',
     longitude: '127.0497957',
+    latitude: '37.6544068',
+    placeId: '',
   },
   {
     id: 3,
     name: '강북캠퍼스',
     key: CAMPUS_GANGBUK,
-    latitude: '37.6558908',
     longitude: '127.0135631',
+    latitude: '37.6558908',
+    placeId: '',
   },
   {
     id: 4,
     name: '동대문캠퍼스',
     key: CAMPUS_DONGDAEMUN,
-    latitude: '37.5773150',
     longitude: '127.0430027',
+    latitude: '37.5773150',
+    placeId: '',
   },
 ];
 

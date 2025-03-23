@@ -31,7 +31,7 @@ export interface StoreMenu {
 }
 
 export interface StoreImage {
-  id?: number;
+  id: number;
   path: string;
 }
 
@@ -70,13 +70,7 @@ export interface StoreOptionCount {
 export interface GetStoreDetailResponse
   extends Omit<
     Store,
-    | 'scrapCount'
-    | 'underPrice'
-    | 'storeImageList'
-    | 'id'
-    | 'holiday'
-    | 'longitude'
-    | 'latitude'
+    'underPrice' | 'storeImageList' | 'longitude' | 'latitude'
   > {
   storeImageList: string[];
   storeReviewList: StoreReviewList[];

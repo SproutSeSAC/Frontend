@@ -132,7 +132,10 @@ export default function Home() {
           </Link>
         </div>
 
-        <SwiperContainer slideList={loungeList?.projects || []}>
+        <SwiperContainer
+          slideList={loungeList?.projects || []}
+          slideItemClassName="min-w-[275px]"
+        >
           {item => <LoungePostCard card={item} />}
         </SwiperContainer>
       </section>
