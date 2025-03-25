@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { useDialogContext } from '@/hooks';
-// import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -25,7 +24,6 @@ export default function StoreReportModal() {
       storeName: '',
       reason: '',
     },
-    // resolver: zodResolver(),
   });
   const { control, handleSubmit } = methods;
 

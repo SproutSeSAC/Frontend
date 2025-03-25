@@ -20,17 +20,15 @@ export const getVerifyNicknameResult = (nickname: string) =>
 
 // 캘린더 인증
 export const getCalendarToken = () =>
-  axiosInstance
-    .get('/user/calendar')
-    .then(res => {
-      const calendarAccessToken = res.data.access_token;
-      if (calendarAccessToken) {
-        sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
-      }
-    })
-    .catch(async error => {
-      console.log('calendarToken', error);
-    });
+  axiosInstance.get('/user/calendar').then(res => {
+    const calendarAccessToken = res.data.access_token;
+    if (calendarAccessToken) {
+      sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
+    }
+  });
+// .catch(async error => {
+//   console.log('calendarToken', error);
+// });
 
 // 리프레시 토큰
 export const getNewAccessToken = () =>

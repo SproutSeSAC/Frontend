@@ -58,7 +58,13 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       {!isCommentListLoading && (
         <ul className="mt-8 flex flex-col gap-8">
           {commentList.map(
-            ({ id, userInfo: { nickname, profileImg }, content, createAt }) => (
+            ({
+              id,
+              userInfo: { nickname, profileImg },
+
+              content,
+              createAt,
+            }) => (
               <li key={id} className="flex w-full flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1">
@@ -66,6 +72,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                       className="size-[30px]"
                       imageNameSegment={profileImg ?? ''}
                     />
+                    <span>{}</span>
                     <span>{nickname ? `@${nickname}` : '-'}</span>
                   </div>
 
