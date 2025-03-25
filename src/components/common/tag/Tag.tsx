@@ -74,7 +74,7 @@ export default function Tag({
 
   return (
     <div
-      className={`flex min-w-fit items-center py-0.5 ${tagStyle} ${tagColor} ${postTypeColor} ${roleColor} ${className}`}
+      className={`flex min-w-fit items-center ${tagStyle} ${tagColor} ${postTypeColor} ${roleColor} ${className}`}
     >
       <span className="tracking-tight">{text}</span>
 

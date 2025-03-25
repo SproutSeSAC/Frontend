@@ -127,9 +127,30 @@ export const useSubmitNotice = () => {
     const firstErrorKey = Object?.keys(
       errors,
     )?.[0] as keyof NoticeDto.PostNotice;
-    const firstErrorMsg = errors[firstErrorKey]?.message;
-    if (firstErrorMsg) {
-      showToast(firstErrorMsg);
+
+    switch (firstErrorKey) {
+      case 'applicationEndDateTime':
+        if (errors.applicationEndDateTime?.message) {
+          showToast(errors.applicationEndDateTime?.message);
+        }
+        return;
+
+      case 'sessions':
+        if (errors.sessions) {
+          const sessionError = (
+            errors.sessions as unknown as {
+              sessionEndDateTime: { message: '' };
+            }[]
+          )?.filter(session => session?.sessionEndDateTime);
+          showToast(sessionError[0]?.sessionEndDateTime?.message);
+        }
+        return;
+
+      default:
+        if (errors[firstErrorKey]?.message) {
+          showToast(errors[firstErrorKey]?.message);
+        }
+        break;
     }
   };
 

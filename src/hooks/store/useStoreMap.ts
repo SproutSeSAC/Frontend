@@ -163,30 +163,6 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
     return marker;
   }, []);
 
-  const getPlaceId = async (storeName: string) => {
-    const clientId = `${import.meta.env.VITE_NAVER_API_CLIENT_ID}`;
-    const clientSecret = `${import.meta.env.VITE_NAVER_API_CLIENT_SECRET_ID}`;
-
-    const response = await fetch(
-      `https://openapi.naver.com/v1/search/local.json?query=${storeName}&display=1`,
-      {
-        headers: {
-          'X-Naver-Client-Id': clientId,
-          'X-Naver-Client-Secret': clientSecret,
-        },
-      },
-    );
-
-    const data = await response.json();
-    if (data.items.length > 0) {
-      const placeId = data.items[0].mapx; // 네이버는 `mapx` 값을 장소 ID로 사용
-      console.log('장소 ID:', placeId);
-      return placeId;
-    }
-
-    return null;
-  };
-
   return {
     storeMapRef,
     isMapReady,
@@ -195,6 +171,5 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
     setCenter,
     addMarker,
     modalOpenInitValue,
-    getPlaceId,
   };
 };
