@@ -35,7 +35,7 @@ export default function Modal({
   return createPortal(
     <>
       <section
-        className={`fixed inset-0 z-40 m-auto h-fit max-h-[90vh] min-h-[180px] w-fit min-w-[350px] overflow-hidden rounded-2xl bg-white ${className}`}
+        className={`fixed inset-0 z-40 m-auto h-fit max-h-[90vh] min-h-[180px] w-fit min-w-[350px] max-w-[650px] overflow-hidden rounded-2xl bg-white ${className}`}
       >
         {headerType === 'title-xIcon' && (
           <header className="flex items-start justify-between">

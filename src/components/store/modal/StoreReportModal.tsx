@@ -9,9 +9,6 @@ import LabeledSection from '@/components/common/input/LabeledSection';
 import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
 
-const defaultStyle =
-  'rounded-xl border border-solid border-mainGray px-6 py-[13px] text-lg';
-
 interface FormValues {
   storeName: string;
   reason: string;
@@ -48,66 +45,57 @@ export default function StoreReportModal() {
 
   return (
     <Modal
-      className="p-[50px]"
+      className="w-1/2 min-w-[300px] max-w-[600px] p-[50px]"
       onToggleClick={hideDialog}
-      title={<div className="mb-4 text-2xl">맛집 제보하기</div>}
+      title={<div className="text-2xl">맛집 제보하기</div>}
     >
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
-        <div className="mt-10 flex w-[716px] flex-col gap-[82px]">
-          <LabeledSection label="식당 이름">
-            <Controller
-              control={control}
-              name="storeName"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                return (
-                  <div className="flex flex-col">
-                    <TextInput
-                      placeholder="식당 이름을 입력해주세요"
-                      className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="가게이름"
-                      onChange={onChange}
-                    />
-
-                    {error && (
-                      <ErrorMsg msg={error?.message || ''} className="ml-2" />
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </LabeledSection>
-
-          <LabeledSection label="맛집 추천 사유">
-            <Controller
-              control={control}
-              name="storeName"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                return (
-                  <div className="flex flex-col">
-                    <TextInput
-                      placeholder="맛집 추천 사유를 입력해주세요"
-                      className={`h-full ${defaultStyle} ${error && 'border-red-500'}`}
-                      name="맛집 추천 사유"
-                      onChange={onChange}
-                    />
-
-                    {error && (
-                      <ErrorMsg msg={error?.message || ''} className="ml-2" />
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </LabeledSection>
-        </div>
-
-        <div className="flex justify-end">
-          <SquareButton
-            name="제보하기"
-            type="submit"
-            className="mt-20 self-end"
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className="flex flex-col gap-10"
+      >
+        <LabeledSection label="식당 이름" className="mt-10">
+          <Controller
+            control={control}
+            name="storeName"
+            render={({ field: { onChange }, fieldState: { error } }) => {
+              return (
+                <TextInput
+                  placeholder="식당 이름을 입력해주세요"
+                  className="!px-4"
+                  name="가게이름"
+                  onChange={onChange}
+                  errorMsg={error?.message}
+                />
+              );
+            }}
           />
-        </div>
+        </LabeledSection>
+
+        <LabeledSection label="맛집 추천 사유">
+          <Controller
+            control={control}
+            name="storeName"
+            render={({ field: { onChange }, fieldState: { error } }) => {
+              return (
+                <div className="flex flex-col">
+                  <textarea
+                    className={`mt-2 w-full resize-none rounded-xl border px-4 py-3 placeholder:text-mainGray-hover focus:outline-none ${error ? 'border-[#FF3939]' : 'border-mainGray'}`}
+                    placeholder="맛집 추천 사유를 입력해주세요"
+                    rows={5}
+                    name="맛집 추천 사유"
+                    onChange={onChange}
+                  />
+
+                  {error && (
+                    <ErrorMsg msg={error?.message || ''} className="ml-2" />
+                  )}
+                </div>
+              );
+            }}
+          />
+        </LabeledSection>
+
+        <SquareButton name="제보하기" type="submit" className="mt-5 self-end" />
       </form>
     </Modal>
   );

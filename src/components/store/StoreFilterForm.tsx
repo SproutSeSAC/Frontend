@@ -27,6 +27,7 @@ interface FormValues {
     overFivePerson: boolean;
     underPrice: boolean;
     walkTimeWithinFiveMinutes: boolean;
+    isScraped: boolean;
   };
   foodTypeList: string[];
 }
@@ -50,6 +51,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         underPrice: searchParams.get('underPrice') === 'true',
         walkTimeWithinFiveMinutes:
           searchParams.get('walkTimeWithinFiveMinutes') === 'true',
+        isScraped: searchParams.get('isScraped') === 'true',
       },
       foodTypeList: searchParams.get('foodTypeList')
         ? searchParams.get('foodTypeList')!.split(',')
@@ -65,6 +67,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         overFivePerson: false,
         underPrice: false,
         walkTimeWithinFiveMinutes: false,
+        isScraped: false,
       },
       foodTypeList: [],
     },
