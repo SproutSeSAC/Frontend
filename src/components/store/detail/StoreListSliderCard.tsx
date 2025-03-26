@@ -87,8 +87,8 @@ export default function StoreListSliderCard({
               {slideItem.storeMenuList.map(item => {
                 return (
                   <li key={item.id} className="flex gap-2">
-                    <span>{item.name}</span>
-                    <span>{item.price.toLocaleString()}원</span>
+                    <span className="line-clamp-1 flex-1">{item.name}</span>
+                    <span className="">{item.price.toLocaleString()}원</span>
                   </li>
                 );
               })}

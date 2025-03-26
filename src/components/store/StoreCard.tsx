@@ -198,7 +198,7 @@ export default function StoreCard({
             {isOpenForBusiness() ? '영업 중' : '영업 종료'}
           </span>
           <span className="mx-2 text-mainGray">|</span>
-          <div className="group relative flex items-center text-darkGray-active">
+          <div className="group relative flex border text-darkGray-active">
             <button
               type="button"
               onClick={e => {
@@ -208,7 +208,9 @@ export default function StoreCard({
               }}
             >
               {/* 영업시간 정보 */}
-              <span className="line-clamp-1">{storeData.workingDay}</span>
+              <span className="line-clamp-1 text-start">
+                {storeData.workingDay}
+              </span>
 
               {/* 브레이크타임 정보 */}
               {storeData.breakTime &&
@@ -219,11 +221,11 @@ export default function StoreCard({
                 ))}
             </button>
 
-            <div className="absolute bottom-8 z-10 hidden min-w-max whitespace-normal rounded-md bg-mainGreen bg-opacity-100 px-4 py-3 text-white group-hover:block">
+            <div className="absolute -left-[30%] bottom-8 z-50 hidden min-w-max whitespace-normal rounded-md bg-mainGreen px-4 py-3 text-white group-hover:block">
               {/* 삼각형 */}
               <div className="absolute -bottom-1.5 left-1/2 h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent border-t-mainGreen opacity-90" />
               <ul className="flex flex-col gap-1">
-                {storeData.workingDay.split(', ').map(workingDay => (
+                {storeData.workingDay.split(/, |\(|\)/).map(workingDay => (
                   <li key={workingDay}>{workingDay}</li>
                 ))}
               </ul>

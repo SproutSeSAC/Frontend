@@ -6,8 +6,8 @@ export const COURSE_MANAGEMENT_TAB_LIST: {
   text: string;
   type: CourseManagementTabType;
 }[] = [
-  { text: '교육과정 관리', type: 'course' },
   { text: '캘린더 관리', type: 'calendar' },
+  { text: '교육과정 관리', type: 'course' },
 ];
 
 // 사용자 관리 탭
