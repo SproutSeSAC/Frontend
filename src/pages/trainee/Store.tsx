@@ -23,8 +23,6 @@ export default function Store() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  // const queryParams = Object.fromEntries(searchParams.entries());
-
   const observeRef = useRef(null);
 
   const { storeList, fetchNextPage, hasNextPage, isLoading } =
