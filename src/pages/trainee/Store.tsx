@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDialogContext, useGetStoreList, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { Store as StoreType } from '@/types/store/storeDto';
 import { updateQueryParams } from '@/utils';
 
 import EmptyContent from '@/components/common/EmptyContent';
@@ -37,48 +38,48 @@ export default function Store() {
     threshold: 0.1,
   });
 
-  const onOpenModal = async (storeId: number) => {
+  const onOpenModal = async (storeData: StoreType) => {
     await showDialog({
       key: 'STORE_MODAL',
-      element: <StoreModal onClose={hideDialog} storeId={storeId} />,
+      element: <StoreModal onClose={hideDialog} storeData={storeData} />,
     });
   };
 
   return (
     <MainView className="h-screen !min-h-[1000px]">
       <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
-        <div className="flex items-center gap-[30px]">
-          <SearchInput
-            name="keyword"
-            placeholder="검색어를 입력해 주세요"
-            width="min-w-[422px] w-full"
-            height="h-12"
-            onEnter={() => {
-              updateQueryParams(
-                searchParams,
-                setSearchParams,
-                'keyword',
-                searchKeyword,
-              );
-            }}
-            value={searchKeyword}
-            onChange={e => setSearchKeyword(e.target.value)}
-          />
-        </div>
+        <SearchInput
+          name="keyword"
+          placeholder="검색어를 입력해 주세요"
+          width="min-w-[422px] w-full"
+          height="h-12"
+          onEnter={() => {
+            updateQueryParams(
+              searchParams,
+              setSearchParams,
+              'keyword',
+              searchKeyword,
+            );
+          }}
+          value={searchKeyword}
+          onChange={e => setSearchKeyword(e.target.value)}
+        />
       </Header>
 
       <MealRecruitList />
 
-      <div className="flex size-full flex-1 overflow-auto rounded-[20px] bg-white p-5">
-        <aside className="h-full w-[22%] max-w-[300px] flex-shrink-0">
-          <StoreFilterForm onReset={() => setSearchKeyword('')} />
-        </aside>
+      <section className="flex size-full flex-1 overflow-auto rounded-[20px] bg-white p-5">
+        <StoreFilterForm onReset={() => setSearchKeyword('')} />
 
         <div className="relative flex w-full flex-col overflow-auto overflow-x-hidden px-8 scrollbar-hide">
           <div className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
             <div className="text-xl font-semibold text-black">맛집 리스트</div>
             <button
-              onClick={() => navigate('/stores/detail-location')}
+              onClick={() => {
+                const queryParams = Object.fromEntries(searchParams.entries());
+                const queryString = new URLSearchParams(queryParams).toString();
+                navigate(`/stores/detail-location?${queryString}`);
+              }}
               className="text-sm font-normal text-darkGray-hover"
             >
               지도 보기
@@ -91,13 +92,13 @@ export default function Store() {
               storeList.map(storeData => (
                 <div
                   className="aspect-square"
-                  onClick={() => onOpenModal(storeData.id)}
+                  onClick={() => onOpenModal(storeData)}
                   key={storeData.id}
                   role="button"
                   tabIndex={0}
                   onKeyDown={e => {
                     if (e.key === 'Enter') {
-                      onOpenModal(storeData.id);
+                      onOpenModal(storeData);
                     }
                   }}
                 >
@@ -125,7 +126,7 @@ export default function Store() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </MainView>
   );
 }

@@ -15,7 +15,7 @@ import {
 } from '@/types/store/storeMealPostDto';
 import { extractValidParams } from '@/utils';
 
-export const useGetInfiniteStoreList = (campusId: number) => {
+export const useGetInfiniteStoreList = () => {
   const [searchParams] = useSearchParams();
   const newSearchParams = extractValidParams(searchParams);
   const pageSize = 10;
@@ -28,7 +28,7 @@ export const useGetInfiniteStoreList = (campusId: number) => {
         {
           params: {
             page: pageParam,
-            campusId: newSearchParams.campusId || campusId,
+            campusId: newSearchParams.campusId || 1,
             ...newSearchParams,
             size: pageSize,
           },
@@ -41,13 +41,12 @@ export const useGetInfiniteStoreList = (campusId: number) => {
     },
     getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 1,
-    enabled: !!campusId,
   });
 };
 
 export const useGetFilterCount = (campusId: number) => {
   return useQuery({
-    queryKey: ['useGetFilterCount'],
+    queryKey: ['useGetFilterCount', campusId],
     queryFn: async () => {
       const { data } = await axiosInstance.get<GetFilterCountResponse>(
         '/store/filterCount',

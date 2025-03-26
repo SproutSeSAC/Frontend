@@ -21,6 +21,7 @@ export interface Store {
   storeImageList: StoreImage[];
   storeMenuList: StoreMenu[];
   isLessThan10000Menu: boolean;
+  mapSchemaId: string;
 }
 
 export interface StoreMenu {
@@ -31,7 +32,7 @@ export interface StoreMenu {
 }
 
 export interface StoreImage {
-  id?: number;
+  id: number;
   path: string;
 }
 
@@ -57,7 +58,6 @@ export interface GetFilterCountResponse {
     foodType: FoodFilterDisplayKey;
     count: number;
   }[];
-
   storeOptionCount: StoreOptionCount;
 }
 
@@ -66,17 +66,12 @@ export interface StoreOptionCount {
   isVoucherCount: number;
   isOverPerson: number;
   isLessThan10000Price: number;
+  isScrapedCount: number;
 }
 export interface GetStoreDetailResponse
   extends Omit<
     Store,
-    | 'scrapCount'
-    | 'underPrice'
-    | 'storeImageList'
-    | 'id'
-    | 'holiday'
-    | 'longitude'
-    | 'latitude'
+    'underPrice' | 'storeImageList' | 'longitude' | 'latitude'
   > {
   storeImageList: string[];
   storeReviewList: StoreReviewList[];

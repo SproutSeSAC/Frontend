@@ -41,7 +41,7 @@ export default function Tag({
     EDU_MANAGER: 'bg-[#E8EFFE] text-[#332FD0]',
     INSTRUCTOR: 'bg-[#34D02F33] text-[#1BA416]',
     JOB_COORDINATOR: 'bg-[#FEFAE0] text-[#FF6D28]',
-    TRAINEE: '',
+    TRAINEE: 'text-[#678771] bg-[#e0f8df]',
     SUPER_ADMIN: 'text-[#6B5FFD] bg-[#eae8ff]',
   };
 
@@ -74,7 +74,7 @@ export default function Tag({
 
   return (
     <div
-      className={`flex min-w-fit items-center py-0.5 ${tagStyle} ${tagColor} ${postTypeColor} ${roleColor} ${className}`}
+      className={`flex min-w-fit items-center ${tagStyle} ${tagColor} ${postTypeColor} ${roleColor} ${className}`}
     >
       <span className="tracking-tight">{text}</span>
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -27,6 +27,7 @@ interface FormValues {
     overFivePerson: boolean;
     underPrice: boolean;
     walkTimeWithinFiveMinutes: boolean;
+    isScraped: boolean;
   };
   foodTypeList: string[];
 }
@@ -34,12 +35,29 @@ interface FormValues {
 export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const campusId = searchParams.get('campusId') || 1;
+
   const { data: campusList } = useGetCampusList();
-  const { data: filterCount } = useGetFilterCount(
-    campusList ? campusList[0]?.id : 0,
-  );
+  const { data: filterCount } = useGetFilterCount(+campusId);
 
   const { showDialog } = useDialogContext();
+
+  const parsedValues = useMemo(() => {
+    return {
+      campusId: Number(searchParams.get('campusId')) || 1,
+      sprout: {
+        isZeropay: searchParams.get('isZeropay') === 'true',
+        overFivePerson: searchParams.get('overFivePerson') === 'true',
+        underPrice: searchParams.get('underPrice') === 'true',
+        walkTimeWithinFiveMinutes:
+          searchParams.get('walkTimeWithinFiveMinutes') === 'true',
+        isScraped: searchParams.get('isScraped') === 'true',
+      },
+      foodTypeList: searchParams.get('foodTypeList')
+        ? searchParams.get('foodTypeList')!.split(',')
+        : [],
+    };
+  }, [searchParams]);
 
   const { control, setValue, getValues, reset } = useForm<FormValues>({
     defaultValues: {
@@ -49,6 +67,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         overFivePerson: false,
         underPrice: false,
         walkTimeWithinFiveMinutes: false,
+        isScraped: false,
       },
       foodTypeList: [],
     },
@@ -107,59 +126,54 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   }, [onReset, reset, setSearchParams]);
 
   useEffect(() => {
-    if (searchParams.size > 0) {
-      handleReset();
-    }
+    reset(parsedValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [parsedValues]);
 
   return (
-    <form className="flex min-w-[80%] flex-shrink-0 flex-col gap-8">
-      <div>
-        <div className="mb-[23px] flex w-full max-w-[220px] items-center justify-between">
-          <h3 className="ml-1 whitespace-nowrap text-xl font-semibold">
-            나의 위치 찾기
-          </h3>
-          <button
-            type="button"
-            className="flex h-[42px] w-[42px] items-center justify-center gap-2"
-            onClick={handleReset}
-          >
-            <MdOutlineRefresh className="h-6 w-6 text-darkGray" />
-          </button>
-        </div>
-        <div>
-          <Controller
-            control={control}
-            name="campusId"
-            render={({ field: { onChange, value }, fieldState: { error } }) => {
-              const selectedOption = campusList?.find(({ id }) => id === value);
-
-              return (
-                <div className="max-w-[90%]">
-                  <SingleSelectDropdown
-                    defaultLabel={campusList ? campusList[0].name : '선택'}
-                    options={campusList || []}
-                    selectedOption={selectedOption}
-                    onChangeValue={data => {
-                      onChange(data[0].id);
-                      updateQueryParams(
-                        searchParams,
-                        setSearchParams,
-                        'campusId',
-                        data[0].id.toString(),
-                      );
-                    }}
-                    errorMsg={error?.message}
-                    selectBoxClassName="w-full h-[46px] p-5 bg-lightGray rounded-lg border border-mainGray-active justify-between items-center inline-flex"
-                    optionClassName="text-sm hover:rounded-sm hover:bg-lightGray-hover pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
-                  />
-                </div>
-              );
-            }}
-          />
-        </div>
+    <form className="flex h-full w-[22%] min-w-[280px] max-w-[380px] flex-shrink-0 flex-col gap-6 pr-4">
+      <div className="flex w-full items-center justify-between">
+        <h3 className="ml-1 whitespace-nowrap text-xl font-semibold">
+          나의 위치 찾기
+        </h3>
+        <button
+          type="button"
+          className="flex h-[42px] w-[42px] items-center justify-center gap-2"
+          onClick={handleReset}
+        >
+          <MdOutlineRefresh className="h-6 w-6 text-darkGray" />
+        </button>
       </div>
+
+      <Controller
+        control={control}
+        name="campusId"
+        render={({ field: { onChange, value }, fieldState: { error } }) => {
+          const selectedOption = campusList?.find(({ id }) => {
+            return id === +value;
+          });
+
+          return (
+            <SingleSelectDropdown
+              defaultLabel={campusList ? campusList[0].name : '선택'}
+              options={campusList || []}
+              selectedOption={selectedOption}
+              onChangeValue={data => {
+                onChange(data[0].id);
+                updateQueryParams(
+                  searchParams,
+                  setSearchParams,
+                  'campusId',
+                  data[0].id.toString(),
+                );
+              }}
+              errorMsg={error?.message}
+              selectBoxClassName="w-full h-[46px] p-5 bg-lightGray rounded-lg border border-mainGray-active justify-between items-center inline-flex"
+              optionClassName="text-sm hover:rounded-sm hover:bg-lightGray-hover pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
+            />
+          );
+        }}
+      />
 
       <CheckboxGroup title="새싹" className="text-sm font-semibold">
         {storeMainFilterList.map(item => (
@@ -193,37 +207,40 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         ))}
       </CheckboxGroup>
 
-      <CheckboxGroup title="메뉴별" className="text-sm font-semibold">
-        {filterCount?.foodTypeCount.map(item => (
-          <Controller
-            key={item.foodType}
-            control={control}
-            name="foodTypeList"
-            render={({ field: { value } }) => {
-              const isChecked = value.includes(item.foodType);
-              return (
-                <Checkbox
-                  id={item.foodType}
-                  textClassName="text-sm"
-                  text={foodFilterDisplay[item.foodType]}
-                  count={item.count}
-                  checked={isChecked}
-                  onChange={e =>
-                    handleFoodTypeListCheckboxChange(
-                      'foodTypeList',
-                      item.foodType,
-                      e.target.checked,
-                    )
-                  }
-                />
-              );
-            }}
-          />
-        ))}
-      </CheckboxGroup>
+      {filterCount?.foodTypeCount && filterCount?.foodTypeCount.length > 0 && (
+        <CheckboxGroup title="메뉴별" className="text-sm font-semibold">
+          {filterCount?.foodTypeCount.map(item => (
+            <Controller
+              key={item.foodType}
+              control={control}
+              name="foodTypeList"
+              render={({ field: { value } }) => {
+                const isChecked = value.includes(item.foodType);
+                return (
+                  <Checkbox
+                    id={item.foodType}
+                    textClassName="text-sm"
+                    text={foodFilterDisplay[item.foodType]}
+                    count={item.count}
+                    checked={isChecked}
+                    onChange={e =>
+                      handleFoodTypeListCheckboxChange(
+                        'foodTypeList',
+                        item.foodType,
+                        e.target.checked,
+                      )
+                    }
+                  />
+                );
+              }}
+            />
+          ))}
+        </CheckboxGroup>
+      )}
+
       <button
         type="button"
-        className="inline-flex h-[46px] w-full max-w-[218px] items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-darkGray-active hover:bg-lightGreen-active active:bg-mainGreen active:text-white"
+        className="h-[46px] w-full items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-darkGray-active hover:bg-lightGreen-active active:bg-mainGreen active:text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',

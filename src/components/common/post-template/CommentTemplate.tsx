@@ -1,5 +1,6 @@
 import { useGetUserProfileCard } from '@/services/auth/authQueries';
 
+import { rolesObj } from '@/constants';
 import { useHandleComment } from '@/hooks';
 import { formatDate } from '@/utils';
 import { useForm } from 'react-hook-form';
@@ -7,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import EditButton from '@/components/common/button/EditButton';
 import SquareButton from '@/components/common/button/SquareButton';
 import TrashButton from '@/components/common/button/TrashButton';
+import Tag from '@/components/common/tag/Tag';
 import UserImage from '@/components/user/UserImage';
 
 interface CommentTemplateProps {
@@ -58,7 +60,12 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       {!isCommentListLoading && (
         <ul className="mt-8 flex flex-col gap-8">
           {commentList.map(
-            ({ id, userInfo: { nickname, profileImg }, content, createAt }) => (
+            ({
+              id,
+              userInfo: { nickname, profileImg, role },
+              content,
+              createAt,
+            }) => (
               <li key={id} className="flex w-full flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1">
@@ -66,7 +73,14 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                       className="size-[30px]"
                       imageNameSegment={profileImg ?? ''}
                     />
-                    <span>{nickname ? `@${nickname}` : '-'}</span>
+                    <span className="text-[15px]">
+                      {nickname ? `@${nickname}` : '-'}
+                    </span>
+                    <Tag
+                      text={rolesObj[role]}
+                      roleType={role}
+                      className="!py-1"
+                    />
                   </div>
 
                   {nickname === profileCard?.profile?.nickname &&

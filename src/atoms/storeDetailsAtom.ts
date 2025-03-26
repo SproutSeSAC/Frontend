@@ -7,9 +7,9 @@ const initData = {
   zoom: 0,
 };
 
-export const storeDetailsAtom = atom(initData);
+export const storeMapDetailsAtom = atom(initData);
 export const zoomBehaviorFlagAtom = atom(false);
 
-export const resetStoreDetailsAtom = atom(null, (_, set) =>
-  set(storeDetailsAtom, initData),
+export const resetStoreMapDetailsAtom = atom(null, (_, set) =>
+  set(storeMapDetailsAtom, initData),
 );
