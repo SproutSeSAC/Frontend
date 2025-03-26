@@ -39,10 +39,12 @@ export default function StoreCard({
 
   const { showDialog } = useDialogContext();
 
+  const { isScraped, postId, storeImageList, mapSchemaId } = storeData;
+
   const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
     useHandleScrap({
-      postId: storeData.postId,
-      isScraped: storeData?.isScraped,
+      postId,
+      isScraped,
       invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
     });
 
@@ -86,11 +88,13 @@ export default function StoreCard({
     const currCampus = campusList?.find(
       campus => campus.name === storeData.campusName,
     );
-    const baseUrl = 'https://map.naver.com/p/directions';
-    const campusSeg = `${currCampus?.longitude},${currCampus?.latitude},청년취업사관학교%20${currCampus?.name},${currCampus?.placeId},PLACE_POI`;
-    const storeSeg = `${storeData.longitude},${storeData.latitude},${storeData.name},0,PLACE_POI`;
-    const resultUrl = `${baseUrl}/${campusSeg}/${storeSeg}/-/walk?c=18.00,0,0,0,dh`;
-    window.open(resultUrl, '_blank');
+    if (currCampus) {
+      const baseUrl = 'https://map.naver.com/p/directions';
+      const campusSeg = `${currCampus.longitude},${currCampus.latitude},청년취업사관학교%20${currCampus?.name},${currCampus?.naverPlaceId},PLACE_POI`;
+      const storeSeg = `${storeData.longitude},${storeData.latitude},${storeData.name},${mapSchemaId},PLACE_POI`;
+      const resultUrl = `${baseUrl}/${campusSeg}/${storeSeg}/-/walk?c=18.00,0,0,0,dh`;
+      window.open(resultUrl, '_blank');
+    }
   };
 
   const onOpenStoreProposalEditModalClick = async () => {
@@ -99,12 +103,6 @@ export default function StoreCard({
       element: <StoreProposalEditModal />,
     });
   };
-
-  const menuImageList = storeData.storeMenuList
-    .filter(menu => menu.imageUrl)
-    .map(({ id, imageUrl: path }) => ({ id, path }));
-
-  const storeImageList = [...storeData.storeImageList, ...menuImageList];
 
   return (
     <article className={`${width} gap-[11px]`} {...rest}>

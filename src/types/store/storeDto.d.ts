@@ -21,6 +21,7 @@ export interface Store {
   storeImageList: StoreImage[];
   storeMenuList: StoreMenu[];
   isLessThan10000Menu: boolean;
+  mapSchemaId: string;
 }
 
 export interface StoreMenu {
