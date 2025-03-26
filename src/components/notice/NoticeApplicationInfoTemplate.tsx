@@ -89,9 +89,8 @@ export default function NoticeApplicationInfoTemplate({
               <span className="flex-1">
                 {formatDate(item.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
                 <span className="text-darkGray-hover">
-                  {formatDate(item.sessionStartDateTime, 'a h시 mm분')}
-                </span>
-                ~{' '}
+                  {formatDate(item.sessionStartDateTime, 'a h시 mm분')} ~
+                </span>{' '}
                 <span className="text-darkGray-hover">
                   {formatDate(item.sessionEndDateTime, 'a h시 mm분')}
                 </span>

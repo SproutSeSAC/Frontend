@@ -95,6 +95,7 @@ export const STORE_MAIN_FILTER_UNDER_PRICE = 'underPrice';
 export const STORE_MAIN_FILTER_OVER_FIVE_PERSON = 'overFivePerson';
 export const STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES =
   'walkTimeWithinFiveMinutes';
+export const STORE_MAIN_FILTER_IS_SCRAPED = 'isScraped';
 
 export const storeMainFilterList: Array<{
   key: string;
@@ -120,5 +121,10 @@ export const storeMainFilterList: Array<{
     key: '도보 5분 이내',
     value: STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES,
     countKey: 'isVoucherCount',
+  },
+  {
+    key: '찜한 식당',
+    value: STORE_MAIN_FILTER_IS_SCRAPED,
+    countKey: 'isScrapedCount',
   },
 ];

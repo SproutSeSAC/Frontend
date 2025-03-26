@@ -57,7 +57,6 @@ export interface GetFilterCountResponse {
     foodType: FoodFilterDisplayKey;
     count: number;
   }[];
-
   storeOptionCount: StoreOptionCount;
 }
 
@@ -66,6 +65,7 @@ export interface StoreOptionCount {
   isVoucherCount: number;
   isOverPerson: number;
   isLessThan10000Price: number;
+  isScrapedCount: number;
 }
 export interface GetStoreDetailResponse
   extends Omit<

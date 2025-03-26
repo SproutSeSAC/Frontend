@@ -1,4 +1,5 @@
 import { Ptype } from '@/types/lounge';
+import { RoleKey } from '@/types/user';
 
 export namespace myPostDto {
   export type GetMyScrapedPostList = MyScrapedPostList;
@@ -67,7 +68,7 @@ export type CommentDetail = {
   postId: number;
   content: string;
   createAt: string;
-  userInfo: { nickname: string; profileImg: string };
+  userInfo: { nickname: string; profileImg: string; role: RoleKey };
   imgUrl: string;
 };
 

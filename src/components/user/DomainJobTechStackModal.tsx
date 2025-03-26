@@ -107,10 +107,14 @@ export default function DomainJobTechStackModal() {
   if (isLoading) return null;
 
   return (
-    <Modal onToggleClick={hideDialog} title="도메인 정보" className="p-[40px]">
+    <Modal
+      onToggleClick={hideDialog}
+      title="도메인 정보"
+      className="min-w-[500px] p-10"
+    >
       <FormProvider {...methods}>
         <form
-          className="mt-8 flex w-[40vw] min-w-[350px] flex-col gap-8"
+          className="mt-8 flex flex-col gap-8"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col">

@@ -30,7 +30,8 @@ export type StoreMainFilterType =
   | typeof STORE_MAIN_FILTER_ZERO_PAY
   | typeof STORE_MAIN_FILTER_UNDER_PRICE
   | typeof STORE_MAIN_FILTER_OVER_FIVE_PERSON
-  | typeof STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES;
+  | typeof STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES
+  | typeof STORE_MAIN_FILTER_ONLY_SCRAPED;
 
 export type DetailPostTechStack = {
   id: number;

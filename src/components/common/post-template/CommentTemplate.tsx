@@ -1,5 +1,6 @@
 import { useGetUserProfileCard } from '@/services/auth/authQueries';
 
+import { rolesObj } from '@/constants';
 import { useHandleComment } from '@/hooks';
 import { formatDate } from '@/utils';
 import { useForm } from 'react-hook-form';
@@ -7,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import EditButton from '@/components/common/button/EditButton';
 import SquareButton from '@/components/common/button/SquareButton';
 import TrashButton from '@/components/common/button/TrashButton';
+import Tag from '@/components/common/tag/Tag';
 import UserImage from '@/components/user/UserImage';
 
 interface CommentTemplateProps {
@@ -60,8 +62,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
           {commentList.map(
             ({
               id,
-              userInfo: { nickname, profileImg },
-
+              userInfo: { nickname, profileImg, role },
               content,
               createAt,
             }) => (
@@ -72,8 +73,14 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                       className="size-[30px]"
                       imageNameSegment={profileImg ?? ''}
                     />
-                    <span>{}</span>
-                    <span>{nickname ? `@${nickname}` : '-'}</span>
+                    <span className="text-[15px]">
+                      {nickname ? `@${nickname}` : '-'}
+                    </span>
+                    <Tag
+                      text={rolesObj[role]}
+                      roleType={role}
+                      className="!py-1"
+                    />
                   </div>
 
                   {nickname === profileCard?.profile?.nickname &&

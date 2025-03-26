@@ -48,7 +48,7 @@ export default function SessionSelectBox({
       aria-label={`수업일시: ${sessionDate} ${sessionTime}`}
       onClick={onClick}
       disabled={disabled}
-      className={`flex w-[294px] cursor-pointer flex-col gap-1 rounded-2xl border border-darkGray px-5 py-6 ${boxStyle} ${disabledStyle}`}
+      className={`flex cursor-pointer flex-col gap-1 rounded-2xl border border-darkGray px-5 py-6 ${boxStyle} ${disabledStyle}`}
     >
       <h4>수업 일시</h4>
       <span>{sessionDate}</span>
