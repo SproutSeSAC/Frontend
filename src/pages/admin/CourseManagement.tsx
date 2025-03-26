@@ -9,6 +9,7 @@ import MainView from '@/layouts/MainView';
 import { updateQueryParams } from '@/utils';
 
 import CalendarAclTable from '@/components/calendar/CalendarAclTable';
+import PreparingPage from '@/components/common/PreparingPage';
 import TabNavigation from '@/components/common/TabNavigation';
 
 const TAB = 'tab';
@@ -32,12 +33,11 @@ export default function CourseManagement() {
         selectedStyle={{ point: 'dot', color: 'green' }}
         tabClassName="!p-0 mr-3 mt-0"
       />
-      {(tabName === null || tabName === 'course') && (
-        <div className="mt-5 h-full rounded-2xl bg-white px-3 pb-3 pt-5">
-          교육과정 관리
-        </div>
-      )}
       {tabName === 'calendar' && <CalendarAclTable />}
+
+      {(tabName === null || tabName === 'course') && (
+        <PreparingPage className="mt-5 !rounded-3xl" />
+      )}
     </MainView>
   );
 }

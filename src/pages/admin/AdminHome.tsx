@@ -3,6 +3,7 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 
+import PreparingPage from '@/components/common/PreparingPage';
 import RoleSwitchButton from '@/components/common/button/RoleSwitchButton';
 
 export default function AdminHome() {
@@ -13,6 +14,7 @@ export default function AdminHome() {
       <Header title={`${data?.name || ''} 관리자님, 환영합니다!`}>
         <RoleSwitchButton title="학생으로 전환" />
       </Header>
+      <PreparingPage />
     </MainView>
   );
 }
