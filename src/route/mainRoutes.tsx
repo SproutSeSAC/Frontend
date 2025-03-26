@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { Suspense, lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
@@ -34,7 +34,11 @@ const mainRoutes: RouteObject[] = [
   {
     path: '/',
     element: <Layout type="trainee" />,
-    ErrorBoundary: () => ErrorPage({ type: 'trainee' }),
+    ErrorBoundary: () => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ErrorPage type="trainee" />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
@@ -101,7 +105,11 @@ const mainRoutes: RouteObject[] = [
   {
     path: '/admin',
     element: <Layout type="admin" />,
-    ErrorBoundary: () => ErrorPage({ type: 'admin' }),
+    ErrorBoundary: () => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ErrorPage type="admin" />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
