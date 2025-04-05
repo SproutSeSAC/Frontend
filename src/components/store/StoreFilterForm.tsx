@@ -50,7 +50,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
 
   const parsedValues = useMemo(() => {
     return {
-      campusId: Number(searchParams.get('campusId')) || 2, // 여기
+      campusId: Number(searchParams.get('campusId')) || 2,
       sprout: {
         isZeropay: searchParams.get('isZeropay') === 'true',
         overFivePerson: searchParams.get('overFivePerson') === 'true',
