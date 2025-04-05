@@ -1,20 +1,28 @@
-import { PostType } from '@/constants/serviceConstant';
-import { RoleKey } from '@/types';
+import { postTypeObj } from '@/constants';
+import { AppliedSessionStatusKey, RoleKey, SessionStatusKey } from '@/types';
 import { BsX } from 'react-icons/bs';
+
+export type PostType = typeof postTypeObj;
+
+export type TagColor =
+  | 'black'
+  | 'green'
+  | 'lightGreen'
+  | 'blue'
+  | 'yellow'
+  | 'purple'
+  | 'pink'
+  | 'gray'
+  | 'grayLight';
+
+export type StatusKey = AppliedSessionStatusKey | SessionStatusKey;
 
 interface TagProps {
   text: string;
-  roleType?: RoleKey;
-  postType?: keyof PostType;
-  color?:
-    | 'black'
-    | 'green'
-    | 'blue'
-    | 'yellow'
-    | 'purple'
-    | 'pink'
-    | 'gray'
-    | 'grayLight';
+  roleKey?: RoleKey;
+  postKey?: keyof PostType;
+  statusKey?: StatusKey;
+  color?: TagColor;
   size?: 'small' | 'medium' | 'big';
   onDeleteClick?: () => void;
   className?: string;
@@ -22,8 +30,9 @@ interface TagProps {
 
 export default function Tag({
   text,
-  roleType,
-  postType,
+  roleKey,
+  postKey,
+  statusKey,
   color,
   size = 'small',
   onDeleteClick,
@@ -34,27 +43,12 @@ export default function Tag({
     medium: 'text-sm px-2.5 py-1 rounded-md',
     big: 'text-base rounded-lg py-1.5 px-[14px]',
   };
+  const tagSize = styleBySize[size];
 
-  const colorByRole: { [key in RoleKey]: string } = {
-    CAMPUS_LEADER: 'bg-[#FFF3F4] text-[#F5004F]',
-    OPERATION_MANAGER: 'bg-[#67B5CC33] text-[#2B768C]',
-    EDU_MANAGER: 'bg-[#E8EFFE] text-[#332FD0]',
-    INSTRUCTOR: 'bg-[#34D02F33] text-[#1BA416]',
-    JOB_COORDINATOR: 'bg-[#FEFAE0] text-[#FF6D28]',
-    TRAINEE: 'text-[#678771] bg-[#e0f8df]',
-    SUPER_ADMIN: 'text-[#6B5FFD] bg-[#eae8ff]',
-  };
-
-  const postTypeRole: { [key in keyof PostType]: string } = {
-    MEAL: 'bg-[#FFC3E0] text-white',
-    NOTICE: 'bg-[#00AC49] text-white',
-    PROJECT: 'bg-[#6FA235] text-white',
-    STORE: 'bg-[#FFC3E0] text-white',
-    STUDY: 'bg-[#67B5CC] text-white',
-  };
-
+  // 기본 태그 색상
   const styleByColor = {
     green: 'bg-mainGreen text-white',
+    lightGreen: 'bg-lightGreen text-mainGreen-active',
     black: 'bg-black text-mainGray',
     gray: 'bg-[#e9e9e9] text-darkGray-active',
     grayLight: 'bg-bg text-black',
@@ -64,17 +58,45 @@ export default function Tag({
     purple: 'bg-[#6B5FFD] text-white',
   };
 
-  const roleColor = roleType ? colorByRole[roleType] : '';
+  // 롤별 색상
+  const styleByRole: { [key in RoleKey]: string } = {
+    CAMPUS_LEADER: 'bg-[#FFF3F4] text-[#F5004F]',
+    OPERATION_MANAGER: 'bg-[#67B5CC33] text-[#2B768C]',
+    EDU_MANAGER: 'bg-[#E8EFFE] text-[#332FD0]',
+    INSTRUCTOR: 'bg-[#34D02F33] text-[#1BA416]',
+    JOB_COORDINATOR: 'bg-[#FEFAE0] text-[#FF6D28]',
+    TRAINEE: 'text-[#678771] bg-[#e0f8df]',
+    SUPER_ADMIN: 'text-[#6B5FFD] bg-[#eae8ff]',
+  };
 
-  const postTypeColor = postType ? postTypeRole[postType] : '';
+  // 포스트별 색상
+  const styleByPost: { [key in keyof PostType]: string } = {
+    MEAL: 'bg-[#FFC3E0] text-white',
+    NOTICE: 'bg-[#00AC49] text-white',
+    PROJECT: 'bg-[#6FA235] text-white',
+    STORE: 'bg-[#FFC3E0] text-white',
+    STUDY: 'bg-[#67B5CC] text-white',
+  };
 
-  const tagColor = color ? styleByColor[color] : '';
+  // 상태별 색상
+  const styleByStatus: { [key in StatusKey]: string } = {
+    ACTIVE: 'bg-red-400/15 !text-red-400',
+    INACTIVE: 'bg-darkGray/20 !text-darkGray-hover',
+    END: 'bg-darkGray/20 !text-darkGray-hover',
+    WAIT: 'bg-red-400/15 !text-red-400',
+    PARTICIPANT: 'bg-mainGreen/20 !text-darkGreen',
+    REJECT: '!bg-mainBlue/30 !text-mainBlue-active',
+    UNKNOWN: 'bg-darkGray/20 !text-darkGray-hover',
+  };
 
-  const tagStyle = styleBySize[size];
+  const roleStyle = roleKey ? styleByRole[roleKey] : '';
+  const postTypeStyle = postKey ? styleByPost[postKey] : '';
+  const statusStyle = statusKey ? styleByStatus[statusKey] : '';
+  const colorStyle = color ? styleByColor[color] : '';
 
   return (
     <div
-      className={`flex min-w-fit items-center ${tagStyle} ${tagColor} ${postTypeColor} ${roleColor} ${className}`}
+      className={`flex min-w-fit items-center ${colorStyle} ${tagSize} ${postTypeStyle} ${roleStyle} ${statusStyle} ${className}`}
     >
       <span className="tracking-tight">{text}</span>
 

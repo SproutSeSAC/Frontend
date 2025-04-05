@@ -9,6 +9,7 @@ interface SearchInputProps
   width: string;
   height: string;
   onEnter?: () => void;
+  inputStyle?: 'rounded' | 'square';
 }
 
 /**
@@ -25,6 +26,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       placeholder,
       width = 'w-[422px]',
       height = 'h-[40px]',
+      inputStyle = 'rounded',
       onChange,
       onEnter,
       value,
@@ -43,7 +45,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <label
-        className={`flex items-center justify-between rounded-full bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${width} ${height} px-4 ${!isFocus && 'text-gray-400'}`}
+        className={`flex items-center justify-between bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${width} ${height} ${inputStyle === 'rounded' ? 'rounded-full' : 'rounded-xl'} px-4 ${!isFocus && 'text-gray-400'}`}
         htmlFor={name}
       >
         {!isFocus && <FaMagnifyingGlass />}

@@ -139,6 +139,23 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
       path: ['meetingPlace'],
     },
   )
+  .refine(
+    data => {
+      if (
+        data.satisfactionSurvey &&
+        !/^https?:\/\/[\w.-]+(?:\.[\w-]+)+[/#?]?.*$/.test(
+          data.satisfactionSurvey,
+        )
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: '"https://"가 주소 앞에 있는 유효한 링크를 입력해주세요.',
+      path: ['satisfactionSurvey'],
+    },
+  )
   .superRefine((data, ctx) => {
     if (
       !data.applicationEndDateTime ||
@@ -160,6 +177,19 @@ export const NoticeConditionalFormSchema = NoticeRequiredFormSchema.extend({
         });
       }
     });
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.meetingType === 'ONLINE' &&
+      data.meetingPlace &&
+      !/^https?:\/\/[\w.-]+(?:\.[\w-]+)+[/#?]?.*$/.test(data.meetingPlace)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['meetingPlace'],
+        message: '"https://"가 주소 앞에 있는 유효한 링크를 입력해주세요.',
+      });
+    }
   });
 
 export type NoticeFormSchemaType = z.infer<typeof NoticeConditionalFormSchema>;

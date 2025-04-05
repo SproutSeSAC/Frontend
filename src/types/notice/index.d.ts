@@ -1,7 +1,7 @@
 import { noticeCategoryDisplay, noticeTabDisplay } from '@/constants';
-import { SessionStatus } from '@/constants/serviceConstant';
 import { PaginationFilter } from '@/types/filter';
 import { NoticeDto } from '@/types/notice/noticeDto';
+import { AppliedSessionStatusKey } from '@/types/session';
 import { HasAdminRole } from '@/types/user';
 
 export * from '@/types/notice/noticeDto';
@@ -56,7 +56,8 @@ export type NoticeSession = {
   sessionStartDateTime: string;
   sessionEndDateTime: string;
   participantCount: number;
-  currentStatus: SessionStatus;
+  currentStatus: AppliedSessionStatusKey;
+  ordinal: number;
 };
 
 /* Notice 필터 */
@@ -68,10 +69,6 @@ export type NoticeFilter = PaginationFilter & {
   offset?: boolean;
 };
 
-export type NoticeSessionParams = {
-  sessionId: number;
-  participantId?: number;
-};
 export type NoticeCommentParams = {
   commentId: number;
 };

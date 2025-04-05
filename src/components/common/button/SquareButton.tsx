@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-export type ButtonColor = 'gray' | 'mainGreen' | 'lightGreen';
+export type ButtonColor = 'gray' | 'lightGray' | 'mainGreen' | 'lightGreen';
 
 interface SquareButtonProps {
   name: string;
@@ -24,6 +24,7 @@ export default function SquareButton({
   const styleByColor = {
     mainGreen: 'bg-mainGreen text-white',
     gray: 'bg-mainGray text-darkGray-active',
+    lightGray: 'bg-mainGray text-mainGray-active',
     lightGreen: 'bg-lightGreen-active text-darkGray-active',
   };
 

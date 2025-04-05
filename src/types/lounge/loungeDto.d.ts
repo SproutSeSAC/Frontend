@@ -1,4 +1,4 @@
-import { StatusBase } from '@/constants/serviceConstant';
+import { StatusBase } from '@/constants';
 import {
   ContactMethodDisplayKey,
   DetailPostTechStack,

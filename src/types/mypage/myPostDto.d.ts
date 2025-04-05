@@ -55,12 +55,12 @@ interface MyPost {
   ptype: Ptype | 'MEAL';
   postId: number;
   linkedId: 2;
-  clientId: number; // NOTE: 필요없음
+  clientId: number;
   postType: 'PROJECT' | 'MEAL';
   title: string;
   createdAt: string;
   updatedAt: string;
-  createdNickName: string; // NOTE: 필요없음
+  createdNickName: string;
 }
 
 export type CommentDetail = {

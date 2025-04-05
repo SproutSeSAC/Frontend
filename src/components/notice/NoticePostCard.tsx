@@ -36,7 +36,7 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          roleType={notice.roleType}
+          roleKey={notice.roleType}
           size="big"
           text={rolesObj[notice.roleType]}
           className="text-base"

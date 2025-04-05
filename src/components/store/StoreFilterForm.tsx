@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
@@ -27,7 +28,7 @@ interface FormValues {
     overFivePerson: boolean;
     underPrice: boolean;
     walkTimeWithinFiveMinutes: boolean;
-    isScraped: boolean;
+    onlyScraped: boolean;
   };
   foodTypeList: string[];
 }
@@ -35,23 +36,28 @@ interface FormValues {
 export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const campusId = searchParams.get('campusId') || 1;
-
+  const { data: userProfile } = useGetUserProfile();
   const { data: campusList } = useGetCampusList();
+  const userCampus = campusList?.find(
+    campus => campus.name === userProfile?.campusList[0].campusName,
+  );
+
+  const campusId = searchParams.get('campusId') || userCampus?.id || 1;
+
   const { data: filterCount } = useGetFilterCount(+campusId);
 
   const { showDialog } = useDialogContext();
 
   const parsedValues = useMemo(() => {
     return {
-      campusId: Number(searchParams.get('campusId')) || 1,
+      campusId: Number(searchParams.get('campusId')) || 2,
       sprout: {
         isZeropay: searchParams.get('isZeropay') === 'true',
         overFivePerson: searchParams.get('overFivePerson') === 'true',
         underPrice: searchParams.get('underPrice') === 'true',
         walkTimeWithinFiveMinutes:
           searchParams.get('walkTimeWithinFiveMinutes') === 'true',
-        isScraped: searchParams.get('isScraped') === 'true',
+        onlyScraped: searchParams.get('onlyScraped') === 'true',
       },
       foodTypeList: searchParams.get('foodTypeList')
         ? searchParams.get('foodTypeList')!.split(',')
@@ -67,7 +73,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         overFivePerson: false,
         underPrice: false,
         walkTimeWithinFiveMinutes: false,
-        isScraped: false,
+        onlyScraped: false,
       },
       foodTypeList: [],
     },

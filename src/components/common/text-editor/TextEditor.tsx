@@ -23,7 +23,14 @@ export default function TextEditor({
 
   const handleChange = useCallback(() => {
     if (quillRef.current) {
-      const updatedValue = quillRef.current.root.innerHTML;
+      let updatedValue = quillRef.current.root.innerHTML;
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = updatedValue;
+      if (tempDiv.innerText.trim() === '') {
+        updatedValue = '';
+      }
+
       onChange(updatedValue);
     }
   }, [onChange]);

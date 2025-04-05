@@ -198,7 +198,7 @@ export default function StoreCard({
             {isOpenForBusiness() ? '영업 중' : '영업 종료'}
           </span>
           <span className="mx-2 text-mainGray">|</span>
-          <div className="group relative flex border text-darkGray-active">
+          <div className="group relative flex text-darkGray-active">
             <button
               type="button"
               onClick={e => {

@@ -1,5 +1,5 @@
-import { SessionStatus } from '@/constants/serviceConstant';
 import { SortDisplayKey } from '@/types/lounge';
+import { AppliedSessionStatusValue } from '@/types/session';
 
 export interface Option {
   id: number;
@@ -15,7 +15,7 @@ export type PaginationFilter = {
 
 export type NoticeParticipantParams = PaginationFilter & {
   sessionId: number;
-  searchParticipantStatus: SessionStatus;
+  searchParticipantStatus: AppliedSessionStatusValue;
 };
 
 /* NOTE: Store 필터 */

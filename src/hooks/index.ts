@@ -23,6 +23,9 @@ export { useHandleComment } from '@/hooks/post/useHandleComment';
 export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
 export { useHandlePostTable } from '@/hooks/post/useHandlePostTable';
 
+/* session */
+export { useHandleSessionApplicantList } from '@/hooks/session/useHandleSessionApplicantList';
+
 /* calendar */
 export { useHandleAcl } from '@/hooks/calendar/useHandleAcl';
 export { useCalendarList } from '@/hooks/calendar/useCalendarList';

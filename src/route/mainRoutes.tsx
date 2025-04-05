@@ -9,7 +9,10 @@ import UserManagement from '@/pages/admin/UserManagement';
 const MyScrapedPostList = lazy(
   () => import('@/pages/trainee/MyScrapedPostList'),
 );
-const SessionsDetail = lazy(() => import('@/pages/SessionsDetail'));
+const AppliedSessionsDetail = lazy(
+  () => import('@/pages/trainee/AppliedSessionsDetail'),
+);
+
 const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
 const Notice = lazy(() => import('@/pages/trainee/Notice'));
 const NoticeDetail = lazy(() => import('@/pages/trainee/NoticeDetail'));
@@ -25,6 +28,13 @@ const Store = lazy(() => import('@/pages/trainee/Store'));
 const StoreDetail = lazy(() => import('@/pages/trainee/StoreDetail'));
 const AdminHome = lazy(() => import('@/pages/admin/AdminHome'));
 const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
+
+const SessionApplicantManagementDetail = lazy(
+  () => import('@/pages/admin/SessionApplicantManagementDetail'),
+);
+const SessionApplicantManagement = lazy(
+  () => import('@/pages/admin/SessionApplicantManagement'),
+);
 
 const mainRoutes: RouteObject[] = [
   {
@@ -55,8 +65,8 @@ const mainRoutes: RouteObject[] = [
         ],
       },
       {
-        path: '/notice/session-status',
-        element: <SessionsDetail />,
+        path: 'session-status',
+        element: <AppliedSessionsDetail />,
       },
       {
         path: 'mypage',
@@ -125,7 +135,16 @@ const mainRoutes: RouteObject[] = [
       },
       {
         path: 'session-status',
-        element: <SessionsDetail />,
+        children: [
+          {
+            index: true,
+            element: <SessionApplicantManagement />,
+          },
+          {
+            path: ':postId',
+            element: <SessionApplicantManagementDetail />,
+          },
+        ],
       },
       {
         path: '*',

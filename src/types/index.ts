@@ -7,3 +7,4 @@ export * from '@/types/lounge';
 export * from '@/types/pageable';
 export * from '@/types/mypage';
 export * from '@/types/notification';
+export * from '@/types/session';

@@ -2,52 +2,53 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { SessionStatus } from '@/constants/serviceConstant';
+import { AppliedSessionStatusKey, SessionDto } from '@/types';
 
-interface Participant {
-  postParticipantid: number;
-  userId: number;
-}
-
-// 나의 세션 참가신청글
-export const useGetMyParticipationList = () => {
+/** TRAINEE API */
+export const useGetAppliedSessionList = (type = 'allList') => {
   const getMyParticipationList = async () => {
-    const { data } = await axiosInstance.get<Participant[]>(
+    const { data } = await axiosInstance.get<SessionDto.GetAppliedSessionList>(
       `/mypage/getParticipant`,
     );
-    return data;
+    if (type === 'nearList') return data.nearList;
+    return data.allList;
   };
   return useQuery({
-    queryKey: ['useGetMyParticipationList'],
+    queryKey: ['useGetAppliedSessionList', type],
     queryFn: getMyParticipationList,
   });
 };
 
-export const useGetSessionStatus = ({
+/** ADMIN API */
+export const useGetSessionApplicantList = ({
   sessionId,
   page = 1,
   size = 10,
-  searchParticipantStatus = 'WAIT',
+  searchParticipantStatus,
 }: {
   sessionId: number;
   page?: number;
   size?: number;
-  searchParticipantStatus?: SessionStatus;
+  searchParticipantStatus?: AppliedSessionStatusKey;
 }) => {
-  const getSessionStatus = async () => {
-    const { data } = await axiosInstance.get(`/notices/sessions/${sessionId}`, {
-      params: {
-        sessionId,
-        page,
-        size,
-        searchParticipantStatus,
-      },
-    });
+  const getSessionApplicantList = async () => {
+    const { data } =
+      await axiosInstance.get<SessionDto.GetSessionApplicantList>(
+        `/notices/sessions/${sessionId}`,
+        {
+          params: {
+            sessionId,
+            page,
+            size,
+            searchParticipantStatus,
+          },
+        },
+      );
     return data;
   };
-  return useQuery({
-    queryKey: ['useGetSessionStatus', sessionId],
-    queryFn: getSessionStatus,
+  return useQuery<SessionDto.GetSessionApplicantList>({
+    queryKey: ['useGetSessionApplicantList', sessionId],
+    queryFn: getSessionApplicantList,
     enabled: !!Number(sessionId),
   });
 };

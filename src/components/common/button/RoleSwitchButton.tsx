@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 interface RoleSwitchButtonProps {
-  title: '관리자로 전환' | '학생으로 전환';
+  title: '관리자로 전환' | '플랫폼으로 전환';
 }
 
 export default function RoleSwitchButton({ title }: RoleSwitchButtonProps) {

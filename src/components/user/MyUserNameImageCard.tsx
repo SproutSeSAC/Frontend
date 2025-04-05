@@ -3,14 +3,16 @@ import {
   useGetUserProfile,
 } from '@/services/auth/authQueries';
 
+import { rolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 
 import Icon from '@/components/common/Icon';
 import EditButton from '@/components/common/button/EditButton';
+import Tag from '@/components/common/tag/Tag';
 import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
 
-export default function UserNameImageCard() {
+export default function MyUserNameImageCard() {
   const { data = initialUserProfile, isLoading } = useGetUserProfile();
 
   const {
@@ -21,6 +23,7 @@ export default function UserNameImageCard() {
     email,
     profileImageUrl,
     nickname,
+    role,
   } = data;
 
   const userInfoList = [
@@ -87,7 +90,10 @@ export default function UserNameImageCard() {
 
         <div className="flex flex-1 flex-col gap-2">
           <span className="font-medium">{name}</span>
-          <span className="text-darkGray">@{nickname}</span>
+          <div className="flex gap-1">
+            <span className="text-darkGray">@{nickname}</span>
+            <Tag text={rolesObj[role]} roleKey={role} />
+          </div>
         </div>
 
         <EditButton

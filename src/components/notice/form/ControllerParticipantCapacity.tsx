@@ -17,7 +17,6 @@ export default function ControllerParticipantCapacity() {
         field: { onChange, value: participantCapacityNum },
         fieldState: { error },
       }) => {
-        /* 10000 이상을 값으로 보내면 '제한 없음' */
         const isLimited = participantCapacityNum >= 10000;
 
         return (

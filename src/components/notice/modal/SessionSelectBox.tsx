@@ -8,6 +8,7 @@ interface SessionSelectBoxProps {
   session: NoticeSession;
   isSelected: boolean;
   disabled: boolean;
+  errorMsg?: string;
 }
 
 export default function SessionSelectBox({
@@ -15,6 +16,7 @@ export default function SessionSelectBox({
   session,
   isSelected,
   disabled,
+  errorMsg,
 }: SessionSelectBoxProps) {
   const initialSessionStatus = session.currentStatus === null;
 
@@ -30,31 +32,33 @@ export default function SessionSelectBox({
 
   const initialStyle =
     initialSessionStatus || !isSelected
-      ? 'bg-white [&>h4]:text-darkGray-active'
+      ? 'bg-white [&>h3]:text-black [&>h4]:text-darkGray-active border-darkGray'
       : '';
   const isSelectedStyle = isSelected
-    ? 'bg-mainGreen text-white [&>h4]:text-lightGray'
+    ? 'bg-darkGreen text-white [&>h4]:text-lightGray border-darkGray'
     : '';
 
   const boxStyle = isSelected ? isSelectedStyle : initialStyle;
 
   const disabledStyle = disabled
-    ? '!bg-mainGray !text-darkGray-active !cursor-not-allowed'
+    ? '!bg-mainGray !text-darkGray !cursor-not-allowed border-mainGray'
     : '';
 
   return (
-    <button
-      type="button"
-      aria-label={`수업일시: ${sessionDate} ${sessionTime}`}
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex cursor-pointer flex-col gap-1 rounded-2xl border border-darkGray px-5 py-6 ${boxStyle} ${disabledStyle}`}
-    >
-      <h4>수업 일시</h4>
-      <span>{sessionDate}</span>
-      <span>{sessionTime}</span>
-
-      {disabled && <ErrorMsg msg="정원이 다 찼습니다." />}
-    </button>
+    <>
+      <button
+        type="button"
+        aria-label={`수업일시: ${sessionDate} ${sessionTime}`}
+        onClick={onClick}
+        disabled={disabled}
+        className={`flex w-full cursor-pointer flex-col gap-1 rounded-2xl border px-5 py-6 ${boxStyle} ${disabledStyle}`}
+      >
+        <h3 className="mb-1 text-lg font-medium">{session.ordinal}회차</h3>
+        <h4>수업 일시</h4>
+        <span>{sessionDate}</span>
+        <span>{sessionTime}</span>
+      </button>
+      {disabled && errorMsg && <ErrorMsg msg={errorMsg} className="pl-2" />}
+    </>
   );
 }

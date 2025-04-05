@@ -12,9 +12,9 @@ import MainView from '@/layouts/MainView';
 
 import Title from '@/components/common/Title';
 import Faq from '@/components/faq/Faq';
-import ApplicationListOfSessionsCard from '@/components/mypage/ApplicationListOfSessionsCard';
 import MyCollection from '@/components/mypage/MyCollection';
-import UserNameImageCard from '@/components/user/UserNameImageCard';
+import MyPageAppliedSessionCard from '@/components/mypage/MyPageAppliedSessionCard';
+import MyUserNameImageCard from '@/components/user/MyUserNameImageCard';
 
 export default function MyPage() {
   const { data: { name } = initialUserProfile, isLoading } =
@@ -29,20 +29,20 @@ export default function MyPage() {
       <section className="mb-10 grid grid-cols-3 gap-x-9">
         <div className="col-span-2">
           <Title title="회원 정보 수정" className="mb-[14px]" />
-          <UserNameImageCard />
+          <MyUserNameImageCard />
         </div>
 
         <div className="col-span-1">
           <div className="mb-3 flex items-center justify-between">
             <Title title="특강 / 행사 신청 내역" />
             <Link
-              to="/notice/session-status"
+              to="/session-status"
               className="text-sm font-medium text-darkGray"
             >
               더보기
             </Link>
           </div>
-          <ApplicationListOfSessionsCard />
+          <MyPageAppliedSessionCard />
         </div>
       </section>
 
