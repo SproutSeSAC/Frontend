@@ -2,10 +2,13 @@ import { useCallback } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import {
   initialUserProfile,
   useGetUserProfile,
 } from '@/services/auth/authQueries';
+import { usePatchNoticeStatus } from '@/services/post/noticeMutations';
 import { useDeleteMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 
@@ -17,7 +20,7 @@ import {
   useHandleScrap,
 } from '@/hooks';
 import { NoticeDto } from '@/types';
-import { findCurrNotice } from '@/utils';
+import { findCurrNotice, hasAdmin } from '@/utils';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 import LoopLoading from '@/components/common/LoopLoading';
@@ -27,7 +30,7 @@ import CommentTemplate from '@/components/common/post-template/CommentTemplate';
 import PostDetailsTemplate from '@/components/common/post-template/PostDetailsTemplate';
 import Tag from '@/components/common/tag/Tag';
 import NoticeApplicationInfoTemplate from '@/components/notice/NoticeApplicationInfoTemplate';
-import NoticeModal from '@/components/notice/modal/NoticeModal';
+import SessionApplicationModal from '@/components/notice/modal/SessionApplicationModal';
 
 export default function NoticeDetail() {
   const { postId: id } = useParams();
@@ -79,50 +82,72 @@ export default function NoticeDetail() {
     invalidateQueryKeys: ['useGetInfiniteNoticeList'],
   });
 
-  const applySession = useCallback(() => {
-    if (
-      noticeDetail &&
-      findCurrNotice(noticeDetail.noticeType)?.needExtraInfo
-    ) {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: changeNoticeStatus } = usePatchNoticeStatus({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetPostDetail', postId],
+      });
+    },
+  });
+
+  const sessionActionList = useCallback(() => {
+    if (noticeDetail && noticeDetail.sessions) {
       const { sessions, participantCapacity, applicationEndDateTime } =
         noticeDetail;
 
-      if (
-        sessions &&
-        (sessions?.length || 0) > 0 &&
-        participantCapacity &&
-        applicationEndDateTime
-      ) {
-        if (sessions[0].currentStatus === null) {
-          const actionToApply = {
-            label: '참여하기',
-            onClick: () => {
-              showDialog({
-                key: 'APPLICATION-NOTICE',
-                element: (
-                  <NoticeModal
-                    participantCapacity={participantCapacity}
-                    sessions={sessions}
-                  />
-                ),
-              });
-            },
-            className: 'bg-mainGreen text-white disabled:bg-mainGray-hover',
-            disabled:
-              new Date(applicationEndDateTime).getTime() < new Date().getTime(),
-          };
-          return [actionToApply];
-        }
-        const applicationComplete = {
-          label: '신청 완료',
-          className: 'bg-mainGray-hover text-white',
-          disabled: true,
+      if (applicationEndDateTime && participantCapacity) {
+        const isEndApplication =
+          new Date(applicationEndDateTime).getTime() < new Date().getTime();
+
+        const applySessionList = {
+          label: '참여하기',
+          className: 'bg-mainGreen text-white disabled:bg-mainGray-hover',
+          disabled: isEndApplication || noticeDetail.status !== 'ACTIVE',
+          onClick: () => {
+            showDialog({
+              key: 'APPLICATION-NOTICE',
+              element: (
+                <SessionApplicationModal
+                  participantCapacity={participantCapacity}
+                  sessions={sessions}
+                  postId={postId}
+                />
+              ),
+            });
+          },
         };
-        return [applicationComplete];
+
+        const toggleNoticeStatus = {
+          label:
+            noticeDetail.status === 'ACTIVE'
+              ? '신청 마감하기'
+              : '다시 신청받기',
+          className: 'bg-mainBlue-active text-white disabled:bg-mainGray-hover',
+          disabled: isEndApplication,
+          onClick: () => {
+            changeNoticeStatus({ noticeId: noticeDetail.id });
+          },
+        };
+
+        const currAdminWriter =
+          hasAdmin(noticeDetail.writer.role) &&
+          noticeDetail.writer.userId === userProfile.userId;
+
+        return currAdminWriter
+          ? [applySessionList, toggleNoticeStatus]
+          : [applySessionList];
       }
     }
-    return undefined;
-  }, [noticeDetail, showDialog]);
+    return [];
+  }, [
+    changeNoticeStatus,
+    noticeDetail,
+    postId,
+    showDialog,
+    userProfile.userId,
+  ]);
 
   const onBackClick = () => navigate('/notice');
 
@@ -152,7 +177,7 @@ export default function NoticeDetail() {
             <div className="mt-12 flex gap-2">
               {noticeDetail?.writer?.role && (
                 <Tag
-                  roleType={noticeDetail?.writer?.role}
+                  roleKey={noticeDetail?.writer?.role}
                   size="big"
                   text={rolesObj[noticeDetail?.writer?.role]}
                   className="px-[10px] py-[5px]"
@@ -171,6 +196,7 @@ export default function NoticeDetail() {
                   <button className="px-2">
                     <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
                   </button>
+
                   <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
                     <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
                       {actions.map(action => (
@@ -199,10 +225,11 @@ export default function NoticeDetail() {
               createdAt={noticeDetail?.createdAt}
               viewCount={noticeDetail?.viewCount || 0}
               description={noticeDetail?.content || '-'}
-              actions={applySession()}
+              actions={sessionActionList()}
               imageNameSegment={noticeDetail?.writer?.profileUrl}
             />
           </section>
+
           <CommentTemplate postId={postId} />
         </div>
       )}

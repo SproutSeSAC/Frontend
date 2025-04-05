@@ -10,7 +10,7 @@ export default function MyScrapedPostList() {
     useGetMyScrapedPostList('내가 찜한 글');
 
   return (
-    <MainView>
+    <MainView className="mb-32">
       <Header title="내가 찜한 글" />
       <ul className="grid grid-cols-3 gap-8">
         {!isMyScrapedPostListLoading &&

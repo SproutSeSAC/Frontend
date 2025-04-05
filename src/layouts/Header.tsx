@@ -21,9 +21,15 @@ interface Props {
   title: string;
   highlight?: string;
   children?: ReactNode;
+  subTitleChildren?: ReactNode;
 }
 
-export default function Header({ title, highlight, children }: Props) {
+export default function Header({
+  title,
+  highlight,
+  children,
+  subTitleChildren,
+}: Props) {
   const { pathname } = useLocation();
   const [, setIsNotificationOpenOpen] = useAtom(notificationOpenAtom);
 
@@ -42,6 +48,8 @@ export default function Header({ title, highlight, children }: Props) {
             Seoul Software Academy
           </h2>
         )}
+
+        {subTitleChildren && subTitleChildren}
       </section>
 
       <section className="flex items-center gap-7">

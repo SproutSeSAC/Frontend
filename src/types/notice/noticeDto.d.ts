@@ -1,4 +1,4 @@
-import { SessionStatus, StatusBase } from '@/constants/serviceConstant';
+import { StatusBase } from '@/constants';
 import {
   MeetingTypeKey,
   NoticeCategoryDisplayKey,
@@ -6,6 +6,7 @@ import {
   NoticeTargetCourse,
   NoticeWriter,
 } from '@/types/notice';
+import { AppliedSessionStatusValue } from '@/types/session';
 import { HasAdminRole } from '@/types/user';
 
 import { NoticeFormSchemaType } from '@/components/notice/form/NoticeFormSchema';
@@ -101,7 +102,7 @@ interface NoticeSessionParticipantsStatus {
   content: [
     {
       userId: number;
-      status: SessionStatus;
+      status: AppliedSessionStatusValue;
       userName: string;
       nickName: string;
       profileImageUrl: string;

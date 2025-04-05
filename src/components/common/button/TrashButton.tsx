@@ -7,6 +7,7 @@ interface TrashButtonProps {
   text?: string;
   disabled?: boolean;
   className?: string;
+  onClick?: () => void;
   onConfirmClick?: () => void;
 }
 
@@ -15,6 +16,7 @@ export default function TrashButton({
   className,
   onConfirmClick,
   text = '',
+  onClick,
 }: TrashButtonProps) {
   const { hideDialog, alert } = useDialogContext();
 
@@ -49,7 +51,7 @@ export default function TrashButton({
       type="button"
       aria-label="삭제"
       className={`${disabled ? '' : 'cursor-pointer'} text-darkGray ${className}`}
-      onClick={onDeleteClick}
+      onClick={onClick || onDeleteClick}
       disabled={disabled}
     >
       {text || <FaRegTrashAlt className="h-full w-full" />}

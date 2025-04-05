@@ -1,4 +1,5 @@
 import { hasAdminRolesObj } from '@/constants/role';
+import { LIMITLESS_CAPACITY_NUM } from '@/constants/serviceConstant';
 import {
   MeetingTypeKey,
   MeetingTypeValue,
@@ -78,8 +79,6 @@ export const defaultEndDateTime = formatDate(
   date.setHours(20, 0, 0, 0),
   "yyyy-MM-dd'T'HH:mm:ss",
 );
-
-export const LIMITLESS_CAPACITY_NUM = 10000;
 
 export const specialLectureEventFormValues = {
   applicationStartDateTime: defaultStartDateTime,

@@ -82,12 +82,11 @@ export default function LoungeApplicationInfoTemplate({
   ] as const;
 
   return (
-    <ul className="mt-4 grid list-none grid-cols-2 gap-5 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
+    <ul className="mt-4 grid list-none grid-cols-2 gap-5 rounded-[20px] bg-white p-4 px-5 py-6">
       {loungeApplicationInfo.map(({ type, data }) => (
         <li key={type} className="flex items-center gap-3 text-[22px]">
-          <h4 className="border-r-solid border-r border-r-mainGray pr-3 text-mainGray">
-            {type}
-          </h4>
+          <h4 className="min-w-10 text-mainGray-active">{type}</h4>
+          <span className="mx-2 text-mainGray-active">|</span>
           {data}
         </li>
       ))}

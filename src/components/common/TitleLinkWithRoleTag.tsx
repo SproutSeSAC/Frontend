@@ -20,7 +20,7 @@ export default function TitleLinkWithRoleTag({
     <Link to={to} className="flex h-7 w-full items-center gap-1.5">
       <Tag
         size="medium"
-        roleType={roleType}
+        roleKey={roleType}
         text={rolesObj[roleType]}
         className="!rounded-md !px-[10px] py-1.5 font-medium"
       />

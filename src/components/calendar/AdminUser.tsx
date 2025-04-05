@@ -47,7 +47,7 @@ export default function AdminUser({ admin, accessRole }: AdminUserProps) {
             </span>
             <Tag
               size="small"
-              roleType={roleType}
+              roleKey={roleType}
               text={rolesObj[roleType]}
               className="mr-0.5 font-medium tracking-tighter"
             />

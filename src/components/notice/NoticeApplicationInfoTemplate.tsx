@@ -84,17 +84,20 @@ export default function NoticeApplicationInfoTemplate({
                 text={`${index + 1}회차`}
                 color="grayLight"
                 size="big"
-                className="min-w-fit !px-2.5 !py-0"
+                className="!min-w-14 !px-2.5 !py-0"
               />
-              <span className="flex-1">
-                {formatDate(item.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
-                <span className="text-darkGray-hover">
-                  {formatDate(item.sessionStartDateTime, 'a h시 mm분')} ~
-                </span>{' '}
-                <span className="text-darkGray-hover">
+              <div className="flex-1">
+                <span className="inline-block pr-2">
+                  {formatDate(item.sessionStartDateTime, 'yyyy.MM.dd')}
+                </span>
+                <span className="inline-block min-w-32 text-pretty text-darkGray-hover">
+                  {formatDate(item.sessionStartDateTime, 'a h시 mm분')}
+                </span>
+                <span className="px-2 text-darkGray-hover">~</span>
+                <span className="min-w-32 text-darkGray-hover">
                   {formatDate(item.sessionEndDateTime, 'a h시 mm분')}
                 </span>
-              </span>
+              </div>
             </li>
           ))
         : '-',
@@ -102,7 +105,7 @@ export default function NoticeApplicationInfoTemplate({
   ] as const;
 
   return (
-    <ul className="mt-4 grid list-none grid-cols-2 gap-x-6 gap-y-4 rounded-lg bg-white p-4 px-5 py-6 shadow-card">
+    <ul className="mt-4 grid list-none grid-cols-2 gap-x-6 gap-y-4 rounded-[20px] bg-white p-4 px-5 py-6">
       {noticeApplicationInfo.map(({ type, data }) => (
         <li
           key={type}

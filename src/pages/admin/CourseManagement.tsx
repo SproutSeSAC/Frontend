@@ -27,17 +27,15 @@ export default function CourseManagement() {
     <MainView>
       <Header title="교육과정 관리" />
       <TabNavigation
-        selectValue={tabName ?? 'course'}
+        selectValue={tabName ?? 'calendar'}
         tabList={COURSE_MANAGEMENT_TAB_LIST}
         onChangeValue={handleChangeValue}
         selectedStyle={{ point: 'dot', color: 'green' }}
         tabClassName="!p-0 mr-3 mt-0"
       />
-      {tabName === 'calendar' && <CalendarAclTable />}
+      {(tabName === null || tabName === 'calendar') && <CalendarAclTable />}
 
-      {(tabName === null || tabName === 'course') && (
-        <PreparingPage className="mt-5 !rounded-3xl" />
-      )}
+      {tabName === 'course' && <PreparingPage className="mt-5 !rounded-3xl" />}
     </MainView>
   );
 }

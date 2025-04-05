@@ -78,7 +78,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                     </span>
                     <Tag
                       text={rolesObj[role]}
-                      roleType={role}
+                      roleKey={role}
                       className="!py-1"
                     />
                   </div>

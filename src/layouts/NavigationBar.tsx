@@ -107,11 +107,11 @@ export default function NavigationBar({ type }: NavigationBarProps) {
       ),
     },
     {
-      title: '특강/행사 신청 현황 이동',
+      title: '특강 / 행사 신청 현황 이동',
       to: '/admin/session-status',
       icon: (
         <NoticeManagementIcon
-          className={`${iconStyle} ${pathname === '/admin/session-status' ? 'fill-mainGreen' : 'fill-mainGray'}`}
+          className={`${iconStyle} ${pathname.includes('/admin/session-status') ? 'fill-mainGreen' : 'fill-mainGray'}`}
         />
       ),
     },

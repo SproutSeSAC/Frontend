@@ -1,58 +1,35 @@
-export interface SessionCardProps {
-  session: {
-    id: number;
-    title: string;
-    location: string;
-    date: string;
-    meetingType: string;
-    currentStatus: string;
-    startTime: date;
-    endTime: date;
-    participantId: number;
-    applicationStartDateTime: date;
-    applicationEndDateTime: date;
-    participantCapacity: number;
-    satisfactionSurvey: string;
+import { PageableType } from '@/types/pageable';
+import { RoleKey } from '@/types/user';
+
+export namespace SessionDto {
+  export type GetSessionApplicantList = PageableType & { content: Applicant[] };
+  export type GetAppliedSessionList = {
+    allList: AppliedSession[];
+    nearList: AppliedSession[];
   };
-  showToast: (message: string, duration?: number) => void;
 }
 
-export interface Session {
-  id: number;
+type Applicant = {
+  noticeParticipantId: number;
+  userId: number;
+  userName: string;
+  nickName: string;
+  phoneNumber: string;
+  email: string;
+  profileImageUrl: string;
+  status: 'WAIT' | 'PARTICIPANT' | 'REJECT';
+  campuses: { id: number; name: string }[];
+  courses: { id: number; name: string }[];
+  applicationTime?: string;
+};
+
+type AppliedSession = {
   title: string;
-  content: string;
-  noticeType: string;
-  viewCount: number;
-  status: string;
-  createdAt: string;
-  applicationStartDateTime: string;
-  applicationEndDateTime: string;
-  meetingPlace: string;
-  meetingType: string;
-  satisfactionSurvey: string;
-  participantCapacity: number;
-  writer: {
-    userId: number;
-    userName: string;
-    profileUrl: string;
-    role: string;
-  };
-  targetCourses: Array<{
-    courseId: number;
-    courseName: string;
-  }>;
-  sessions: Array<{
-    sessionId: number;
-    sessionStartDateTime: string;
-    sessionEndDateTime: string;
-    participantCount: number;
-    currentStatus: SessionStatus;
-  }>;
-  allList?: {
-    id: number;
-    title: string;
-    participantId: number;
-    startDateTime: string;
-    endDateTime: string;
-  }[];
-}
+  postId: number;
+  sessionId: number;
+  participantId: number;
+  startDateTime: string;
+  endDateTime: string;
+  role: RoleKey;
+  ordinal: number;
+};

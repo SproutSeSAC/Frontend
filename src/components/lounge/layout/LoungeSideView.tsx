@@ -10,33 +10,39 @@ export default function LoungeSideView() {
 
   return (
     <div className="flex flex-col gap-10">
-      <div className="max-h-[90vh] min-h-60 overflow-y-scroll rounded-[20px] bg-white px-4 py-5">
+      <div className="max-h-[90vh] min-h-60 overflow-y-scroll rounded-[20px] bg-white px-5 py-6">
         <Title
           as="h2"
           title="곧 마감합니다!"
-          className="mb-6"
+          className="mb-3"
           highlight="마감"
         />
 
         {endingTomorrowProjectList &&
         endingTomorrowProjectList?.length !== 0 ? (
-          <div className="flex flex-col gap-6">
+          <ul className="flex flex-col gap-3.5">
             {endingTomorrowProjectList?.map(project => (
-              <Link
+              <li
                 key={project.projectId}
-                to={`/lounge/post/${project.projectId}`}
+                className="border-t pt-3.5 first:border-t-0"
               >
-                <div className="text-darkGray-active">{project.title}</div>
-                <div className="mt-2 flex items-center gap-2">
-                  <UserImage
-                    className="size-[22px]"
-                    imageNameSegment={project.imgUrl}
-                  />
-                  <div>{project.userNickname}</div>
-                </div>
-              </Link>
+                <Link to={`/lounge/post/${project.projectId}`}>
+                  <h2 className="line-clamp-3 text-darkGray-hover">
+                    {project.title}
+                  </h2>
+                  <div className="mt-2 flex items-center gap-2">
+                    <UserImage
+                      className="size-[22px]"
+                      imageNameSegment={project.imgUrl}
+                    />
+                    <span className="tracking-tight">
+                      @ {project.userNickname}
+                    </span>
+                  </div>
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         ) : (
           <span className="inline-block w-full py-10 text-center text-mainGray-active">
             곧 마감하는 프로젝트가 없어요!

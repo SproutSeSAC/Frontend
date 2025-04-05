@@ -62,6 +62,53 @@ export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
   });
 };
 
+export const useGetInfiniteSessionNoticeList = (
+  filterParams: Pick<NoticeFilter, 'keyword' | 'size'>,
+) => {
+  return useInfiniteQuery({
+    queryKey: ['useGetInfiniteSessionNoticeList', filterParams],
+    queryFn: async ({ pageParam = 1 }) => {
+      const offset = (pageParam - 1) * filterParams.size;
+
+      const [specialLectureRes, eventRes] = await Promise.all([
+        axiosInstance.get<NoticeDto.GetNoticeList>(`/notices`, {
+          params: {
+            ...filterParams,
+            noticeType: 'SPECIAL_LECTURE',
+            offset,
+            page: pageParam,
+          },
+        }),
+        axiosInstance.get<NoticeDto.GetNoticeList>(`/notices`, {
+          params: {
+            ...filterParams,
+            noticeType: 'EVENT',
+            offset,
+            page: pageParam,
+          },
+        }),
+      ]);
+
+      const sessionNoticeList = [
+        ...specialLectureRes.data.notices,
+        ...eventRes.data.notices,
+      ];
+
+      const hasNextPage =
+        specialLectureRes.data.notices.length > 0 ||
+        eventRes.data.notices.length > 0;
+
+      return {
+        notices: sessionNoticeList,
+        currentPage: pageParam,
+        nextPage: hasNextPage ? pageParam + 1 : undefined,
+      };
+    },
+    getNextPageParam: lastPage => lastPage.nextPage,
+    initialPageParam: 1,
+  });
+};
+
 export const useGetThisWeekNoticeList = () => {
   const getThisWeekNotice = async () => {
     const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
@@ -94,7 +141,7 @@ export const useGetCloseSoonNoticeList = (params: {
   };
 
   return useQuery({
-    queryKey: ['useGetCloseSoonNoticeList'],
+    queryKey: ['useGetCloseSoonNoticeList', params],
     queryFn: getEndingSoonNoticeList,
   });
 };

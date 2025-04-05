@@ -14,8 +14,8 @@ import {
   myCollectionList,
   myCommentTypeOptionList,
   myPostTypeOptionList,
+  postTypeObj,
 } from '@/constants';
-import { postTypeObj } from '@/constants/serviceConstant';
 import { useDialogContext, useHandlePostTable } from '@/hooks';
 import { formatDate } from '@/utils';
 import { useAtom } from 'jotai';

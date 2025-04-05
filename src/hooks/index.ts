@@ -24,8 +24,7 @@ export { useHandlePostActions } from '@/hooks/post/useHandlePostActions';
 export { useHandlePostTable } from '@/hooks/post/useHandlePostTable';
 
 /* session */
-export { useApplicants } from '@/hooks/session/useApplicants';
-export { useCancelParticipant } from '@/hooks/session/useCancelParticipant';
+export { useHandleSessionApplicantList } from '@/hooks/session/useHandleSessionApplicantList';
 
 /* calendar */
 export { useHandleAcl } from '@/hooks/calendar/useHandleAcl';

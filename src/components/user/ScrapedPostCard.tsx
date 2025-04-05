@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { postTypeObj } from '@/constants/serviceConstant';
+import { postTypeObj } from '@/constants';
 import { useHandleScrap } from '@/hooks';
 import { MyScrapedPost } from '@/types/mypage/myPostDto';
 
@@ -36,7 +36,7 @@ export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {
         <div className="flex items-center justify-between">
           <Tag
             size="medium"
-            postType={card.postType}
+            postKey={card.postType}
             text={`#${postTypeObj[card.postType]}`}
             className="py-1.5"
           />

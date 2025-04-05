@@ -8,14 +8,8 @@ export type StatusBase =
   | typeof STATUS_INACTIVE
   | typeof STATUS_END;
 
-export const STATUS_WAIT = 'WAIT';
-export const STATUS_PARTICIPANT = 'PARTICIPANT';
-export const STATUS_REJECT = 'REJECT';
-
-export type SessionStatus =
-  | typeof STATUS_WAIT
-  | typeof STATUS_PARTICIPANT
-  | typeof STATUS_REJECT;
+// 인원 "제한 없음" 기준
+export const LIMITLESS_CAPACITY_NUM = 10000;
 
 // 서비스 종류
 export const postTypeObj = {
@@ -25,5 +19,3 @@ export const postTypeObj = {
   STUDY: '스터디',
   STORE: '맛집',
 } as const;
-
-export type PostType = typeof postTypeObj;

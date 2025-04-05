@@ -53,7 +53,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
       onClick={onViewCount}
     >
       <div className="flex w-full items-center justify-between">
-        <Tag postType={ptype} size="medium" text={`#${ptypeDisplay[ptype]}`} />
+        <Tag postKey={ptype} size="medium" text={`#${ptypeDisplay[ptype]}`} />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />

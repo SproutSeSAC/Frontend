@@ -45,13 +45,13 @@ export default function StoreReportModal() {
 
   return (
     <Modal
-      className="w-1/2 min-w-[300px] max-w-[600px] p-[50px]"
+      className="min-w-[300px] p-[50px]"
       onToggleClick={hideDialog}
       title={<div className="text-2xl">맛집 제보하기</div>}
     >
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
-        className="flex flex-col gap-10"
+        className="flex flex-col gap-10 border border-red-500"
       >
         <LabeledSection label="식당 이름" className="mt-10">
           <Controller

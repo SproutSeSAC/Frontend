@@ -69,7 +69,7 @@ export const useGetEndingTomorrowProjects = () => {
     queryKey: ['useGetEndingTomorrowProjects'],
     queryFn: async () => {
       const { data } = await axiosInstance.get<LoungeDto.GetEndingTomorrowList>(
-        `/project/ending-tomorrow`,
+        `/project/ending-close`,
       );
       return data;
     },
