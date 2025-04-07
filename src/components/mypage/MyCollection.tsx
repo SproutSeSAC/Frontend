@@ -28,6 +28,7 @@ import Checkbox from '@/components/common/checkbox/Checkbox';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import TableDataCell from '@/components/common/table/TableDataCell';
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
+// import StoreModal from '@/components/store/modal/StoreModal';
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
 export const ITEMS_PER_PAGE = 3;
@@ -66,19 +67,16 @@ export default function MyCollection() {
     useGetMyScrapedPostList(currCollection);
 
   const filteredAndOrderedPostList = useMemo(() => {
-    const postList =
+    const currPostList =
       currCollection === '내가 쓴 게시글' ? myPostList : myCommentList;
 
-    const filteredList = postList?.filter(post => {
-      return checkedCategoryOptionList.some(({ key }) => {
-        const postType =
-          post.postType === 'PROJECT' ? post?.ptype : post.postType;
-        return key === postType;
-      });
+    const filteredList = currPostList?.filter(({ postType }) => {
+      return checkedCategoryOptionList.some(({ key }) => key === postType);
     });
 
     const orderedList = filteredList?.sort((a, b) => {
       const getPostTime = (createdAt: string) => new Date(createdAt).getTime();
+
       if (!isLatest) {
         return getPostTime(a.createdAt) - getPostTime(b.createdAt);
       }
@@ -104,11 +102,17 @@ export default function MyCollection() {
     (filteredAndOrderedPostList?.length || 0) / ITEMS_PER_PAGE,
   );
 
-  const handleShowDialog = async (id: number) => {
-    await showDialog({
-      key: 'MEAL-RECRUIT-CARD-TYPE',
-      element: <MealRecruitCardModal isOwner id={id} isParticipant />,
-    });
+  const handleShowDialog = async (type: 'MEAL' | 'STORE', id: number) => {
+    if (type === 'MEAL') {
+      await showDialog({
+        key: 'MEAL-RECRUIT-CARD-TYPE',
+        element: <MealRecruitCardModal isOwner id={id} isParticipant />,
+      });
+    }
+    // await showDialog({
+    //   key: 'STORE_MODAL',
+    //   element: <StoreModal storeData={storeData} />,
+    // });
   };
 
   const headerCellList = ['체크박스', '작성일', '분류', '글제목', '선택삭제'];
@@ -240,75 +244,68 @@ export default function MyCollection() {
                 <tbody>
                   {paginationList.length !== 0 ? (
                     paginationList.map(
-                      ({
-                        postId,
-                        postType,
-                        ptype,
-                        createdAt,
-                        title,
-                        linkedId,
-                      }) => (
-                        <tr key={createdAt} className="hover:bg-gray4 group">
-                          <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
-                            <Checkbox
-                              id={postType}
-                              checked={!!checkedPostIdList.includes(postId)}
-                              onChange={() => onPostCheckboxChange(postId)}
-                              inputClassName="!rounded-lg"
-                            />
-                          </TableDataCell>
+                      ({ postId, postType, createdAt, title, linkedId }) => {
+                        const linkTo = {
+                          NOTICE: `/notice/post/${postId}`,
+                          STORE: '/stores',
+                          PROJECT: `/lounge/post/${postId}`,
+                          STUDY: `/lounge/post/${postId}`,
+                        };
 
-                          <TableDataCell>
-                            {formatDate(createdAt, 'yy.MM.dd')}
-                          </TableDataCell>
+                        return (
+                          <tr key={createdAt} className="hover:bg-gray4 group">
+                            <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
+                              <Checkbox
+                                id={postType}
+                                checked={!!checkedPostIdList.includes(postId)}
+                                onChange={() => onPostCheckboxChange(postId)}
+                                inputClassName="!rounded-lg"
+                              />
+                            </TableDataCell>
 
-                          <TableDataCell>
-                            {
-                              postTypeObj[
-                                postType === 'PROJECT' ? ptype : postType
-                              ]
-                            }
-                          </TableDataCell>
+                            <TableDataCell>
+                              {formatDate(createdAt, 'yy.MM.dd')}
+                            </TableDataCell>
 
-                          <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-11 text-start">
-                            {postType !== 'MEAL' && (
-                              <Link
-                                to={
-                                  postType === 'PROJECT'
-                                    ? `/lounge/post/${postId}`
-                                    : `/notice/post/${linkedId}`
+                            <TableDataCell>
+                              {postTypeObj[postType]}
+                            </TableDataCell>
+
+                            <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-11 text-start">
+                              {postType === 'MEAL' || postType === 'STORE' ? (
+                                <button
+                                  type="button"
+                                  className="underline"
+                                  onClick={() => {
+                                    handleShowDialog(postType, linkedId);
+                                  }}
+                                >
+                                  {title}
+                                </button>
+                              ) : (
+                                <Link
+                                  to={`${linkTo[postType]}`}
+                                  className="underline"
+                                >
+                                  {title}
+                                </Link>
+                              )}
+                            </TableDataCell>
+
+                            <TableDataCell className="pr-6 [&>button]:px-2">
+                              <TrashButton
+                                className="px-1.5 py-2"
+                                onConfirmClick={() =>
+                                  onDeleteConfirmClick(currCollection, [postId])
                                 }
-                                className="underline"
-                              >
-                                {title}
-                              </Link>
-                            )}
-                            {postType === 'MEAL' && (
-                              <button
-                                type="button"
-                                className="underline"
-                                onClick={() => {
-                                  handleShowDialog(linkedId);
-                                }}
-                              >
-                                {title}
-                              </button>
-                            )}
-                          </TableDataCell>
-
-                          <TableDataCell className="pr-6 [&>button]:px-2">
-                            <TrashButton
-                              className="px-1.5 py-2"
-                              onConfirmClick={() =>
-                                onDeleteConfirmClick(currCollection, [postId])
-                              }
-                              disabled={
-                                isDeletePostPending || isDeleteCommentPending
-                              }
-                            />
-                          </TableDataCell>
-                        </tr>
-                      ),
+                                disabled={
+                                  isDeletePostPending || isDeleteCommentPending
+                                }
+                              />
+                            </TableDataCell>
+                          </tr>
+                        );
+                      },
                     )
                   ) : (
                     <tr>

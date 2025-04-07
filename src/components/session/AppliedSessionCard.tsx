@@ -73,23 +73,15 @@ export default function AppliedSessionCard({
           className="absolute right-[5%] top-[8%]"
         />
 
-        <div className="flex items-center gap-2">
-          <Tag
-            size="big"
-            text={appliedSessionStatusObj[currentStatus]}
-            statusKey={currentStatus}
-            className="!w-[86px] justify-center"
-          />
-          <Tag
-            size="big"
-            text={`${currSession.ordinal}회차`}
-            color="lightGreen"
-            className="!w-[86px] justify-center"
-          />
-        </div>
+        <Tag
+          size="big"
+          text={appliedSessionStatusObj[currentStatus]}
+          statusKey={currentStatus}
+          className="!w-[86px] justify-center"
+        />
 
         <h4 className="mt-3 whitespace-nowrap text-xl font-medium text-black">
-          {noticeDetail?.title}
+          {noticeDetail?.title} {currSession.ordinal}회차
         </h4>
 
         <ul className="mt-3 flex flex-col gap-1.5 text-sm font-normal text-darkGray">

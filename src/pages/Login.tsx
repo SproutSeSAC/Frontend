@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import Logo2 from '@/assets/images/sprout-logo2.png';
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants';
+import { ACCESS_TOKEN_KEY } from '@/constants';
 import Logo from '@/layouts/Logo';
 import { setCookie } from '@/utils';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function Login() {
   const navigate = useNavigate();
+
   const handleGoogle = async () => {
     window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
   };
@@ -23,16 +24,14 @@ export default function Login() {
         },
       );
 
-      const { access_token: accessToken, refresh_token: refreshToken } =
-        response.data;
+      const { access_token: accessToken } = response.data;
 
-      if (!accessToken || !refreshToken) {
+      if (!accessToken) {
         alert('로그인에 실패했습니다.');
         return;
       }
 
       setCookie(ACCESS_TOKEN_KEY, accessToken, 1);
-      setCookie(REFRESH_TOKEN_KEY, refreshToken, 1);
 
       navigate('/');
     } catch (error) {

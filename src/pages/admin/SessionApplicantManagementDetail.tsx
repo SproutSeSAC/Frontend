@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { useGetPostDetail } from '@/services/post/postQueries';
 
@@ -7,29 +7,49 @@ import {
   SESSION_TABLE_HEADERS,
   appliedSessionStatusObj,
 } from '@/constants';
-import { useHandleSessionApplicantList } from '@/hooks';
+import { useHandleSessionApplicantList, useHandleTabNavigation } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import {
   AppliedSessionStatusKey,
+  AppliedSessionStatusValue,
   NoticeDto,
-  NoticeSession,
   SessionStatusKey,
 } from '@/types';
 import { formatDate } from '@/utils';
 import { BsCalendar, BsClock } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
+import TabNavigation from '@/components/common/TabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 
 export default function SessionApplicantManagementDetail() {
-  const {
-    state: { session, postId },
-  } = useLocation() as { state: { session: NoticeSession; postId: number } };
+  const { postId } = useParams();
+
+  const [searchParams] = useSearchParams();
+
+  const currSessionId = searchParams.get('sessionId');
+
+  const { tabName, handleChangeTab } = useHandleTabNavigation();
+
+  const tabList: {
+    text: '전체' | AppliedSessionStatusValue;
+    type: 'ALL' | AppliedSessionStatusKey;
+  }[] = [
+    { text: '전체', type: 'ALL' },
+    { text: '대기', type: 'WAIT' },
+    { text: '승인', type: 'PARTICIPANT' },
+    { text: '반려', type: 'REJECT' },
+    { text: '종료', type: 'END' },
+  ];
 
   const { data: noticeDetail } = useGetPostDetail<NoticeDto.GetNoticeDetail>(
     +postId!,
+  );
+
+  const session = noticeDetail?.sessions?.find(
+    ({ sessionId }) => sessionId === +currSessionId!,
   );
 
   const {
@@ -45,7 +65,10 @@ export default function SessionApplicantManagementDetail() {
     isAcceptPending,
     handleCheckedItemReject,
     isRejectPending,
-  } = useHandleSessionApplicantList({ sessionId: session.sessionId! });
+  } = useHandleSessionApplicantList({
+    sessionId: session?.sessionId || +currSessionId!,
+    searchParticipantStatus: tabName as AppliedSessionStatusKey,
+  });
 
   const STATUS_STYLES: Record<AppliedSessionStatusKey, string> = {
     WAIT: 'text-orange-500',
@@ -74,6 +97,8 @@ export default function SessionApplicantManagementDetail() {
     return currentStatus;
   };
 
+  if (!session) return null;
+
   return (
     <MainView className="mb-32">
       <Header
@@ -85,46 +110,55 @@ export default function SessionApplicantManagementDetail() {
               <span className="text-[15px] text-darkGray">일자</span>
               <BsCalendar size={13} className="text-darkGray" />{' '}
               <span className="text-[15px] text-darkGray">
-                {formatDate(session?.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
+                {formatDate(session.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
               </span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-[15px] text-darkGray">시간</span>
               <BsClock size={13} className="text-darkGray" />
               <span className="text-[15px] text-darkGray">
-                {formatDate(session?.sessionStartDateTime, 'HH:mm')}~
-                {formatDate(session?.sessionEndDateTime, 'HH:mm')}
+                {formatDate(session.sessionStartDateTime, 'HH:mm')}~
+                {formatDate(session.sessionEndDateTime, 'HH:mm')}
               </span>
             </div>
           </div>
         }
       />
 
-      <div className="flex items-center justify-end space-x-4">
-        <span className="mr-2 text-sm text-darkGray">
-          {applicantList?.length} /{' '}
-          {noticeDetail?.participantCapacity === LIMITLESS_CAPACITY_NUM
-            ? '제한 없음'
-            : noticeDetail?.participantCapacity}
-        </span>
-        <SquareButton
-          name={allChecked ? '선택 해제' : '모두 선택'}
-          className="!bg-mainGray-active !text-white"
-          onClick={allChecked ? onAllClearCheckedChange : onAllCheckedChange}
+      <div className="flex items-end justify-between">
+        <TabNavigation
+          tabList={tabList}
+          selectValue={tabName ?? 'ALL'}
+          onChangeValue={handleChangeTab}
+          tabClassName="!pb-3 !px-3"
         />
-        <SquareButton
-          name="승인"
-          color="lightGreen"
-          className="!text-darkGreen"
-          onClick={handleCheckedItemAccept}
-          disabled={isAcceptPending}
-        />
-        <SquareButton
-          name="반려"
-          className="!bg-red-100 !text-red-500"
-          onClick={handleCheckedItemReject}
-          disabled={isRejectPending}
-        />
+
+        <div className="flex items-center space-x-4">
+          <span className="mr-2 text-sm text-darkGray">
+            {applicantList?.length} /{' '}
+            {noticeDetail?.participantCapacity === LIMITLESS_CAPACITY_NUM
+              ? '제한 없음'
+              : noticeDetail?.participantCapacity}
+          </span>
+          <SquareButton
+            name={allChecked ? '선택 해제' : '모두 선택'}
+            className="!bg-mainGray-active !text-white"
+            onClick={allChecked ? onAllClearCheckedChange : onAllCheckedChange}
+          />
+          <SquareButton
+            name="승인"
+            color="lightGreen"
+            className="!text-darkGreen"
+            onClick={handleCheckedItemAccept}
+            disabled={isAcceptPending}
+          />
+          <SquareButton
+            name="반려"
+            className="!bg-red-100 !text-red-500"
+            onClick={handleCheckedItemReject}
+            disabled={isRejectPending}
+          />
+        </div>
       </div>
 
       {/* 표 */}

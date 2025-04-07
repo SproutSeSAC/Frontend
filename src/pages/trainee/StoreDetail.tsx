@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useCollapsibleSideView, useGetStoreList, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
@@ -14,6 +14,8 @@ import StoreListSideView from '@/components/store/detail/StoreListSideView';
 import StoreMap from '@/components/store/detail/StoreMap';
 
 export default function StoreDetail() {
+  const navigate = useNavigate();
+
   const { sideViewOpen, openSideView, closeSideView } =
     useCollapsibleSideView();
 
@@ -37,8 +39,7 @@ export default function StoreDetail() {
           <SearchInput
             name="keyword"
             placeholder="검색어를 입력해 주세요"
-            width="w-[422px]"
-            height="h-[45px]"
+            className="w-[422px]"
             onEnter={() => {
               updateQueryParams(
                 searchParams,
@@ -48,8 +49,12 @@ export default function StoreDetail() {
               );
             }}
             value={searchKeyword}
-            onChange={e => {
-              setSearchKeyword(e.target.value);
+            onChange={event => setSearchKeyword(event.target.value)}
+            resetChange={() => {
+              setSearchKeyword('');
+              const params = new URLSearchParams(searchParams);
+              params.delete('keyword');
+              navigate(`/stores/detail-location`);
             }}
           />
         </Header>

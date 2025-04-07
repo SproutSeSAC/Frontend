@@ -8,10 +8,12 @@ export default function SmallCalendarBottomEvent({
   title,
 }: SmallCalendarBottomEventProps) {
   return (
-    <li className="line-clamp-1">
-      <span className="tracking-tight text-mainGray-active">{date}</span>
-      <span className="mx-2 text-mainGray-active">|</span>
-      <span className="tracking-tight">{title}</span>
+    <li className="line-clamp-1 flex items-center">
+      <span className="min-w-[142px] tracking-tight text-mainGray-active">
+        {date}
+      </span>
+      <span className="ml-1.5 mr-2 text-mainGray-active">|</span>
+      <span className="truncate tracking-tight">{title}</span>
     </li>
   );
 }

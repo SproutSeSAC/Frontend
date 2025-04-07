@@ -5,6 +5,8 @@ export { useFilterData } from '@/hooks/common/useFilterData';
 export { useTechStackList } from '@/hooks/common/useTechStackList';
 export { useObserver } from '@/hooks/common/useObserver';
 export { useHandleImage } from '@/hooks/common/useHandleImage';
+export { useHandleTabNavigation } from '@/hooks/common/useHandleTabNavigation';
+export { useDebounce } from '@/hooks/common/useDebounce';
 
 /* profile */
 export { useUpdateProfile } from '@/hooks/profile/useUpdateProfile';

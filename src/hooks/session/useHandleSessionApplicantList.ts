@@ -14,6 +14,7 @@ import { Applicant, AppliedSessionStatusKey } from '@/types';
 
 interface UseHandleSessionApplicantListProps {
   sessionId: number;
+  searchParticipantStatus?: AppliedSessionStatusKey;
 }
 
 const initialApplicantList = {
@@ -26,6 +27,7 @@ const initialApplicantList = {
 
 export const useHandleSessionApplicantList = ({
   sessionId,
+  searchParticipantStatus,
 }: UseHandleSessionApplicantListProps) => {
   const [checkedList, setCheckedList] = useState<
     { participantId: number; status: AppliedSessionStatusKey }[]
@@ -42,6 +44,7 @@ export const useHandleSessionApplicantList = ({
     sessionId,
     page: 1,
     size: 10,
+    searchParticipantStatus,
   });
 
   const { mutateAsync: acceptApplicant, isPending: isAcceptPending } =

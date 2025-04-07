@@ -20,16 +20,25 @@ export const useGetMyPostList = (collection: Collection) => {
 
 export const useGetMyScrapedPostList = (collection: Collection) => {
   const getMyScrapedPostList = async () => {
-    const { data } = await axiosInstance.get<myPostDto.GetMyScrapedPostList>(
-      `/mypage/getScrap`,
-      {
-        params: {
-          page: 0,
-          size: 20,
+    const { data: postList } =
+      await axiosInstance.get<myPostDto.GetMyScrapedPostList>(
+        `/mypage/getScrap`,
+        {
+          params: {
+            page: 0,
+            size: 20,
+          },
         },
-      },
-    );
-    return data;
+      );
+    return {
+      ...postList,
+      content: postList.content.map(({ postType, ptype, ...rest }) => {
+        return {
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        };
+      }),
+    };
   };
   return useQuery({
     queryKey: ['useGetMyScrapedPostList'],
@@ -44,13 +53,13 @@ export const useGetMyCommentList = (collection: Collection) => {
       await axiosInstance.get<myPostDto.GetMyCommentList>(
         `/mypage/getComments`,
       );
-    return data.map(({ userNickname, content, ...rest }) => ({
+    return data.map(({ userNickname, content, postType, ptype, ...rest }) => ({
       ...rest,
+      postType: postType === 'PROJECT' ? ptype : postType,
       title: content,
       createdNickName: userNickname,
-      ptype: 'NOTICE' as const,
       linkedId: rest.postId,
-      postId: rest.commentId,
+      postId: rest.postId,
     }));
   };
   return useQuery({

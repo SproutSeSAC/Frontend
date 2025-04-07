@@ -50,16 +50,10 @@ export default function ManagingSessionCardList({
           statusKey={getSessionStatus(applicationEndDateTime!)}
           className="!w-[86px] justify-center"
         />
-        <Tag
-          size="big"
-          text={`${session.ordinal}회차`}
-          color="grayLight"
-          className="justify-center"
-        />
         {getSessionStatus(applicationEndDateTime!) === 'ACTIVE' && (
           <Tag
             size="big"
-            text={`D${getDDay(applicationEndDateTime!)}`}
+            text={`마감 D${getDDay(applicationEndDateTime!)}`}
             color="lightGreen"
             className="justify-center"
           />
@@ -67,7 +61,7 @@ export default function ManagingSessionCardList({
       </div>
 
       <h4 className="mt-3 line-clamp-1 whitespace-nowrap text-pretty text-xl font-medium text-black">
-        {title}
+        {title} {session.ordinal}회차
       </h4>
 
       <ul className="mt-3 flex flex-col gap-1.5 overflow-hidden text-sm font-normal text-darkGray">
@@ -114,8 +108,7 @@ export default function ManagingSessionCardList({
       </ul>
 
       <Link
-        to={`${postId}`}
-        state={{ session, postId }}
+        to={`${postId}?sessionId=${session.sessionId}`}
         className="flex w-[25%] min-w-[90px] cursor-pointer items-center justify-center self-end whitespace-nowrap rounded-lg bg-darkGray px-[2%] py-[2.5%] text-sm font-normal text-white hover:bg-darkGray-hover active:bg-darkGray-active"
       >
         참여자 조회

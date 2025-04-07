@@ -8,11 +8,11 @@ import { useGetJobList } from '@/services/specifications/specificationsQueries';
 import { progressList, sortList } from '@/constants';
 import { useFilterData, useTechStackList } from '@/hooks';
 import { LoungeProjectFilter, Progress, SortDisplayKey } from '@/types';
+import { BsArrowCounterclockwise } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
-import SquareButton from '@/components/common/button/SquareButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
@@ -22,6 +22,7 @@ import LoungeForm from '@/components/lounge/form/LoungeForm';
 const initialState: LoungeProjectFilter = {
   page: 1,
   size: 20,
+  keyword: '',
 };
 
 const initialProjectList = {
@@ -34,12 +35,12 @@ const initialProjectList = {
 
 export default function Lounge() {
   const {
-    searchRef,
     currFilter,
+    debouncedFilter,
     handleChangeKeyword,
-    handleSearchSubmit,
     handleChangeFilter,
     handleResetFilter,
+    handleResetKeyword,
   } = useFilterData({ initialState });
 
   const [searchParams] = useSearchParams();
@@ -48,66 +49,51 @@ export default function Lounge() {
   const {
     data: { projects = [], totalPages, currentPage } = initialProjectList,
     isLoading,
-  } = useGetLoungeProjectList(currFilter);
+  } = useGetLoungeProjectList(debouncedFilter);
 
   const { data: jobList } = useGetJobList();
 
   const { techStackList, isTechStackListLoading } = useTechStackList();
 
   const selectedTechStackOption = useMemo(() => {
-    const { techStack } = currFilter;
+    const { techStack } = debouncedFilter;
     return techStackList?.filter(({ id }) => techStack?.includes(id));
-  }, [currFilter, techStackList]);
+  }, [debouncedFilter, techStackList]);
 
   const selectedPositionOption = useMemo(() => {
-    const { position } = currFilter;
+    const { position } = debouncedFilter;
     const selectedPosition = jobList
       ?.filter(({ id }) => position?.includes(id))
       .map(({ id, job }) => ({ id, name: job }))?.[0];
     return selectedPosition;
-  }, [currFilter, jobList]);
+  }, [debouncedFilter, jobList]);
 
   const selectedProgressOption = useMemo(() => {
-    const { meetingType } = currFilter;
+    const { meetingType } = debouncedFilter;
     return progressList?.filter(({ key }) => meetingType?.includes(key))?.[0];
-  }, [currFilter]);
+  }, [debouncedFilter]);
 
   const selectedSortOption = useMemo(() => {
-    const { sort } = currFilter;
+    const { sort } = debouncedFilter;
     return sortList?.filter(({ key }) => sort?.includes(key))?.[0];
-  }, [currFilter]);
+  }, [debouncedFilter]);
 
   if (pType === 'EDIT') return <LoungeForm />;
 
   return (
     <>
-      <div className="mt-6 flex items-center gap-8">
-        <SearchInput
-          name="search"
-          ref={searchRef}
-          placeholder="검색어를 입력해 주세요"
-          width="w-full"
-          height="h-12"
-          onEnter={handleSearchSubmit}
-          onChange={handleChangeKeyword}
-        />
-        <div className="flex gap-2">
-          <SquareButton
-            name="검색하기"
-            onClick={handleSearchSubmit}
-            className="w-[88px] whitespace-nowrap px-3.5 py-3 text-white"
-          />
-          <button
-            onClick={handleResetFilter}
-            className="whitespace-nowrap rounded-lg bg-darkGray px-3.5 py-3 text-white"
-          >
-            필터 초기화
-          </button>
-        </div>
-      </div>
+      <SearchInput
+        name="search"
+        value={currFilter.keyword}
+        placeholder="검색어를 입력해 주세요"
+        onChange={handleChangeKeyword}
+        resetChange={handleResetKeyword}
+        inputStyle="square"
+        className="mt-6 w-full"
+      />
 
       <div className="relative mb-9 mt-6 flex justify-between">
-        <div className="flex gap-4">
+        <div className="mr-auto flex gap-4">
           {!isTechStackListLoading && (
             <TechStackDropdown
               defaultLabel="기술 스택"
@@ -155,6 +141,15 @@ export default function Lounge() {
           boxShape="buttonShape"
           selectedOption={selectedSortOption}
         />
+        <button
+          onClick={handleResetFilter}
+          className="ml-4 flex items-center rounded-full border border-mainGray px-4 py-1"
+        >
+          <span className="whitespace-nowrap pr-2 text-darkGray-active">
+            필터 초기화
+          </span>
+          <BsArrowCounterclockwise className="text-darkGray-active" />
+        </button>
       </div>
 
       <ul className="mb-[90px] grid grid-cols-3 gap-6">
