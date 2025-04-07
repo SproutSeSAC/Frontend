@@ -27,8 +27,8 @@ import TrashButton from '@/components/common/button/TrashButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
 import TableDataCell from '@/components/common/table/TableDataCell';
+import MyCommentModal from '@/components/mypage/MyCommentModal';
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
-// import StoreModal from '@/components/store/modal/StoreModal';
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
 export const ITEMS_PER_PAGE = 3;
@@ -102,20 +102,37 @@ export default function MyCollection() {
     (filteredAndOrderedPostList?.length || 0) / ITEMS_PER_PAGE,
   );
 
-  const handleShowDialog = async (type: 'MEAL' | 'STORE', id: number) => {
+  const handleShowDialog = async (
+    type: 'MEAL' | 'STORE',
+    id: number,
+    myComment: { comment: string; nickname: string },
+  ) => {
     if (type === 'MEAL') {
       await showDialog({
         key: 'MEAL-RECRUIT-CARD-TYPE',
         element: <MealRecruitCardModal isOwner id={id} isParticipant />,
       });
+    } else {
+      await showDialog({
+        key: 'STORE_MODAL',
+        element: (
+          <MyCommentModal
+            postId={id}
+            comment={myComment.comment}
+            nickname={myComment.nickname}
+          />
+        ),
+      });
     }
-    // await showDialog({
-    //   key: 'STORE_MODAL',
-    //   element: <StoreModal storeData={storeData} />,
-    // });
   };
 
-  const headerCellList = ['체크박스', '작성일', '분류', '글제목', '선택삭제'];
+  const headerCellList = [
+    '체크박스',
+    '작성일',
+    '분류',
+    '게시글 제목',
+    '선택삭제',
+  ];
 
   return (
     <>
@@ -215,9 +232,13 @@ export default function MyCollection() {
                             />
                           </div>
                         )}
-                        {name === '글제목' && (
+                        {name === '게시글 제목' && (
                           <div className="flex w-full pl-11">
-                            <span className="block">{name}</span>
+                            <span className="block">
+                              {currCollection === '내가 쓴 댓글'
+                                ? '댓글 내용'
+                                : name}
+                            </span>
                           </div>
                         )}
                         {name === '선택삭제' && (
@@ -244,12 +265,18 @@ export default function MyCollection() {
                 <tbody>
                   {paginationList.length !== 0 ? (
                     paginationList.map(
-                      ({ postId, postType, createdAt, title, linkedId }) => {
-                        const linkTo = {
-                          NOTICE: `/notice/post/${postId}`,
-                          STORE: '/stores',
-                          PROJECT: `/lounge/post/${postId}`,
-                          STUDY: `/lounge/post/${postId}`,
+                      ({
+                        postId,
+                        postType,
+                        createdAt,
+                        title,
+                        createdNickName: nickname,
+                        linkedId,
+                      }) => {
+                        const type = {
+                          NOTICE: 'notice',
+                          PROJECT: 'lounge',
+                          STUDY: 'lounge',
                         };
 
                         return (
@@ -276,15 +303,18 @@ export default function MyCollection() {
                                 <button
                                   type="button"
                                   className="underline"
-                                  onClick={() => {
-                                    handleShowDialog(postType, linkedId);
-                                  }}
+                                  onClick={() =>
+                                    handleShowDialog(postType, linkedId, {
+                                      comment: title,
+                                      nickname,
+                                    })
+                                  }
                                 >
                                   {title}
                                 </button>
                               ) : (
                                 <Link
-                                  to={`${linkTo[postType]}`}
+                                  to={`/${type[postType]}/post/${postId}`}
                                   className="underline"
                                 >
                                   {title}

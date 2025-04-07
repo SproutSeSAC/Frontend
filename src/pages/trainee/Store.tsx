@@ -39,10 +39,12 @@ export default function Store() {
     threshold: 0.1,
   });
 
-  const onOpenModal = async (storeData: StoreType) => {
+  const onOpenModal = async (store: StoreType) => {
     await showDialog({
       key: 'STORE_MODAL',
-      element: <StoreModal onClose={hideDialog} storeData={storeData} />,
+      element: (
+        <StoreModal postId={store.postId} onClose={hideDialog} store={store} />
+      ),
     });
   };
 

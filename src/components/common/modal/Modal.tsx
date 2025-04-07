@@ -8,10 +8,10 @@ import Icon from '@/components/common/Icon';
 
 interface Props {
   onToggleClick: () => void;
-  title: string | ReactNode;
+  title?: string | ReactNode;
   children: ReactNode;
   className?: string;
-  headerType?: 'title-xIcon' | 'squareBackBtn-title';
+  headerType?: 'title-xIcon' | 'squareBackBtn-title' | 'none';
   hideClose?: boolean;
 }
 

@@ -41,7 +41,7 @@ export default function ManagingSessionCardList({
   return noticeDetail.sessions?.map(session => (
     <div
       key={session.sessionId}
-      className="group relative flex w-full min-w-[300px] cursor-default flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card"
+      className="group relative flex w-full min-w-[300px] cursor-default flex-col justify-between overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card"
     >
       <div className="flex flex-wrap items-center gap-2">
         <Tag
@@ -60,11 +60,11 @@ export default function ManagingSessionCardList({
         )}
       </div>
 
-      <h4 className="mt-3 line-clamp-1 whitespace-nowrap text-pretty text-xl font-medium text-black">
+      <h4 className="mt-3 line-clamp-2 text-xl font-medium text-black">
         {title} {session.ordinal}회차
       </h4>
 
-      <ul className="mt-3 flex flex-col gap-1.5 overflow-hidden text-sm font-normal text-darkGray">
+      <ul className="mt-3 flex flex-1 flex-col gap-1.5 overflow-hidden text-sm font-normal text-darkGray">
         <li className="flex gap-1">
           <span className="min-w-fit">
             {meetingType === 'ONLINE' ? '링크' : '장소'}

@@ -94,7 +94,7 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
   return (
     <div
       ref={cardRef}
-      className="relative z-10 flex h-[74px] w-[346px] items-center justify-between rounded-xl border border-[#f2f2f7] bg-white px-5 py-[15px] shadow-[2px_4px_12px_0px_rgba(0,0,0,0.0)]"
+      className="relative z-10 flex h-[74px] w-[346px] items-center justify-between rounded-xl border border-lightGray-active bg-white px-5 py-[15px] shadow-[2px_4px_12px_0px_rgba(0,0,0,0.0)]"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -104,45 +104,40 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
           imageNameSegment={ownerProfileImageUrl}
         />
         <div className="flex flex-col items-start justify-start">
-          <div className="max-w-[137px] overflow-x-auto whitespace-nowrap text-base font-normal text-[#2b2b2b] scrollbar-hide">
+          <h3 className="max-w-[137px] overflow-x-auto whitespace-nowrap text-base font-normal scrollbar-hide">
             {title}
-          </div>
-          <div className="text-sm font-normal tracking-tight text-[#6d6d6d]">
+          </h3>
+          <span className="text-sm font-normal tracking-tight text-darkGray-active">
             {currentMemberCount}/
             {targetMemberCount === 10000 ? '∞' : `${targetMemberCount}명`}
-          </div>
+          </span>
         </div>
       </div>
       <button
         className={`inline-flex h-[35px] w-[92px] cursor-pointer flex-col items-center justify-center rounded-lg ${buttonStyle}`}
         onClick={handleShowDialog}
       >
-        <div className="text-sm font-medium">{buttonState.text}</div>
+        <span className="text-sm font-medium">{buttonState.text}</span>
       </button>
+
       {isHovered && (
-        <div
-          className="fixed z-20 w-[346px] rounded-2xl border border-[#f2f2f7] bg-white px-4 py-6 shadow-md"
+        <ul
+          className="fixed z-20 flex w-[346px] flex-col gap-2 rounded-2xl border border-lightGray-active bg-white px-4 py-6 text-sm shadow-md"
           style={tooltipStyle}
         >
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2 text-sm">
-              <p className="flex items-center gap-2">
-                <span className="text-gray1">일정 | </span>
-                <span>
-                  {formatDate(appointmentTime, 'yyyy.MM.dd a h시 mm분')}
-                </span>
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-gray1">식당 | </span>
-                <span>{storeName}</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-gray1">만남 장소 | </span>
-                <span>{meetingPlace}</span>
-              </p>
-            </div>
-          </div>
-        </div>
+          <li className="flex items-center gap-2">
+            <span className="text-gray1">일정 | </span>
+            <span>{formatDate(appointmentTime, 'yyyy.MM.dd a h시 mm분')}</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="text-gray1">식당 | </span>
+            <span>{storeName}</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="text-gray1">만남 장소 | </span>
+            <span>{meetingPlace}</span>
+          </li>
+        </ul>
       )}
     </div>
   );

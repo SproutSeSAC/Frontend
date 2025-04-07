@@ -58,7 +58,7 @@ export const useGetFilterCount = (campusId: number) => {
   });
 };
 
-export const useGetStoreDetail = (storeId: number) => {
+export const useGetStoreDetail = (storeId?: number) => {
   return useQuery({
     queryKey: ['useGetStoreDetail', storeId],
     queryFn: async () => {
@@ -67,6 +67,7 @@ export const useGetStoreDetail = (storeId: number) => {
       );
       return data;
     },
+    enabled: !!storeId,
   });
 };
 
