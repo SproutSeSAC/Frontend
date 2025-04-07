@@ -90,15 +90,19 @@ export default function MyUserNameImageCard() {
 
         <div className="flex flex-1 flex-col gap-2">
           <span className="font-medium">{name}</span>
-          <div className="flex gap-1">
-            <span className="text-darkGray">@{nickname}</span>
-            <Tag text={rolesObj[role]} roleKey={role} />
+          <div className="inline">
+            <span className="break-all text-darkGray">@{nickname}</span>
+            <Tag
+              className="mt-2 inline h-fit w-fit py-0.5"
+              text={rolesObj[role]}
+              roleKey={role}
+            />
           </div>
         </div>
 
         <EditButton
           label="프로필 수정 버튼"
-          className="pb-10"
+          className="absolute right-6 top-8 pb-10"
           onClick={openModalClick}
         />
       </div>

@@ -143,12 +143,10 @@ export default function Lounge() {
         />
         <button
           onClick={handleResetFilter}
-          className="ml-4 flex items-center rounded-full border border-mainGray px-4 py-1"
+          className="ml-4 flex items-center rounded-full border border-mainGray bg-mainGreen px-4 py-1"
         >
-          <span className="whitespace-nowrap pr-2 text-darkGray-active">
-            필터 초기화
-          </span>
-          <BsArrowCounterclockwise className="text-darkGray-active" />
+          <span className="whitespace-nowrap pr-2 text-white">초기화</span>
+          <BsArrowCounterclockwise className="text-white" />
         </button>
       </div>
 

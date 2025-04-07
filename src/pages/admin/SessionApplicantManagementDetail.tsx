@@ -7,7 +7,11 @@ import {
   SESSION_TABLE_HEADERS,
   appliedSessionStatusObj,
 } from '@/constants';
-import { useHandleSessionApplicantList, useHandleTabNavigation } from '@/hooks';
+import {
+  useDialogContext,
+  useHandleSessionApplicantList,
+  useHandleTabNavigation,
+} from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import {
@@ -16,13 +20,14 @@ import {
   NoticeDto,
   SessionStatusKey,
 } from '@/types';
-import { formatDate } from '@/utils';
-import { BsCalendar, BsClock } from 'react-icons/bs';
+import { formatDate, getDDay } from '@/utils';
+import { BsCalendar, BsCalendar2Minus, BsClock } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import TabNavigation from '@/components/common/TabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
+import Modal from '@/components/common/modal/Modal';
 
 export default function SessionApplicantManagementDetail() {
   const { postId } = useParams();
@@ -52,6 +57,8 @@ export default function SessionApplicantManagementDetail() {
     ({ sessionId }) => sessionId === +currSessionId!,
   );
 
+  const { showToast, hideDialog, showDialog } = useDialogContext();
+
   const {
     applicantList,
     isApplicantListLoading,
@@ -61,14 +68,83 @@ export default function SessionApplicantManagementDetail() {
     onAllClearCheckedChange,
     onAllCheckedChange,
 
-    handleCheckedItemAccept,
+    acceptApplicant,
     isAcceptPending,
-    handleCheckedItemReject,
+    rejectApplicant,
     isRejectPending,
   } = useHandleSessionApplicantList({
     sessionId: session?.sessionId || +currSessionId!,
     searchParticipantStatus: tabName as AppliedSessionStatusKey,
   });
+
+  const handleCheckedItem = async (type: '승인' | '반려') => {
+    if (checkedList.length === 0) {
+      showToast('선택된 참가자가 없습니다.');
+      return;
+    }
+
+    await showDialog({
+      key: 'SESSION_MANAGEMENT_MODAL',
+      element: (
+        <Modal
+          title={`참가자 ${type}`}
+          onToggleClick={hideDialog}
+          className="flex flex-col gap-4 p-10"
+        >
+          <p className="leading-6">
+            선택한 스프들의 신청을 {type}하시겠습니까?
+          </p>
+
+          {/* <p>
+            <span className="text-mainGreen-hover">
+              {checkedList.map(user => user.name).join(', ')}
+            </span>{' '}
+            스프는{' '}
+            <span className="font-medium">
+              {type === '승인' ? '반려' : '승인'}됨에서 {type}됨
+            </span>
+            으로 상태를 변경하고 알림을 보냅니다.
+          </p> */}
+
+          {/* NOTE: 위의 문구는 만약 상태가 "대기" 인 참가자가 포함되어 있다면? */}
+
+          <div className="mt-8 flex justify-end gap-3">
+            <SquareButton
+              name={type}
+              onClick={async () => {
+                try {
+                  await Promise.all(
+                    checkedList.map(({ participantId, status }) => {
+                      const params = {
+                        sessionId: session?.sessionId || +currSessionId!,
+                        participantId,
+                      };
+
+                      if (type === '승인' && status !== 'PARTICIPANT') {
+                        return acceptApplicant(params);
+                      }
+
+                      if (type === '반려' && status !== 'REJECT') {
+                        return rejectApplicant(params);
+                      }
+
+                      return null;
+                    }),
+                  );
+                  showToast(`선택한 참가자들을 모두 ${type}했습니다.`);
+                  onAllClearCheckedChange();
+                  hideDialog();
+                } catch {
+                  showToast(`참가자 ${type} 중 오류가 발생했습니다.`);
+                }
+              }}
+            />
+            <SquareButton name="취소" onClick={hideDialog} color="gray" />
+          </div>
+        </Modal>
+      ),
+    });
+  };
 
   const STATUS_STYLES: Record<AppliedSessionStatusKey, string> = {
     WAIT: 'text-orange-500',
@@ -113,12 +189,26 @@ export default function SessionApplicantManagementDetail() {
                 {formatDate(session.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
               </span>
             </div>
+
             <div className="flex items-center gap-1">
               <span className="text-[15px] text-darkGray">시간</span>
               <BsClock size={13} className="text-darkGray" />
               <span className="text-[15px] text-darkGray">
                 {formatDate(session.sessionStartDateTime, 'HH:mm')}~
                 {formatDate(session.sessionEndDateTime, 'HH:mm')}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <span className="text-[15px] text-darkGray">마감</span>
+              <BsCalendar2Minus size={13} className="text-darkGray" />
+              <span className="text-[15px] text-darkGray">
+                {formatDate(
+                  noticeDetail?.applicationEndDateTime,
+                  'yyyy.MM.dd HH:mm',
+                )}{' '}
+                {noticeDetail?.applicationEndDateTime &&
+                  `(D${getDDay(noticeDetail?.applicationEndDateTime)})`}
               </span>
             </div>
           </div>
@@ -149,13 +239,13 @@ export default function SessionApplicantManagementDetail() {
             name="승인"
             color="lightGreen"
             className="!text-darkGreen"
-            onClick={handleCheckedItemAccept}
+            onClick={() => handleCheckedItem('승인')}
             disabled={isAcceptPending}
           />
           <SquareButton
             name="반려"
             className="!bg-red-100 !text-red-500"
-            onClick={handleCheckedItemReject}
+            onClick={() => handleCheckedItem('반려')}
             disabled={isRejectPending}
           />
         </div>
@@ -175,7 +265,7 @@ export default function SessionApplicantManagementDetail() {
       {applicantList?.length === 0 ? (
         <EmptyContent
           message="신청자가 없습니다."
-          className="h-full rounded-[20px] bg-white py-20"
+          className="h-full rounded-[20px] bg-lightGray py-20"
         />
       ) : (
         <ul className="space-y-4">
@@ -209,7 +299,11 @@ export default function SessionApplicantManagementDetail() {
                           )
                         }
                         onChange={() =>
-                          onCheckedChange({ noticeParticipantId, status })
+                          onCheckedChange({
+                            noticeParticipantId,
+                            status,
+                            userName,
+                          })
                         }
                         inputClassName="bg-white !size-5 !mr-3"
                       />
