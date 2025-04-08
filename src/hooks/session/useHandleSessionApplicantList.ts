@@ -79,9 +79,12 @@ export const useHandleSessionApplicantList = ({
     status,
     userName,
   }: Pick<Applicant, 'noticeParticipantId' | 'status' | 'userName'>) => {
-    setCheckedList(prevList => {
-      return prevList.find(({ participantId: id }) => id === newId)
-        ? prevList.filter(({ participantId: id }) => id === newId)
+    return setCheckedList(prevList => {
+      const hasParticipantId = prevList.find(
+        ({ participantId: prevId }) => prevId === newId,
+      );
+      return hasParticipantId
+        ? prevList.filter(({ participantId: prevId }) => prevId !== newId)
         : [...prevList, { participantId: newId, status, name: userName }];
     });
   };

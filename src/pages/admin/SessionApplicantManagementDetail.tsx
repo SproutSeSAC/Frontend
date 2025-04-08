@@ -28,6 +28,7 @@ import TabNavigation from '@/components/common/TabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import Modal from '@/components/common/modal/Modal';
+import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 
 export default function SessionApplicantManagementDetail() {
   const { postId } = useParams();
@@ -46,7 +47,6 @@ export default function SessionApplicantManagementDetail() {
     { text: '대기', type: 'WAIT' },
     { text: '승인', type: 'PARTICIPANT' },
     { text: '반려', type: 'REJECT' },
-    { text: '종료', type: 'END' },
   ];
 
   const { data: noticeDetail } = useGetPostDetail<NoticeDto.GetNoticeDetail>(
@@ -74,7 +74,8 @@ export default function SessionApplicantManagementDetail() {
     isRejectPending,
   } = useHandleSessionApplicantList({
     sessionId: session?.sessionId || +currSessionId!,
-    searchParticipantStatus: tabName as AppliedSessionStatusKey,
+    searchParticipantStatus:
+      tabName === 'ALL' ? undefined : (tabName as AppliedSessionStatusKey),
   });
 
   const handleCheckedItem = async (type: '승인' | '반려') => {
@@ -284,7 +285,6 @@ export default function SessionApplicantManagementDetail() {
                 const userCampuses = campuses
                   ?.map(({ name }) => name.slice(0, -3))
                   .join(', ');
-                const userCourse = courses?.[0].name;
 
                 return (
                   <li key={noticeParticipantId} className="flex items-center">
@@ -310,17 +310,19 @@ export default function SessionApplicantManagementDetail() {
                     )}
 
                     <div
-                      className={`w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:truncate [&>*]:text-center`}
+                      className={`relative w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:truncate [&>*]:text-center`}
                     >
                       <span className="text-darkGray-active">{userName}</span>
                       <span className="text-darkGray-active">
                         {`${userCampuses}캠퍼스` || '정보 없음'}
                       </span>
-                      <span className="text-darkGray-active">
-                        {courses.length > 1
-                          ? `${userCourse}외 ${courses.length - 2}`
-                          : userCourse || '정보 없음'}
-                      </span>
+
+                      <MyCourseListWithHover
+                        courseList={courses
+                          .sort((a, b) => a.id - b.id)
+                          .map(({ name }) => ({ courseTitle: name }))}
+                      />
+
                       <span className="text-darkGray-active">{email}</span>
                       <span className="text-darkGray-active">
                         {phoneNumber}
