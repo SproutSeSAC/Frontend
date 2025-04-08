@@ -29,12 +29,7 @@ export default function MyCommentModal({
   return (
     currReview &&
     !isStoreDetailLoading && (
-      <Modal
-        className="main-w-[284px] px-8 py-10"
-        onToggleClick={hideDialog}
-        hideClose
-        headerType="none"
-      >
+      <Modal onClose={hideDialog} modalSize="sm">
         <StoreReview review={currReview} />
       </Modal>
     )

@@ -19,7 +19,7 @@ export default function LoadingAlert({
 
   return createPortal(
     <section
-      className={`e fixed inset-0 z-[1000] m-auto flex h-fit w-fit min-w-[300px] max-w-[800px] flex-col items-center justify-between ${className}`}
+      className={`fixed inset-0 z-[1000] m-auto flex h-fit w-fit min-w-[300px] max-w-[800px] flex-col items-center justify-between ${className}`}
     >
       <LoopLoading />
       <p className="mt-6 rounded-full bg-lightGray-active px-5 py-2 text-lg font-medium shadow-card">

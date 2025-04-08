@@ -87,12 +87,8 @@ export default function SessionApplicantManagementDetail() {
     await showDialog({
       key: 'SESSION_MANAGEMENT_MODAL',
       element: (
-        <Modal
-          title={`참가자 ${type}`}
-          onToggleClick={hideDialog}
-          className="flex flex-col gap-4 p-10"
-        >
-          <p className="leading-6">
+        <Modal title={`참가자 ${type}`} onClose={hideDialog}>
+          <p className="mt-2 leading-6">
             선택한 스프들의 신청을 {type}하시겠습니까?
           </p>
 

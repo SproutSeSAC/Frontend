@@ -44,16 +44,12 @@ export default function StoreReportModal() {
   );
 
   return (
-    <Modal
-      className="min-w-[300px] p-[50px]"
-      onToggleClick={hideDialog}
-      title={<div className="text-2xl">맛집 제보하기</div>}
-    >
+    <Modal onClose={hideDialog} title="맛집 제보하기">
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
-        className="flex flex-col gap-10 border border-red-500"
+        className="flex flex-col gap-10"
       >
-        <LabeledSection label="식당 이름" className="mt-10">
+        <LabeledSection label="식당 이름" className="mt-4">
           <Controller
             control={control}
             name="storeName"
@@ -79,7 +75,7 @@ export default function StoreReportModal() {
               return (
                 <div className="flex flex-col">
                   <textarea
-                    className={`mt-2 w-full resize-none rounded-xl border px-4 py-3 placeholder:text-mainGray-hover focus:outline-none ${error ? 'border-[#FF3939]' : 'border-mainGray'}`}
+                    className={`w-full resize-none rounded-xl border px-4 py-3 placeholder:text-mainGray-hover focus:outline-none ${error ? 'border-[#FF3939]' : 'border-mainGray'}`}
                     placeholder="맛집 추천 사유를 입력해주세요"
                     rows={5}
                     name="맛집 추천 사유"

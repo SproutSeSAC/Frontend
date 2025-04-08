@@ -119,11 +119,7 @@ export default function SignUp() {
       showDialog({
         key: 'POLICY_TERM_KEY',
         element: (
-          <Modal
-            title={type}
-            onToggleClick={hideDialog}
-            className="rounded-xl p-4"
-          >
+          <Modal title={type} onClose={hideDialog}>
             <div
               className={`h-[70vh] w-[500px] overflow-auto ${styles.policyContainer}`}
               dangerouslySetInnerHTML={{ __html: content ?? '' }}

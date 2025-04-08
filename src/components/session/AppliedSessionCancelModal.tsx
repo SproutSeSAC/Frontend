@@ -42,12 +42,8 @@ export default function AppliedSessionCancelModal({
   });
 
   return (
-    <Modal
-      title="특강 / 행사 신청 취소"
-      onToggleClick={hideDialog}
-      className="p-12"
-    >
-      <div className="mb-3 mt-7 flex items-start justify-center gap-1.5">
+    <Modal title="특강 / 행사 신청 취소" onClose={hideDialog}>
+      <div className="my-3 flex items-start justify-center gap-1.5">
         <Tag size="medium" text={rolesObj[role]} roleKey={role} />
         <Tag size="medium" text={`${ordinal}회차`} color="grayLight" />
         <span className="mt-0.5 max-w-[330px]">{title}</span>

@@ -99,12 +99,9 @@ export default function UserNameImageModal({
   };
 
   return (
-    <Modal onToggleClick={hideDialog} title="개인정보" className="p-[50px]">
+    <Modal onClose={hideDialog} title="개인정보">
       <FormProvider {...methods}>
-        <form
-          className="mt-4 flex w-[350px] flex-col"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
           <UserImage
             previewUrl={previewUrl}
             imageNameSegment={previewUrl ? undefined : profileImageUrl}
