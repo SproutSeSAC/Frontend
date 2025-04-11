@@ -11,12 +11,7 @@ export default function LoungeSideView() {
   return (
     <div className="flex flex-col gap-10">
       <div className="max-h-[90vh] min-h-60 overflow-y-scroll rounded-[20px] bg-white px-5 py-6">
-        <Title
-          as="h2"
-          title="곧 마감합니다!"
-          className="mb-3"
-          highlight="마감"
-        />
+        <Title as="h2" title="마감 하루전!" className="mb-3" highlight="마감" />
 
         {endingTomorrowProjectList &&
         endingTomorrowProjectList?.length !== 0 ? (
@@ -44,7 +39,7 @@ export default function LoungeSideView() {
             ))}
           </ul>
         ) : (
-          <span className="inline-block w-full py-10 text-center text-mainGray-active">
+          <span className="inline-block w-full pt-14 text-center text-mainGray-active">
             곧 마감하는 프로젝트가 없어요!
           </span>
         )}

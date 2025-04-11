@@ -2,15 +2,10 @@ import { MouseEvent } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { useNotification } from '@/hooks/notification/useNotification';
-
-import { formatElapsedTime } from '@/utils/formatElapsedTime';
-
-import {
-  NOTIFICATION_ROUTE,
-  NOTIFICATION_TYPE,
-} from '@/constants/notification';
+import { NOTIFICATION_ROUTE, NOTIFICATION_TYPE } from '@/constants';
+import { useNotification } from '@/hooks';
 import { Notification } from '@/types';
+import { formatElapsedTime } from '@/utils';
 import { BsX } from 'react-icons/bs';
 import { RiCheckFill } from 'react-icons/ri';
 

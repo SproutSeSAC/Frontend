@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { storeMapDetailsAtom } from '@/atoms/storeDetailsAtom';
 
 import { useStoreMap } from '@/hooks';
@@ -16,13 +15,6 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
   const storeMapDetails = useAtomValue(storeMapDetailsAtom);
 
   const [searchParams] = useSearchParams();
-
-  // const campusId = searchParams.get('campusId') || 0;
-
-  // const { data: campusList } = useGetCampusList();
-
-  // const currCampus =
-  //   campusList?.find(campus => campus.id === +campusId) || campusList?.[0];
 
   const {
     modalOpen,
@@ -66,7 +58,11 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
       {modalOpen.open && (
         <StoreModal
           onClose={() => setModalOpen(modalOpenInitValue)}
-          storeData={
+          postId={
+            storeList.find(({ postId }) => postId === modalOpen.id)?.postId ||
+            storeList[0].postId
+          }
+          store={
             storeList.find(store => store.id === modalOpen.id) || storeList[0]
           }
         />

@@ -41,16 +41,10 @@ export default function StoreProposalEditModal() {
   );
 
   return (
-    <Modal
-      className="p-[50px]"
-      onToggleClick={() => {
-        hideDialog('STORE-PROPOSAL-EDIT-MODAL-TYPE');
-      }}
-      title={<div className="mb-4 text-2xl">정보 수정 제안하기</div>}
-    >
+    <Modal onClose={hideDialog} title="정보 수정 제안하기">
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
-        className="flex w-[716px] flex-col"
+        className="flex flex-col"
       >
         <Controller
           control={control}
@@ -59,7 +53,7 @@ export default function StoreProposalEditModal() {
             return (
               <div className="flex flex-col">
                 <textarea
-                  className={`mt-5 h-40 resize-none rounded-2xl border border-solid border-mainGray px-4 py-[10px] text-base focus:outline-none ${error && 'border-red-500'}`}
+                  className={`mt-2 h-40 resize-none rounded-2xl border border-solid border-mainGray px-4 py-[10px] text-base focus:outline-none ${error && 'border-red-500'}`}
                   placeholder="수정하려는 정보를 입력해주세요"
                   onChange={onChange}
                 />

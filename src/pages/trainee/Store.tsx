@@ -18,6 +18,7 @@ import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function Store() {
   const navigate = useNavigate();
+
   const { showDialog, hideDialog } = useDialogContext();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,10 +39,12 @@ export default function Store() {
     threshold: 0.1,
   });
 
-  const onOpenModal = async (storeData: StoreType) => {
+  const onOpenModal = async (store: StoreType) => {
     await showDialog({
       key: 'STORE_MODAL',
-      element: <StoreModal onClose={hideDialog} storeData={storeData} />,
+      element: (
+        <StoreModal postId={store.postId} onClose={hideDialog} store={store} />
+      ),
     });
   };
 
@@ -51,8 +54,7 @@ export default function Store() {
         <SearchInput
           name="keyword"
           placeholder="검색어를 입력해 주세요"
-          width="min-w-[422px] w-full"
-          height="h-12"
+          className="w-[422px]"
           onEnter={() => {
             updateQueryParams(
               searchParams,
@@ -63,6 +65,12 @@ export default function Store() {
           }}
           value={searchKeyword}
           onChange={e => setSearchKeyword(e.target.value)}
+          resetChange={() => {
+            setSearchKeyword('');
+            const params = new URLSearchParams(searchParams);
+            params.delete('keyword');
+            navigate(`/stores`);
+          }}
         />
       </Header>
 

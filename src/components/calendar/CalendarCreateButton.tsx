@@ -1,8 +1,6 @@
-import { useHandleCalendar } from '@/hooks/calendar/useHandleCalendar';
-
 import { useGetUserProfile } from '@/services/auth/authQueries';
 
-import { useDialogContext } from '@/hooks';
+import { useDialogContext, useHandleCalendar } from '@/hooks';
 import { HasSuperAdminRole } from '@/types';
 
 import SquareButton from '@/components/common/button/SquareButton';

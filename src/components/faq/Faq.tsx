@@ -1,4 +1,4 @@
-import { FAQ } from '@/constants/faq';
+import { FAQ } from '@/constants';
 import { useDialogContext } from '@/hooks';
 
 import Accordion from '@/components/common/Accordion';

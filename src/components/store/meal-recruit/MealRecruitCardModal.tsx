@@ -73,16 +73,16 @@ export default function MealRecruitCardModal({
   }, [id, queryClient, hideDialog, showToast, leaveMeal]);
 
   return (
-    !isLoading && (
+    !isLoading &&
+    data && (
       <Modal
-        className="main-w-[284px] px-8 py-10"
-        onToggleClick={hideDialog}
-        hideClose
-        title={
-          <div className="text-base font-semibold">{data?.title || '-'}</div>
-        }
+        onClose={hideDialog}
+        modalSize="sm"
+        headerType="onlyTitle"
+        headerSize="base"
+        title={data.title}
       >
-        <div className="mt-1 flex flex-col gap-2 rounded-lg bg-lightGray px-3 py-[17px] text-sm">
+        <div className="flex flex-col gap-2 rounded-lg bg-lightGray-active px-3 py-[17px] text-sm">
           <div className="flex items-center">
             <span className="meal-recruit-text-divider text-darkGray-active">
               일정

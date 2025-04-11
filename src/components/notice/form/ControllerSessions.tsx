@@ -1,5 +1,9 @@
-import { defaultEndDateTime, defaultStartDateTime } from '@/constants';
-import { hours, minutes } from '@/constants/optionList';
+import {
+  defaultEndDateTime,
+  defaultStartDateTime,
+  hours,
+  minutes,
+} from '@/constants';
 import { NoticeCategoryDisplayValue } from '@/types';
 import { formatDate } from '@/utils';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';

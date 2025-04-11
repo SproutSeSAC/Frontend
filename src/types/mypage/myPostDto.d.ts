@@ -1,6 +1,8 @@
 import { Ptype } from '@/types/lounge';
 import { RoleKey } from '@/types/user';
 
+import { PostType } from '@/components/common/tag/Tag';
+
 export namespace myPostDto {
   export type GetMyScrapedPostList = MyScrapedPostList;
   export type GetMyPostList = MyPost[];
@@ -45,18 +47,18 @@ type MyScrapedPost = {
   };
   postId: number;
   title: string;
-  postType: 'NOTICE' | 'PROJECT' | 'STUDY' | 'MEAL' | 'STORE';
+  postType: keyof PostType;
   content: string;
-  ptype: 'PROJECT' | 'MEAL';
+  ptype: Ptype;
   createdAt: string;
 };
 
 interface MyPost {
-  ptype: Ptype | 'MEAL';
+  ptype: Ptype;
   postId: number;
-  linkedId: 2;
+  linkedId: number;
   clientId: number;
-  postType: 'PROJECT' | 'MEAL';
+  postType: keyof PostType;
   title: string;
   createdAt: string;
   updatedAt: string;
@@ -78,5 +80,6 @@ type MyComment = {
   postId: number;
   content: string;
   createdAt: string;
-  postType: 'NOTICE' | 'PROJECT' | 'STUDY' | 'MEAL';
+  postType: keyof PostType;
+  ptype: Ptype;
 };

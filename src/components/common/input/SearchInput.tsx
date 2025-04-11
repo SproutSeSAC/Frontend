@@ -1,15 +1,16 @@
 import { forwardRef, useState } from 'react';
 
+import { BsX } from 'react-icons/bs';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 
 import TextInput, { InputProps } from '@/components/common/input/TextInput';
 
 interface SearchInputProps
   extends Pick<InputProps, 'name' | 'placeholder' | 'onChange' | 'value'> {
-  width: string;
-  height: string;
   onEnter?: () => void;
+  resetChange?: () => void;
   inputStyle?: 'rounded' | 'square';
+  className?: string;
 }
 
 /**
@@ -17,19 +18,20 @@ interface SearchInputProps
  * @param placeholder - 플레이스 홀더
  * @param onChange - 입력값 변경시 호출되는 함수
  * @param onEnter - 엔터키 입력(검색)시 호출되는 함수 (optional)
+ * @param className - 클래스네임 커스텀
  */
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   function SearchInput(
     {
       name,
+      value,
       placeholder,
-      width = 'w-[422px]',
-      height = 'h-[40px]',
       inputStyle = 'rounded',
       onChange,
       onEnter,
-      value,
+      resetChange,
+      className,
     }: SearchInputProps,
     ref,
   ) {
@@ -45,7 +47,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <label
-        className={`flex items-center justify-between bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${width} ${height} ${inputStyle === 'rounded' ? 'rounded-full' : 'rounded-xl'} px-4 ${!isFocus && 'text-gray-400'}`}
+        className={`flex h-12 w-[422px] items-center justify-between bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${inputStyle === 'rounded' ? 'rounded-full' : 'rounded-xl'} px-4 ${!isFocus && 'text-gray-400'} ${className}`}
         htmlFor={name}
       >
         {!isFocus && <FaMagnifyingGlass />}
@@ -59,6 +61,11 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           onEnter={handlePressEnter}
           className="ml-2 border-none px-0"
         />
+        {value !== '' && (
+          <button type="button" onClick={resetChange}>
+            <BsX className="size-7 text-darkGray-active" />
+          </button>
+        )}
       </label>
     );
   },

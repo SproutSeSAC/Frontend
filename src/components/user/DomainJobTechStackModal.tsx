@@ -107,14 +107,10 @@ export default function DomainJobTechStackModal() {
   if (isLoading) return null;
 
   return (
-    <Modal
-      onToggleClick={hideDialog}
-      title="도메인 정보"
-      className="min-w-[500px] p-10"
-    >
+    <Modal onClose={hideDialog} title="도메인 정보">
       <FormProvider {...methods}>
         <form
-          className="mt-8 flex flex-col gap-8"
+          className="mt-4 flex flex-col gap-8"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col">
@@ -135,7 +131,7 @@ export default function DomainJobTechStackModal() {
                   return (
                     <>
                       {value.length > 0 && (
-                        <ScrollContainer className="gap-5">
+                        <ScrollContainer className="gap-4" isBlurRight>
                           {value.map(({ id, domain }) => (
                             <li key={id} className="mb-3">
                               <Tag
@@ -194,7 +190,7 @@ export default function DomainJobTechStackModal() {
                   return (
                     <>
                       {value.length > 0 && (
-                        <ScrollContainer className="gap-5">
+                        <ScrollContainer className="gap-4" isBlurRight>
                           {value?.map(({ id, job }) => (
                             <li key={id} className="mb-3">
                               <Tag

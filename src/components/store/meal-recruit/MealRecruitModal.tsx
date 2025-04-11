@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostMyPost } from '@/services/post/postMutation';
 
-import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
+import { hours, minutes, recruitmentCountList } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { PostMeal } from '@/types/store/storeMealPostDto';
 import { formatDate } from '@/utils';
@@ -96,21 +96,13 @@ export default function MealRecruitModal() {
   );
 
   return (
-    <Modal
-      className="w-full max-w-[716px] p-[50px]"
-      onToggleClick={hideDialog}
-      title={
-        <>
-          <div className="mb-4 text-2xl">한끼팟 만들기</div>
-          <div className="mt-3 text-base font-normal text-mainGray-active">
-            다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
-          </div>
-        </>
-      }
-    >
+    <Modal onClose={hideDialog} title="한끼팟 만들기">
+      <div className="mb-4 text-base font-normal text-mainGray-active">
+        다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
-        className="flex flex-col pb-10"
+        className="flex flex-col"
       >
         <div className="relative mb-10 mt-4 grid grid-cols-2 gap-4 text-lg">
           <LabeledSection label="제목" className="col-span-2">

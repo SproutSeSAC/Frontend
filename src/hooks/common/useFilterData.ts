@@ -1,37 +1,46 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-export const useFilterData = <T>({ initialState }: { initialState: T }) => {
-  const [currFilter, setCurrFilter] = useState<T>(initialState);
+import { useDebounce } from '@/hooks';
+
+export const useFilterData = <T>({ initialFilter }: { initialFilter: T }) => {
+  const [currFilter, setCurrFilter] = useState<T>(initialFilter);
 
   const handleChangeFilter = useCallback((newData: Partial<T>) => {
     setCurrFilter(prev => ({ ...prev, ...newData }));
   }, []);
 
-  const searchRef = useRef<HTMLInputElement | null>(null);
-
   const handleChangeKeyword = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (searchRef.current) {
-        searchRef.current.value = e.target.value;
-      }
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newKeyword = event.target.value;
+      setCurrFilter(prev => ({ ...prev, keyword: newKeyword }));
     },
     [],
   );
 
-  const handleSearchSubmit = useCallback(() => {
-    setCurrFilter(prev => ({ ...prev, keyword: searchRef.current?.value }));
+  const handleResetFilter = useCallback(() => {
+    setCurrFilter(initialFilter);
+  }, [initialFilter]);
+
+  const handleResetKeyword = useCallback(() => {
+    setCurrFilter(prev => ({ ...prev, keyword: '' }));
   }, []);
 
-  const handleResetFilter = useCallback(() => {
-    setCurrFilter(initialState);
-  }, [initialState]);
+  const debouncedKeyword = useDebounce(
+    (currFilter as { keyword: string }).keyword,
+    700,
+  );
+
+  const debouncedFilter = {
+    ...currFilter,
+    keyword: debouncedKeyword,
+  };
 
   return {
-    searchRef,
     currFilter,
+    debouncedFilter,
     handleChangeKeyword,
-    handleSearchSubmit,
     handleChangeFilter,
     handleResetFilter,
+    handleResetKeyword,
   };
 };

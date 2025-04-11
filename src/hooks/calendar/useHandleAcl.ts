@@ -2,12 +2,11 @@ import { useCallback } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useDialogContext } from '@/hooks/common/useDialogContext';
-
 import { useGrantAcl } from '@/services/calendar/calendarMutations';
 import { useGetCalendarAcl } from '@/services/calendar/calendarQueries';
 
 import { SUPER_ADMIN_EMAIL } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { AdminEmail, CourseCalendarAcl } from '@/types';
 
 interface UseHandleAclProps {

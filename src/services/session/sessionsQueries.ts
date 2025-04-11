@@ -47,7 +47,11 @@ export const useGetSessionApplicantList = ({
     return data;
   };
   return useQuery<SessionDto.GetSessionApplicantList>({
-    queryKey: ['useGetSessionApplicantList', sessionId],
+    queryKey: [
+      'useGetSessionApplicantList',
+      sessionId,
+      searchParticipantStatus,
+    ],
     queryFn: getSessionApplicantList,
     enabled: !!Number(sessionId),
   });

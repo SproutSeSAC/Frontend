@@ -36,7 +36,7 @@ export interface StoreImage {
   path: string;
 }
 
-export interface StoreReviewList {
+export interface StoreReview {
   nickname: string;
   review: string;
   profileImageUrl: string;
@@ -74,7 +74,7 @@ export interface GetStoreDetailResponse
     'underPrice' | 'storeImageList' | 'longitude' | 'latitude'
   > {
   storeImageList: string[];
-  storeReviewList: StoreReviewList[];
+  storeReviewList: StoreReview[];
 }
 
 export interface PostStoreReviewRequest {

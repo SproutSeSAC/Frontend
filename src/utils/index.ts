@@ -1,5 +1,5 @@
-export { getDDay } from '@/utils/getDDay';
-export { updateQueryParams } from '@/utils/updateQueryParams';
+export * from '@/utils/getDDay';
+export * from '@/utils/updateQueryParams';
 export * from '@/utils/extractValidParams';
 export * from '@/utils/handleCookie';
 export * from '@/utils/getDateProgress';
@@ -10,6 +10,7 @@ export * from '@/utils/formatPhoneNumber';
 export * from '@/utils/formatDate';
 export * from '@/utils/notice';
 export * from '@/utils/isValid';
+export * from '@/utils/formatElapsedTime';
 
 // 캘린더 관련
 export * from '@/utils/getFullCalendarEvents';

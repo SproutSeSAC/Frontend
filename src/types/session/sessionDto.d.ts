@@ -1,5 +1,4 @@
-import { PageableType } from '@/types/pageable';
-import { RoleKey } from '@/types/user';
+import { PageableType, RoleKey } from '@/types';
 
 export namespace SessionDto {
   export type GetSessionApplicantList = PageableType & { content: Applicant[] };

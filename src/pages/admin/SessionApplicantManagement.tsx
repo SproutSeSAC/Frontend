@@ -1,14 +1,11 @@
 import { useMemo, useRef } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
-
 import { useGetInfiniteSessionNoticeList } from '@/services/post/noticeQueries';
 
-import { useFilterData, useObserver } from '@/hooks';
+import { useFilterData, useHandleTabNavigation, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { NoticeDisplay, NoticeFilter } from '@/types';
-import { updateQueryParams } from '@/utils';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -17,7 +14,7 @@ import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import ManagingSessionCardList from '@/components/session/ManagingSessionCardList';
 
-const initialState = {
+const initialFilter = {
   page: 1,
   size: 5,
   keyword: '',
@@ -26,8 +23,8 @@ const initialState = {
 export default function SessionApplicantManagement() {
   const observeRef = useRef(null);
 
-  const { currFilter, searchRef, handleSearchSubmit, handleChangeKeyword } =
-    useFilterData<NoticeFilter>({ initialState });
+  const { currFilter, handleChangeKeyword, handleResetKeyword } =
+    useFilterData<NoticeFilter>({ initialFilter });
 
   const {
     data = {
@@ -48,13 +45,7 @@ export default function SessionApplicantManagement() {
     return data.pages.map(({ notices }) => notices).flat();
   }, [data?.pages]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const tabName = searchParams.get('tab');
-
-  const handleChangeValue = (type: string) => {
-    updateQueryParams(searchParams, setSearchParams, 'tab', type);
-  };
+  const { tabName, handleChangeTab } = useHandleTabNavigation();
 
   const tabList = [
     { text: '전체', type: 'ALL' },
@@ -70,24 +61,24 @@ export default function SessionApplicantManagement() {
         <TabNavigation
           tabList={tabList}
           selectValue={tabName ?? 'ALL'}
-          onChangeValue={handleChangeValue}
-          tabClassName="!pb-3"
+          onChangeValue={handleChangeTab}
+          tabClassName="!pb-3 "
         />
 
         <div className="flex flex-1 items-center justify-end gap-5">
           <SearchInput
             name="search"
-            ref={searchRef}
+            value={currFilter.keyword}
             placeholder="찾으시는 특강/행사의 내용을 입력해 주세요"
-            width="w-[40vw]"
-            height="h-12"
             inputStyle="square"
             onChange={handleChangeKeyword}
-            onEnter={handleSearchSubmit}
+            onEnter={() => {}}
+            resetChange={handleResetKeyword}
+            className="w-[40vw]"
           />
           <SquareButton
             name="검색하기"
-            onClick={handleSearchSubmit}
+            onClick={() => {}}
             className="h-12 font-medium"
           />
         </div>

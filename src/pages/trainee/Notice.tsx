@@ -10,12 +10,11 @@ import { NoticeDisplay, NoticeFilter, NoticeTabDisplayKey } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
-import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import NoticePostCard from '@/components/notice/NoticePostCard';
 import NoticeForm from '@/components/notice/form/NoticeForm';
 
-const initialState: NoticeFilter = {
+const initialFilter: NoticeFilter = {
   page: 1,
   size: 10,
   noticeType: 'ALL',
@@ -28,12 +27,12 @@ export default function Notice() {
   const tab = searchParams.get(NOTICE_SEARCH_PARAMS) as NoticeTabDisplayKey;
 
   const {
+    debouncedFilter,
     currFilter,
-    searchRef,
-    handleSearchSubmit,
     handleChangeKeyword,
     handleChangeFilter,
-  } = useFilterData<NoticeFilter>({ initialState });
+    handleResetKeyword,
+  } = useFilterData<NoticeFilter>({ initialFilter });
 
   const observeRef = useRef(null);
 
@@ -45,7 +44,7 @@ export default function Notice() {
     fetchNextPage,
     hasNextPage,
     isLoading,
-  } = useGetInfiniteNoticeList(currFilter);
+  } = useGetInfiniteNoticeList(debouncedFilter);
 
   const noticeList: NoticeDisplay[] = useMemo(() => {
     return data.pages.map(({ notices }) => notices).flat();
@@ -61,21 +60,14 @@ export default function Notice() {
 
   return (
     <>
-      <div className="mt-6 flex items-center gap-10">
-        <SearchInput
-          name="search"
-          ref={searchRef}
-          placeholder="찾으시는 공지사항 내용을 입력해 주세요"
-          width="w-full"
-          height="h-12"
-          onChange={handleChangeKeyword}
-        />
-        <SquareButton
-          name="검색하기"
-          onClick={handleSearchSubmit}
-          className="h-full whitespace-nowrap font-medium"
-        />
-      </div>
+      <SearchInput
+        name="search"
+        value={currFilter.keyword}
+        placeholder="찾으시는 공지사항 내용을 입력해 주세요"
+        onChange={handleChangeKeyword}
+        resetChange={handleResetKeyword}
+        className="mt-6 w-full"
+      />
 
       <ul className="mt-6 flex items-center gap-2.5">
         {noticeCategoryList.map(({ key, name }) => (

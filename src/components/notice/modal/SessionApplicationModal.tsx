@@ -86,11 +86,7 @@ export default function SessionApplicationModal({
   const formDisabled = !sessionIdList || hasAllSessionStatus;
 
   return (
-    <Modal
-      title="특강/행사 선택하기"
-      onToggleClick={hideDialog}
-      className="p-12"
-    >
+    <Modal title="특강/행사 선택하기" onClose={hideDialog}>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
           <Controller
@@ -98,7 +94,7 @@ export default function SessionApplicationModal({
             name="sessionIdList"
             render={({ field: { onChange, value: selectedIdList } }) => {
               return (
-                <ul className="mb-2 mt-14 grid grid-cols-2 justify-between gap-x-6 gap-y-4">
+                <ul className="mb-6 mt-4 grid grid-cols-2 justify-between gap-x-6 gap-y-4">
                   {sessions.map(session => {
                     const { sessionId, currentStatus } = session;
 
@@ -148,7 +144,7 @@ export default function SessionApplicationModal({
             type="submit"
             disabled={formDisabled}
             color={formDisabled ? 'lightGray' : 'mainGreen'}
-            className="mt-10 h-full self-end whitespace-nowrap px-3 py-[12px] text-lg"
+            className="h-full self-end whitespace-nowrap px-3 text-lg"
           />
         </form>
       </FormProvider>

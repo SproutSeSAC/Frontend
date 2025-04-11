@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useDialogContext } from '@/hooks/common/useDialogContext';
-
 import { useCreateCalendar } from '@/services/calendar/calendarMutations';
+
+import { useDialogContext } from '@/hooks';
 
 export const useHandleCalendar = ({ courseId }: { courseId: number }) => {
   const queryClient = useQueryClient();

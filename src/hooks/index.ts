@@ -5,6 +5,12 @@ export { useFilterData } from '@/hooks/common/useFilterData';
 export { useTechStackList } from '@/hooks/common/useTechStackList';
 export { useObserver } from '@/hooks/common/useObserver';
 export { useHandleImage } from '@/hooks/common/useHandleImage';
+export { useHandleTabNavigation } from '@/hooks/common/useHandleTabNavigation';
+export { useDebounce } from '@/hooks/common/useDebounce';
+export { useNotification } from '@/hooks/notification/useNotification';
+
+/* course */
+export { useCourseData } from '@/hooks/course/useCourseData';
 
 /* profile */
 export { useUpdateProfile } from '@/hooks/profile/useUpdateProfile';
@@ -30,3 +36,4 @@ export { useHandleSessionApplicantList } from '@/hooks/session/useHandleSessionA
 export { useHandleAcl } from '@/hooks/calendar/useHandleAcl';
 export { useCalendarList } from '@/hooks/calendar/useCalendarList';
 export { useCalendarEvents } from '@/hooks/calendar/useCalendarEvents';
+export { useHandleCalendar } from '@/hooks/calendar/useHandleCalendar';

@@ -6,9 +6,9 @@ import {
 import { rolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 
-import Icon from '@/components/common/Icon';
 import EditButton from '@/components/common/button/EditButton';
 import Tag from '@/components/common/tag/Tag';
+import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 import UserImage from '@/components/user/UserImage';
 import UserNameImageModal from '@/components/user/UserNameImageModal';
 
@@ -45,25 +45,10 @@ export default function MyUserNameImageCard() {
     {
       label: '소속 교육과정',
       value: (
-        <div className="peer flex w-full flex-1 items-center truncate">
-          {courseList.length > 1 ? (
-            courseList.slice(0, 1).map(({ courseTitle }) => (
-              <span
-                className="w-full overflow-hidden truncate text-end"
-                key={courseTitle}
-              >
-                {courseTitle}
-              </span>
-            ))
-          ) : (
-            <span className="w-full overflow-hidden truncate text-end">
-              {courseList[0]?.courseTitle}
-            </span>
-          )}
-          {courseList.length > 1 && (
-            <Icon name="ChevronDown" className="size-5" />
-          )}
-        </div>
+        <MyCourseListWithHover
+          courseList={courseList}
+          hoverBoxClassName="w-[450px] -right-6"
+        />
       ),
     },
     {
@@ -90,15 +75,19 @@ export default function MyUserNameImageCard() {
 
         <div className="flex flex-1 flex-col gap-2">
           <span className="font-medium">{name}</span>
-          <div className="flex gap-1">
-            <span className="text-darkGray">@{nickname}</span>
-            <Tag text={rolesObj[role]} roleKey={role} />
+          <div className="inline">
+            <span className="break-all text-darkGray">@{nickname}</span>
+            <Tag
+              className="mt-2 inline h-fit w-fit py-0.5"
+              text={rolesObj[role]}
+              roleKey={role}
+            />
           </div>
         </div>
 
         <EditButton
           label="프로필 수정 버튼"
-          className="pb-10"
+          className="absolute right-6 top-8 pb-10"
           onClick={openModalClick}
         />
       </div>
@@ -114,30 +103,6 @@ export default function MyUserNameImageCard() {
             </span>
 
             {value}
-
-            {/*  교육과정 전체 목록  */}
-            {label === '소속 교육과정' && courseList.length > 1 && (
-              <div className="absolute -right-[50%] top-[100%] z-10 hidden rounded-[20px] bg-white px-8 pb-8 pt-6 shadow-card hover:block peer-hover:block">
-                <header className="flex items-center justify-between border-b border-mainGray pb-4 text-black">
-                  <h4>소속 교육과정 전체 목록</h4>
-                  <span>총 {courseList.length}개</span>
-                </header>
-
-                <ul className="mt-4 flex flex-col gap-y-4">
-                  {courseList.map(({ courseTitle }, index) => (
-                    <li
-                      className="w-full overflow-hidden truncate tracking-tight text-black"
-                      key={courseTitle}
-                    >
-                      <span className="inline-block w-8 text-darkGray">
-                        {index + 1}.
-                      </span>{' '}
-                      {courseTitle}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </li>
         ))}
       </ul>

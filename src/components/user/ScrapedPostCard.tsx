@@ -11,7 +11,7 @@ import Tag from '@/components/common/tag/Tag';
 import UserImage from '@/components/user/UserImage';
 
 interface ScrapedPostCardProps {
-  card: MyScrapedPost;
+  card: Omit<MyScrapedPost, 'ptype'>;
 }
 
 export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {

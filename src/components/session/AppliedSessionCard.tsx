@@ -67,29 +67,21 @@ export default function AppliedSessionCard({
   return (
     currSession &&
     currentStatus && (
-      <div className="group relative flex max-h-[261px] w-full min-w-[300px] cursor-default flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card">
+      <div className="group relative flex w-full min-w-[300px] cursor-default flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card">
         <TrashButton
           onClick={() => handleShowDialog(session)}
           className="absolute right-[5%] top-[8%]"
         />
 
-        <div className="flex items-center gap-2">
-          <Tag
-            size="big"
-            text={appliedSessionStatusObj[currentStatus]}
-            statusKey={currentStatus}
-            className="!w-[86px] justify-center"
-          />
-          <Tag
-            size="big"
-            text={`${currSession.ordinal}회차`}
-            color="lightGreen"
-            className="!w-[86px] justify-center"
-          />
-        </div>
+        <Tag
+          size="big"
+          text={appliedSessionStatusObj[currentStatus]}
+          statusKey={currentStatus}
+          className="!w-[86px] justify-center"
+        />
 
-        <h4 className="mt-3 whitespace-nowrap text-xl font-medium text-black">
-          {noticeDetail?.title}
+        <h4 className="mt-3 line-clamp-2 text-xl font-medium text-black">
+          {noticeDetail?.title} {currSession.ordinal}회차
         </h4>
 
         <ul className="mt-3 flex flex-col gap-1.5 text-sm font-normal text-darkGray">
