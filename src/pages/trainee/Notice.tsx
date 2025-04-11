@@ -14,7 +14,7 @@ import SearchInput from '@/components/common/input/SearchInput';
 import NoticePostCard from '@/components/notice/NoticePostCard';
 import NoticeForm from '@/components/notice/form/NoticeForm';
 
-const initialState: NoticeFilter = {
+const initialFilter: NoticeFilter = {
   page: 1,
   size: 10,
   noticeType: 'ALL',
@@ -32,7 +32,7 @@ export default function Notice() {
     handleChangeKeyword,
     handleChangeFilter,
     handleResetKeyword,
-  } = useFilterData<NoticeFilter>({ initialState });
+  } = useFilterData<NoticeFilter>({ initialFilter });
 
   const observeRef = useRef(null);
 

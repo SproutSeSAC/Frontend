@@ -6,7 +6,7 @@ import {
 } from '@/services/auth/authQueries';
 
 import imgUrl from '@/assets/images/faq.png';
-import { faqList } from '@/constants/faq';
+import { faqList } from '@/constants';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 

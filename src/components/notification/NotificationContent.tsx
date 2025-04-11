@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 
-import { useNotification } from '@/hooks/notification/useNotification';
-
 import { useGetNotificationList } from '@/services/notification/notificationQueries';
 
 import { notificationOpenAtom } from '@/atoms/notificationAtom';
 
 import DoubleCheck from '@/assets/icons/double-check.svg?react';
-import { NOTIFICATION_TYPE } from '@/constants/notification';
+import { NOTIFICATION_TYPE } from '@/constants';
+import { useNotification } from '@/hooks';
 import { useAtomValue } from 'jotai';
 import { FaRegTrashAlt } from 'react-icons/fa';
 

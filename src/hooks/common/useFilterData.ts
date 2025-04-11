@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 
-import { useDebounce } from '@/hooks/common/useDebounce';
+import { useDebounce } from '@/hooks';
 
-export const useFilterData = <T>({ initialState }: { initialState: T }) => {
-  const [currFilter, setCurrFilter] = useState<T>(initialState);
+export const useFilterData = <T>({ initialFilter }: { initialFilter: T }) => {
+  const [currFilter, setCurrFilter] = useState<T>(initialFilter);
 
   const handleChangeFilter = useCallback((newData: Partial<T>) => {
     setCurrFilter(prev => ({ ...prev, ...newData }));
@@ -18,8 +18,8 @@ export const useFilterData = <T>({ initialState }: { initialState: T }) => {
   );
 
   const handleResetFilter = useCallback(() => {
-    setCurrFilter(initialState);
-  }, [initialState]);
+    setCurrFilter(initialFilter);
+  }, [initialFilter]);
 
   const handleResetKeyword = useCallback(() => {
     setCurrFilter(prev => ({ ...prev, keyword: '' }));

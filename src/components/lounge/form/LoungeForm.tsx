@@ -6,8 +6,7 @@ import { usePostMyPost, usePutMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
-import { PtypeList, progressList } from '@/constants';
-import { recruitmentCountList } from '@/constants/optionList';
+import { PtypeList, progressList, recruitmentCountList } from '@/constants';
 import {
   useDialogContext,
   useHandleImage,

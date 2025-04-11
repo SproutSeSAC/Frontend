@@ -5,6 +5,7 @@ import { RouteObject } from 'react-router-dom';
 import ContentsManagement from '@/pages/admin/ContentsManagement';
 import CourseManagement from '@/pages/admin/CourseManagement';
 import UserManagement from '@/pages/admin/UserManagement';
+import UserManagementDetail from '@/pages/admin/UserManagementDetail';
 
 const MyScrapedPostList = lazy(
   () => import('@/pages/trainee/MyScrapedPostList'),
@@ -123,7 +124,16 @@ const mainRoutes: RouteObject[] = [
       },
       {
         path: 'user',
-        element: <UserManagement />,
+        children: [
+          {
+            index: true,
+            element: <UserManagement />,
+          },
+          {
+            path: ':userId',
+            element: <UserManagementDetail />,
+          },
+        ],
       },
       {
         path: 'course',

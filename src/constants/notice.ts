@@ -1,4 +1,4 @@
-import { hasAdminRolesObj } from '@/constants/role';
+import { hasAdminRolesObj } from '@/constants';
 import { LIMITLESS_CAPACITY_NUM } from '@/constants/serviceConstant';
 import {
   MeetingTypeKey,

@@ -44,7 +44,12 @@ export default function MyUserNameImageCard() {
     },
     {
       label: '소속 교육과정',
-      value: <MyCourseListWithHover courseList={courseList} />,
+      value: (
+        <MyCourseListWithHover
+          courseList={courseList}
+          hoverBoxClassName="w-[450px] -right-6"
+        />
+      ),
     },
     {
       label: '전화번호',

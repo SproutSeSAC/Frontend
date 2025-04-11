@@ -1,6 +1,4 @@
-import { useCourseData } from '@/hooks/course/useCourseData';
-
-import { useHandleAcl } from '@/hooks';
+import { useCourseData, useHandleAcl } from '@/hooks';
 import { UserCourse } from '@/types';
 import { FaPlus } from 'react-icons/fa6';
 

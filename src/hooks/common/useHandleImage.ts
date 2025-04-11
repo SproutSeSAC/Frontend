@@ -1,9 +1,7 @@
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { getByteSizeNum } from '@/utils/getByteSizeNum';
-
 import { useDialogContext } from '@/hooks';
-import { base64ToFile } from '@/utils';
+import { base64ToFile, getByteSizeNum } from '@/utils';
 import axios from 'axios';
 
 type PresignedUrlResponse = {

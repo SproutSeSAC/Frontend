@@ -19,7 +19,7 @@ import SearchInput from '@/components/common/input/SearchInput';
 import LoungePostCard from '@/components/lounge/LoungePostCard';
 import LoungeForm from '@/components/lounge/form/LoungeForm';
 
-const initialState: LoungeProjectFilter = {
+const initialFilter: LoungeProjectFilter = {
   page: 1,
   size: 20,
   keyword: '',
@@ -41,7 +41,7 @@ export default function Lounge() {
     handleChangeFilter,
     handleResetFilter,
     handleResetKeyword,
-  } = useFilterData({ initialState });
+  } = useFilterData({ initialFilter });
 
   const [searchParams] = useSearchParams();
   const pType = searchParams.get('pType');

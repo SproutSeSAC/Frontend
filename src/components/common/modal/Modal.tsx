@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from 'react';
 
 import { createPortal } from 'react-dom';
 
+import { modalSizeObj } from '@/constants';
 import { BsX } from 'react-icons/bs';
 
 import Icon from '@/components/common/Icon';
@@ -48,12 +49,6 @@ export default function Modal({
     base: 'text-base',
     lg: 'text-lg',
     '2xl': 'text-2xl',
-  };
-
-  const modalSizeObj: { [key in Modalsize]: string } = {
-    sm: 'w-[320px] p-8',
-    md: 'w-[556px] py-9 px-12',
-    lg: 'w-90vw max-w-[1162px] py-14 px-[50px]',
   };
 
   return createPortal(

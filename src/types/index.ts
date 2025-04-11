@@ -8,3 +8,5 @@ export * from '@/types/pageable';
 export * from '@/types/mypage';
 export * from '@/types/notification';
 export * from '@/types/session';
+export * from '@/types/admin/userToManageDto';
+export * from '@/types/admin/userToManageDto';

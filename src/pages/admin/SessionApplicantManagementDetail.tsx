@@ -144,9 +144,9 @@ export default function SessionApplicantManagementDetail() {
   };
 
   const STATUS_STYLES: Record<AppliedSessionStatusKey, string> = {
-    WAIT: 'text-orange-500',
-    PARTICIPANT: 'text-green-600',
-    REJECT: 'text-red-500',
+    WAIT: 'text-red-500',
+    PARTICIPANT: 'text-mainGreen-hover',
+    REJECT: 'text-mainBlue-active',
     END: 'text-gray-500',
     UNKNOWN: 'text-gray-500',
   };
@@ -306,7 +306,7 @@ export default function SessionApplicantManagementDetail() {
                     )}
 
                     <div
-                      className={`relative w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:truncate [&>*]:text-center`}
+                      className={`relative w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:text-center [&>span]:truncate`}
                     >
                       <span className="text-darkGray-active">{userName}</span>
                       <span className="text-darkGray-active">
@@ -317,6 +317,7 @@ export default function SessionApplicantManagementDetail() {
                         courseList={courses
                           .sort((a, b) => a.id - b.id)
                           .map(({ name }) => ({ courseTitle: name }))}
+                        hoverBoxClassName="w-[400px]"
                       />
 
                       <span className="text-darkGray-active">{email}</span>
@@ -326,7 +327,7 @@ export default function SessionApplicantManagementDetail() {
                       <span className="text-darkGray-active">
                         {applicationTime || '-'}
                       </span>
-                      <span className={`font-medium ${STATUS_STYLES[status]}`}>
+                      <span className={` ${STATUS_STYLES[status]}`}>
                         {appliedSessionStatusObj[status]}
                       </span>
                     </div>

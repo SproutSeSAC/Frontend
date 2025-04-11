@@ -14,7 +14,7 @@ import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
 import ManagingSessionCardList from '@/components/session/ManagingSessionCardList';
 
-const initialState = {
+const initialFilter = {
   page: 1,
   size: 5,
   keyword: '',
@@ -24,7 +24,7 @@ export default function SessionApplicantManagement() {
   const observeRef = useRef(null);
 
   const { currFilter, handleChangeKeyword, handleResetKeyword } =
-    useFilterData<NoticeFilter>({ initialState });
+    useFilterData<NoticeFilter>({ initialFilter });
 
   const {
     data = {

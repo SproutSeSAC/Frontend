@@ -1,4 +1,4 @@
-import { hours, minutes } from '@/constants/optionList';
+import { hours, minutes } from '@/constants';
 import { formatDate } from '@/utils';
 import { Controller, useFormContext } from 'react-hook-form';
 

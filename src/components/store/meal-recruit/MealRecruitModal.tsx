@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { usePostMyPost } from '@/services/post/postMutation';
 
-import { hours, minutes, recruitmentCountList } from '@/constants/optionList';
+import { hours, minutes, recruitmentCountList } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { PostMeal } from '@/types/store/storeMealPostDto';
 import { formatDate } from '@/utils';
