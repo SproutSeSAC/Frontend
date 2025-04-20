@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useParams } from 'react-router-dom';
 
 import {
@@ -73,14 +75,7 @@ export default function UserManagementDetail() {
       await showDialog({
         key: 'PHONE_NUMBER_CARD',
         element: (
-          <Modal
-            onClose={() => {
-              setValue('phoneNumber', '');
-              hideDialog();
-            }}
-            modalSize="md"
-            title="전화번호 수정"
-          >
+          <Modal title="전화번호 수정" onClose={hideDialog} modalSize="md">
             <FormProvider {...methods}>
               <form
                 onSubmit={handleSubmit(({ phoneNumber }) => {
@@ -132,6 +127,10 @@ export default function UserManagementDetail() {
     }
   };
 
+  useEffect(() => {
+    setValue('phoneNumber', data?.profile.phoneNumber ?? '');
+  }, [data?.profile.phoneNumber, setValue]);
+
   return (
     <MainView>
       {!isLoading && data && (
@@ -139,7 +138,8 @@ export default function UserManagementDetail() {
           <Header title={`${data.profile.name} 스프`} />
 
           <div className="flex gap-14">
-            <div className="size-full rounded-xl bg-white p-8">
+            {/* 수강정보 */}
+            <div className="size-full rounded-xl border bg-white p-8">
               <div className="flex gap-6">
                 <UserImage
                   className="size-[110px]"
@@ -166,7 +166,7 @@ export default function UserManagementDetail() {
                     {value ? (
                       <span className="text-darkGray-active">{value}</span>
                     ) : (
-                      <span className="text-darkGray">{emptyValue}</span>
+                      <span className="mb-3 text-darkGray">{emptyValue}</span>
                     )}
 
                     {(name === '전화번호' || name === '메모') && (
@@ -174,9 +174,7 @@ export default function UserManagementDetail() {
                         name="수정하기"
                         color="gray"
                         className="absolute bottom-0 right-0"
-                        onClick={() => {
-                          openModalClick(name);
-                        }}
+                        onClick={() => openModalClick(name)}
                       />
                     )}
                   </li>
@@ -184,6 +182,7 @@ export default function UserManagementDetail() {
               </ul>
             </div>
 
+            {/* 도메인정보 */}
             <div className="size-full rounded-xl bg-white p-8">
               <div className="mb-7">
                 <Title title="도메인" />

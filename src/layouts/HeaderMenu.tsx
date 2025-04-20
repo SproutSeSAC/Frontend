@@ -2,11 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import {
-  ACCESS_TOKEN_KEY,
-  CALENDAR_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-} from '@/constants';
+import { ACCESS_TOKEN_KEY, CALENDAR_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { deleteCookie } from '@/utils';
 
@@ -34,7 +30,6 @@ export default function HeaderMenu() {
             onClick={async () => {
               await queryClient.invalidateQueries();
               deleteCookie(ACCESS_TOKEN_KEY);
-              deleteCookie(REFRESH_TOKEN_KEY);
               sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
               navigate('/login');
               hideDialog();
