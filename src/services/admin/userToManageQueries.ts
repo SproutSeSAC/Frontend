@@ -19,6 +19,8 @@ export const useGetInfiniteUserList = (params: UserManagementFilter) => {
   const getUserList = async () => {
     const offset = (params.page - 1) * params.size;
 
+    // console.log(params);
+
     const { data } = await axiosInstance.get<UserManagementDto.GetUserList>(
       `/admin/users`,
       { params: { ...params, offset } },

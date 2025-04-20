@@ -66,9 +66,7 @@ export default function ManagingSessionCardList({
 
       <ul className="mt-3 flex flex-1 flex-col gap-1.5 overflow-hidden text-sm font-normal text-darkGray">
         <li className="flex gap-1">
-          <span className="min-w-fit">
-            {meetingType === 'ONLINE' ? '링크' : '장소'}
-          </span>
+          <span className="min-w-fit">장소</span>
           <span>|</span>
           {noticeDetail?.meetingPlace &&
             (meetingType === 'ONLINE' ? (

@@ -94,6 +94,20 @@ export default function UserManagement() {
     name: campus.campusName,
   }));
 
+  const selectedCampusOption = campusOptionList.find(
+    ({ id }) => id === currFilter.campusId,
+  ) || {
+    id: campusOptionList[0].id,
+    name: campusOptionList[0].name,
+  };
+
+  const selectedCourseOption = courseOptionList.find(
+    ({ id }) => id === currFilter.courseId,
+  ) || {
+    id: courseOptionList[0].id,
+    name: courseOptionList[0].name,
+  };
+
   return (
     <MainView className="mb-20">
       <Header title="사용자 관리" />
@@ -110,12 +124,7 @@ export default function UserManagement() {
           <SingleSelectDropdown
             defaultLabel={campusList[0].campusName || '캠퍼스 선택'}
             options={campusOptionList}
-            selectedOption={
-              campusOptionList.find(({ id }) => id === currFilter.campusId) || {
-                id: campusOptionList[0].id,
-                name: campusOptionList[0].name,
-              }
-            }
+            selectedOption={selectedCampusOption}
             onChangeValue={option =>
               handleChangeFilter({ campusId: option[0].id })
             }
@@ -126,15 +135,10 @@ export default function UserManagement() {
           <SingleSelectDropdown
             defaultLabel={courseList[0].courseTitle || '교육과정 선택'}
             options={courseOptionList}
-            selectedOption={
-              courseOptionList.find(({ id }) => id === currFilter.courseId) || {
-                id: courseOptionList[0].id,
-                name: courseOptionList[0].name,
-              }
+            selectedOption={selectedCourseOption}
+            onChangeValue={option =>
+              handleChangeFilter({ courseId: option[0].id })
             }
-            onChangeValue={option => {
-              handleChangeFilter({ courseId: option[0].id });
-            }}
             selectBoxClassName="w-[400px] rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
@@ -142,7 +146,7 @@ export default function UserManagement() {
           <SearchInput
             name="search"
             value={currFilter.keyword}
-            placeholder="검색어를 입력해주세요."
+            placeholder="이름을 입력해주세요."
             onChange={handleChangeKeyword}
             className="ml-auto text-lg"
             inputStyle="square"
@@ -183,7 +187,7 @@ export default function UserManagement() {
       ) : (
         <EmptyContent
           message="사용자가 없습니다."
-          className="mb-16 mt-4 h-full rounded-[20px] bg-lightGray py-20"
+          className="mb-16 mt-4 h-full min-h-[500px] rounded-[20px] border bg-lightGray py-20"
         />
       )}
 

@@ -16,7 +16,10 @@ export default function MyPageAppliedSessionCard() {
         ) : (
           <ul className="h-full w-full space-y-2">
             {mySessionList?.map(session => (
-              <AppliedSession key={session.postId} session={session} />
+              <AppliedSession
+                key={`${session.postId}-${session.ordinal}`}
+                session={session}
+              />
             ))}
           </ul>
         ))}

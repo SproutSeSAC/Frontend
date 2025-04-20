@@ -4,11 +4,7 @@ import {
 } from '@/services/auth/authQueries';
 
 import { redirectToLogin } from '@/App';
-import {
-  ACCESS_TOKEN_KEY,
-  CALENDAR_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-} from '@/constants';
+import { ACCESS_TOKEN_KEY, CALENDAR_TOKEN_KEY } from '@/constants';
 import { getCookie, setCookie } from '@/utils';
 import axios, {
   AxiosHeaders,
@@ -26,13 +22,9 @@ axiosInstance.interceptors.request.use(
     const headers = new AxiosHeaders(config.headers);
 
     const accessToken = getCookie(ACCESS_TOKEN_KEY);
-    const refreshToken = getCookie(REFRESH_TOKEN_KEY);
 
     if (accessToken) {
       headers.set('Access-Token', accessToken);
-    }
-    if (refreshToken) {
-      headers.set('Refresh-Token', refreshToken);
     }
 
     const modifiedConfig: InternalAxiosRequestConfig = {

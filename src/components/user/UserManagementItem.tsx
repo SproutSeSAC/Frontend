@@ -99,7 +99,6 @@ export default function UserManagementItem({
       <span className="truncate">
         {campusList.map(({ name }) => name.slice(0, -3)).join(', ')}
       </span>
-
       {type === 'user-list' && (
         <Tag
           text={rolesObj[role!]}
@@ -198,6 +197,7 @@ export default function UserManagementItem({
                             <ControllerPhoneNumber
                               name="phoneNumber"
                               className="!rounded-xl bg-lightGray-active"
+                              initialValue="010-5555-5555"
                             />
                             <SquareButton
                               type="submit"

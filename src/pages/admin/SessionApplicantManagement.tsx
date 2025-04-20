@@ -23,8 +23,12 @@ const initialFilter = {
 export default function SessionApplicantManagement() {
   const observeRef = useRef(null);
 
-  const { currFilter, handleChangeKeyword, handleResetKeyword } =
-    useFilterData<NoticeFilter>({ initialFilter });
+  const {
+    currFilter,
+    handleChangeKeyword,
+    handleResetKeyword,
+    debouncedFilter,
+  } = useFilterData<NoticeFilter>({ initialFilter });
 
   const {
     data = {
@@ -33,7 +37,7 @@ export default function SessionApplicantManagement() {
     isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useGetInfiniteSessionNoticeList(currFilter);
+  } = useGetInfiniteSessionNoticeList(debouncedFilter);
 
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
