@@ -197,7 +197,6 @@ export default function UserManagementItem({
                             <ControllerPhoneNumber
                               name="phoneNumber"
                               className="!rounded-xl bg-lightGray-active"
-                              initialValue="010-5555-5555"
                             />
                             <SquareButton
                               type="submit"
