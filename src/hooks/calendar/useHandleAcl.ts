@@ -51,6 +51,7 @@ export const useHandleAcl = ({
   } = useGetCalendarAcl(courseId, calendarId);
 
   const getHasAclAdminList = useCallback(() => {
+    if (typeof courseCalendarAcl === 'string') return [];
     return courseCalendarAcl?.map(acl => {
       const superAdminObj = {
         roleType: 'SUPER_ADMIN' as const,
@@ -69,6 +70,7 @@ export const useHandleAcl = ({
   }, [adminList, courseCalendarAcl]);
 
   const getHasNotAclAdminList = useCallback(() => {
+    if (typeof courseCalendarAcl === 'string') return [];
     return adminList.filter(
       ({ email }) =>
         !courseCalendarAcl?.find(({ email: aclEmail }) => email === aclEmail),
@@ -78,6 +80,7 @@ export const useHandleAcl = ({
   const courseAclInfo: CourseCalendarAcl = {
     courseId,
     isCreated: !!calendarId,
+
     calendarId,
     hasAclAdminList: getHasAclAdminList(),
     hasNotAclAdminList: getHasNotAclAdminList(),

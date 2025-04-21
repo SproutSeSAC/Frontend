@@ -20,6 +20,7 @@ import ScrollContainer from '@/components/common/container/ScrollContainer';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';
+import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 import UserImage from '@/components/user/UserImage';
 import { formSchema } from '@/components/user/UserManagementItem';
 
@@ -131,6 +132,10 @@ export default function UserManagementDetail() {
     setValue('phoneNumber', data?.profile.phoneNumber ?? '');
   }, [data?.profile.phoneNumber, setValue]);
 
+  const campusList = data?.study.campus
+    .map(({ campusName }) => campusName.slice(0, -3))
+    .join(', ');
+
   return (
     <MainView>
       {!isLoading && data && (
@@ -148,13 +153,14 @@ export default function UserManagementDetail() {
                 <div className="flex flex-col gap-2">
                   <Title title="수강정보" />
                   <span className="mt-2 truncate text-darkGray-active">
-                    {data.study.campus[0].campusName}
+                    {campusList} 캠퍼스
                   </span>
-                  <span className="line-clamp-1 text-darkGray-active">
-                    {data.study.course
-                      .map(({ courseName }) => courseName.slice(0, -3))
-                      .join(', ')}{' '}
-                  </span>
+                  <MyCourseListWithHover
+                    courseList={data.study.course.map(({ courseName }) => ({
+                      courseTitle: courseName,
+                    }))}
+                    hoverBoxClassName="min-w-[550px]"
+                  />
                 </div>
               </div>
 
@@ -166,7 +172,7 @@ export default function UserManagementDetail() {
                     {value ? (
                       <span className="text-darkGray-active">{value}</span>
                     ) : (
-                      <span className="mb-3 text-darkGray">{emptyValue}</span>
+                      <span className="text-darkGray">{emptyValue}</span>
                     )}
 
                     {(name === '전화번호' || name === '메모') && (

@@ -50,6 +50,10 @@ export default function AclInfoButton({
   }, [isError, error, queryClient, courseId]);
 
   const alertText = {
+    notFoundCalendar: {
+      text: '캘린더에 오류가 발생했습니다.',
+      subText: '생성되었던 해당 캘린더가 유실되었습니다.',
+    },
     hasNotAcl: {
       text: '아직 캘린더 권한이 없는 상태입니다.',
       subText:
@@ -61,15 +65,25 @@ export default function AclInfoButton({
     },
   };
 
+  // 캘린더를 찾지 못했을때
+  const notFoundCalendar =
+    aclList === 'Not Found' &&
+    typeof aclList === 'string' &&
+    'notFoundCalendar';
   // 권한 없음
-  const hasNotAcl = !aclList?.length;
-
+  const hasNotAcl = !aclList?.length && 'hasNotAcl';
   // 권한이 있지만 내 캘린더 목록에 추가하지 않아 캘린더 데이터를 못가져올 때
-  const hasAclButNotInMyCalendarList = !!aclList?.length;
+  const hasAclButNotInMyCalendarList =
+    !!aclList?.length && typeof aclList === 'object' && 'notInMyCalendar';
 
   const onInfoClick = () => {
     alert({
-      ...alertText[hasNotAcl ? 'hasNotAcl' : 'notInMyCalendar'],
+      ...alertText[
+        notFoundCalendar ||
+          hasNotAcl ||
+          hasAclButNotInMyCalendarList ||
+          'hasNotAcl'
+      ],
       subTextColor: 'green',
       children: (
         <div className="flex gap-4">
@@ -95,11 +109,11 @@ export default function AclInfoButton({
   };
 
   return (
-    (hasNotAcl || hasAclButNotInMyCalendarList) &&
+    (notFoundCalendar || hasNotAcl || hasAclButNotInMyCalendarList) &&
     !isLoading && (
       <button type="button" onClick={onInfoClick} className="group text-[15px]">
         <BiInfoCircle
-          className={`inline size-[20px] ${hasNotAcl ? 'text-red-400' : 'text-mainGreen'}`}
+          className={`inline size-[20px] ${!hasAclButNotInMyCalendarList ? 'text-red-400' : 'text-mainGreen'}`}
         />
       </button>
     )

@@ -165,24 +165,15 @@ export default function UserManagement() {
 
       {data && data?.userList.length !== 0 ? (
         <ul className="mb-16 mt-4 flex w-full flex-col gap-4">
-          {data.userList.map(user =>
-            tabName === 'trainee-list' ? (
-              <Link key={user.userId} to={`/admin/user/${user.userId}`}>
-                <UserManagementItem
-                  user={user}
-                  type={tabName as 'trainee-list' | 'user-list'}
-                  className={`${gridStyle}`}
-                />
-              </Link>
-            ) : (
+          {data.userList.map(user => (
+            <Link key={user.userId} to={`/admin/user/${user.userId}`}>
               <UserManagementItem
-                key={user.userId}
                 user={user}
                 type={tabName as 'trainee-list' | 'user-list'}
                 className={`${gridStyle}`}
               />
-            ),
-          )}
+            </Link>
+          ))}
         </ul>
       ) : (
         <EmptyContent

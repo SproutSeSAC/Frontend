@@ -132,27 +132,31 @@ export const useGetCourseCalendarStatus = (
 export const useGetCalendarAcl = (
   courseId: number,
   calendarId?: string,
-  options?: UseQueryOptions<unknown, AxiosError, AclEmail[]>,
+  options?: UseQueryOptions<unknown, AxiosError, AclEmail[] | string>,
 ) => {
   const getCalendarAcl = async () => {
     const aclRes = await axiosCalendarInstance.get<{ items: Acl[] }>(
       `/calendars/${calendarId}/acl`,
     );
 
-    const result = aclRes.data.items
-      .filter(
-        ({ scope: { value } }) =>
-          !value.includes('@public') && !value.includes('@group'),
-      )
-      .map(({ role, scope }) => ({
-        email: scope.value,
-        accessRole: role,
-      })) as AclEmail[];
+    if (aclRes.status === 200) {
+      const result = aclRes.data.items
+        .filter(
+          ({ scope: { value: email } }) =>
+            !email.includes('@public') && !email.includes('@group'),
+        )
+        .map(({ role, scope }) => ({
+          email: scope.value,
+          accessRole: role,
+        })) as AclEmail[];
 
-    return result;
+      return result;
+    }
+
+    return aclRes;
   };
 
-  return useQuery<unknown, AxiosError, AclEmail[]>({
+  return useQuery<unknown, AxiosError, AclEmail[] | string>({
     queryKey: ['useGetCalendarAcl', courseId],
     queryFn: getCalendarAcl,
     enabled: !!calendarId && !!courseId,
