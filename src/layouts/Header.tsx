@@ -8,7 +8,10 @@ import {
 } from '@/services/auth/authQueries';
 import { useGetUnReadNotificationList } from '@/services/notification/notificationQueries';
 
-import { notificationOpenAtom } from '@/atoms/notificationAtom';
+import {
+  notificationOpenAtom,
+  notificationServerSentEventAtom,
+} from '@/atoms/notificationAtom';
 
 import HeaderMenu from '@/layouts/HeaderMenu';
 import { useAtom } from 'jotai';
@@ -32,12 +35,19 @@ export default function Header({
 }: Props) {
   const { pathname } = useLocation();
   const [, setIsNotificationOpenOpen] = useAtom(notificationOpenAtom);
+  const [isNotificationServerSentEvent, setIsNotificationServerSentEventData] =
+    useAtom(notificationServerSentEventAtom);
 
   const homePathname = pathname === '/' || pathname === '/admin';
 
   const { data: { profileImageUrl } = initialUserProfile } =
     useGetUserProfile();
   const { data: notificationList } = useGetUnReadNotificationList();
+
+  const openNotificationListTab = () => {
+    setIsNotificationServerSentEventData(false);
+    setIsNotificationOpenOpen(prev => !prev);
+  };
 
   return (
     <header className="mb-10 flex items-start justify-between">
@@ -58,10 +68,11 @@ export default function Header({
         <aside className="flex items-center">
           <button
             className="relative mr-6 p-1"
-            onClick={() => setIsNotificationOpenOpen(prev => !prev)}
+            onClick={() => openNotificationListTab()}
           >
             <BsBell className="size-[26px] stroke-[0.3] font-bold text-darkGray-hover" />
-            {notificationList?.length !== 0 && (
+            {(isNotificationServerSentEvent ||
+              notificationList?.length > 0) && (
               <div className="absolute right-0 top-0.5 size-2 rounded-full border bg-red-500" />
             )}
           </button>
