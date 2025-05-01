@@ -72,7 +72,7 @@ export default function Header({
           >
             <BsBell className="size-[26px] stroke-[0.3] font-bold text-darkGray-hover" />
             {(isNotificationServerSentEvent ||
-              notificationList?.length > 0) && (
+              notificationList?.length !== 0) && (
               <div className="absolute right-0 top-0.5 size-2 rounded-full border bg-red-500" />
             )}
           </button>
