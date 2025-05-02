@@ -1,44 +1,44 @@
 import { Link } from 'react-router-dom';
 
-import { useGetPostDetail } from '@/services/post/postQueries';
-
 import { sessionStatusObj } from '@/constants';
-import { NoticeDisplay, NoticeDto, SessionStatusKey } from '@/types';
+import { NoticeSessionDetail, SessionStatusKey } from '@/types';
 import { formatDate, getDDay } from '@/utils';
 
 import Tag from '@/components/common/tag/Tag';
 
-interface AdminSessionCardListByNoticeProps {
-  notice: NoticeDisplay;
+interface ManagingSessionCardProps {
+  sessionDetail: NoticeSessionDetail;
 }
 
-export default function ManagingSessionCardList({
-  notice,
-}: AdminSessionCardListByNoticeProps) {
-  const { postId } = notice;
+export default function ManagingSessionCard({
+  sessionDetail,
+}: ManagingSessionCardProps) {
+  const {
+    postId,
+    title,
+    meetingPlace,
+    meetingType,
+    applicationEndDateTime,
+    session,
+  } = sessionDetail;
 
-  const { data: noticeDetail } =
-    useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
-
-  const getSessionStatus = (applicationEndDateTime: string) => {
+  const getSessionStatus = (sessionEndDateTime: string) => {
     const checkIsEndSession = (endDateTime: string) => {
       return new Date(endDateTime).getTime() < new Date().getTime();
     };
 
-    const isEndSession = checkIsEndSession(applicationEndDateTime);
+    const isEndSession = checkIsEndSession(sessionEndDateTime);
 
     const currentStatus: SessionStatusKey = isEndSession
       ? 'INACTIVE'
-      : noticeDetail?.status || 'UNKNOWN';
+      : sessionDetail?.status || 'UNKNOWN';
 
     return currentStatus;
   };
 
-  if (!noticeDetail || !noticeDetail.sessions) return null;
+  if (!sessionDetail) return null;
 
-  const { title, meetingType, applicationEndDateTime } = noticeDetail;
-
-  return noticeDetail.sessions?.map(session => (
+  return (
     <div
       key={session.sessionId}
       className="group relative flex w-full min-w-[300px] cursor-default flex-col justify-between overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card"
@@ -68,7 +68,7 @@ export default function ManagingSessionCardList({
         <li className="flex gap-1">
           <span className="min-w-fit">장소</span>
           <span>|</span>
-          {noticeDetail?.meetingPlace &&
+          {meetingPlace &&
             (meetingType === 'ONLINE' ? (
               <a
                 href="https://www.naver.com" // NOTE: url 변경하기
@@ -76,15 +76,15 @@ export default function ManagingSessionCardList({
                 rel="noreferrer"
                 className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"
               >
-                {noticeDetail.meetingPlace}
+                {meetingPlace}
               </a>
             ) : (
               <span className="overflow-x-scroll whitespace-nowrap scrollbar-hide">
-                {noticeDetail?.meetingPlace}
+                {meetingPlace}
               </span>
             ))}
 
-          {noticeDetail.meetingPlace === '' && <span>미정</span>}
+          {meetingPlace === '' && <span>미정</span>}
         </li>
         <li className="flex gap-1">
           <span className="min-w-fit">일자</span>
@@ -112,5 +112,5 @@ export default function ManagingSessionCardList({
         참여자 조회
       </Link>
     </div>
-  ));
+  );
 }

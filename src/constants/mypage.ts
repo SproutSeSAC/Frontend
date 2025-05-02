@@ -1,6 +1,6 @@
-import { Collection } from '@/types/mypage';
+import { MyCollection } from '@/types/mypage';
 
-export const myCollectionList: Collection[] = [
+export const myCollectionList: MyCollection[] = [
   '내가 쓴 게시글',
   '내가 쓴 댓글',
   '내가 찜한 글',

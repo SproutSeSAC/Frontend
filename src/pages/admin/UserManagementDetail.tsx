@@ -1,260 +1,274 @@
-import { useEffect } from 'react';
-
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import {
-  usePatchUserToManagePhoneNumber, // usePostTraineeMemo,
-} from '@/services/admin/userToManageMutation';
-import { useGetUserToManageInfo } from '@/services/admin/userToManageQueries';
+  useGetTraineeMemo,
+  useGetUserAppliedSessionList,
+  useGetUserToManageInfo,
+} from '@/services/admin/userToManageQueries';
 
+import { rolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { Domain, Job, TechStack } from '@/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
+import { isTrainee } from '@/utils';
+
+import UserMemoModal from '@/pages/admin/UserMemoModal';
+import UserPhoneNumberModal from '@/pages/admin/UserPhoneNumberModal';
+import UserPostCollection from '@/pages/admin/UserPostCollection';
 
 import Title from '@/components/common/Title';
 import SquareButton from '@/components/common/button/SquareButton';
 import ScrollContainer from '@/components/common/container/ScrollContainer';
-import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
-import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';
+import AppliedSession from '@/components/session/AppliedSession';
+import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 import UserImage from '@/components/user/UserImage';
-import { formSchema } from '@/components/user/UserManagementItem';
 
 export default function UserManagementDetail() {
-  const { userId } = useParams();
+  const { userId: id } = useParams();
+  const userId = +id!;
 
-  const { data, isLoading } = useGetUserToManageInfo({ userId: +userId! });
+  const { showDialog } = useDialogContext();
 
-  const userData = [
+  const { data: userInfo, isLoading } = useGetUserToManageInfo({ userId });
+
+  const { data: traineeMemo } = useGetTraineeMemo({ traineeId: userId });
+
+  const { data: appliedSessionList } = useGetUserAppliedSessionList({ userId });
+
+  const userBasicData = [
     {
       name: '이름',
-      value: data?.profile.name,
+      value: userInfo && (
+        <span className="peer line-clamp-1 flex items-center gap-1 text-darkGray-active">
+          {userInfo?.name}
+          <Tag
+            text={rolesObj[userInfo?.role]}
+            roleKey={userInfo.role}
+            size="small"
+            className="py-1"
+          />
+        </span>
+      ),
     },
     {
       name: '이메일',
-      value: data?.study.email,
+      value: (
+        <span className="peer line-clamp-1 text-darkGray-active">
+          {userInfo?.email}
+        </span>
+      ),
     },
     {
       name: '전화번호',
-      value: data?.profile.phoneNumber,
+      value: (
+        <span className="peer line-clamp-1 text-darkGray-active">
+          {userInfo?.phoneNumber}
+        </span>
+      ),
     },
     {
       name: '메모',
-      value: undefined,
-      emptyValue: '메모가 없습니다.',
-    },
-    {
-      name: '특강 신청 내역',
-      value: undefined,
-      emptyValue: '특강 신청 내역이 없습니다.',
+      value: traineeMemo?.content,
+      emptyValue: '작성된 메모가 없어요.',
     },
   ];
 
-  // const { mutateAsync: changeTraineeMemo } = usePostTraineeMemo();
-
-  const { showDialog, hideDialog } = useDialogContext();
-
-  const methods = useForm({
-    defaultValues: { phoneNumber: '' },
-    resolver: zodResolver(formSchema),
-  });
-
-  const { handleSubmit, setValue } = methods;
-
-  const { mutateAsync: changePhoneNumber } = usePatchUserToManagePhoneNumber();
-
-  const domainList: Domain[] = [];
-  const jobList: Job[] = [];
-  const techStackList: TechStack[] = [];
+  const userSpecificationData = [
+    {
+      name: '도메인',
+      dataList: userInfo?.domainList?.sort((a, b) => a.id - b.id),
+      emptyValue: '선택한 도메인이 없어요',
+    },
+    {
+      name: '직무',
+      dataList: userInfo?.jobList?.sort((a, b) => a.id - b.id),
+      emptyValue: '선택한 직무가 없어요',
+    },
+    {
+      name: '기술스택',
+      dataList: userInfo?.techStackList?.sort((a, b) => a.id - b.id),
+      emptyValue: '선택한 기술스택이 없어요',
+    },
+  ];
 
   const openModalClick = async (name: '메모' | '전화번호') => {
     if (name === '전화번호') {
       await showDialog({
         key: 'PHONE_NUMBER_CARD',
         element: (
-          <Modal title="전화번호 수정" onClose={hideDialog} modalSize="md">
-            <FormProvider {...methods}>
-              <form
-                onSubmit={handleSubmit(({ phoneNumber }) => {
-                  changePhoneNumber({ userId: +userId!, phoneNumber });
-                })}
-                className="mt-[26px]"
-              >
-                <div className="mb-2 text-lg font-medium">
-                  <span className="text-mainGreen">{data?.profile.name}</span>{' '}
-                  연락처
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <ControllerPhoneNumber
-                    name="phoneNumber"
-                    className="!rounded-xl bg-lightGray-active"
-                  />
-                  <SquareButton
-                    type="submit"
-                    name="확인"
-                    color="gray"
-                    className="h-[50px] min-w-fit !rounded-xl"
-                  />
-                </div>
-              </form>
-            </FormProvider>
-          </Modal>
+          <UserPhoneNumberModal
+            userId={userId}
+            username={userInfo?.name || ''}
+            userPhoneNumber={userInfo?.phoneNumber || ''}
+          />
         ),
       });
     }
     if (name === '메모') {
       await showDialog({
         key: 'TRAINEE_MEMO_CARD',
-        element: (
-          <Modal onClose={hideDialog} modalSize="lg" title="메모">
-            <div className="flex flex-col">
-              <span className="text-darkGray">
-                학생에 대한 메모를 볼 수 있어요.
-              </span>
-
-              <p className="mb-10 mt-4 min-h-32 text-darkGray-hover">
-                메모가 아직 없어요
-              </p>
-
-              <SquareButton type="submit" name="수정하기" className="ml-auto" />
-            </div>
-          </Modal>
+        element: userInfo && (
+          <UserMemoModal
+            userId={userId}
+            username={userInfo.name}
+            memo={traineeMemo?.content || ''}
+          />
         ),
       });
     }
   };
 
-  useEffect(() => {
-    setValue('phoneNumber', data?.profile.phoneNumber ?? '');
-  }, [data?.profile.phoneNumber, setValue]);
-
   return (
     <MainView>
-      {!isLoading && data && (
+      {!isLoading && userInfo && (
         <>
-          <Header title={`${data.profile.name} 스프`} />
+          <Header title={`${userInfo.name} 스프`} />
 
           <div className="flex gap-14">
             {/* 수강정보 */}
-            <div className="size-full rounded-xl border bg-white p-8">
-              <div className="flex gap-6">
+            <div className="size-full rounded-xl border bg-white p-12">
+              <div className="flex items-center gap-7">
                 <UserImage
-                  className="size-[110px]"
-                  imageNameSegment={data.profile.profileUrl}
+                  className="size-[120px]"
+                  imageNameSegment={userInfo.profileImageUrl}
                 />
                 <div className="flex flex-col gap-2">
-                  <Title title="수강정보" />
+                  <Title
+                    title={isTrainee(userInfo.role) ? '수강정보' : '담당정보'}
+                  />
                   <span className="mt-2 truncate text-darkGray-active">
-                    {data.study.campus[0].campusName}
-                  </span>
-                  <span className="line-clamp-1 text-darkGray-active">
-                    {data.study.course
-                      .map(({ courseName }) => courseName.slice(0, -3))
+                    {userInfo?.campusList
+                      .map(({ campusName }) => campusName.slice(0, -3))
                       .join(', ')}{' '}
+                    캠퍼스
                   </span>
+                  <MyCourseListWithHover
+                    courseList={userInfo.courseList}
+                    hoverBoxClassName="min-w-[550px]"
+                  />
                 </div>
               </div>
 
-              <ul className="mt-10 flex flex-col gap-6">
-                {userData.map(({ name, value, emptyValue }) => (
-                  <li key={name} className="relative flex flex-col gap-[10px]">
-                    <Title title={name} />
+              <ul className="mt-10 flex flex-col gap-7">
+                {userBasicData.map(({ name, value, emptyValue }) => (
+                  <li
+                    key={name}
+                    className="relative flex items-center justify-between gap-12"
+                  >
+                    <div className="relative flex w-full flex-col items-start justify-between gap-3">
+                      <Title title={name} />
 
-                    {value ? (
-                      <span className="text-darkGray-active">{value}</span>
-                    ) : (
-                      <span className="mb-3 text-darkGray">{emptyValue}</span>
-                    )}
-
+                      {value ? (
+                        <>
+                          <span className="peer line-clamp-1 text-darkGray-active">
+                            {value}
+                          </span>
+                          {name === '메모' && (
+                            <div className="absolute top-16 z-40 hidden h-fit w-[550px] min-w-fit rounded-[20px] bg-black bg-opacity-90 px-6 py-4 shadow-card hover:block peer-hover:block">
+                              <textarea
+                                defaultValue={value as string}
+                                className="h-fit w-full resize-none bg-transparent text-base text-white focus:outline-none"
+                              />
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-darkGray">{emptyValue}</span>
+                      )}
+                    </div>
                     {(name === '전화번호' || name === '메모') && (
                       <SquareButton
                         name="수정하기"
                         color="gray"
-                        className="absolute bottom-0 right-0"
+                        className="min-w-fit"
                         onClick={() => openModalClick(name)}
                       />
                     )}
                   </li>
                 ))}
+                {/* 특강 신청 내역은 학생만 */}
+                {isTrainee(userInfo.role) && (
+                  <li className="relative">
+                    <div className="mb-[10px] flex w-full items-center justify-between">
+                      <Title title="특강 신청 내역" />
+                      {appliedSessionList?.length !== 0 && (
+                        <Link
+                          to={`/session-status/${userInfo.userId}`}
+                          className="text-mainGray-active"
+                          state={{
+                            userId: userInfo.userId,
+                            username: userInfo.name,
+                          }}
+                        >
+                          더보기
+                        </Link>
+                      )}
+                    </div>
+                    {appliedSessionList?.length !== 0 ? (
+                      <ul className="h-full w-full space-y-2">
+                        {appliedSessionList?.map(session => (
+                          <AppliedSession
+                            key={`${session.startDateTime}-${session.ordinal}`}
+                            session={session}
+                            hasDeleteButton={false}
+                          />
+                        ))}
+                      </ul>
+                    ) : (
+                      <span className="text-darkGray">
+                        신청한 특강이 없습니다.
+                      </span>
+                    )}
+                  </li>
+                )}
               </ul>
             </div>
 
-            {/* 도메인정보 */}
-            <div className="size-full rounded-xl bg-white p-8">
-              <div className="mb-7">
-                <Title title="도메인" />
-
-                {domainList.length !== 0 ? (
-                  <ScrollContainer className="gap-3" isBlurRight>
-                    {domainList
-                      ?.sort((a, b) => a.id - b.id)
-                      ?.map(({ id, domain }) => (
-                        <li key={id}>
-                          <Tag
-                            text={domain}
-                            size="big"
-                            color="grayLight"
-                            className="px-[14px] py-[10px] !font-normal"
-                          />
-                        </li>
-                      ))}
-                  </ScrollContainer>
-                ) : (
-                  <span className="mt-[10px] inline-block text-darkGray">
-                    도메인이 없습니다.
-                  </span>
-                )}
-              </div>
-
-              <div className="mb-7">
-                <Title title="직무" />
-
-                {jobList.length !== 0 ? (
-                  <ScrollContainer className="gap-4" isBlurRight>
-                    {jobList
-                      ?.sort((a, b) => a.id - b.id)
-                      ?.map(({ job, id }) => (
-                        <li key={id} className="leading-5 tracking-tight">
-                          {job}
-                        </li>
-                      ))}
-                  </ScrollContainer>
-                ) : (
-                  <span className="mt-[10px] inline-block text-darkGray">
-                    직무가 없습니다.
-                  </span>
-                )}
-              </div>
-
-              <div className="mb-7">
-                <Title title="기술 스택" />
-
-                {techStackList.length !== 0 ? (
-                  <ScrollContainer className="gap-3" isBlurRight>
-                    {techStackList
-                      ?.sort((a, b) => a.id - b.id)
-                      ?.map(({ id, techStack, iconImageUrl }) => (
-                        <li key={id} className="size-7">
-                          <img
-                            src={iconImageUrl}
-                            alt={techStack}
-                            className="size-full"
-                          />
-                        </li>
-                      ))}
-                  </ScrollContainer>
-                ) : (
-                  <span className="mt-[10px] inline-block text-darkGray">
-                    기술 스택이 없습니다.
-                  </span>
-                )}
-              </div>
-
-              <div className="mt-16">
-                <Title title="김철수님이 작성한 글" />
+            {/* 특정정보 */}
+            <div className="flex size-full flex-col gap-8 rounded-xl bg-white p-12">
+              {isTrainee(userInfo.role) &&
+                userSpecificationData.map(({ name, dataList, emptyValue }) => (
+                  <div key={name} className="relative flex flex-col gap-3">
+                    <Title title={name} />
+                    {dataList?.length !== 0 ? (
+                      <ScrollContainer className="gap-3" isBlurRight>
+                        {dataList?.map(data => (
+                          <li key={data.id}>
+                            {'domain' in data && (
+                              <Tag
+                                text={data.domain}
+                                size="big"
+                                color="grayLight"
+                                className="!py-[8px] px-[14px] !font-normal"
+                              />
+                            )}
+                            {'job' in data && (
+                              <span className="pr-3 leading-5 tracking-tight">
+                                {data.job}
+                              </span>
+                            )}
+                            {'techStack' in data && (
+                              <img
+                                src={data.iconImageUrl}
+                                alt={data.techStack}
+                                className="size-7"
+                              />
+                            )}
+                          </li>
+                        ))}
+                      </ScrollContainer>
+                    ) : (
+                      <span className="text-darkGray">{emptyValue}</span>
+                    )}
+                  </div>
+                ))}
+              <div className="relative flex flex-col">
+                <Title
+                  title={`${userInfo?.name}님이 작성한 글 모음`}
+                  className="mb-[10px]"
+                />
+                <UserPostCollection userId={userId} username={userInfo.name} />
               </div>
             </div>
           </div>

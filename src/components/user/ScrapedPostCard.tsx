@@ -2,19 +2,25 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
+
 import { postTypeObj } from '@/constants';
 import { useHandleScrap } from '@/hooks';
-import { MyScrapedPost } from '@/types/mypage/myPostDto';
+import { UserScrap } from '@/types/mypage/myPostDto';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
 import UserImage from '@/components/user/UserImage';
 
 interface ScrapedPostCardProps {
-  card: Omit<MyScrapedPost, 'ptype'>;
+  card: Omit<UserScrap, 'ptype'>;
+  className?: string;
 }
 
-export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {
+export default function ScrapedPostCard({
+  card,
+  className,
+}: ScrapedPostCardProps) {
   const stripHTML = useCallback((htmlString: string) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
@@ -27,10 +33,21 @@ export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {
     invalidateQueryKeys: [{ queryKey: ['useGetMyScrapedPostList'] }],
   });
 
+  const { data: userProfile } = useGetUserProfile();
+
+  const writer = card.writer.nickname === userProfile?.nickname;
+
+  const postLink =
+    card.postType === 'PROJECT' || card.postType === 'STUDY'
+      ? 'lounge'
+      : card.postType;
+
   return (
-    <li className="flex h-[238px] w-full flex-col justify-between rounded-3xl bg-white">
+    <li
+      className={`flex h-[238px] w-full flex-col justify-between rounded-3xl bg-white ${className}`}
+    >
       <Link
-        to={`/${card.postType.toLocaleLowerCase()}/post/${card.postId}`}
+        to={`/${postLink.toLocaleLowerCase()}/post/${card.postId}`}
         className="flex h-full flex-col justify-between p-5"
       >
         <div className="flex items-center justify-between">
@@ -44,7 +61,7 @@ export default function ScrapedPostCard({ card }: ScrapedPostCardProps) {
             size={20}
             isFavorite
             onClick={onScrapClick}
-            disabled={isDeleteScrapPending || !isIdle}
+            disabled={isDeleteScrapPending || !isIdle || !writer}
           />
         </div>
         <h3 className="my-2 tracking-tight">{card.title}</h3>

@@ -25,7 +25,7 @@ export default function MyCourseListWithHover({
 
       {/* 호버 박스 */}
       <div
-        className={`absolute z-40 hidden rounded-[20px] bg-black bg-opacity-90 p-6 shadow-card hover:block peer-hover:block ${hoverBoxClassName}`}
+        className={`absolute z-40 hidden max-h-[380px] overflow-scroll rounded-[20px] bg-black bg-opacity-90 p-6 shadow-card scrollbar-hide hover:block peer-hover:block ${hoverBoxClassName}`}
       >
         {courseList.length > 1 && (
           <header className="mb-4 flex items-center justify-between border-b border-mainGray pb-3 text-white">

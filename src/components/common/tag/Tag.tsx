@@ -82,6 +82,7 @@ export default function Tag({
   const styleByStatus: { [key in StatusKey]: string } = {
     ACTIVE: 'bg-red-400/15 !text-red-400',
     INACTIVE: 'bg-darkGray/20 !text-darkGray-hover',
+    COMPLETE: 'bg-darkGray/20 !text-darkGray-hover',
     END: 'bg-darkGray/20 !text-darkGray-hover',
     WAIT: 'bg-red-400/15 !text-red-400',
     PARTICIPANT: 'bg-mainGreen/20 !text-darkGreen',

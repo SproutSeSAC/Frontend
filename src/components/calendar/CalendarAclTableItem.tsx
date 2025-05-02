@@ -28,14 +28,21 @@ export default function CalendarAclTableItem({
     onGrantAclClick,
   } = useHandleAcl({ courseId, calendarId, adminList });
 
+  const notFoundStyle =
+    courseCalendarAcl === 'Not Found' ? 'bg-[#eeeeee] opacity-30' : '';
+
   return (
     <tr className="group border-t hover:bg-lightGray [&:last-child>td]:border-b-0 [&>td]:border-b [&>td]:py-4">
-      <TableDataCell className="pl-4 [&>label>input]:mr-0 [&>label>input]:size-5">
+      <TableDataCell
+        className={`pl-4 [&>label>input]:mr-0 [&>label>input]:size-5 ${notFoundStyle}`}
+      >
         <span className="text-darkGray">{index + 1}</span>
       </TableDataCell>
 
       {/* 캘린더 생성 상태 */}
-      <TableDataCell className="max-w-[0px] overflow-hidden truncate">
+      <TableDataCell
+        className={`max-w-[0px] overflow-hidden truncate ${notFoundStyle}`}
+      >
         {isCalendarAclLoading && (
           <div className="h-8 w-16 rounded-xl bg-lightGray-active" />
         )}
@@ -44,7 +51,7 @@ export default function CalendarAclTableItem({
           (calendarId ? (
             <div className="w-full px-2">
               <span className="text-center text-sm tracking-tighter text-darkGray">
-                생성완료
+                {courseCalendarAcl === 'Not Found' ? '데이터유실' : '생성완료'}
               </span>
             </div>
           ) : (
@@ -57,13 +64,13 @@ export default function CalendarAclTableItem({
 
       {/* 교육과정명 */}
       <TableDataCell
-        className={`${courseCalendarAcl ? '' : 'text-mainGray'} h-full overflow-hidden pr-8 text-start leading-5 tracking-tight`}
+        className={`${courseCalendarAcl ? '' : 'text-mainGray'} ${notFoundStyle} h-full overflow-hidden pr-8 text-start leading-5 tracking-tight`}
       >
         {courseTitle}
       </TableDataCell>
 
       {/* 캘린더 권한 부여된 유저 */}
-      <TableDataCell>
+      <TableDataCell className={notFoundStyle}>
         {courseAclInfo.isCreated && (
           <div className="flex justify-start">
             {!courseCalendarAcl && (
@@ -87,7 +94,7 @@ export default function CalendarAclTableItem({
       </TableDataCell>
 
       {/* 캘린더 권한 대기중인 유저 */}
-      <TableDataCell>
+      <TableDataCell className={notFoundStyle}>
         {courseAclInfo.isCreated && (
           <>
             {!courseCalendarAcl && (
@@ -109,7 +116,9 @@ export default function CalendarAclTableItem({
       </TableDataCell>
 
       {/* 권한 부여 버튼 */}
-      <TableDataCell className="border-b pr-5 text-end [&>button]:px-4">
+      <TableDataCell
+        className={`border-b pr-5 text-end [&>button]:px-4 ${notFoundStyle}`}
+      >
         <button
           type="button"
           onClick={() => {

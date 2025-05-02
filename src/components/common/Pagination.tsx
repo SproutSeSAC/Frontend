@@ -60,7 +60,10 @@ function Pagination({
 
       {pageNumbers[0] > 1 && (
         <>
-          <button onClick={() => onPageChange(1)} className="text-sm">
+          <button
+            onClick={() => onPageChange(1)}
+            className={`text-sm ${currentPage === 1 ? 'text-black' : 'text-mainGray'}`}
+          >
             1
           </button>
           {pageNumbers[0] !== 2 && <span>...</span>}
@@ -82,7 +85,10 @@ function Pagination({
           {pageNumbers[pageNumbers.length - 1] !== totalPages - 1 && (
             <span>...</span>
           )}
-          <button className="text-sm" onClick={() => onPageChange(totalPages)}>
+          <button
+            className={`text-sm ${currentPage === totalPages ? 'text-black' : 'text-mainGray'}`}
+            onClick={() => onPageChange(totalPages)}
+          >
             {totalPages}
           </button>
         </>

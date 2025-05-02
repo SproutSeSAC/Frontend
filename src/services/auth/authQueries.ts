@@ -26,13 +26,11 @@ export const getCalendarToken = () =>
       sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
     }
   });
-// .catch(async error => {
-//   console.log('calendarToken', error);
-// });
 
 // 리프레시 토큰
 export const getNewAccessToken = () =>
-  axiosInstance.get('/login/refresh').catch(() => {
+  axiosInstance.get('/login/refresh').catch(error => {
+    console.log('리프레시 error:', error);
     window.location.href = `${window.location.origin}/login`;
   });
 

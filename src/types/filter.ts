@@ -18,5 +18,12 @@ export type NoticeParticipantParams = PaginationFilter & {
   searchParticipantStatus: AppliedSessionStatusValue;
 };
 
+export type SessionFilter = {
+  page: number;
+  size: number;
+  keyword: string;
+  applicationStatus?: 'ACTIVE' | 'INACTIVE' | undefined;
+};
+
 /* NOTE: Store 필터 */
 /* NOTE: MyPage 필터 */

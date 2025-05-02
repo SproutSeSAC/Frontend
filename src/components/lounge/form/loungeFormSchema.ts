@@ -76,7 +76,8 @@ export const loungeFormSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['contactDetail'],
-        message: '유효한 링크 주소를 입력해 주세요.',
+        message:
+          '"https://"가 주소 앞에 있는 유효한 링크 주소를 입력해 주세요.',
       });
     }
   });

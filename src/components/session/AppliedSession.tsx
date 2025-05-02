@@ -8,9 +8,13 @@ import AppliedSessionCancelModal from '@/components/session/AppliedSessionCancel
 
 interface AppliedSessionProps {
   session: Session;
+  hasDeleteButton?: boolean;
 }
 
-export default function AppliedSession({ session }: AppliedSessionProps) {
+export default function AppliedSession({
+  session,
+  hasDeleteButton = true,
+}: AppliedSessionProps) {
   const { showDialog } = useDialogContext();
 
   const handleShowDialog = async (appliedSession: Session) => {
@@ -35,10 +39,12 @@ export default function AppliedSession({ session }: AppliedSessionProps) {
         className="!px-2 !py-1.5"
       />
       <span className="w-full overflow-hidden truncate">{session.title}</span>
-      <XButton
-        onDeleteClick={() => handleShowDialog(session)}
-        iconClassName="text-mainGray !size-6"
-      />
+      {hasDeleteButton && (
+        <XButton
+          onDeleteClick={() => handleShowDialog(session)}
+          iconClassName="text-mainGray !size-6"
+        />
+      )}
     </li>
   );
 }

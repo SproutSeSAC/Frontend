@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { RoleKey, UserProfileDto } from '@/types';
+import { RoleKey, SessionDto, UserProfileDto } from '@/types';
 import { UserManagementDto } from '@/types/admin/userToManageDto';
 
 export type UserManagementFilter = {
@@ -15,11 +15,10 @@ export type UserManagementFilter = {
   roles?: RoleKey[];
 };
 
+/** 사용자 목록 조회 */
 export const useGetInfiniteUserList = (params: UserManagementFilter) => {
   const getUserList = async () => {
     const offset = (params.page - 1) * params.size;
-
-    // console.log(params);
 
     const { data } = await axiosInstance.get<UserManagementDto.GetUserList>(
       `/admin/users`,
@@ -39,6 +38,7 @@ export const useGetInfiniteUserList = (params: UserManagementFilter) => {
   });
 };
 
+/** 학생 목록 조회 */
 export const useGetInfiniteTraineeList = (params: UserManagementFilter) => {
   const getUserList = async () => {
     const offset = (params.page - 1) * params.size;
@@ -61,9 +61,10 @@ export const useGetInfiniteTraineeList = (params: UserManagementFilter) => {
   });
 };
 
+/** 사용자 정보 조회 */
 export const useGetUserToManageInfo = ({ userId }: { userId: number }) => {
   const getUserToManage = async () => {
-    const { data } = await axiosInstance.get<UserProfileDto.GetCard>(
+    const { data } = await axiosInstance.get<UserProfileDto.Get>(
       `/admin/users/${userId}`,
     );
     return data;
@@ -72,5 +73,105 @@ export const useGetUserToManageInfo = ({ userId }: { userId: number }) => {
   return useQuery({
     queryKey: ['useGetUserToManageInfo', userId],
     queryFn: getUserToManage,
+  });
+};
+
+/** 학생에 대한 메모 조회 */
+export const useGetTraineeMemo = ({ traineeId }: { traineeId: number }) => {
+  const getTraineeMemo = async () => {
+    const { data } = await axiosInstance.get<UserManagementDto.GetMemo>(
+      `/admin/users/trainees/${traineeId}/memo`,
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetTraineeMemo', traineeId],
+    queryFn: getTraineeMemo,
+  });
+};
+
+/** 사용자 찜한 글 조회 */
+export const useGetUserScrapList = ({
+  userId,
+  // params,
+}: {
+  userId: number;
+  // params: { page: number; size: number; sort?: string[] };
+}) => {
+  const getUserScrapList = async () => {
+    const { data } = await axiosInstance.get<UserManagementDto.GetScrapList>(
+      `/admin/users/${userId}/scrap`,
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetUserScrapList', userId],
+    queryFn: getUserScrapList,
+  });
+};
+
+/** 사용자 작성 글 조회 */
+export const useGetUserPostList = ({
+  userId,
+  // params,
+}: {
+  userId: number;
+  // params: { page: number; size: number; sort: string[] };
+}) => {
+  const getUserPostList = async () => {
+    const { data } = await axiosInstance.get<UserManagementDto.GetPostList>(
+      `/admin/users/${userId}/post`,
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetUserPostList', userId],
+    queryFn: getUserPostList,
+  });
+};
+
+/** 사용자 작성 댓글 조회 */
+export const useGetUserCommentList = ({
+  userId,
+  // params,
+}: {
+  userId: number;
+  // params: { page: number; size: number; sort: string[] };
+}) => {
+  const getUserCommentList = async () => {
+    const { data } = await axiosInstance.get<UserManagementDto.GetCommentList>(
+      `/admin/users/${userId}/comments`,
+    );
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['useGetUserCommentList', userId],
+    queryFn: getUserCommentList,
+  });
+};
+
+/** 사용자가 신청한 특강/행사 */
+export const useGetUserAppliedSessionList = ({
+  userId,
+  type,
+}: {
+  userId: number;
+  type?: 'allList' | 'nearList';
+}) => {
+  const getUserAppliedSessionList = async () => {
+    const { data } = await axiosInstance.get<SessionDto.GetAppliedSessionList>(
+      `/admin/users/${userId}/participantTitle`,
+    );
+    if (type === 'nearList') return data.nearList;
+    return data.allList;
+  };
+
+  return useQuery({
+    queryKey: ['useGetUserAppliedSessionList', userId],
+    queryFn: getUserAppliedSessionList,
   });
 };

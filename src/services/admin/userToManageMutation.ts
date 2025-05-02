@@ -26,7 +26,7 @@ export const usePatchUserToManagePhoneNumber = (
     userId,
     phoneNumber,
   }: ChangeUserPhoneNumber) => {
-    await axiosInstance.patch(`/admin/users/${userId}`, phoneNumber);
+    await axiosInstance.patch(`/admin/users/${userId}`, { phoneNumber });
   };
 
   return useMutation<unknown, Error, ChangeUserPhoneNumber>({
@@ -81,7 +81,9 @@ export const usePostTraineeMemo = (
     traineeId,
     content,
   }: ChangeTraineeMemo) => {
-    await axiosInstance.patch(`/admin/users/role/${traineeId}`, { content });
+    await axiosInstance.post(`/admin/users/trainees/${traineeId}/memo`, {
+      content,
+    });
   };
 
   return useMutation<unknown, Error, ChangeTraineeMemo>({

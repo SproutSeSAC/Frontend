@@ -67,10 +67,10 @@ axiosInstance.interceptors.response.use(
 
         default:
         // NOTE: 에러처리
+        // redirectToLogin();
         // alert(
         //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
         // );
-        // return redirectToLogin();
       }
     }
     return Promise.reject(error);
@@ -114,18 +114,14 @@ axiosCalendarInstance.interceptors.response.use(
     if (error.response && !originalRequest.retry) {
       originalRequest.retry = true;
 
+      /** Google Calendar API 에러 문서:
+       * https://developers.google.com/workspace/calendar/api/guides/errors?hl=ko#errors_suggested_actions */
       switch (error.response.status) {
         case 401:
           return handleCalendarToken();
 
-        case 403:
-          return []; //
-
         default:
-        // NOTE: 에러처리
-        // alert(
-        //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
-        // );
+          return error.response.data.error.message;
       }
     }
     return Promise.reject(error);

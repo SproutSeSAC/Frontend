@@ -26,9 +26,8 @@ export default function ContactMethodDetail({
           `${contactMethod === CONTACT_METHOD_EMAIL ? '이메일 주소' : '연락처'}가 복사되었습니다!`,
         );
       })
-      .catch(err => {
+      .catch(() => {
         showToast('복사에 실패했습니다.');
-        console.error('복사 실패:', err);
       });
   };
 
