@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { axiosInstance } from '@/services/axiosInstance';
+
 import { ACCESS_TOKEN_KEY, CALENDAR_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { deleteCookie } from '@/utils';
@@ -20,6 +22,16 @@ export default function HeaderMenu() {
 
   const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    deleteCookie(ACCESS_TOKEN_KEY);
+    sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
+    navigate('/login');
+    hideDialog();
+    await axiosInstance.get('/sproutLogout', {
+      withCredentials: true,
+    });
+  };
+
   const onLogOutClick = () => {
     alert({
       text: '정말 로그아웃하시겠어요?',
@@ -29,10 +41,7 @@ export default function HeaderMenu() {
             name="확인"
             onClick={async () => {
               await queryClient.invalidateQueries();
-              deleteCookie(ACCESS_TOKEN_KEY);
-              sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
-              navigate('/login');
-              hideDialog();
+              handleLogout();
             }}
             type="button"
           />
