@@ -47,7 +47,7 @@ export default function MyUserNameImageCard() {
       value: (
         <MyCourseListWithHover
           courseList={courseList}
-          hoverBoxClassName="w-[450px] -right-6"
+          hoverBoxClassName="w-[470px] -right-6"
         />
       ),
     },

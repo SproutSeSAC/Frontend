@@ -1,33 +1,31 @@
-import { useMemo } from 'react';
-
-import { Link } from 'react-router-dom';
-
 import {
   useGetMyCommentList,
   useGetMyPostList,
   useGetMyScrapedPostList,
 } from '@/services/post/myPostQueries';
 
-import { collectionAtom } from '@/atoms/tableCollectionAtom';
+import { myCollectionAtom } from '@/atoms/tableCollectionAtom';
 
 import {
   myCollectionList,
   myCommentTypeOptionList,
   myPostTypeOptionList,
-  postTypeObj,
 } from '@/constants';
 import { useDialogContext, useHandlePostTable } from '@/hooks';
-import { formatDate } from '@/utils';
+import { MyCollection as Collection, UserComment } from '@/types';
+import { UserPost } from '@/types/mypage/myPostDto';
 import { useAtom } from 'jotai';
-import { BiExpandVertical } from 'react-icons/bi';
+
+import { Header } from '@/pages/admin/UserPostCollection';
 
 import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
-import TrashButton from '@/components/common/button/TrashButton';
-import Checkbox from '@/components/common/checkbox/Checkbox';
-import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
-import TableDataCell from '@/components/common/table/TableDataCell';
+import TableBody from '@/components/common/table/TableBody';
+import TableContainer from '@/components/common/table/TableContainer';
+import TableHeader from '@/components/common/table/TableHeader';
 import MyCommentModal from '@/components/mypage/MyCommentModal';
+import PostCollectionTabList from '@/components/post-collection/PostCollectionTabList';
+import PostTableRow from '@/components/post-collection/PostTableRow';
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
@@ -36,14 +34,23 @@ export const ITEMS_PER_PAGE = 3;
 export default function MyCollection() {
   const { showDialog } = useDialogContext();
 
-  const [currCollection, setCurrCollection] = useAtom(collectionAtom);
+  const [currCollection, setCurrCollection] = useAtom(myCollectionAtom);
+
+  const { data: postList, isLoading: isMyPostListLoading } =
+    useGetMyPostList(currCollection);
+
+  const { data: commentList, isLoading: isMyCommentListLoading } =
+    useGetMyCommentList(currCollection);
+
+  const { data: scrapedPostList, isLoading: isScrapedPostListLoading } =
+    useGetMyScrapedPostList(currCollection);
 
   const {
-    page: { currentPage, onChangePage },
-    sort: { isLatest, onChangeSort },
+    page: { currentPage, onChangePage, totalPages },
+    sort: { onChangeSort },
     category: {
       checkedCategoryOptionList,
-      onSetCategoryOptionList,
+      setCategoryOptionListByCollection,
       onCategoryOptionListChange,
     },
     postCheckbox: {
@@ -53,54 +60,14 @@ export default function MyCollection() {
       initializePostCheckedBoxList,
     },
     onDeleteConfirmClick,
-    isDeletePostPending,
-    isDeleteCommentPending,
-  } = useHandlePostTable();
-
-  const { data: myPostList, isLoading: isMyPostListLoading } =
-    useGetMyPostList(currCollection);
-
-  const { data: myCommentList, isLoading: isMyCommentListLoading } =
-    useGetMyCommentList(currCollection);
-
-  const { data: myScrapedPostList, isLoading: isMyScrapedPostListLoading } =
-    useGetMyScrapedPostList(currCollection);
-
-  const filteredAndOrderedPostList = useMemo(() => {
-    const currPostList =
-      currCollection === '내가 쓴 게시글' ? myPostList : myCommentList;
-
-    const filteredList = currPostList?.filter(({ postType }) => {
-      return checkedCategoryOptionList.some(({ key }) => key === postType);
-    });
-
-    const orderedList = filteredList?.sort((a, b) => {
-      const getPostTime = (createdAt: string) => new Date(createdAt).getTime();
-
-      if (!isLatest) {
-        return getPostTime(a.createdAt) - getPostTime(b.createdAt);
-      }
-      return getPostTime(b.createdAt) - getPostTime(a.createdAt);
-    });
-    return orderedList || [];
-  }, [
+    paginationList,
+    filteredAndOrderedPostList,
+  } = useHandlePostTable<Collection>({
     currCollection,
-    myPostList,
-    myCommentList,
-    checkedCategoryOptionList,
-    isLatest,
-  ]);
-
-  const paginationList = useMemo(() => {
-    return filteredAndOrderedPostList?.slice(
-      ITEMS_PER_PAGE * (currentPage - 1),
-      ITEMS_PER_PAGE * currentPage,
-    );
-  }, [currentPage, filteredAndOrderedPostList]);
-
-  const totalPages = Math.ceil(
-    (filteredAndOrderedPostList?.length || 0) / ITEMS_PER_PAGE,
-  );
+    postList,
+    commentList,
+    itemListPerPage: 3,
+  });
 
   const handleShowDialog = async (
     type: 'MEAL' | 'STORE',
@@ -126,230 +93,83 @@ export default function MyCollection() {
     }
   };
 
-  const headerCellList = [
+  const isChecked =
+    paginationList.length !== 0 &&
+    checkedPostIdList.length === paginationList.length;
+
+  const disabledDelete =
+    paginationList.length === 0 || checkedPostIdList.length === 0;
+
+  const sortOptionList =
+    currCollection === '내가 쓴 댓글'
+      ? myCommentTypeOptionList
+      : myPostTypeOptionList;
+
+  const headerCellList: Header[] = [
     '체크박스',
     '작성일',
     '분류',
     '게시글 제목',
-    '선택삭제',
+    '선택 삭제',
   ];
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <ul className="mb-4 mt-6 flex items-center gap-3">
-          {myCollectionList.map(collection => (
-            <li key={collection}>
-              <button
-                type="button"
-                aria-label={collection}
-                onClick={() => {
-                  initializePostCheckedBoxList();
-                  onChangePage(1);
-                  onSetCategoryOptionList(collection);
-                  setCurrCollection(collection);
-                }}
-                className={`${currCollection === collection ? 'bg-mainGray-hover text-white underline' : 'bg-white text-darkGray-active'} cursor-pointer rounded-lg border border-mainGray-hover px-4 py-[10px] text-sm font-medium`}
-              >
-                {collection}
-              </button>
-            </li>
-          ))}
-        </ul>
-        {currCollection === '내가 찜한 글' &&
-          myScrapedPostList?.content.length !== 0 && (
-            <Link to="/mypage/scraped-posts" className="mt-3 text-darkGray">
-              더보기
-            </Link>
-          )}
-      </div>
+      <PostCollectionTabList<Collection>
+        collectionList={myCollectionList}
+        currCollection={currCollection}
+        onTabClick={(collection: Collection) => {
+          initializePostCheckedBoxList();
+          onChangePage(1);
+          setCategoryOptionListByCollection(collection);
+          setCurrCollection(collection);
+        }}
+      />
 
       {currCollection !== '내가 찜한 글' && (
         <>
-          <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white py-6">
+          <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white p-6">
             {!isMyPostListLoading && !isMyCommentListLoading && (
-              <table>
-                <colgroup>
-                  <col width="3%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="60%" />
-                  <col width="10%" />
-                </colgroup>
-
-                <thead>
-                  <tr className="text-center">
-                    {headerCellList.map(name => (
-                      <th key={name} className="relative pb-4 font-normal">
-                        {name === '체크박스' && (
-                          <Checkbox
-                            id={name}
-                            checked={
-                              paginationList.length !== 0 &&
-                              checkedPostIdList.length === paginationList.length
-                            }
-                            disabled={paginationList.length === 0}
-                            onChange={() => {
-                              const postList = paginationList.map(
-                                ({ postId }) => postId,
-                              );
-                              return onPostCheckboxListChange(
-                                checkedPostIdList.length !== 0 ? [] : postList,
-                              );
-                            }}
-                            inputClassName="!rounded-lg ml-6 size-5"
-                          />
-                        )}
-                        {name === '작성일' && (
-                          <button
-                            type="button"
-                            onClick={onChangeSort}
-                            className="flex w-full items-center justify-center pl-3"
-                          >
-                            <span>{name}</span>
-                            <BiExpandVertical className="inline size-5 cursor-pointer px-0.5 text-darkGray-hover" />
-                          </button>
-                        )}
-                        {name === '분류' && (
-                          <div className="flex items-center justify-center">
-                            <MultiSelectDropdown
-                              isDefaultLabelSelectBox
-                              selectBoxClassName="border-none pl-1.5 !gap-0"
-                              options={
-                                currCollection === '내가 쓴 게시글'
-                                  ? myPostTypeOptionList
-                                  : myCommentTypeOptionList
-                              }
-                              optionClassName="w-32"
-                              defaultLabel="분류"
-                              value={checkedCategoryOptionList.map(
-                                ({ id }) => id,
-                              )}
-                              onChangeValue={value => {
-                                onCategoryOptionListChange(value);
-                                onChangePage(1);
-                              }}
-                            />
-                          </div>
-                        )}
-                        {name === '게시글 제목' && (
-                          <div className="flex w-full pl-11">
-                            <span className="block">
-                              {currCollection === '내가 쓴 댓글'
-                                ? '댓글 내용'
-                                : name}
-                            </span>
-                          </div>
-                        )}
-                        {name === '선택삭제' && (
-                          <TrashButton
-                            text="선택삭제"
-                            onConfirmClick={() =>
-                              onDeleteConfirmClick(
-                                currCollection,
-                                checkedPostIdList,
-                              )
-                            }
-                            disabled={
-                              paginationList.length === 0 ||
-                              checkedPostIdList.length === 0
-                            }
-                            className="mr-4 !text-black disabled:!text-mainGray"
-                          />
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {paginationList.length !== 0 ? (
-                    paginationList.map(
-                      ({
-                        postId,
-                        postType,
-                        createdAt,
-                        title,
-                        createdNickName: nickname,
-                        linkedId,
-                      }) => {
-                        const type = {
-                          NOTICE: 'notice',
-                          PROJECT: 'lounge',
-                          STUDY: 'lounge',
-                        };
-
-                        return (
-                          <tr key={createdAt} className="hover:bg-gray4 group">
-                            <TableDataCell className="pl-6 [&>label>input]:mr-0 [&>label>input]:size-5">
-                              <Checkbox
-                                id={postType}
-                                checked={!!checkedPostIdList.includes(postId)}
-                                onChange={() => onPostCheckboxChange(postId)}
-                                inputClassName="!rounded-lg"
-                              />
-                            </TableDataCell>
-
-                            <TableDataCell>
-                              {formatDate(createdAt, 'yy.MM.dd')}
-                            </TableDataCell>
-
-                            <TableDataCell>
-                              {postTypeObj[postType]}
-                            </TableDataCell>
-
-                            <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-11 text-start">
-                              {postType === 'MEAL' || postType === 'STORE' ? (
-                                <button
-                                  type="button"
-                                  className="underline"
-                                  onClick={() =>
-                                    handleShowDialog(postType, linkedId, {
-                                      comment: title,
-                                      nickname,
-                                    })
-                                  }
-                                >
-                                  {title}
-                                </button>
-                              ) : (
-                                <Link
-                                  to={`/${type[postType]}/post/${postId}`}
-                                  className="underline"
-                                >
-                                  {title}
-                                </Link>
-                              )}
-                            </TableDataCell>
-
-                            <TableDataCell className="pr-6 [&>button]:px-2">
-                              <TrashButton
-                                className="px-1.5 py-2"
-                                onConfirmClick={() =>
-                                  onDeleteConfirmClick(currCollection, [postId])
-                                }
-                                disabled={
-                                  isDeletePostPending || isDeleteCommentPending
-                                }
-                              />
-                            </TableDataCell>
-                          </tr>
-                        );
-                      },
-                    )
-                  ) : (
-                    <tr>
-                      <td colSpan={6} className="w-full">
-                        <span className="my-12 flex justify-center text-mainGray">
-                          {`아직 ${currCollection}이 없어요`}
-                        </span>
-                      </td>
-                    </tr>
+              <TableContainer colWidthList={[3, 10, 12, 70, 5]}>
+                <TableHeader
+                  headerCellList={headerCellList}
+                  currCollection={currCollection}
+                  isChecked={isChecked}
+                  disabledCheck={false}
+                  onCheckboxClick={() => {
+                    const idList = paginationList.map(({ postId }) => postId);
+                    return onPostCheckboxListChange(
+                      checkedPostIdList.length !== 0 ? [] : idList,
+                    );
+                  }}
+                  sortOptionList={sortOptionList}
+                  onChangeSort={onChangeSort}
+                  checkedCategoryOptionList={checkedCategoryOptionList}
+                  onChangeCategory={onCategoryOptionListChange}
+                  disabledDelete={disabledDelete}
+                  onDeleteConfirmClick={() => {}}
+                />
+                <TableBody<UserPost | UserComment>
+                  paginationList={paginationList}
+                  colLength={5}
+                >
+                  {post => (
+                    <PostTableRow
+                      headerCellList={headerCellList}
+                      post={post}
+                      handleShowDialog={handleShowDialog}
+                      checkedPostIdList={checkedPostIdList}
+                      onPostCheckboxChange={onPostCheckboxChange}
+                      onDeleteConfirmClick={(postId: number) =>
+                        onDeleteConfirmClick(currCollection, [postId])
+                      }
+                    />
                   )}
-                </tbody>
-              </table>
+                </TableBody>
+              </TableContainer>
             )}
           </div>
+
           {filteredAndOrderedPostList?.length !== 0 && (
             <Pagination
               totalPages={totalPages}
@@ -365,10 +185,10 @@ export default function MyCollection() {
 
       {currCollection === '내가 찜한 글' && (
         <>
-          {!isMyScrapedPostListLoading &&
-            (myScrapedPostList?.content.length !== 0 ? (
+          {!isScrapedPostListLoading &&
+            (scrapedPostList?.content.length !== 0 ? (
               <ul className="grid min-h-[230px] grid-cols-3 gap-5">
-                {myScrapedPostList?.content
+                {scrapedPostList?.content
                   ?.slice(0, 3)
                   ?.map(card => (
                     <ScrapedPostCard key={card.postId} card={card} />
@@ -380,7 +200,7 @@ export default function MyCollection() {
               </div>
             ))}
 
-          {isMyScrapedPostListLoading && (
+          {isScrapedPostListLoading && (
             <div className="flex h-[230px] items-center justify-center rounded-[20px] border bg-white p-3">
               <LoopLoading size={90} />
             </div>

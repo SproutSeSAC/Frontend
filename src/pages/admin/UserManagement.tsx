@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 
-import { Link } from 'react-router-dom';
-
 import {
   UserManagementFilter,
   useGetInfiniteTraineeList,
@@ -14,6 +12,7 @@ import {
 } from '@/services/campusCourse/campusCourseQueries';
 
 import {
+  HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST,
   USER_MANAGEMENT_TAB_LIST,
   UserManagementTabType,
   traineeLabelList,
@@ -22,6 +21,7 @@ import {
 import { useFilterData, useHandleTabNavigation } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { hasSuperAdmin } from '@/utils';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import Pagination from '@/components/common/Pagination';
@@ -35,8 +35,6 @@ const initialFilter: UserManagementFilter = {
   size: 7,
   keyword: '',
 };
-
-type UserManagementTabName = 'user-list' | 'trainee-list';
 
 export default function UserManagement() {
   const { tabName, handleChangeTab } = useHandleTabNavigation();
@@ -101,7 +99,7 @@ export default function UserManagement() {
   };
 
   const dataType =
-    dataTypeObj[(tabName ?? 'trainee-list') as UserManagementTabName];
+    dataTypeObj[(tabName ?? 'trainee-list') as UserManagementTabType];
 
   const { data, labelList, gridStyle } = dataType;
 
@@ -111,7 +109,11 @@ export default function UserManagement() {
 
       <TabNavigation<UserManagementTabType>
         selectValue={tabName ?? 'trainee-list'}
-        tabList={USER_MANAGEMENT_TAB_LIST}
+        tabList={
+          hasSuperAdmin(userProfile.role)
+            ? HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST
+            : USER_MANAGEMENT_TAB_LIST
+        }
         onChangeValue={handleChangeTab}
         tabClassName="!p-3"
       />
@@ -138,7 +140,7 @@ export default function UserManagement() {
             onChangeValue={option =>
               handleChangeFilter({ courseId: option[0].id })
             }
-            selectBoxClassName="w-[400px] rounded-xl border-0 justify-between items-center h-12"
+            selectBoxClassName="!max-w-[450px] rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
         )}
@@ -154,7 +156,7 @@ export default function UserManagement() {
         />
       </div>
 
-      <header className={`grid ${gridStyle} mb-2 mt-5 gap-x-3 px-6`}>
+      <header className={`grid gap-x-3 pl-6 pr-2 ${gridStyle} mb-2 mt-5`}>
         {[...labelList, `총 ${data?.totalCounts || 0}명`].map(label => (
           <span key={label} className="text-darkGray-active">
             {label}
@@ -165,13 +167,12 @@ export default function UserManagement() {
       {data && data?.userList.length !== 0 ? (
         <ul className="mb-16 mt-4 flex w-full flex-col gap-4">
           {data.userList.map(user => (
-            <Link key={user.userId} to={`/admin/user/${user.userId}`}>
-              <UserManagementItem
-                user={user}
-                type={tabName as 'trainee-list' | 'user-list'}
-                className={`grid gap-x-3 ${gridStyle}`}
-              />
-            </Link>
+            <UserManagementItem
+              key={user.userId}
+              user={user}
+              type={tabName as 'trainee-list' | 'user-list'}
+              className={`grid gap-x-3 pl-6 pr-2 ${gridStyle}`}
+            />
           ))}
         </ul>
       ) : (

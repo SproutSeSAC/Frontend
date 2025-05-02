@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { usePatchUserToManagePhoneNumber } from '@/services/admin/userToManageMutation';
 
 import { colorByCampusObj, modalSizeObj, rolesObj } from '@/constants';
@@ -10,7 +12,6 @@ import { BsThreeDotsVertical, BsX } from 'react-icons/bs';
 import * as z from 'zod';
 
 import SquareButton from '@/components/common/button/SquareButton';
-import OutsideClickContainer from '@/components/common/container/OutsideClickContainer';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import Tag from '@/components/common/tag/Tag';
 import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
@@ -87,58 +88,67 @@ export default function UserManagementItem({
   };
 
   return (
-    <div
-      className={`relative items-center rounded-xl bg-white px-6 py-[22px] [&>div>div>span]:text-darkGray-hover [&>span]:text-darkGray-hover ${className}`}
+    <Link
+      key={user.userId}
+      to={`/admin/user/${user.userId}`}
+      onClick={e => {
+        if (currMenu.isOpen) {
+          e.preventDefault();
+        }
+      }}
+      className={currMenu.isOpen ? 'cursor-default' : ''}
     >
-      {/* 캠퍼스색상 */}
-      <div className={`absolute h-full w-2 rounded-l-xl ${campusColor}`} />
+      <div
+        className={`relative h-[70px] items-center rounded-xl bg-white [&>div>div>span]:text-darkGray-hover [&>span]:text-darkGray-hover ${className}`}
+      >
+        {/* 캠퍼스색상 */}
+        <div className={`absolute h-full w-2 rounded-l-xl ${campusColor}`} />
 
-      <span>{userName}</span>
-      <span>{nickname}</span>
-      <span className="truncate">{email}</span>
-      <span className="truncate">
-        {campusList.map(({ name }) => name.slice(0, -3)).join(', ')}
-      </span>
-      {type === 'user-list' && (
-        <Tag
-          text={rolesObj[role!]}
-          roleKey={role}
-          size="medium"
-          className="w-fit"
+        <span>{userName}</span>
+        <span>{nickname}</span>
+        <span className="truncate">{email}</span>
+        <span className="truncate">
+          {campusList.map(({ name }) => name.slice(0, -3)).join(', ')}
+        </span>
+        {type === 'user-list' && (
+          <Tag
+            text={rolesObj[role!]}
+            roleKey={role}
+            size="medium"
+            className="w-fit"
+          />
+        )}
+
+        <MyCourseListWithHover
+          courseList={courseList.map(({ name }) => ({ courseTitle: name }))}
+          className={type === 'trainee-list' ? 'col-span-2' : ''}
+          hoverBoxClassName="left-0"
         />
-      )}
 
-      <MyCourseListWithHover
-        courseList={courseList.map(({ name }) => ({ courseTitle: name }))}
-        className={type === 'trainee-list' ? 'col-span-2' : ''}
-        hoverBoxClassName="left-0 max-h-[260px] overflow-scroll scrollbar-hide"
-      />
-
-      {type === 'user-list' && (
-        <>
-          <div className="group relative flex items-center justify-center">
-            <BsThreeDotsVertical className="size-5" />
-            <div className="absolute -right-8 top-1.5 z-40 hidden py-4 hover:block group-hover:block">
-              <ul className="flex w-[120px] flex-col items-center gap-1.5 rounded-md bg-black bg-opacity-90 p-2 shadow-2xl">
-                {actionLabelList.map(label => (
-                  <li key={label} className="relative w-full">
-                    <button
-                      onClick={event => {
-                        event.preventDefault();
-                        setCurrMenu({ label, email, isOpen: true });
-                      }}
-                      className="w-full rounded-md py-2 font-medium text-white hover:bg-darkGray-hover hover:bg-opacity-30"
-                    >
-                      {label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+        {type === 'user-list' && (
+          <>
+            <div className="group relative flex h-full items-center justify-center">
+              <BsThreeDotsVertical className="size-5" />
+              <div className="absolute -right-8 top-10 z-40 hidden py-4 hover:block group-hover:block">
+                <ul className="flex w-[120px] flex-col items-center gap-1.5 rounded-md bg-black bg-opacity-90 p-2 shadow-2xl">
+                  {actionLabelList.map(label => (
+                    <li key={label} className="relative w-full">
+                      <button
+                        onClick={event => {
+                          event.preventDefault();
+                          setCurrMenu({ label, email, isOpen: true });
+                        }}
+                        className="w-full rounded-md py-2 font-medium text-white hover:bg-darkGray-hover hover:bg-opacity-30"
+                      >
+                        {label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
 
-          {currMenu.isOpen && email === currMenu.email && (
-            <OutsideClickContainer onClose={onMenuClose}>
+            {currMenu.isOpen && email === currMenu.email && (
               <div
                 className={`absolute right-0 top-0 z-40 rounded-lg bg-white px-8 py-4 shadow-2xl ${modalSizeObj.md}`}
               >
@@ -211,10 +221,10 @@ export default function UserManagementItem({
                   </>
                 )}
               </div>
-            </OutsideClickContainer>
-          )}
-        </>
-      )}
-    </div>
+            )}
+          </>
+        )}
+      </div>
+    </Link>
   );
 }

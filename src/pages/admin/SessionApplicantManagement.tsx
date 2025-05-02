@@ -1,22 +1,22 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 
-import { useGetInfiniteSessionNoticeList } from '@/services/post/noticeQueries';
+import { useGetNoticeSessionList } from '@/services/session/sessionsQueries';
 
 import { useFilterData, useHandleTabNavigation, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { NoticeDisplay, NoticeFilter } from '@/types';
+import { SessionFilter } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
 import TabNavigation from '@/components/common/TabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
 import SearchInput from '@/components/common/input/SearchInput';
-import ManagingSessionCardList from '@/components/session/ManagingSessionCardList';
+import ManagingSessionCard from '@/components/session/ManagingSessionCard';
 
 const initialFilter = {
   page: 1,
-  size: 5,
+  size: 10,
   keyword: '',
 };
 
@@ -28,16 +28,18 @@ export default function SessionApplicantManagement() {
     handleChangeKeyword,
     handleResetKeyword,
     debouncedFilter,
-  } = useFilterData<NoticeFilter>({ initialFilter });
+  } = useFilterData<SessionFilter>({ initialFilter });
 
   const {
-    data = {
-      pages: [{ notices: [] }],
-    },
+    data: noticeSessionList,
     isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useGetInfiniteSessionNoticeList(debouncedFilter);
+  } = useGetNoticeSessionList({ filterParams: debouncedFilter });
+
+  const sessionList = noticeSessionList?.pages
+    .map(page => page.noticeSessionList)
+    .flat();
 
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
@@ -45,16 +47,12 @@ export default function SessionApplicantManagement() {
 
   useObserver({ runFucAtIntersect, target: observeRef, threshold: 0.1 });
 
-  const specialLectureNoticeList: NoticeDisplay[] = useMemo(() => {
-    return data.pages.map(({ notices }) => notices).flat();
-  }, [data?.pages]);
-
   const { tabName, handleChangeTab } = useHandleTabNavigation();
 
   const tabList = [
     { text: '전체', type: 'ALL' },
     { text: '모집 중', type: 'ACTIVE' },
-    { text: '모집 종료', type: 'END' },
+    { text: '모집 종료', type: 'INACTIVE' },
   ];
 
   return (
@@ -95,18 +93,18 @@ export default function SessionApplicantManagement() {
       )}
 
       {!isLoading &&
-        (specialLectureNoticeList?.length === 0 ? (
+        (sessionList?.length === 0 ? (
           <EmptyContent
-            message="공지사항이 없습니다."
+            message="특강 / 행사가 없습니다."
             className="h-full pb-20"
           />
         ) : (
           <>
             <ul className="grid grid-cols-3 gap-8">
-              {specialLectureNoticeList?.map(notice => (
-                <ManagingSessionCardList
-                  key={notice.noticeId}
-                  notice={notice}
+              {sessionList?.map(session => (
+                <ManagingSessionCard
+                  key={session.session.sessionId}
+                  sessionDetail={session}
                 />
               ))}
             </ul>

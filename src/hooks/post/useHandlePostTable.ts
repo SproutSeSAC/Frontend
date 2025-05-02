@@ -1,21 +1,37 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useDeleteComment } from '@/services/comment/commentMutations';
 import { useDeleteMyPost } from '@/services/post/postMutation';
 
-import { collectionAtom } from '@/atoms/tableCollectionAtom';
-
 import { myCommentTypeOptionList, myPostTypeOptionList } from '@/constants';
-import { Collection, Option } from '@/types';
-import { useAtomValue } from 'jotai';
+import { Option, UserComment } from '@/types';
+import { UserPost } from '@/types/mypage/myPostDto';
 
-export const ITEMS_PER_PAGE = 3;
+export type CommentItem = {
+  postType: 'MEAL' | 'STORE' | 'NOTICE' | 'PROJECT' | 'STUDY';
+  title: string;
+  createdNickName: string;
+  linkedId: number;
+  postId: number;
+  commentId: number;
+  createdAt: string;
+};
 
-export const useHandlePostTable = () => {
-  const currCollection = useAtomValue(collectionAtom);
+interface UseHandlePostTableProps<T> {
+  currCollection: T;
+  postList?: UserPost[];
+  commentList?: UserComment[];
+  itemListPerPage?: number;
+}
 
+export const useHandlePostTable = <T extends string>({
+  currCollection,
+  postList,
+  commentList,
+  itemListPerPage = 3,
+}: UseHandlePostTableProps<T>) => {
   const queryClient = useQueryClient();
 
   const [isLatest, setIsLatest] = useState(true);
@@ -23,7 +39,7 @@ export const useHandlePostTable = () => {
   const [checkedCategoryOptionList, setCheckedCategoryOptionList] = useState<
     Option[]
   >(
-    currCollection === '내가 쓴 게시글'
+    currCollection.includes('게시글')
       ? myPostTypeOptionList
       : myCommentTypeOptionList,
   );
@@ -56,7 +72,7 @@ export const useHandlePostTable = () => {
     );
   };
 
-  const onSetCategoryOptionList = (collection: Collection) => {
+  const setCategoryOptionListByCollection = (collection: T) => {
     const optionList =
       collection === '내가 쓴 댓글'
         ? myCommentTypeOptionList
@@ -67,6 +83,7 @@ export const useHandlePostTable = () => {
 
   const onCategoryOptionListChange = (value: Option[]) => {
     setCheckedCategoryOptionList(value);
+    onChangePage(1);
   };
 
   const { mutateAsync: deletePost, isPending: isDeletePostPending } =
@@ -75,13 +92,10 @@ export const useHandlePostTable = () => {
   const { mutateAsync: deleteComment, isPending: isDeleteCommentPending } =
     useDeleteComment();
 
-  const onDeleteConfirmClick = (
-    collection: Collection,
-    postIdList: number[],
-  ) => {
+  const onDeleteConfirmClick = (collection: T, postIdList: number[]) => {
     if (
       currentPage > 1 &&
-      (postIdList.length === ITEMS_PER_PAGE || postIdList.length === 1)
+      (postIdList.length === itemListPerPage || postIdList.length === 1)
     ) {
       onChangePage('prevPage');
     }
@@ -101,19 +115,59 @@ export const useHandlePostTable = () => {
     });
   };
 
+  const filteredAndOrderedPostList = useMemo(() => {
+    const currPostList =
+      currCollection === '내가 쓴 게시글' ? postList : commentList;
+
+    const filteredList = currPostList?.filter(({ postType }) => {
+      return checkedCategoryOptionList.some(({ key }) => key === postType);
+    });
+
+    const orderedList = filteredList?.sort((a, b) => {
+      const getPostTime = (createdAt: string) => new Date(createdAt).getTime();
+
+      if (!isLatest) {
+        return getPostTime(a.createdAt) - getPostTime(b.createdAt);
+      }
+      return getPostTime(b.createdAt) - getPostTime(a.createdAt);
+    });
+    return orderedList || [];
+  }, [
+    currCollection,
+    postList,
+    commentList,
+    checkedCategoryOptionList,
+    isLatest,
+  ]);
+
+  const paginationList = useMemo(() => {
+    return filteredAndOrderedPostList?.slice(
+      itemListPerPage * (currentPage - 1),
+      itemListPerPage * currentPage,
+    );
+  }, [currentPage, filteredAndOrderedPostList, itemListPerPage]);
+
+  const totalPages = Math.ceil(
+    (filteredAndOrderedPostList?.length || 0) / itemListPerPage,
+  );
+
   return {
+    paginationList,
+    filteredAndOrderedPostList,
+
     sort: {
       isLatest,
       onChangeSort,
     },
     category: {
       checkedCategoryOptionList,
-      onSetCategoryOptionList,
+      setCategoryOptionListByCollection,
       onCategoryOptionListChange,
     },
     page: {
       currentPage,
       onChangePage,
+      totalPages,
     },
     postCheckbox: {
       checkedPostIdList,

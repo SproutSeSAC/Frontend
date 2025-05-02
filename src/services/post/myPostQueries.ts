@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { Collection } from '@/types';
-import { myPostDto } from '@/types/mypage/myPostDto';
+import { MyCollection } from '@/types';
+import { MyPostDto, UserComment } from '@/types/mypage/myPostDto';
 
-export const useGetMyPostList = (collection: Collection) => {
+export const useGetMyPostList = (collection: MyCollection) => {
   const getMyPostList = async () => {
     const { data } =
-      await axiosInstance.get<myPostDto.GetMyPostList>(`/mypage/getPost`);
+      await axiosInstance.get<MyPostDto.GetPostList>(`/mypage/getPost`);
     return data;
   };
   return useQuery({
@@ -18,10 +18,10 @@ export const useGetMyPostList = (collection: Collection) => {
   });
 };
 
-export const useGetMyScrapedPostList = (collection: Collection) => {
+export const useGetMyScrapedPostList = (collection: MyCollection) => {
   const getMyScrapedPostList = async () => {
     const { data: postList } =
-      await axiosInstance.get<myPostDto.GetMyScrapedPostList>(
+      await axiosInstance.get<MyPostDto.GetScrapedPostList>(
         `/mypage/getScrap`,
         {
           params: {
@@ -47,21 +47,20 @@ export const useGetMyScrapedPostList = (collection: Collection) => {
   });
 };
 
-export const useGetMyCommentList = (collection: Collection) => {
+export const useGetMyCommentList = (collection: MyCollection) => {
   const getMyScrapedPostList = async () => {
     const { data } =
-      await axiosInstance.get<myPostDto.GetMyCommentList>(
-        `/mypage/getComments`,
-      );
-    return data.map(({ userNickname, content, postType, ptype, ...rest }) => ({
-      ...rest,
-      postType: postType === 'PROJECT' ? ptype : postType,
-      title: content,
-      createdNickName: userNickname,
-      linkedId: rest.postId,
-      postId: rest.postId,
-    }));
+      await axiosInstance.get<MyPostDto.GetCommentList>(`/mypage/getComments`);
+
+    return data.map(
+      ({ postType, ptype, ...rest }) =>
+        ({
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        }) as UserComment,
+    );
   };
+
   return useQuery({
     queryKey: ['useGetMyCommentList'],
     queryFn: getMyScrapedPostList,

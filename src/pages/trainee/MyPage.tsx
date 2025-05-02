@@ -47,7 +47,7 @@ export default function MyPage() {
       </section>
 
       <section className="mb-20 min-h-[420px]">
-        <Title title={`${name}님이 작성한 글 모음`} />
+        <Title title={`${name}님이 작성한 글 모음`} className="mb-4" />
         <MyCollection />
       </section>
 

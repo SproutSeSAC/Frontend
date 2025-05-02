@@ -147,7 +147,7 @@ export default function SessionApplicantManagementDetail() {
     WAIT: 'text-red-500',
     PARTICIPANT: 'text-mainGreen-hover',
     REJECT: 'text-mainBlue-active',
-    END: 'text-gray-500',
+    COMPLETE: 'text-gray-500',
     UNKNOWN: 'text-gray-500',
   };
 
@@ -156,16 +156,14 @@ export default function SessionApplicantManagementDetail() {
 
   const allChecked = applicantList?.length === checkedList.length;
 
-  const getSessionStatus = (applicationEndDateTime: string) => {
-    const checkIsEndSession = (sessionEndDateTime: string) => {
-      return new Date(sessionEndDateTime).getTime() < new Date().getTime();
+  const getSessionStatus = (sessionEndDateTime: string) => {
+    const checkIsEndSession = (endDateTime: string) => {
+      return new Date(endDateTime).getTime() < new Date().getTime();
     };
-
-    const isEndSession = checkIsEndSession(applicationEndDateTime);
-
+    const isEndSession = checkIsEndSession(sessionEndDateTime);
     const currentStatus: SessionStatusKey = isEndSession
       ? 'INACTIVE'
-      : noticeDetail?.status || 'UNKNOWN';
+      : 'ACTIVE';
 
     return currentStatus;
   };
@@ -227,24 +225,30 @@ export default function SessionApplicantManagementDetail() {
               ? '제한 없음'
               : noticeDetail?.participantCapacity}
           </span>
-          <SquareButton
-            name={allChecked ? '선택 해제' : '모두 선택'}
-            className="!bg-mainGray-active !text-white"
-            onClick={allChecked ? onAllClearCheckedChange : onAllCheckedChange}
-          />
-          <SquareButton
-            name="승인"
-            color="lightGreen"
-            className="!text-darkGreen"
-            onClick={() => handleCheckedItem('승인')}
-            disabled={isAcceptPending}
-          />
-          <SquareButton
-            name="반려"
-            className="!bg-red-100 !text-red-500"
-            onClick={() => handleCheckedItem('반려')}
-            disabled={isRejectPending}
-          />
+          {getSessionStatus(session.sessionEndDateTime) === 'ACTIVE' && (
+            <>
+              <SquareButton
+                name={allChecked ? '선택 해제' : '모두 선택'}
+                className="!bg-mainGray-active !text-white"
+                onClick={
+                  allChecked ? onAllClearCheckedChange : onAllCheckedChange
+                }
+              />
+              <SquareButton
+                name="승인"
+                color="lightGreen"
+                className="!text-darkGreen"
+                onClick={() => handleCheckedItem('승인')}
+                disabled={isAcceptPending}
+              />
+              <SquareButton
+                name="반려"
+                className="!bg-red-100 !text-red-500"
+                onClick={() => handleCheckedItem('반려')}
+                disabled={isRejectPending}
+              />
+            </>
+          )}
         </div>
       </div>
 

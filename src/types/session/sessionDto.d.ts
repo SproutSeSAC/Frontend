@@ -1,4 +1,13 @@
-import { PageableType, RoleKey } from '@/types';
+import { StatusBase } from '@/constants';
+import {
+  MeetingTypeKey,
+  NoticeCategoryDisplayKey,
+  NoticeSession,
+  NoticeTargetCourse,
+  NoticeWriter,
+  PageableType,
+  RoleKey,
+} from '@/types';
 
 export namespace SessionDto {
   export type GetSessionApplicantList = PageableType & { content: Applicant[] };
@@ -6,6 +15,7 @@ export namespace SessionDto {
     allList: AppliedSession[];
     nearList: AppliedSession[];
   };
+  export type GetNoticeSessionList = NoticeSessionDetail[];
 }
 
 type Applicant = {
@@ -31,4 +41,21 @@ type AppliedSession = {
   endDateTime: string;
   role: RoleKey;
   ordinal: number;
+};
+
+type NoticeSessionDetail = {
+  postId: number;
+  noticeId: number;
+  title: string;
+  noticeType: NoticeCategoryDisplayKey;
+  status: StatusBase;
+  createdAt: string;
+  applicationStartDateTime: string;
+  applicationEndDateTime: string;
+  meetingPlace: string;
+  meetingType: MeetingTypeKey;
+  participantCapacity: number;
+  writer: NoticeWriter;
+  targetCourses: NoticeTargetCourse[];
+  session: NoticeSession;
 };

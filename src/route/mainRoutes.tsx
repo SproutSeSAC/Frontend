@@ -7,9 +7,7 @@ import CourseManagement from '@/pages/admin/CourseManagement';
 import UserManagement from '@/pages/admin/UserManagement';
 import UserManagementDetail from '@/pages/admin/UserManagementDetail';
 
-const MyScrapedPostList = lazy(
-  () => import('@/pages/trainee/MyScrapedPostList'),
-);
+const ScrapedPostList = lazy(() => import('@/pages/trainee/ScrapedPostList'));
 const AppliedSessionsDetail = lazy(
   () => import('@/pages/trainee/AppliedSessionsDetail'),
 );
@@ -66,16 +64,24 @@ const mainRoutes: RouteObject[] = [
         ],
       },
       {
-        path: 'session-status',
-        element: <AppliedSessionsDetail />,
-      },
-      {
         path: 'mypage',
         element: <MyPage />,
       },
       {
-        path: 'mypage/scraped-posts',
-        element: <MyScrapedPostList />,
+        path: 'session-status',
+        element: <AppliedSessionsDetail />,
+      },
+      {
+        path: 'session-status/:userId',
+        element: <AppliedSessionsDetail />,
+      },
+      {
+        path: 'scraped-posts',
+        element: <ScrapedPostList />,
+      },
+      {
+        path: 'scraped-posts/:userId',
+        element: <ScrapedPostList />,
       },
       {
         path: 'stores',

@@ -1,3 +1,5 @@
+import { useParams } from 'react-router-dom';
+
 import { useGetPostDetail } from '@/services/post/postQueries';
 
 import { appliedSessionStatusObj } from '@/constants';
@@ -17,6 +19,8 @@ export default function AppliedSessionCard({
   session,
 }: AppliedSessionCardProps) {
   const { startDateTime, endDateTime, postId, sessionId: sId } = session;
+
+  const params = useParams();
 
   const { data: noticeDetail } =
     useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
@@ -61,17 +65,19 @@ export default function AppliedSessionCard({
 
   const isEndSession = checkIsEndSession(currSession?.sessionEndDateTime);
   const currentStatus: AppliedSessionStatusKey = isEndSession
-    ? 'END'
+    ? 'COMPLETE'
     : currSession.currentStatus || 'UNKNOWN';
 
   return (
     currSession &&
     currentStatus && (
       <div className="group relative flex w-full min-w-[300px] cursor-default flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card">
-        <TrashButton
-          onClick={() => handleShowDialog(session)}
-          className="absolute right-[5%] top-[8%]"
-        />
+        {!params?.userId && (
+          <TrashButton
+            onClick={() => handleShowDialog(session)}
+            className="absolute right-[5%] top-[8%]"
+          />
+        )}
 
         <Tag
           size="big"
@@ -84,26 +90,57 @@ export default function AppliedSessionCard({
           {noticeDetail?.title} {currSession.ordinal}회차
         </h4>
 
-        <ul className="mt-3 flex flex-col gap-1.5 text-sm font-normal text-darkGray">
-          <li>
-            일자 | {formatDate(startDateTime, 'yyyy.MM.dd') || '날짜 없음'}
+        <ul className="my-2 flex flex-1 flex-col gap-1.5 text-sm font-normal text-darkGray">
+          <li className="flex gap-1">
+            <span className="min-w-fit">장소</span>
+            <span>|</span>
+            <span className="overflow-x-scroll truncate whitespace-nowrap scrollbar-hide">
+              {noticeDetail?.meetingType === 'ONLINE' &&
+                (noticeDetail?.meetingPlace ? (
+                  <a
+                    href="https://www.naver.com" // NOTE: url 변경하기
+                    target="_blank"
+                    rel="noreferrer"
+                    className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"
+                  >
+                    {noticeDetail?.meetingPlace}
+                  </a>
+                ) : (
+                  <span className="text-darkGray">미정</span>
+                ))}
+
+              {noticeDetail?.meetingType === 'OFFLINE' &&
+                (noticeDetail?.meetingPlace ? (
+                  <span className="overflow-x-scroll truncate whitespace-nowrap scrollbar-hide">
+                    {noticeDetail?.meetingPlace}
+                  </span>
+                ) : (
+                  <span className="text-darkGray">미정</span>
+                ))}
+            </span>
           </li>
-          <li>
-            시간 |{' '}
+
+          <li className="flex gap-1">
+            <span className="min-w-fit">일자</span>
+            <span>|</span>
+            <span className="overflow-x-scroll truncate whitespace-nowrap scrollbar-hide">
+              {formatDate(startDateTime, 'yyyy.MM.dd') || '미정'}
+            </span>
+          </li>
+
+          <li className="flex gap-1">
+            <span className="min-w-fit">시간</span>
+            <span>|</span>
             {startDateTime && endDateTime
               ? `${formatDate(startDateTime, 'HH:mm')} ~ ${formatDate(endDateTime, 'HH:mm')}`
               : '시간 미정'}
-          </li>
-          <li className="overflow-x-auto whitespace-nowrap scrollbar-hide">
-            {noticeDetail?.meetingType === 'ONLINE' ? '링크' : '장소'} |{' '}
-            {noticeDetail?.meetingPlace || '미정'}
           </li>
         </ul>
 
         <button
           className="flex w-[25%] min-w-[90px] cursor-pointer items-center justify-center self-end rounded-lg bg-darkGray px-[2%] py-[2.5%] hover:bg-darkGray-hover active:bg-darkGray-active disabled:cursor-default disabled:bg-mainGray"
           onClick={openSurveyLink}
-          disabled={!!noticeDetail?.satisfactionSurvey}
+          disabled={noticeDetail?.satisfactionSurvey === ''}
           onKeyDown={event => {
             if (event.key !== 'Enter' && event.key !== ' ') return;
             openSurveyLink();
