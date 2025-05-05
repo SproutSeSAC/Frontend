@@ -40,9 +40,11 @@ export default function StoreProposalEditModal({
 
   const { mutateAsync, isPending, isIdle } = usePostStoreReport();
 
+  const hideModal = () => hideDialog('STORE-PROPOSAL-EDIT-MODAL-TYPE');
+
   const onSubmit = async ({ content }: FormValues) => {
     mutateAsync({ type: 'UPDATE', targetStoreName: storeName, content });
-    hideDialog('STORE-PROPOSAL-EDIT-MODAL-TYPE');
+    hideModal();
     showToast('정보 수정을 요청했어요!', 1000);
   };
 
@@ -54,7 +56,7 @@ export default function StoreProposalEditModal({
   };
 
   return (
-    <Modal onClose={hideDialog} title="정보 수정 제안하기">
+    <Modal onClose={hideModal} title="정보 수정 제안하기">
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
         className="flex flex-col"
