@@ -1,43 +1,72 @@
-/** 관리자 페이지 탭 */
+/** 관리자 페이지 관련 상수 정의 파일 */
 
-// 교육과정 관리 탭
-export type CourseManagementTabType = 'course' | 'calendar';
-export const HAS_SUPER_ADMIN_COURSE_MANAGEMENT_TAB_LIST: {
-  text: string;
-  type: CourseManagementTabType;
-}[] = [
-  { text: '캘린더 관리', type: 'calendar' },
+/**
+ * 관리자 페이지 탭 설정 모음
+ *
+ * 일반 유저와 슈퍼 어드민 권한 유저의 탭 구성이 다릅니다.
+ * - 슈퍼 어드민 권한용 탭은 변수명 뒤에 `ForHasSuperAdmin`이 붙습니다.
+ *
+ * 탭 종류:
+ * 1. 교육과정 관리
+ * 2. 사용자 관리
+ * 3. 특강/행사 모집 현황 탭
+ * 4. 특강/행사 신청자 현황 탭
+ */
+
+/**
+ * 1. 교육과정 관리 탭
+ * - 기본: '교육과정 관리'
+ * - 슈퍼 어드민: '캘린더 관리' + 기본 탭
+ */
+export const courseManagementTabList = [
   { text: '교육과정 관리', type: 'course' },
-];
-export const COURSE_MANAGEMENT_TAB_LIST: {
-  text: string;
-  type: CourseManagementTabType;
-}[] = [{ text: '교육과정 관리', type: 'course' }];
+] as const;
 
-// 사용자 관리 탭
-export type UserManagementTabType = 'trainee-list' | 'user-list';
-export const HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST: {
-  text: string;
-  type: UserManagementTabType;
-}[] = [
+export const courseManagementTabListForHasSuperAdmin = [
+  { text: '캘린더 관리', type: 'calendar' },
+  ...courseManagementTabList,
+] as const;
+
+/**
+ * 2. 사용자 관리 탭
+ * - 기본: '학생 목록'
+ * - 슈퍼 어드민: + '사용자 목록'
+ */
+export const userManagementTabList = [
   { text: '학생 목록', type: 'trainee-list' },
+] as const;
+
+export const userManagementTabListForHasSuperAdmin = [
+  ...userManagementTabList,
   { text: '사용자 목록', type: 'user-list' },
-];
-export const USER_MANAGEMENT_TAB_LIST: {
-  text: string;
-  type: UserManagementTabType;
-}[] = [{ text: '학생 목록', type: 'trainee-list' }];
+] as const;
 
-// 특강 / 행사 신청 현황 탭
-export type SessionStatusTabType = 'all' | 'recruit-completed';
-export const SESSION_STATUS_TAB_LIST: {
-  text: string;
-  type: SessionStatusTabType;
-}[] = [
-  { text: '전체', type: 'all' },
-  { text: '모집 완료', type: 'recruit-completed' },
-];
+/**
+ * 3. 특강/행사 모집 현황 탭
+ * - 기본: 전체 / 모집 중 / 모집 종료
+ */
+export const sessionStatusTabList = [
+  { text: '전체', type: 'ALL' },
+  { text: '모집 중', type: 'ACTIVE' },
+  { text: '모집 종료', type: 'INACTIVE' },
+] as const;
 
+/**
+ * 4. 특강/행사 신청자 현황 탭
+ * - 기본: 전체 / 대기 / 승인 / 반려
+ */
+export const sessionApplicantsStatusTabList = [
+  { text: '전체', type: 'ALL' },
+  { text: '대기', type: 'WAIT' },
+  { text: '승인', type: 'PARTICIPANT' },
+  { text: '반려', type: 'REJECT' },
+] as const;
+
+/**
+ * 사용자 관리 페이지 표 라벨 목록
+ * 1. 교육생 목록 표 라벨
+ * 2. 사용자 목록 표 라벨
+ */
 export const userLabelList = [
   '이름',
   '닉네임',
@@ -45,7 +74,7 @@ export const userLabelList = [
   '소속 캠퍼스',
   '역할',
   '교육과정',
-];
+] as const;
 
 export const traineeLabelList = [
   '이름',
@@ -53,4 +82,17 @@ export const traineeLabelList = [
   '이메일',
   '소속 캠퍼스',
   '교육과정',
+] as const;
+
+/**
+ * 특강/행사 신청 현황 페이지 표 라벨 목록
+ */
+export const sessionApplicantsTableHeaderList = [
+  '이름',
+  '캠퍼스',
+  '교육과정',
+  '메일주소',
+  '연락처',
+  '신청 시간',
+  '상태',
 ];

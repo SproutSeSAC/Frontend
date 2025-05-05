@@ -49,15 +49,20 @@ export const useHandleSessionApplicantList = ({
     });
   };
 
-  const { mutateAsync: acceptApplicant, isPending: isAcceptPending } =
-    usePostAcceptSession({
-      onSuccess: invalidateQueries,
-    });
+  const {
+    mutateAsync: acceptApplicant,
+    isPending: isAcceptPending,
+    isIdle: isAcceptIdle,
+  } = usePostAcceptSession();
 
-  const { mutateAsync: rejectApplicant, isPending: isRejectPending } =
-    usePostRejectSession({
-      onSuccess: invalidateQueries,
-    });
+  const {
+    mutateAsync: rejectApplicant,
+    isPending: isRejectPending,
+    isIdle: isRejectIdle,
+  } = usePostRejectSession();
+
+  const isPending =
+    (isAcceptPending && !isAcceptIdle) || (isRejectPending && !isRejectIdle);
 
   const onAllClearCheckedChange = () => setCheckedList([]);
 
@@ -96,10 +101,10 @@ export const useHandleSessionApplicantList = ({
     onCheckedChange,
     onAllClearCheckedChange,
     onAllCheckedChange,
+    invalidateQueries,
 
     acceptApplicant,
-    isAcceptPending,
     rejectApplicant,
-    isRejectPending,
+    isPending,
   };
 };

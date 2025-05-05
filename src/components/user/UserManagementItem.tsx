@@ -5,6 +5,11 @@ import { Link } from 'react-router-dom';
 import { usePatchUserToManagePhoneNumber } from '@/services/admin/userToManageMutation';
 
 import { colorByCampusObj, modalSizeObj, rolesObj } from '@/constants';
+import {
+  ColorByCampus,
+  UserManagingActionLabel,
+  UserManagingActionMenu,
+} from '@/types/admin';
 import { UserManagementDto } from '@/types/admin/userToManageDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -22,16 +27,6 @@ interface UserManagementItemProps {
   className: string;
 }
 
-type ColorByCampus = keyof typeof colorByCampusObj;
-
-type ActionLabel = '권한 수정' | '연락처 수정' | '회원 탈퇴';
-
-type ActionMenu = {
-  label: ActionLabel;
-  email: string;
-  isOpen: boolean;
-};
-
 export const formSchema = z.object({
   phoneNumber: z
     .string()
@@ -44,7 +39,7 @@ export default function UserManagementItem({
   type,
   className,
 }: UserManagementItemProps) {
-  const [currMenu, setCurrMenu] = useState<ActionMenu>({
+  const [currMenu, setCurrMenu] = useState<UserManagingActionMenu>({
     label: '권한 수정',
     email: '',
     isOpen: false,
@@ -76,7 +71,7 @@ export default function UserManagementItem({
         : '다수') as ColorByCampus
     ];
 
-  const actionLabelList: ActionLabel[] = [
+  const actionLabelList: UserManagingActionLabel[] = [
     '권한 수정',
     '연락처 수정',
     '회원 탈퇴',

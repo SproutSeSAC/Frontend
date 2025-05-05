@@ -52,8 +52,6 @@ export const useGetNoticeSessionList = ({
         },
       );
 
-      console.log(tabName, data);
-
       const hasNextPage = false; //! data?.isLastPage
 
       const nextPage = hasNextPage ? pageParam + 1 : undefined;

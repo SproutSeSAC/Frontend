@@ -4,8 +4,10 @@ import { useGetPostDetail } from '@/services/post/postQueries';
 
 import {
   LIMITLESS_CAPACITY_NUM,
-  SESSION_TABLE_HEADERS,
+  STATUS_ACTIVE,
   appliedSessionStatusObj,
+  sessionApplicantsStatusTabList,
+  sessionApplicantsTableHeaderList,
 } from '@/constants';
 import {
   useDialogContext,
@@ -14,12 +16,8 @@ import {
 } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import {
-  AppliedSessionStatusKey,
-  AppliedSessionStatusValue,
-  NoticeDto,
-  SessionStatusKey,
-} from '@/types';
+import { AppliedSessionStatusKey, NoticeDto, SessionStatusKey } from '@/types';
+import { SessionApplicantsStatusTabType } from '@/types/admin';
 import { formatDate, getDDay } from '@/utils';
 import { BsCalendar, BsCalendar2Minus, BsClock } from 'react-icons/bs';
 
@@ -39,16 +37,6 @@ export default function SessionApplicantManagementDetail() {
 
   const { tabName, handleChangeTab } = useHandleTabNavigation();
 
-  const tabList: {
-    text: '전체' | AppliedSessionStatusValue;
-    type: 'ALL' | AppliedSessionStatusKey;
-  }[] = [
-    { text: '전체', type: 'ALL' },
-    { text: '대기', type: 'WAIT' },
-    { text: '승인', type: 'PARTICIPANT' },
-    { text: '반려', type: 'REJECT' },
-  ];
-
   const { data: noticeDetail } = useGetPostDetail<NoticeDto.GetNoticeDetail>(
     +postId!,
   );
@@ -67,11 +55,11 @@ export default function SessionApplicantManagementDetail() {
     onCheckedChange,
     onAllClearCheckedChange,
     onAllCheckedChange,
+    invalidateQueries,
 
     acceptApplicant,
-    isAcceptPending,
     rejectApplicant,
-    isRejectPending,
+    isPending,
   } = useHandleSessionApplicantList({
     sessionId: session?.sessionId || +currSessionId!,
     searchParticipantStatus:
@@ -84,6 +72,20 @@ export default function SessionApplicantManagementDetail() {
       return;
     }
 
+    const isAllSameState =
+      checkedList.filter(
+        ({ status }) => status === (type === '반려' ? 'REJECT' : 'PARTICIPANT'),
+      ).length === checkedList.length;
+
+    if (isAllSameState) {
+      showToast(`선택한 참가자가 모두 ${type}된 상태입니다.`);
+      return;
+    }
+
+    const oppositeStateList = checkedList.filter(
+      ({ status }) => status === (type === '반려' ? 'PARTICIPANT' : 'REJECT'),
+    );
+
     await showDialog({
       key: 'SESSION_MANAGEMENT_MODAL',
       element: (
@@ -92,22 +94,22 @@ export default function SessionApplicantManagementDetail() {
             선택한 스프들의 신청을 {type}하시겠습니까?
           </p>
 
-          {/* <p>
-            <span className="text-mainGreen-hover">
-              {checkedList.map(user => user.name).join(', ')}
+          {/* "대기" 상태가 아니었던 참가자는 아래 문구로 한번더 확인 */}
+          <div>
+            <span className="font-medium text-mainGreen-hover">
+              {oppositeStateList.map(user => user.name).join(', ')}
             </span>{' '}
             스프는{' '}
-            <span className="font-medium">
+            <span className="font-medium text-red-400">
               {type === '승인' ? '반려' : '승인'}됨에서 {type}됨
             </span>
             으로 상태를 변경하고 알림을 보냅니다.
-          </p> */}
-
-          {/* NOTE: 위의 문구는 만약 상태가 "대기" 인 참가자가 포함되어 있다면? */}
+          </div>
 
           <div className="mt-8 flex justify-end gap-3">
             <SquareButton
               name={type}
+              disabled={isPending}
               onClick={async () => {
                 try {
                   await Promise.all(
@@ -128,6 +130,7 @@ export default function SessionApplicantManagementDetail() {
                       return null;
                     }),
                   );
+                  await invalidateQueries();
                   showToast(`선택한 참가자들을 모두 ${type}했습니다.`);
                   onAllClearCheckedChange();
                   hideDialog();
@@ -152,7 +155,7 @@ export default function SessionApplicantManagementDetail() {
   };
 
   const gridStyle =
-    'grid grid-cols-[0.5fr_0.8fr_1.5fr_1fr_1fr_1fr_1fr] gap-x-2.5';
+    'grid grid-cols-[0.5fr_0.7fr_1.5fr_1fr_0.8fr_0.7fr_0.5fr] gap-x-2.5';
 
   const allChecked = applicantList?.length === checkedList.length;
 
@@ -176,7 +179,9 @@ export default function SessionApplicantManagementDetail() {
         title="특강 / 행사 신청 현황"
         subTitleChildren={
           <div className="flex items-center gap-4">
-            <span className="text-[#A2C27D]">{noticeDetail?.title}</span>
+            <span className="text-[#A2C27D]">
+              {noticeDetail?.title} {session.ordinal}회차
+            </span>
             <div className="flex items-center gap-1">
               <span className="text-[15px] text-darkGray">일자</span>
               <BsCalendar size={13} className="text-darkGray" />{' '}
@@ -211,8 +216,8 @@ export default function SessionApplicantManagementDetail() {
       />
 
       <div className="flex items-end justify-between">
-        <TabNavigation
-          tabList={tabList}
+        <TabNavigation<SessionApplicantsStatusTabType>
+          tabList={sessionApplicantsStatusTabList}
           selectValue={tabName ?? 'ALL'}
           onChangeValue={handleChangeTab}
           tabClassName="!pb-3 !px-3"
@@ -225,7 +230,7 @@ export default function SessionApplicantManagementDetail() {
               ? '제한 없음'
               : noticeDetail?.participantCapacity}
           </span>
-          {getSessionStatus(session.sessionEndDateTime) === 'ACTIVE' && (
+          {getSessionStatus(session.sessionEndDateTime) === STATUS_ACTIVE && (
             <>
               <SquareButton
                 name={allChecked ? '선택 해제' : '모두 선택'}
@@ -239,13 +244,13 @@ export default function SessionApplicantManagementDetail() {
                 color="lightGreen"
                 className="!text-darkGreen"
                 onClick={() => handleCheckedItem('승인')}
-                disabled={isAcceptPending}
+                disabled={isPending}
               />
               <SquareButton
                 name="반려"
                 className="!bg-red-100 !text-red-500"
                 onClick={() => handleCheckedItem('반려')}
-                disabled={isRejectPending}
+                disabled={isPending}
               />
             </>
           )}
@@ -254,9 +259,9 @@ export default function SessionApplicantManagementDetail() {
 
       {/* 표 */}
       <div
-        className={`mb-2 mt-4 w-full ${gridStyle} items-center py-4 pl-[30px] font-medium text-darkGray-hover`}
+        className={`mb-2 mt-4 w-full ${gridStyle} items-center py-4 ${getSessionStatus(session.sessionEndDateTime) === STATUS_ACTIVE ? 'pl-[30px]' : ''} font-medium text-darkGray-hover`}
       >
-        {SESSION_TABLE_HEADERS.map(header => (
+        {sessionApplicantsTableHeaderList.map(header => (
           <span key={header} className="text-center">
             {header}
           </span>
@@ -279,7 +284,7 @@ export default function SessionApplicantManagementDetail() {
                 courses,
                 email,
                 phoneNumber,
-                applicationTime,
+                applicationDateTime,
                 status,
               }) => {
                 const userCampuses = campuses
@@ -312,9 +317,14 @@ export default function SessionApplicantManagementDetail() {
                     <div
                       className={`relative w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:text-center [&>span]:truncate`}
                     >
-                      <span className="text-darkGray-active">{userName}</span>
-                      <span className="text-darkGray-active">
-                        {`${userCampuses}캠퍼스` || '정보 없음'}
+                      <span className="text-darkGray-active" title={userName}>
+                        {userName}
+                      </span>
+                      <span
+                        className="text-darkGray-active"
+                        title={`${userCampuses} 캠퍼스` || '정보 없음'}
+                      >
+                        {`${userCampuses} 캠퍼스` || '정보 없음'}
                       </span>
 
                       <MyCourseListWithHover
@@ -324,12 +334,17 @@ export default function SessionApplicantManagementDetail() {
                         hoverBoxClassName="w-[400px]"
                       />
 
-                      <span className="text-darkGray-active">{email}</span>
-                      <span className="text-darkGray-active">
+                      <span className="text-darkGray-active" title={email}>
+                        {email}
+                      </span>
+                      <span
+                        className="text-darkGray-active"
+                        title={phoneNumber}
+                      >
                         {phoneNumber}
                       </span>
                       <span className="text-darkGray-active">
-                        {applicationTime || '-'}
+                        {formatDate(applicationDateTime, 'MM.dd HH:mm') || '-'}
                       </span>
                       <span className={` ${STATUS_STYLES[status]}`}>
                         {appliedSessionStatusObj[status]}

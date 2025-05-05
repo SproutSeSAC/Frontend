@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
 
-import { sessionStatusObj } from '@/constants';
+import {
+  STATUS_ACTIVE,
+  STATUS_INACTIVE,
+  STATUS_UNKNOWN,
+  sessionStatusObj,
+} from '@/constants';
 import { NoticeSessionDetail, SessionStatusKey } from '@/types';
 import { formatDate, getDDay } from '@/utils';
 
@@ -26,12 +31,10 @@ export default function ManagingSessionCard({
     const checkIsEndSession = (endDateTime: string) => {
       return new Date(endDateTime).getTime() < new Date().getTime();
     };
-
     const isEndSession = checkIsEndSession(sessionEndDateTime);
-
     const currentStatus: SessionStatusKey = isEndSession
-      ? 'INACTIVE'
-      : sessionDetail?.status || 'UNKNOWN';
+      ? STATUS_INACTIVE
+      : sessionDetail?.status || STATUS_UNKNOWN;
 
     return currentStatus;
   };
@@ -50,7 +53,7 @@ export default function ManagingSessionCard({
           statusKey={getSessionStatus(applicationEndDateTime!)}
           className="!w-[86px] justify-center"
         />
-        {getSessionStatus(applicationEndDateTime!) === 'ACTIVE' && (
+        {getSessionStatus(applicationEndDateTime!) === STATUS_ACTIVE && (
           <Tag
             size="big"
             text={`마감 D${getDDay(applicationEndDateTime!)}`}

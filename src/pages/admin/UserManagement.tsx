@@ -12,15 +12,15 @@ import {
 } from '@/services/campusCourse/campusCourseQueries';
 
 import {
-  HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST,
-  USER_MANAGEMENT_TAB_LIST,
-  UserManagementTabType,
   traineeLabelList,
   userLabelList,
+  userManagementTabList,
+  userManagementTabListForHasSuperAdmin,
 } from '@/constants';
 import { useFilterData, useHandleTabNavigation } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { UserManagementTabType } from '@/types/admin';
 import { hasSuperAdmin } from '@/utils';
 
 import EmptyContent from '@/components/common/EmptyContent';
@@ -111,8 +111,8 @@ export default function UserManagement() {
         selectValue={tabName ?? 'trainee-list'}
         tabList={
           hasSuperAdmin(userProfile.role)
-            ? HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST
-            : USER_MANAGEMENT_TAB_LIST
+            ? userManagementTabListForHasSuperAdmin
+            : userManagementTabList
         }
         onChangeValue={handleChangeTab}
         tabClassName="!p-3"
