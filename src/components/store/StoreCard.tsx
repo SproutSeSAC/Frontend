@@ -100,7 +100,7 @@ export default function StoreCard({
   const onOpenStoreProposalEditModalClick = async () => {
     await showDialog({
       key: 'STORE-PROPOSAL-EDIT-MODAL-TYPE',
-      element: <StoreProposalEditModal />,
+      element: <StoreProposalEditModal storeName={storeData.name} />,
     });
   };
 
@@ -115,7 +115,7 @@ export default function StoreCard({
       ) : (
         <SwiperContainer
           slideList={storeImageList}
-          arrowClassName="absolute hover:bg-black mx-1 !size-14 p-2 hover:disabled:bg-transparent hover:bg-opacity-50 z-20 h-fit rounded-full disabled:!text-mainGray !text-white"
+          arrowClassName="absolute hover:bg-black mx-1 !size-14 p-2 hover:disabled:bg-transparent hover:bg-opacity-50 z-10 h-fit rounded-full disabled:!text-mainGray !text-white"
           slidesPerView={1}
         >
           {item => {

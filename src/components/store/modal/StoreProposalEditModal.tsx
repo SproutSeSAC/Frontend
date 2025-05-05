@@ -1,44 +1,57 @@
-import { useCallback } from 'react';
+import { usePostStoreReport } from '@/services/store/storeMutations';
 
 import { useDialogContext } from '@/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import Modal from '@/components/common/modal/Modal';
 
 interface FormValues {
-  text: string;
+  content: string;
 }
 
-export default function StoreProposalEditModal() {
+const proposalFormSchema = z.object({
+  content: z.union([
+    z.string().min(1, '댓글을 작성해 주세요.'),
+    z.undefined().refine(() => false, '댓글을 작성해 주세요.'),
+  ]),
+});
+
+interface StoreProposalEditModalProps {
+  storeName: string;
+}
+
+export default function StoreProposalEditModal({
+  storeName,
+}: StoreProposalEditModalProps) {
   const { hideDialog, showToast } = useDialogContext();
+
   const methods = useForm<FormValues>({
     defaultValues: {
-      text: '',
+      content: '',
     },
-    // resolver: zodResolver(),
+    resolver: zodResolver(proposalFormSchema),
   });
+
   const { control, handleSubmit } = methods;
 
-  const onSubmit = useCallback(async (data: FormValues) => {
-    console.log(data);
-  }, []);
+  const { mutateAsync, isPending, isIdle } = usePostStoreReport();
 
-  const onError: SubmitErrorHandler<FormValues> = useCallback(
-    err => {
-      console.error('hook form error >>', {
-        data: methods.getValues(),
-        error: err,
-      });
-      const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
+  const onSubmit = async ({ content }: FormValues) => {
+    mutateAsync({ type: 'UPDATE', targetStoreName: storeName, content });
+    hideDialog('STORE-PROPOSAL-EDIT-MODAL-TYPE');
+    showToast('정보 수정을 요청했어요!', 1000);
+  };
 
-      if (firstErrorMessage) {
-        showToast(firstErrorMessage);
-      }
-    },
-    [methods, showToast],
-  );
+  const onError: SubmitErrorHandler<FormValues> = err => {
+    const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
+    if (firstErrorMessage) {
+      showToast(firstErrorMessage);
+    }
+  };
 
   return (
     <Modal onClose={hideDialog} title="정보 수정 제안하기">
@@ -48,7 +61,7 @@ export default function StoreProposalEditModal() {
       >
         <Controller
           control={control}
-          name="text"
+          name="content"
           render={({ field: { onChange }, fieldState: { error } }) => {
             return (
               <div className="flex flex-col">
@@ -57,7 +70,6 @@ export default function StoreProposalEditModal() {
                   placeholder="수정하려는 정보를 입력해주세요"
                   onChange={onChange}
                 />
-
                 {error && (
                   <ErrorMsg msg={error?.message || ''} className="ml-2" />
                 )}
@@ -70,6 +82,7 @@ export default function StoreProposalEditModal() {
           name="제보하기"
           type="submit"
           className="mt-10 self-end"
+          disabled={isPending || !isIdle}
         />
       </form>
     </Modal>

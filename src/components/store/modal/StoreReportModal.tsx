@@ -1,7 +1,9 @@
-import { useCallback } from 'react';
+import { usePostStoreReport } from '@/services/store/storeMutations';
 
 import { useDialogContext } from '@/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
@@ -10,38 +12,47 @@ import TextInput from '@/components/common/input/TextInput';
 import Modal from '@/components/common/modal/Modal';
 
 interface FormValues {
-  storeName: string;
-  reason: string;
+  targetStoreName: string;
+  content: string;
 }
+
+const reportFormSchema = z.object({
+  targetStoreName: z.union([
+    z.string().min(1, '내용을 작성해 주세요.'),
+    z.undefined().refine(() => false, '내용을 작성해 주세요.'),
+  ]),
+  content: z.union([
+    z.string().min(1, '내용을 작성해 주세요.'),
+    z.undefined().refine(() => false, '내용을 작성해 주세요.'),
+  ]),
+});
 
 export default function StoreReportModal() {
   const { hideDialog, showToast } = useDialogContext();
+
+  const { mutateAsync, isPending, isIdle } = usePostStoreReport();
+
   const methods = useForm<FormValues>({
     defaultValues: {
-      storeName: '',
-      reason: '',
+      targetStoreName: '',
+      content: '',
     },
+    resolver: zodResolver(reportFormSchema),
   });
   const { control, handleSubmit } = methods;
 
-  const onSubmit = useCallback(async (data: FormValues) => {
-    console.log(data);
-  }, []);
+  const onSubmit = async ({ targetStoreName, content }: FormValues) => {
+    mutateAsync({ type: 'ADD', targetStoreName, content });
+    hideDialog();
+    showToast('맛집을 제보했어요!', 1000);
+  };
 
-  const onError: SubmitErrorHandler<FormValues> = useCallback(
-    err => {
-      console.error('hook form error >>', {
-        data: methods.getValues(),
-        error: err,
-      });
-      const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
-
-      if (firstErrorMessage) {
-        showToast(firstErrorMessage);
-      }
-    },
-    [methods, showToast],
-  );
+  const onError: SubmitErrorHandler<FormValues> = err => {
+    const firstErrorMessage = Object.entries(err)?.[0]?.[1].message || '';
+    if (firstErrorMessage) {
+      showToast(firstErrorMessage);
+    }
+  };
 
   return (
     <Modal onClose={hideDialog} title="맛집 제보하기">
@@ -52,7 +63,7 @@ export default function StoreReportModal() {
         <LabeledSection label="식당 이름" className="mt-4">
           <Controller
             control={control}
-            name="storeName"
+            name="targetStoreName"
             render={({ field: { onChange }, fieldState: { error } }) => {
               return (
                 <TextInput
@@ -70,7 +81,7 @@ export default function StoreReportModal() {
         <LabeledSection label="맛집 추천 사유">
           <Controller
             control={control}
-            name="storeName"
+            name="content"
             render={({ field: { onChange }, fieldState: { error } }) => {
               return (
                 <div className="flex flex-col">
@@ -91,7 +102,12 @@ export default function StoreReportModal() {
           />
         </LabeledSection>
 
-        <SquareButton name="제보하기" type="submit" className="mt-5 self-end" />
+        <SquareButton
+          name="제보하기"
+          type="submit"
+          className="mt-5 self-end"
+          disabled={isPending || !isIdle}
+        />
       </form>
     </Modal>
   );
