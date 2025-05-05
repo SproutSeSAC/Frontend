@@ -22,12 +22,34 @@ export const usePostStoreReview = () => {
     mutationFn: async requestParams => {
       const { data } = await axiosInstance.post(
         `/store/${requestParams.storeId}/review`,
-
         {
           rating: requestParams.rating,
           review: requestParams.review,
         },
       );
+      return data;
+    },
+  });
+};
+
+export const usePostStoreReport = () => {
+  return useMutation<
+    boolean,
+    AxiosError,
+    {
+      type: 'ADD' | 'UPDATE';
+      content: string;
+      targetStoreName: string;
+      storeId?: number;
+    }
+  >({
+    mutationFn: async ({ content, storeId, targetStoreName, type }) => {
+      const { data } = await axiosInstance.post(`/store/report`, {
+        content,
+        storeId,
+        targetStoreName,
+        type,
+      });
       return data;
     },
   });
