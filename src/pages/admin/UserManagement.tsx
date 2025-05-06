@@ -6,10 +6,7 @@ import {
   useGetInfiniteUserList,
 } from '@/services/admin/userToManageQueries';
 import { useGetUserProfile } from '@/services/auth/authQueries';
-import {
-  useGetCampusList,
-  useGetCourseListByCampus,
-} from '@/services/campusCourse/campusCourseQueries';
+import { useGetCourseListByCampus } from '@/services/campusCourse/campusCourseQueries';
 
 import {
   traineeLabelList,
@@ -53,8 +50,6 @@ export default function UserManagement() {
 
   const { data: traineeList } = useGetInfiniteTraineeList(debouncedFilter);
 
-  const { data: campusList } = useGetCampusList();
-
   useEffect(() => {
     if (userProfile) {
       handleChangeFilter({
@@ -64,22 +59,34 @@ export default function UserManagement() {
     }
   }, [handleChangeFilter, userProfile]);
 
-  const campusOptionList = campusList?.map(({ id, name }) => ({ id, name }));
+  /**
+   * 캠퍼스 목록
+   * - 관리자가 '갖고 있는' 캠퍼스만 나타낸다.
+   * */
+  const campusOptionList = userProfile?.campusList?.map(
+    ({ id, campusName }) => ({ id, name: campusName }),
+  );
 
   const selectedCampusOption =
     campusOptionList?.find(({ id }) => id === currFilter.campusId) ||
     campusOptionList?.[0];
 
-  const courseListByCampusData = useGetCourseListByCampus(
+  /**
+   * 캠퍼스별 교육과정 목록
+   * - 관리자가 '갖고 있는' 캠퍼스별 교육과정만 나타낸다.
+   * */
+  const courseListByCampus = useGetCourseListByCampus(
     selectedCampusOption?.id ? [selectedCampusOption?.id] : [],
   );
 
-  if (!userProfile || !campusList || !courseListByCampusData[0].data)
-    return null;
+  if (!userProfile || !courseListByCampus[0].data) return null;
 
-  const courseOptionList = courseListByCampusData[0].data.map(
-    ({ id, title: name }) => ({ id, name }),
-  );
+  const courseOptionList = courseListByCampus[0].data
+    .map(({ id, title: name }) => ({ id, name }))
+    .filter(
+      ({ id }) =>
+        !!userProfile.courseList.find(({ courseId }) => courseId === id),
+    );
 
   const selectedCourseOption =
     courseOptionList.find(({ id }) => id === currFilter.courseId) ||
@@ -132,7 +139,7 @@ export default function UserManagement() {
           />
         )}
 
-        {courseListByCampusData[0].data && (
+        {courseListByCampus[0].data && (
           <SingleSelectDropdown
             defaultLabel="교육과정 선택"
             options={courseOptionList}
