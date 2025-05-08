@@ -3,11 +3,7 @@ import {
   useGetInfiniteTraineeList,
   useGetInfiniteUserList,
 } from '@/services/admin/userToManageQueries';
-import {
-  initialUserProfile,
-  useGetUserProfile,
-} from '@/services/auth/authQueries';
-import { useGetCourseListByCampus } from '@/services/campusCourse/campusCourseQueries';
+import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import { campusIdAtom, courseIdAtom } from '@/atoms/userManagementFilterAtom';
 
@@ -17,7 +13,11 @@ import {
   userManagementTabList,
   userManagementTabListForHasSuperAdmin,
 } from '@/constants';
-import { useFilterData, useHandleTabNavigation } from '@/hooks';
+import {
+  useFilterCampusCourse,
+  useFilterData,
+  useHandleTabNavigation,
+} from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { UserManagementTabType } from '@/types/admin';
@@ -49,7 +49,7 @@ export default function UserManagement() {
 
   const { tabName, handleChangeTab } = useHandleTabNavigation();
 
-  const currTab = (tabName ?? 'trainee-list') as UserManagementTabType;
+  const { data: userProfile } = useGetUserProfile();
 
   const {
     currFilter,
@@ -59,50 +59,25 @@ export default function UserManagement() {
     handleResetFilter,
   } = useFilterData<InitialFilter>({ initialFilter });
 
+  const {
+    campusOptionList,
+    selectedCampusOption,
+    courseOptionList,
+    selectedCourseOption,
+    courseListByCampus,
+  } = useFilterCampusCourse({ selectedCampusId, selectedCourseId });
+
   const userFilter = {
     ...debouncedFilter,
-    campusId: selectedCampusId!,
-    courseId: selectedCourseId!,
-    role: 'CAMPUS_LEADER',
+    campusId: selectedCampusId || campusOptionList[0]?.id,
+    courseId: selectedCourseId || courseOptionList[0]?.id,
   };
 
-  const { data: { role, campusList, courseList } = initialUserProfile } =
-    useGetUserProfile();
+  const currTab = (tabName ?? 'trainee-list') as UserManagementTabType;
 
   const { data: userList } = useGetInfiniteUserList(currTab, userFilter);
 
   const { data: traineeList } = useGetInfiniteTraineeList(currTab, userFilter);
-
-  /**
-   * 캠퍼스 목록
-   * - 매니저가 '갖고 있는' 캠퍼스만 나타낸다.
-   * */
-  const campusOptionList = campusList?.map(({ id, campusName }) => ({
-    id,
-    name: campusName,
-  }));
-
-  const currCampusId = selectedCampusId || campusList[0]?.id;
-
-  const selectedCampusOption = campusOptionList?.find(
-    ({ id }) => id === currCampusId,
-  );
-
-  const courseListByCampus = useGetCourseListByCampus([currCampusId]);
-
-  if (!campusList || !courseListByCampus[0].data) return null;
-
-  /**
-   * 캠퍼스별 교육과정 목록
-   * - 매니저가 '갖고 있는' 캠퍼스별 교육과정만 나타낸다.
-   */
-  const courseOptionList = courseListByCampus[0].data
-    .map(({ id, title: name }) => ({ id, name }))
-    .filter(({ id }) => !!courseList.find(({ courseId }) => courseId === id));
-
-  const selectedCourseOption =
-    courseOptionList.find(({ id }) => id === selectedCourseId) ||
-    courseOptionList[0];
 
   const dataTypeObj = {
     'user-list': {
@@ -117,9 +92,7 @@ export default function UserManagement() {
     },
   };
 
-  const dataType = dataTypeObj[currTab];
-
-  const { data, labelList, gridStyle } = dataType;
+  const { data, labelList, gridStyle } = dataTypeObj[currTab];
 
   return (
     <MainView className="mb-20">
@@ -128,7 +101,7 @@ export default function UserManagement() {
       <TabNavigation<UserManagementTabType>
         selectValue={tabName ?? 'trainee-list'}
         tabList={
-          hasSuperAdmin(role)
+          hasSuperAdmin(userProfile?.role)
             ? userManagementTabListForHasSuperAdmin
             : userManagementTabList
         }
@@ -148,7 +121,7 @@ export default function UserManagement() {
           />
         )}
 
-        {courseListByCampus[0].data && (
+        {courseListByCampus?.length !== 0 && (
           <SingleSelectDropdown
             defaultLabel="교육과정 선택"
             options={courseOptionList}
