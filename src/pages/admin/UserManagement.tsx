@@ -1,12 +1,15 @@
-import { useEffect } from 'react';
-
 import {
   UserManagementFilter,
   useGetInfiniteTraineeList,
   useGetInfiniteUserList,
 } from '@/services/admin/userToManageQueries';
-import { useGetUserProfile } from '@/services/auth/authQueries';
+import {
+  initialUserProfile,
+  useGetUserProfile,
+} from '@/services/auth/authQueries';
 import { useGetCourseListByCampus } from '@/services/campusCourse/campusCourseQueries';
+
+import { campusIdAtom, courseIdAtom } from '@/atoms/userManagementFilterAtom';
 
 import {
   traineeLabelList,
@@ -19,22 +22,34 @@ import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { UserManagementTabType } from '@/types/admin';
 import { hasSuperAdmin } from '@/utils';
+import { useAtom } from 'jotai';
 
+import UserManagementItem from '@/components/admin/UserManagementItem';
 import EmptyContent from '@/components/common/EmptyContent';
 import Pagination from '@/components/common/Pagination';
 import TabNavigation from '@/components/common/TabNavigation';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
-import UserManagementItem from '@/components/user/UserManagementItem';
 
-const initialFilter: UserManagementFilter = {
+type InitialFilter = Pick<
+  UserManagementFilter,
+  'page' | 'size' | 'offset' | 'keyword'
+>;
+
+const initialFilter: InitialFilter = {
   page: 1,
   size: 7,
   keyword: '',
 };
 
 export default function UserManagement() {
+  const [selectedCampusId, setSelectedCampusId] = useAtom(campusIdAtom);
+
+  const [selectedCourseId, setSelectedCourseId] = useAtom(courseIdAtom);
+
   const { tabName, handleChangeTab } = useHandleTabNavigation();
+
+  const currTab = (tabName ?? 'trainee-list') as UserManagementTabType;
 
   const {
     currFilter,
@@ -42,71 +57,67 @@ export default function UserManagement() {
     handleChangeFilter,
     debouncedFilter,
     handleResetFilter,
-  } = useFilterData<UserManagementFilter>({ initialFilter });
+  } = useFilterData<InitialFilter>({ initialFilter });
 
-  const { data: userProfile } = useGetUserProfile();
+  const userFilter = {
+    ...debouncedFilter,
+    campusId: selectedCampusId!,
+    courseId: selectedCourseId!,
+    role: 'CAMPUS_LEADER',
+  };
 
-  const { data: userList } = useGetInfiniteUserList(debouncedFilter);
+  const { data: { role, campusList, courseList } = initialUserProfile } =
+    useGetUserProfile();
 
-  const { data: traineeList } = useGetInfiniteTraineeList(debouncedFilter);
+  const { data: userList } = useGetInfiniteUserList(currTab, userFilter);
 
-  useEffect(() => {
-    if (userProfile) {
-      handleChangeFilter({
-        courseId: userProfile?.courseList[0].courseId,
-        campusId: userProfile?.campusList[0].id,
-      });
-    }
-  }, [handleChangeFilter, userProfile]);
+  const { data: traineeList } = useGetInfiniteTraineeList(currTab, userFilter);
 
   /**
    * 캠퍼스 목록
-   * - 관리자가 '갖고 있는' 캠퍼스만 나타낸다.
+   * - 매니저가 '갖고 있는' 캠퍼스만 나타낸다.
    * */
-  const campusOptionList = userProfile?.campusList?.map(
-    ({ id, campusName }) => ({ id, name: campusName }),
+  const campusOptionList = campusList?.map(({ id, campusName }) => ({
+    id,
+    name: campusName,
+  }));
+
+  const currCampusId = selectedCampusId || campusList[0]?.id;
+
+  const selectedCampusOption = campusOptionList?.find(
+    ({ id }) => id === currCampusId,
   );
 
-  const selectedCampusOption =
-    campusOptionList?.find(({ id }) => id === currFilter.campusId) ||
-    campusOptionList?.[0];
+  const courseListByCampus = useGetCourseListByCampus([currCampusId]);
+
+  if (!campusList || !courseListByCampus[0].data) return null;
 
   /**
    * 캠퍼스별 교육과정 목록
-   * - 관리자가 '갖고 있는' 캠퍼스별 교육과정만 나타낸다.
-   * */
-  const courseListByCampus = useGetCourseListByCampus(
-    selectedCampusOption?.id ? [selectedCampusOption?.id] : [],
-  );
-
-  if (!userProfile || !courseListByCampus[0].data) return null;
-
+   * - 매니저가 '갖고 있는' 캠퍼스별 교육과정만 나타낸다.
+   */
   const courseOptionList = courseListByCampus[0].data
     .map(({ id, title: name }) => ({ id, name }))
-    .filter(
-      ({ id }) =>
-        !!userProfile.courseList.find(({ courseId }) => courseId === id),
-    );
+    .filter(({ id }) => !!courseList.find(({ courseId }) => courseId === id));
 
   const selectedCourseOption =
-    courseOptionList.find(({ id }) => id === currFilter.courseId) ||
+    courseOptionList.find(({ id }) => id === selectedCourseId) ||
     courseOptionList[0];
 
   const dataTypeObj = {
     'user-list': {
       labelList: userLabelList,
       data: userList,
-      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_0.8fr_2.4fr_50px]',
+      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_0.8fr_2.4fr_60px]',
     },
     'trainee-list': {
       labelList: traineeLabelList,
       data: traineeList,
-      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_2fr_50px]',
+      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_2fr_60px]',
     },
   };
 
-  const dataType =
-    dataTypeObj[(tabName ?? 'trainee-list') as UserManagementTabType];
+  const dataType = dataTypeObj[currTab];
 
   const { data, labelList, gridStyle } = dataType;
 
@@ -117,7 +128,7 @@ export default function UserManagement() {
       <TabNavigation<UserManagementTabType>
         selectValue={tabName ?? 'trainee-list'}
         tabList={
-          hasSuperAdmin(userProfile.role)
+          hasSuperAdmin(role)
             ? userManagementTabListForHasSuperAdmin
             : userManagementTabList
         }
@@ -131,9 +142,7 @@ export default function UserManagement() {
             defaultLabel="캠퍼스 선택"
             options={campusOptionList}
             selectedOption={selectedCampusOption}
-            onChangeValue={option =>
-              handleChangeFilter({ campusId: option[0].id })
-            }
+            onChangeValue={option => setSelectedCampusId(option[0].id)}
             selectBoxClassName="w-full rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
@@ -144,9 +153,7 @@ export default function UserManagement() {
             defaultLabel="교육과정 선택"
             options={courseOptionList}
             selectedOption={selectedCourseOption}
-            onChangeValue={option =>
-              handleChangeFilter({ courseId: option[0].id })
-            }
+            onChangeValue={option => setSelectedCourseId(option[0].id)}
             selectBoxClassName="!max-w-[450px] rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />

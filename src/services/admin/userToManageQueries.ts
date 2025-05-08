@@ -2,7 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { RoleKey, SessionDto, UserProfileDto } from '@/types';
+import {
+  RoleKey,
+  SessionDto,
+  UserManagementTabType,
+  UserProfileDto,
+} from '@/types';
 import { UserManagementDto } from '@/types/admin/userToManageDto';
 
 export type UserManagementFilter = {
@@ -16,7 +21,10 @@ export type UserManagementFilter = {
 };
 
 /** 사용자 목록 조회 */
-export const useGetInfiniteUserList = (params: UserManagementFilter) => {
+export const useGetInfiniteUserList = (
+  currTab: UserManagementTabType,
+  params: UserManagementFilter,
+) => {
   const getUserList = async () => {
     const offset = (params.page - 1) * params.size;
 
@@ -35,11 +43,15 @@ export const useGetInfiniteUserList = (params: UserManagementFilter) => {
   return useQuery({
     queryKey: ['useGetInfiniteUserList', params],
     queryFn: getUserList,
+    enabled: currTab === 'user-list',
   });
 };
 
 /** 학생 목록 조회 */
-export const useGetInfiniteTraineeList = (params: UserManagementFilter) => {
+export const useGetInfiniteTraineeList = (
+  currTab: UserManagementTabType,
+  params: UserManagementFilter,
+) => {
   const getUserList = async () => {
     const offset = (params.page - 1) * params.size;
 
@@ -58,6 +70,7 @@ export const useGetInfiniteTraineeList = (params: UserManagementFilter) => {
   return useQuery({
     queryKey: ['useGetInfiniteTraineeList', params],
     queryFn: getUserList,
+    enabled: currTab === 'trainee-list',
   });
 };
 
