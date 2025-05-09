@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
@@ -36,13 +35,9 @@ interface FormValues {
 export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { data: userProfile } = useGetUserProfile();
   const { data: campusList } = useGetCampusList();
-  const userCampus = campusList?.find(
-    campus => campus.name === userProfile?.campusList[0].campusName,
-  );
 
-  const campusId = searchParams.get('campusId') || userCampus?.id || 1;
+  const campusId = Number(searchParams.get('campusId')) || 1;
 
   const { data: filterCount } = useGetFilterCount(+campusId);
 
@@ -50,7 +45,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
 
   const parsedValues = useMemo(() => {
     return {
-      campusId: Number(searchParams.get('campusId')) || 2,
+      campusId,
       sprout: {
         isZeropay: searchParams.get('isZeropay') === 'true',
         overFivePerson: searchParams.get('overFivePerson') === 'true',
@@ -63,11 +58,11 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         ? searchParams.get('foodTypeList')!.split(',')
         : [],
     };
-  }, [searchParams]);
+  }, [campusId, searchParams]);
 
   const { control, setValue, getValues, reset } = useForm<FormValues>({
     defaultValues: {
-      campusId: 0,
+      campusId,
       sprout: {
         isZeropay: false,
         overFivePerson: false,
