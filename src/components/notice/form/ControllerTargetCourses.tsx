@@ -96,12 +96,12 @@ export default function ControllerTargetCourses() {
       control={control}
       name="targetCourseIdList"
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const courseListOption = userProfile?.courseList
-          ?.sort((a, b) => a.courseTitle.localeCompare(b.courseTitle))
-          .map(({ courseId, courseTitle }) => ({
+        const courseListOption = userProfile?.courseList.map(
+          ({ courseId, courseTitle }) => ({
             id: courseId,
             name: courseTitle,
-          }));
+          }),
+        );
 
         return (
           <MultiSelectDropdown

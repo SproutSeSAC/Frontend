@@ -328,9 +328,9 @@ export default function SessionApplicantManagementDetail() {
                       </span>
 
                       <MyCourseListWithHover
-                        courseList={courses
-                          .sort((a, b) => a.id - b.id)
-                          .map(({ name }) => ({ courseTitle: name }))}
+                        courseList={courses.map(({ name }) => ({
+                          courseTitle: name,
+                        }))}
                         hoverBoxClassName="w-[400px]"
                       />
 

@@ -32,14 +32,10 @@ export default function UserManagementItem({
     isOpen: false,
   });
 
-  const {
-    campus: campusList,
-    course: courseList,
-    name: userName,
-    nickname,
-    email,
-    role,
-  } = user;
+  const { campus, course, name: userName, nickname, email, role } = user;
+
+  const campusList = campus.sort((a, b) => a.name.localeCompare(b.name));
+  const courseList = course.sort((a, b) => a.name.localeCompare(b.name));
 
   const campusColor =
     colorByCampusObj[
@@ -65,14 +61,16 @@ export default function UserManagementItem({
         }}
         className={`h-[70px] items-center rounded-xl bg-white [&>div>div>span]:text-darkGray-hover [&>span]:text-darkGray-hover ${className}`}
       >
-        <span>{userName}</span>
-        <span>{nickname}</span>
-        <span className="truncate">{email}</span>
-        <span className="truncate">
-          {campusList
-            .map(({ name }) => name.slice(0, -3))
-            .sort((a, b) => a.localeCompare(b))
-            .join(', ')}
+        <span className={userName}>{userName}</span>
+        <span className={nickname}>{nickname}</span>
+        <span className="truncate" title={email}>
+          {email}
+        </span>
+        <span
+          className="truncate"
+          title={campusList.map(({ name }) => name.slice(0, -3)).join(', ')}
+        >
+          {campusList.map(({ name }) => name.slice(0, -3)).join(', ')}
         </span>
         {type === 'user-list' && (
           <Tag
