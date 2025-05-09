@@ -165,7 +165,7 @@ export default function StoreCard({
           <BsFillGeoAltFill className="text-mainGray-hover" size={17} />
           <div className="relative flex items-center gap-2.5">
             <span className="text-darkGray-active">
-              {storeData ? `${storeData.campusName}캠퍼스` : '-'}
+              {storeData ? `${storeData.campusName}` : '-'}
             </span>
             <div className="flex gap-1 text-darkGray-active">
               <span>도보</span>
