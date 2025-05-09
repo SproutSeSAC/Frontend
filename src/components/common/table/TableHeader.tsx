@@ -13,7 +13,7 @@ interface TableHeaderProps<T> {
   disabledCheck?: boolean;
   onCheckboxClick?: () => void;
   // 작성일
-  sortOptionList: Option[];
+  categoryOptionList: Option[];
   onChangeSort: () => void;
   // 분류
   checkedCategoryOptionList: Option[];
@@ -27,7 +27,7 @@ export default function TableHeader<T>({
   headerCellList,
   isChecked,
   disabledCheck,
-  sortOptionList,
+  categoryOptionList,
   currCollection,
   onDeleteConfirmClick,
   onChangeCategory,
@@ -69,7 +69,7 @@ export default function TableHeader<T>({
                 <MultiSelectDropdown
                   isDefaultLabelSelectBox
                   selectBoxClassName="border-none pl-1.5 !gap-0 text-[15px]"
-                  options={sortOptionList}
+                  options={categoryOptionList}
                   optionClassName="w-32"
                   defaultLabel="분류"
                   value={checkedCategoryOptionList.map(({ id }) => id)}
