@@ -1,4 +1,4 @@
-import { HasAdminRole, HasSuperAdminRole } from '@/types';
+import { HasAdminRole, HasSuperAdminRole, Role, RoleKey } from '@/types';
 
 export const rolesObj = {
   SUPER_ADMIN: '최고 관리자',
@@ -9,6 +9,15 @@ export const rolesObj = {
   JOB_COORDINATOR: '잡코디',
   TRAINEE: '새싹 교육생',
 } as const;
+
+export const rolesArr: { key: RoleKey; label: Role[RoleKey] }[] =
+  Object.entries(rolesObj).map(
+    ([key, value]) =>
+      ({
+        key,
+        label: value,
+      }) as { key: RoleKey; label: Role[RoleKey] },
+  );
 
 export const hasSuperAdminRolesObj: HasSuperAdminRole = {
   CAMPUS_LEADER: '캠퍼스 담당자',

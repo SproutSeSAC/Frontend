@@ -1,4 +1,3 @@
-import { StatusBase } from '@/constants';
 import {
   MeetingTypeKey,
   NoticeCategoryDisplayKey,
@@ -29,7 +28,7 @@ type Applicant = {
   status: 'WAIT' | 'PARTICIPANT' | 'REJECT';
   campuses: { id: number; name: string }[];
   courses: { id: number; name: string }[];
-  applicationTime?: string;
+  applicationDateTime: string;
 };
 
 type AppliedSession = {
@@ -48,7 +47,7 @@ type NoticeSessionDetail = {
   noticeId: number;
   title: string;
   noticeType: NoticeCategoryDisplayKey;
-  status: StatusBase;
+  status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   applicationStartDateTime: string;
   applicationEndDateTime: string;

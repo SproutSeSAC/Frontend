@@ -64,7 +64,7 @@ export default function UserMemoModal({
           <span className="text-mainGray-active">
             {username}님에 대한 메모를 볼 수 있어요.
           </span>
-          {traineeMemo?.content === '' ? (
+          {typeof traineeMemo === 'string' || traineeMemo?.content === '' ? (
             <span className="mb-10 mt-6 min-h-32 text-mainGray-active">
               작성된 메모가 없어요.
             </span>

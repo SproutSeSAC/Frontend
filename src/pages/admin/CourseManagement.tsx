@@ -1,13 +1,13 @@
 import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import {
-  COURSE_MANAGEMENT_TAB_LIST,
-  CourseManagementTabType,
-  HAS_SUPER_ADMIN_COURSE_MANAGEMENT_TAB_LIST,
+  courseManagementTabList,
+  courseManagementTabListForHasSuperAdmin,
 } from '@/constants';
 import { useHandleTabNavigation } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { CourseManagementTabType } from '@/types/admin';
 import { hasSuperAdmin } from '@/utils';
 
 import CalendarAclTable from '@/components/calendar/CalendarAclTable';
@@ -27,8 +27,8 @@ export default function CourseManagement() {
           selectValue={tabName ?? 'calendar'}
           tabList={
             hasSuperAdmin(userProfile.role)
-              ? HAS_SUPER_ADMIN_COURSE_MANAGEMENT_TAB_LIST
-              : COURSE_MANAGEMENT_TAB_LIST
+              ? courseManagementTabListForHasSuperAdmin
+              : courseManagementTabList
           }
           onChangeValue={handleChangeTab}
           tabClassName="!pb-3 !px-3"

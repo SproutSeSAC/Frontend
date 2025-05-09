@@ -1,43 +1,55 @@
-import { useEffect } from 'react';
-
 import {
   UserManagementFilter,
   useGetInfiniteTraineeList,
   useGetInfiniteUserList,
 } from '@/services/admin/userToManageQueries';
 import { useGetUserProfile } from '@/services/auth/authQueries';
-import {
-  useGetCampusList,
-  useGetCourseListByCampus,
-} from '@/services/campusCourse/campusCourseQueries';
+
+import { campusIdAtom, courseIdAtom } from '@/atoms/userManagementFilterAtom';
 
 import {
-  HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST,
-  USER_MANAGEMENT_TAB_LIST,
-  UserManagementTabType,
   traineeLabelList,
   userLabelList,
+  userManagementTabList,
+  userManagementTabListForHasSuperAdmin,
 } from '@/constants';
-import { useFilterData, useHandleTabNavigation } from '@/hooks';
+import {
+  useFilterCampusCourse,
+  useFilterData,
+  useHandleTabNavigation,
+} from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
+import { UserManagementTabType } from '@/types/admin';
 import { hasSuperAdmin } from '@/utils';
+import { useAtom } from 'jotai';
 
+import UserManagementItem from '@/components/admin/UserManagementItem';
 import EmptyContent from '@/components/common/EmptyContent';
 import Pagination from '@/components/common/Pagination';
 import TabNavigation from '@/components/common/TabNavigation';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import SearchInput from '@/components/common/input/SearchInput';
-import UserManagementItem from '@/components/user/UserManagementItem';
 
-const initialFilter: UserManagementFilter = {
+type InitialFilter = Pick<
+  UserManagementFilter,
+  'page' | 'size' | 'offset' | 'keyword'
+>;
+
+const initialFilter: InitialFilter = {
   page: 1,
   size: 7,
   keyword: '',
 };
 
 export default function UserManagement() {
+  const [selectedCampusId, setSelectedCampusId] = useAtom(campusIdAtom);
+
+  const [selectedCourseId, setSelectedCourseId] = useAtom(courseIdAtom);
+
   const { tabName, handleChangeTab } = useHandleTabNavigation();
+
+  const { data: userProfile } = useGetUserProfile();
 
   const {
     currFilter,
@@ -45,63 +57,42 @@ export default function UserManagement() {
     handleChangeFilter,
     debouncedFilter,
     handleResetFilter,
-  } = useFilterData<UserManagementFilter>({ initialFilter });
+  } = useFilterData<InitialFilter>({ initialFilter });
 
-  const { data: userProfile } = useGetUserProfile();
+  const {
+    campusOptionList,
+    selectedCampusOption,
+    courseOptionList,
+    selectedCourseOption,
+    courseListByCampus,
+  } = useFilterCampusCourse({ selectedCampusId, selectedCourseId });
 
-  const { data: userList } = useGetInfiniteUserList(debouncedFilter);
+  const userFilter = {
+    ...debouncedFilter,
+    campusId: selectedCampusId || campusOptionList[0]?.id,
+    courseId: selectedCourseId || courseOptionList[0]?.id,
+  };
 
-  const { data: traineeList } = useGetInfiniteTraineeList(debouncedFilter);
+  const currTab = (tabName ?? 'trainee-list') as UserManagementTabType;
 
-  const { data: campusList } = useGetCampusList();
+  const { data: userList } = useGetInfiniteUserList(currTab, userFilter);
 
-  useEffect(() => {
-    if (userProfile) {
-      handleChangeFilter({
-        courseId: userProfile?.courseList[0].courseId,
-        campusId: userProfile?.campusList[0].id,
-      });
-    }
-  }, [handleChangeFilter, userProfile]);
-
-  const campusOptionList = campusList?.map(({ id, name }) => ({ id, name }));
-
-  const selectedCampusOption =
-    campusOptionList?.find(({ id }) => id === currFilter.campusId) ||
-    campusOptionList?.[0];
-
-  const courseListByCampusData = useGetCourseListByCampus(
-    selectedCampusOption?.id ? [selectedCampusOption?.id] : [],
-  );
-
-  if (!userProfile || !campusList || !courseListByCampusData[0].data)
-    return null;
-
-  const courseOptionList = courseListByCampusData[0].data.map(
-    ({ id, title: name }) => ({ id, name }),
-  );
-
-  const selectedCourseOption =
-    courseOptionList.find(({ id }) => id === currFilter.courseId) ||
-    courseOptionList[0];
+  const { data: traineeList } = useGetInfiniteTraineeList(currTab, userFilter);
 
   const dataTypeObj = {
     'user-list': {
       labelList: userLabelList,
       data: userList,
-      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_0.8fr_2.4fr_50px]',
+      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_0.8fr_2.4fr_60px]',
     },
     'trainee-list': {
       labelList: traineeLabelList,
       data: traineeList,
-      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_2fr_50px]',
+      gridStyle: 'grid-cols-[80px_0.8fr_1.5fr_1fr_2fr_60px]',
     },
   };
 
-  const dataType =
-    dataTypeObj[(tabName ?? 'trainee-list') as UserManagementTabType];
-
-  const { data, labelList, gridStyle } = dataType;
+  const { data, labelList, gridStyle } = dataTypeObj[currTab];
 
   return (
     <MainView className="mb-20">
@@ -110,9 +101,9 @@ export default function UserManagement() {
       <TabNavigation<UserManagementTabType>
         selectValue={tabName ?? 'trainee-list'}
         tabList={
-          hasSuperAdmin(userProfile.role)
-            ? HAS_SUPER_ADMIN_USER_MANAGEMENT_TAB_LIST
-            : USER_MANAGEMENT_TAB_LIST
+          hasSuperAdmin(userProfile?.role)
+            ? userManagementTabListForHasSuperAdmin
+            : userManagementTabList
         }
         onChangeValue={handleChangeTab}
         tabClassName="!p-3"
@@ -124,22 +115,18 @@ export default function UserManagement() {
             defaultLabel="캠퍼스 선택"
             options={campusOptionList}
             selectedOption={selectedCampusOption}
-            onChangeValue={option =>
-              handleChangeFilter({ campusId: option[0].id })
-            }
+            onChangeValue={option => setSelectedCampusId(option[0].id)}
             selectBoxClassName="w-full rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
         )}
 
-        {courseListByCampusData[0].data && (
+        {courseListByCampus?.length !== 0 && (
           <SingleSelectDropdown
             defaultLabel="교육과정 선택"
             options={courseOptionList}
             selectedOption={selectedCourseOption}
-            onChangeValue={option =>
-              handleChangeFilter({ courseId: option[0].id })
-            }
+            onChangeValue={option => setSelectedCourseId(option[0].id)}
             selectBoxClassName="!max-w-[450px] rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />

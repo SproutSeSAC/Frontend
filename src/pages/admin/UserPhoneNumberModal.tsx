@@ -8,10 +8,10 @@ import { useDialogContext } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { formSchema } from '@/components/admin/UserManagementPhoneNumber';
 import SquareButton from '@/components/common/button/SquareButton';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import Modal from '@/components/common/modal/Modal';
-import { formSchema } from '@/components/user/UserManagementItem';
 
 interface UserPhoneNumberModalProps {
   userId: number;
@@ -24,7 +24,7 @@ export default function UserPhoneNumberModal({
   username,
   userPhoneNumber,
 }: UserPhoneNumberModalProps) {
-  const { hideDialog } = useDialogContext();
+  const { hideDialog, showToast } = useDialogContext();
 
   const queryClient = useQueryClient();
 
@@ -55,12 +55,13 @@ export default function UserPhoneNumberModal({
             if (phoneNumber !== userPhoneNumber) {
               changePhoneNumber({ userId, phoneNumber });
             }
+            showToast('전화번호가 수정되었습니다!');
             return hideDialog();
           })}
           className="mt-[26px]"
         >
           <h4 className="mb-2 text-lg font-medium">
-            <span className="text-mainGreen">{username}</span> 연락처
+            <span className="text-mainGreen">{username}</span>님의 연락처
           </h4>
           <div className="flex items-start justify-between gap-4">
             <ControllerPhoneNumber

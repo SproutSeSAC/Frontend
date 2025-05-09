@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 interface TabNavigationProps<T> {
-  tabList: { text: string; type: T }[];
+  tabList: readonly { text: string; type: T }[];
   onChangeValue: (
     value: T,
     e?:

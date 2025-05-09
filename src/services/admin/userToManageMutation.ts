@@ -19,6 +19,15 @@ type ChangeTraineeMemo = {
   content: string;
 };
 
+type ChangeUserPermission = {
+  userId: number;
+  requestBody: {
+    courseIdList: number[];
+    campusIdList: number[];
+    role: RoleKey;
+  };
+};
+
 export const usePatchUserToManagePhoneNumber = (
   options?: UseMutationOptions<unknown, Error, ChangeUserPhoneNumber>,
 ) => {
@@ -88,6 +97,27 @@ export const usePostTraineeMemo = (
 
   return useMutation<unknown, Error, ChangeTraineeMemo>({
     mutationFn: postUserToManageRole,
+    ...options,
+  });
+};
+
+/** 사용자 권한 변경 */
+export const usePatchUserPermission = (
+  options?: UseMutationOptions<unknown, Error, ChangeUserPermission>,
+) => {
+  const patchUserPermission = async ({
+    userId,
+    requestBody,
+  }: ChangeUserPermission) => {
+    const { data } = await axiosInstance.patch(
+      `/admin/users/role/${userId}`,
+      requestBody,
+    );
+    return data;
+  };
+
+  return useMutation<unknown, Error, ChangeUserPermission>({
+    mutationFn: patchUserPermission,
     ...options,
   });
 };

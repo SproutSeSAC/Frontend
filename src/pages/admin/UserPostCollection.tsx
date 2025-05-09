@@ -96,7 +96,7 @@ export default function UserPostCollection({
     }
   };
 
-  const sortOptionList =
+  const categoryOptionList =
     currCollection === '댓글' ? myCommentTypeOptionList : myPostTypeOptionList;
 
   const onCollectionTabClick = (collection: Collection) => {
@@ -118,14 +118,14 @@ export default function UserPostCollection({
 
       {currCollection !== '찜한 글' && (
         <>
-          <div className="mb-4 flex min-h-[240px] flex-1 flex-col rounded-[20px] border border-mainGray-hover bg-white px-4 py-5 pb-4">
+          <div className="mb-4 flex !min-h-[270px] flex-1 flex-col rounded-[20px] border border-mainGray-hover bg-white px-4 py-5 pb-4">
             {!isUserPostListLoading && !isUserCommentListLoading && (
-              <TableContainer colWidthList={[17, 20, 55]}>
+              <TableContainer colWidthList={[18, 20, 55]}>
                 <TableHeader<Collection>
                   headerCellList={headerCellList}
                   currCollection={currCollection}
-                  sortOptionList={sortOptionList}
                   onChangeSort={onChangeSort}
+                  categoryOptionList={categoryOptionList}
                   checkedCategoryOptionList={checkedCategoryOptionList}
                   onChangeCategory={onCategoryOptionListChange}
                 />
@@ -160,7 +160,7 @@ export default function UserPostCollection({
         <>
           {!isUserScrapListLoading &&
             (scrapList?.content.length !== 0 ? (
-              <ScrollContainer className="gap-4" isBlurRight>
+              <ScrollContainer className="gap-6">
                 {scrapList?.content
                   ?.slice(0, 3)
                   ?.map(card => (

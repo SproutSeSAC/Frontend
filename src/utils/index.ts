@@ -9,8 +9,9 @@ export * from '@/utils/isInThisWeek';
 export * from '@/utils/formatPhoneNumber';
 export * from '@/utils/formatDate';
 export * from '@/utils/notice';
-export * from '@/utils/isValid';
+export * from '@/utils/isValidUrl';
 export * from '@/utils/formatElapsedTime';
+export * from '@/utils/areEqualArray';
 
 // 캘린더 관련
 export * from '@/utils/getFullCalendarEvents';

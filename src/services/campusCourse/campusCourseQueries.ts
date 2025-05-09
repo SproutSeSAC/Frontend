@@ -7,6 +7,7 @@ export type CourseListData = {
     id: number;
     title: string;
     campusName: string;
+    campusId?: number;
   }[];
 };
 
@@ -49,7 +50,7 @@ export const useGetCourseListByCampus = (
     const res = await axiosInstance.get<CourseListData>(
       `/course/list/${campusId}`,
     );
-    return res.data.courseList;
+    return res.data.courseList.map(course => ({ ...course, campusId }));
   };
 
   return useQueries({

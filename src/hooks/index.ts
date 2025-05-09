@@ -7,6 +7,9 @@ export { useObserver } from '@/hooks/common/useObserver';
 export { useHandleImage } from '@/hooks/common/useHandleImage';
 export { useHandleTabNavigation } from '@/hooks/common/useHandleTabNavigation';
 export { useDebounce } from '@/hooks/common/useDebounce';
+export { useFilterCampusCourse } from '@/hooks/common/useFilterCampusCourse';
+
+/* notification */
 export { useNotification } from '@/hooks/notification/useNotification';
 
 /* course */

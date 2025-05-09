@@ -1,4 +1,3 @@
-import { Option } from '@/types/filter';
 import { UserComment, UserPost, UserScrap } from '@/types/mypage/myPostDto';
 import { PageableType } from '@/types/pageable';
 import { RoleKey } from '@/types/user';
@@ -28,8 +27,8 @@ type UserToManage = {
   email: string;
   role?: RoleKey;
   phoneNumber: string;
-  campus: Option[];
-  course: Option[];
+  campus: { campusId: number; name: string }[];
+  course: { courseId: number; name: string }[];
   memo: {
     memoId: number;
     content: string;

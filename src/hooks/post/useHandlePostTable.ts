@@ -73,10 +73,9 @@ export const useHandlePostTable = <T extends string>({
   };
 
   const setCategoryOptionListByCollection = (collection: T) => {
-    const optionList =
-      collection === '내가 쓴 댓글'
-        ? myCommentTypeOptionList
-        : myPostTypeOptionList;
+    const optionList = collection.includes('댓글')
+      ? myCommentTypeOptionList
+      : myPostTypeOptionList;
 
     setCheckedCategoryOptionList(optionList);
   };
@@ -101,11 +100,11 @@ export const useHandlePostTable = <T extends string>({
     }
     initializePostCheckedBoxList();
     return postIdList.map(async postId => {
-      if (collection === '내가 쓴 게시글') {
+      if (collection.includes('게시글')) {
         await deletePost({ postId });
         await queryClient.invalidateQueries({ queryKey: ['useGetMyPostList'] });
       }
-      if (collection === '내가 쓴 댓글') {
+      if (collection.includes('댓글')) {
         await deleteComment({ commentId: postId });
         await queryClient.invalidateQueries({
           queryKey: ['useGetMyCommentList'],
@@ -116,8 +115,9 @@ export const useHandlePostTable = <T extends string>({
   };
 
   const filteredAndOrderedPostList = useMemo(() => {
-    const currPostList =
-      currCollection === '내가 쓴 게시글' ? postList : commentList;
+    const currPostList = currCollection.includes('게시글')
+      ? postList
+      : commentList;
 
     const filteredList = currPostList?.filter(({ postType }) => {
       return checkedCategoryOptionList.some(({ key }) => key === postType);

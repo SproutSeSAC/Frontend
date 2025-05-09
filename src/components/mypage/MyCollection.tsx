@@ -100,7 +100,7 @@ export default function MyCollection() {
   const disabledDelete =
     paginationList.length === 0 || checkedPostIdList.length === 0;
 
-  const sortOptionList =
+  const categoryOptionList =
     currCollection === '내가 쓴 댓글'
       ? myCommentTypeOptionList
       : myPostTypeOptionList;
@@ -142,7 +142,7 @@ export default function MyCollection() {
                       checkedPostIdList.length !== 0 ? [] : idList,
                     );
                   }}
-                  sortOptionList={sortOptionList}
+                  categoryOptionList={categoryOptionList}
                   onChangeSort={onChangeSort}
                   checkedCategoryOptionList={checkedCategoryOptionList}
                   onChangeCategory={onCategoryOptionListChange}

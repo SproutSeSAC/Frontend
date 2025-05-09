@@ -2,10 +2,11 @@ import { useRef } from 'react';
 
 import { useGetNoticeSessionList } from '@/services/session/sessionsQueries';
 
+import { sessionStatusTabList } from '@/constants';
 import { useFilterData, useHandleTabNavigation, useObserver } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { SessionFilter } from '@/types';
+import { SessionFilter, SessionStatusTabType } from '@/types';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -49,19 +50,13 @@ export default function SessionApplicantManagement() {
 
   const { tabName, handleChangeTab } = useHandleTabNavigation();
 
-  const tabList = [
-    { text: '전체', type: 'ALL' },
-    { text: '모집 중', type: 'ACTIVE' },
-    { text: '모집 종료', type: 'INACTIVE' },
-  ];
-
   return (
     <MainView className="mb-32">
       <Header title="특강 / 행사 신청 현황" />
 
       <div className="mb-14 flex items-end justify-between">
-        <TabNavigation
-          tabList={tabList}
+        <TabNavigation<SessionStatusTabType>
+          tabList={sessionStatusTabList}
           selectValue={tabName ?? 'ALL'}
           onChangeValue={handleChangeTab}
           tabClassName="!pb-3 "

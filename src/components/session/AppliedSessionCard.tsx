@@ -1,3 +1,5 @@
+import { KeyboardEvent, MouseEvent } from 'react';
+
 import { useParams } from 'react-router-dom';
 
 import { useGetPostDetail } from '@/services/post/postQueries';
@@ -35,7 +37,10 @@ export default function AppliedSessionCard({
 
   const { showDialog, showToast } = useDialogContext();
 
-  const openSurveyLink = () => {
+  const openSurveyLink = (
+    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
     if (!noticeDetail?.satisfactionSurvey) {
       showToast('만족도 조사 링크가 제공되지 않았습니다.');
       return;
@@ -143,7 +148,7 @@ export default function AppliedSessionCard({
           disabled={noticeDetail?.satisfactionSurvey === ''}
           onKeyDown={event => {
             if (event.key !== 'Enter' && event.key !== ' ') return;
-            openSurveyLink();
+            openSurveyLink(event);
           }}
         >
           <span className="whitespace-nowrap text-sm font-normal text-white">
