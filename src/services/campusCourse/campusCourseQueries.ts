@@ -50,7 +50,9 @@ export const useGetCourseListByCampus = (
     const res = await axiosInstance.get<CourseListData>(
       `/course/list/${campusId}`,
     );
-    return res.data.courseList.map(course => ({ ...course, campusId }));
+    return res.data.courseList
+      .map(course => ({ ...course, campusId }))
+      .sort((a, b) => a.title.localeCompare(b.title));
   };
 
   return useQueries({

@@ -63,10 +63,26 @@ export const useGetUserProfile = (
   const getUserProfile = async () => {
     const res = await axiosInstance.get<UserProfileDto.Get>('/user/check');
 
+    const campusList = res.data.campusList.sort((a, b) =>
+      a.campusName.localeCompare(b.campusName),
+    );
+
     const courseList = res.data.courseList.sort((a, b) =>
       a.courseTitle.localeCompare(b.courseTitle),
     );
-    return { ...res.data, courseList };
+
+    const domainList = res.data.domainList?.sort((a, b) => a.id - b.id);
+    const techStackList = res.data.techStackList?.sort((a, b) => a.id - b.id);
+    const jobList = res.data.jobList?.sort((a, b) => a.id - b.id);
+
+    return {
+      ...res.data,
+      courseList,
+      campusList,
+      domainList,
+      techStackList,
+      jobList,
+    };
   };
 
   return useQuery<UserProfileDto.Get>({
@@ -100,7 +116,17 @@ export const useGetUserProfileCard = (
   const getUserProfileCard = async () => {
     const res =
       await axiosInstance.get<UserProfileDto.GetCard>('/mypage/getCard');
-    return res.data;
+
+    const campusList = res.data.study.campus.sort((a, b) =>
+      a.campusName.localeCompare(b.campusName),
+    );
+    const courseList = res.data.study.course.sort((a, b) =>
+      a.courseName.localeCompare(b.courseName),
+    );
+    return {
+      ...res.data,
+      study: { ...res.data.study, campus: campusList, course: courseList },
+    };
   };
 
   return useQuery<UserProfileDto.GetCard>({

@@ -282,19 +282,17 @@ export default function UserManagementPermission({
                 a.data![0].campusName.localeCompare(b.data![0].campusName),
               )
               .map(({ data }) =>
-                data
-                  ?.sort((a, b) => a.title.localeCompare(b.title))
-                  .map(({ id, title }) => (
-                    <li key={id}>
-                      <SquareButton
-                        name={title}
-                        className={`${
-                          !checkHasItem('course', id) ? disabledStyle : ''
-                        } w-full whitespace-pre text-start`}
-                        onClick={() => onToggleClick('course', id)}
-                      />
-                    </li>
-                  )),
+                data?.map(({ id, title }) => (
+                  <li key={id}>
+                    <SquareButton
+                      name={title}
+                      className={`${
+                        !checkHasItem('course', id) ? disabledStyle : ''
+                      } w-full whitespace-pre text-start`}
+                      onClick={() => onToggleClick('course', id)}
+                    />
+                  </li>
+                )),
               )}
           </ul>
         )}

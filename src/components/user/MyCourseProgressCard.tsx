@@ -112,48 +112,42 @@ export default function MyCourseProgressCard() {
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">도메인</span>
             <ScrollContainer className="gap-3" isBlurRight>
-              {domainList
-                ?.sort((a, b) => a.id - b.id)
-                ?.map(({ id, domain }) => (
-                  <li key={id}>
-                    <Tag
-                      text={domain}
-                      size="big"
-                      color="grayLight"
-                      className="px-[14px] py-[10px] !font-normal"
-                    />
-                  </li>
-                ))}
+              {domainList?.map(({ id, domain }) => (
+                <li key={id}>
+                  <Tag
+                    text={domain}
+                    size="big"
+                    color="grayLight"
+                    className="px-[14px] py-[10px] !font-normal"
+                  />
+                </li>
+              ))}
             </ScrollContainer>
           </div>
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">직무</span>
             <ScrollContainer className="gap-4" isBlurRight>
-              {jobList
-                ?.sort((a, b) => a.id - b.id)
-                ?.map(({ job, id }) => (
-                  <li key={id} className="leading-5 tracking-tight">
-                    {job}
-                  </li>
-                ))}
+              {jobList?.map(({ job, id }) => (
+                <li key={id} className="leading-5 tracking-tight">
+                  {job}
+                </li>
+              ))}
             </ScrollContainer>
           </div>
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">기술 스택</span>
             <ScrollContainer className="gap-3" isBlurRight>
-              {techStackList
-                ?.sort((a, b) => a.id - b.id)
-                ?.map(({ id, techStack, iconImageUrl }) => (
-                  <li key={id} className="size-7">
-                    <img
-                      src={iconImageUrl}
-                      alt={techStack}
-                      className="size-full"
-                    />
-                  </li>
-                ))}
+              {techStackList?.map(({ id, techStack, iconImageUrl }) => (
+                <li key={id} className="size-7">
+                  <img
+                    src={iconImageUrl}
+                    alt={techStack}
+                    className="size-full"
+                  />
+                </li>
+              ))}
             </ScrollContainer>
           </div>
         </div>

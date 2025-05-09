@@ -77,17 +77,17 @@ export default function UserManagementDetail() {
   const userSpecificationData = [
     {
       name: '도메인',
-      dataList: userInfo?.domainList?.sort((a, b) => a.id - b.id),
+      dataList: userInfo?.domainList,
       emptyValue: '선택한 도메인이 없어요',
     },
     {
       name: '직무',
-      dataList: userInfo?.jobList?.sort((a, b) => a.id - b.id),
+      dataList: userInfo?.jobList,
       emptyValue: '선택한 직무가 없어요',
     },
     {
       name: '기술스택',
-      dataList: userInfo?.techStackList?.sort((a, b) => a.id - b.id),
+      dataList: userInfo?.techStackList,
       emptyValue: '선택한 기술스택이 없어요',
     },
   ];
@@ -141,7 +141,7 @@ export default function UserManagementDetail() {
                     {userInfo?.campusList
                       .map(({ campusName }) => campusName.slice(0, -3))
                       .join(', ')}{' '}
-                    캠퍼스
+                    캠퍼스...
                   </span>
                   <MyCourseListWithHover
                     courseList={userInfo.courseList}

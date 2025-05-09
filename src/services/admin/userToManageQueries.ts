@@ -80,7 +80,18 @@ export const useGetUserToManageInfo = ({ userId }: { userId: number }) => {
     const { data } = await axiosInstance.get<UserProfileDto.Get>(
       `/admin/users/${userId}`,
     );
-    return data;
+    return {
+      ...data,
+      campusList: data.campusList.sort((a, b) =>
+        a.campusName.localeCompare(b.campusName),
+      ),
+      courseList: data.courseList.sort((a, b) =>
+        a.courseTitle.localeCompare(b.courseTitle),
+      ),
+      domainList: data.domainList.sort((a, b) => a.id - b.id),
+      jobList: data.jobList.sort((a, b) => a.id - b.id),
+      techStackList: data.techStackList.sort((a, b) => a.id - b.id),
+    };
   };
 
   return useQuery({

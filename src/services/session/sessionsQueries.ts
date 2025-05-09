@@ -92,7 +92,14 @@ export const useGetSessionApplicantList = ({
           },
         },
       );
-    return data;
+    return {
+      ...data,
+      content: data.content.map(item => ({
+        ...item,
+        courses: item.courses.sort((a, b) => a.name.localeCompare(b.name)),
+        campuses: item.campuses.sort((a, b) => a.name.localeCompare(b.name)),
+      })),
+    };
   };
   return useQuery<SessionDto.GetSessionApplicantList>({
     queryKey: [
