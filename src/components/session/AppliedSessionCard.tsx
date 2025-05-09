@@ -70,7 +70,7 @@ export default function AppliedSessionCard({
 
   const isEndSession = checkIsEndSession(currSession?.sessionEndDateTime);
   const currentStatus: AppliedSessionStatusKey = isEndSession
-    ? 'COMPLETE'
+    ? 'END'
     : currSession.currentStatus || 'UNKNOWN';
 
   return (

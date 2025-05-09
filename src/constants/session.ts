@@ -2,7 +2,7 @@ export const appliedSessionStatusObj = {
   WAIT: '대기',
   PARTICIPANT: '승인',
   REJECT: '반려',
-  COMPLETE: '종료',
+  END: '종료',
   UNKNOWN: '알 수 없는 상태',
 } as const;
 

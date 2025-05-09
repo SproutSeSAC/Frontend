@@ -150,7 +150,7 @@ export default function SessionApplicantManagementDetail() {
     WAIT: 'text-red-500',
     PARTICIPANT: 'text-mainGreen-hover',
     REJECT: 'text-mainBlue-active',
-    COMPLETE: 'text-gray-500',
+    END: 'text-gray-500',
     UNKNOWN: 'text-gray-500',
   };
 
