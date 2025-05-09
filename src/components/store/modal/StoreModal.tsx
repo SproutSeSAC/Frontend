@@ -39,10 +39,10 @@ export default function StoreModal({
   const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
     useHandleScrap({
       postId,
-      isScraped: !!store?.isScraped,
+      isScraped: !!storeDetail?.isScraped,
       invalidateQueryKeys: [
         { queryKey: ['useGetInfiniteStoreList'] },
-        { queryKey: ['useGetStoreDetail', postId] },
+        { queryKey: ['useGetPostDetail', postId] },
       ],
     });
 
@@ -70,7 +70,7 @@ export default function StoreModal({
 
               <FavoriteButton
                 size={22}
-                isFavorite={store.isScraped}
+                isFavorite={storeDetail?.isScraped}
                 onClick={onScrapClick}
                 disabled={isDeleteScrapPending || isPostScrapPending}
               />
