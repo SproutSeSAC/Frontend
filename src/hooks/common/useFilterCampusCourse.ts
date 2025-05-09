@@ -41,7 +41,8 @@ export const useFilterCampusCourse = ({
    */
   const courseOptionList = (courseListByCampus || [])
     .map(({ id, title: name }) => ({ id, name }))
-    .filter(({ id }) => !!courseList.find(({ courseId }) => courseId === id));
+    .filter(({ id }) => !!courseList.find(({ courseId }) => courseId === id))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   const selectedCourseOption =
     courseOptionList?.find(({ id }) => id === selectedCourseId) ||

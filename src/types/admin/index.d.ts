@@ -1,6 +1,8 @@
 import {
+  actionLabelList,
   colorByCampusObj,
   courseManagementTabListForHasSuperAdmin,
+  modifyingPermissionTabList,
   sessionApplicantsStatusTabList,
   sessionStatusTabList,
   userManagementTabListForHasSuperAdmin,
@@ -24,10 +26,14 @@ export type SessionApplicantsStatusTabType =
 
 export type ColorByCampus = keyof typeof colorByCampusObj;
 
-export type UserManagingActionLabel = '권한 수정' | '연락처 수정' | '회원 탈퇴';
+export type UserManagingActionLabel = (typeof actionLabelList)[number];
 
 export type UserManagingActionMenu = {
   label: UserManagingActionLabel;
   email: string;
   isOpen: boolean;
 };
+
+export type ModifyingPermissionsTab = typeof modifyingPermissionTabList;
+export type ModifyingPermissionsTabType =
+  ModifyingPermissionsTab[number]['type'];
