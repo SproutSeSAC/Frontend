@@ -72,7 +72,7 @@ export const useGetCampusList = (
 ) => {
   const getCampusList = async () => {
     const res = await axiosInstance.get<CampusListData>('/campus/list');
-    return res.data.campusList;
+    return res.data.campusList.sort((a, b) => a.name.localeCompare(b.name));
   };
 
   return useQuery<CampusListData['campusList']>({

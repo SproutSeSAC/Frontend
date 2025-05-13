@@ -34,7 +34,11 @@ export const useGetInfiniteUserList = (
     );
 
     return {
-      userList: data.content,
+      userList: data.content.map(user => ({
+        ...user,
+        campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
+        course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
+      })),
       totalCounts: data.totalCount,
       totalPages: Math.ceil(data.totalCount / params.size),
     };
@@ -61,7 +65,11 @@ export const useGetInfiniteTraineeList = (
     );
 
     return {
-      userList: data.content,
+      userList: data.content.map(user => ({
+        ...user,
+        campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
+        course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
+      })),
       totalCounts: data.totalCount,
       totalPages: Math.ceil(data.totalCount / params.size),
     };

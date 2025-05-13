@@ -35,6 +35,7 @@ export default function SquareButton({
       type={type === 'submit' ? 'submit' : 'button'}
       className={`rounded-lg ${colorStyle} px-4 py-2 tracking-tight ${className}`}
       onClick={onClick}
+      title={name}
       disabled={disabled}
     >
       {children}

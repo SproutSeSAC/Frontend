@@ -22,7 +22,7 @@ export default function UserManagementModal({
   return (
     <div className="absolute right-0 top-0 z-40 !pb-16">
       <div
-        className={`rounded-xl bg-white px-8 !pb-8 !pt-7 shadow-2xl ${currMenu.label === '권한 수정' ? modalSizeObj.lg : modalSizeObj.md}`}
+        className={`rounded-xl bg-white px-8 !pb-8 !pt-7 shadow-2xl ${modalSizeObj.md}`}
       >
         <header className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{currMenu.label}</h1>
@@ -40,7 +40,7 @@ export default function UserManagementModal({
 
         {currMenu.label !== '회원 탈퇴' && (
           <>
-            <p className="mb-5 text-darkGray">
+            <p className="mb-3 text-darkGray">
               {userName}님의{' '}
               <span className="font-medium">
                 {currMenu.label.includes('권한')

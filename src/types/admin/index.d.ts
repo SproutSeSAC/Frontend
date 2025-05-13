@@ -2,7 +2,7 @@ import {
   actionLabelList,
   colorByCampusObj,
   courseManagementTabListForHasSuperAdmin,
-  modifyingPermissionTabList,
+  modifyingPermissionStepList,
   sessionApplicantsStatusTabList,
   sessionStatusTabList,
   userManagementTabListForHasSuperAdmin,
@@ -34,6 +34,4 @@ export type UserManagingActionMenu = {
   isOpen: boolean;
 };
 
-export type ModifyingPermissionsTab = typeof modifyingPermissionTabList;
-export type ModifyingPermissionsTabType =
-  ModifyingPermissionsTab[number]['type'];
+export type ModifyingPermissionStep = typeof modifyingPermissionStepList;
