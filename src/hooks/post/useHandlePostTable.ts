@@ -6,47 +6,27 @@ import { useDeleteComment } from '@/services/comment/commentMutations';
 import { useDeleteMyPost } from '@/services/post/postMutation';
 
 import { myCommentTypeOptionList, myPostTypeOptionList } from '@/constants';
-import { Option, UserComment } from '@/types';
-import { UserPost } from '@/types/mypage/myPostDto';
-
-export type CommentItem = {
-  postType: 'MEAL' | 'STORE' | 'NOTICE' | 'PROJECT' | 'STUDY';
-  title: string;
-  createdNickName: string;
-  linkedId: number;
-  postId: number;
-  commentId: number;
-  createdAt: string;
-};
+import { Option, UserManagementDto } from '@/types';
+import { MyPostDto } from '@/types/mypage/myPostDto';
 
 interface UseHandlePostTableProps<T> {
   currCollection: T;
-  postList?: UserPost[];
-  commentList?: UserComment[];
-  itemListPerPage?: number;
+  postList?: MyPostDto.GetPostList | UserManagementDto.GetPostList;
+  commentList?: MyPostDto.GetCommentList | UserManagementDto.GetCommentList;
 }
 
 export const useHandlePostTable = <T extends string>({
   currCollection,
   postList,
   commentList,
-  itemListPerPage = 3,
 }: UseHandlePostTableProps<T>) => {
   const queryClient = useQueryClient();
 
-  const [isLatest, setIsLatest] = useState(true);
+  const [isLatestOrder, setIsLatestOrder] = useState(true);
 
-  const [checkedCategoryOptionList, setCheckedCategoryOptionList] = useState<
-    Option[]
-  >(
-    currCollection.includes('게시글')
-      ? myPostTypeOptionList
-      : myCommentTypeOptionList,
-  );
+  const onChangeOrder = () => setIsLatestOrder(prev => !prev);
 
   const [checkedPostIdList, setCheckedPostIdList] = useState<number[]>([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
 
   const onPostCheckboxChange = (postId: number) => {
     setCheckedPostIdList(prev => {
@@ -62,27 +42,23 @@ export const useHandlePostTable = <T extends string>({
 
   const initializePostCheckedBoxList = () => setCheckedPostIdList([]);
 
-  const onChangeSort = () => setIsLatest(prev => !prev);
-
-  const onChangePage = (page: number | 'prevPage' | 'nextPage') => {
-    setCurrentPage(
-      typeof page === 'number'
-        ? page
-        : prev => prev + (page === 'nextPage' ? +1 : -1),
-    );
+  const getCategoryOptionList: (collection: T) => Option[] = collection => {
+    return collection.includes('게시글')
+      ? myPostTypeOptionList
+      : myCommentTypeOptionList;
   };
 
-  const setCategoryOptionListByCollection = (collection: T) => {
-    const optionList = collection.includes('댓글')
-      ? myCommentTypeOptionList
-      : myPostTypeOptionList;
+  const [checkedCategoryOptionList, setCheckedCategoryOptionList] = useState(
+    getCategoryOptionList(currCollection),
+  );
 
+  const setCategoryOptionListByCollection = (collection: T) => {
+    const optionList = getCategoryOptionList(collection);
     setCheckedCategoryOptionList(optionList);
   };
 
   const onCategoryOptionListChange = (value: Option[]) => {
     setCheckedCategoryOptionList(value);
-    onChangePage(1);
   };
 
   const { mutateAsync: deletePost, isPending: isDeletePostPending } =
@@ -92,13 +68,8 @@ export const useHandlePostTable = <T extends string>({
     useDeleteComment();
 
   const onDeleteConfirmClick = (collection: T, postIdList: number[]) => {
-    if (
-      currentPage > 1 &&
-      (postIdList.length === itemListPerPage || postIdList.length === 1)
-    ) {
-      onChangePage('prevPage');
-    }
     initializePostCheckedBoxList();
+
     return postIdList.map(async postId => {
       if (collection.includes('게시글')) {
         await deletePost({ postId });
@@ -114,60 +85,40 @@ export const useHandlePostTable = <T extends string>({
     });
   };
 
-  const filteredAndOrderedPostList = useMemo(() => {
-    const currPostList = currCollection.includes('게시글')
-      ? postList
-      : commentList;
+  const currPostList = currCollection.includes('게시글')
+    ? postList
+    : commentList;
 
-    const filteredList = currPostList?.filter(({ postType }) => {
+  const filteredAndOrderedPostList = useMemo(() => {
+    const filteredList = currPostList?.content?.filter(({ postType }) => {
       return checkedCategoryOptionList.some(({ key }) => key === postType);
     });
 
     const orderedList = filteredList?.sort((a, b) => {
       const getPostTime = (createdAt: string) => new Date(createdAt).getTime();
-
-      if (!isLatest) {
+      if (!isLatestOrder) {
         return getPostTime(a.createdAt) - getPostTime(b.createdAt);
       }
       return getPostTime(b.createdAt) - getPostTime(a.createdAt);
     });
+
     return orderedList || [];
-  }, [
-    currCollection,
-    postList,
-    commentList,
-    checkedCategoryOptionList,
-    isLatest,
-  ]);
-
-  const paginationList = useMemo(() => {
-    return filteredAndOrderedPostList?.slice(
-      itemListPerPage * (currentPage - 1),
-      itemListPerPage * currentPage,
-    );
-  }, [currentPage, filteredAndOrderedPostList, itemListPerPage]);
-
-  const totalPages = Math.ceil(
-    (filteredAndOrderedPostList?.length || 0) / itemListPerPage,
-  );
+  }, [currPostList?.content, checkedCategoryOptionList, isLatestOrder]);
 
   return {
-    paginationList,
     filteredAndOrderedPostList,
-
-    sort: {
-      isLatest,
-      onChangeSort,
+    page: {
+      totalPage: currPostList?.totalPages,
+      currentPage: currPostList?.number,
+    },
+    order: {
+      isLatestOrder,
+      onChangeOrder,
     },
     category: {
       checkedCategoryOptionList,
       setCategoryOptionListByCollection,
       onCategoryOptionListChange,
-    },
-    page: {
-      currentPage,
-      onChangePage,
-      totalPages,
     },
     postCheckbox: {
       checkedPostIdList,

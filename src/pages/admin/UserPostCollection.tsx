@@ -7,7 +7,7 @@ import {
 } from '@/services/admin/userToManageQueries';
 
 import { myCommentTypeOptionList, myPostTypeOptionList } from '@/constants';
-import { useDialogContext, useHandlePostTable } from '@/hooks';
+import { useDialogContext, useFilterData, useHandlePostTable } from '@/hooks';
 import { UserComment } from '@/types';
 import { UserPost } from '@/types/mypage/myPostDto';
 
@@ -38,6 +38,8 @@ export type Header =
   | '게시글 제목'
   | '선택 삭제';
 
+const initialFilter = { page: 1, size: 5 };
+
 export default function UserPostCollection({
   userId,
   username,
@@ -46,30 +48,30 @@ export default function UserPostCollection({
 
   const { showDialog } = useDialogContext();
 
-  const { data: scrapList, isLoading: isUserScrapListLoading } =
-    useGetUserScrapList({ userId });
+  const { currFilter, handleChangeFilter } = useFilterData({ initialFilter });
 
   const { data: postList, isLoading: isUserPostListLoading } =
-    useGetUserPostList({ userId });
+    useGetUserPostList(userId, currFilter);
 
   const { data: commentList, isLoading: isUserCommentListLoading } =
-    useGetUserCommentList({ userId });
+    useGetUserCommentList(userId, currFilter);
+
+  const { data: scrapList, isLoading: isUserScrapListLoading } =
+    useGetUserScrapList(userId, currFilter);
 
   const {
-    page: { currentPage, onChangePage, totalPages },
-    sort: { onChangeSort },
+    page: { currentPage, totalPage },
+    order: { onChangeOrder },
     category: {
       checkedCategoryOptionList,
       setCategoryOptionListByCollection,
       onCategoryOptionListChange,
     },
-    paginationList,
     filteredAndOrderedPostList,
   } = useHandlePostTable<Collection>({
     currCollection,
     postList,
     commentList,
-    itemListPerPage: 5,
   });
 
   const handleShowDialog = async (
@@ -100,7 +102,6 @@ export default function UserPostCollection({
     currCollection === '댓글' ? myCommentTypeOptionList : myPostTypeOptionList;
 
   const onCollectionTabClick = (collection: Collection) => {
-    onChangePage(1);
     setCategoryOptionListByCollection(collection);
     setCurrCollection(collection);
   };
@@ -124,7 +125,7 @@ export default function UserPostCollection({
                 <TableHeader<Collection>
                   headerCellList={headerCellList}
                   currCollection={currCollection}
-                  onChangeSort={onChangeSort}
+                  onChangeOrder={onChangeOrder}
                   categoryOptionList={categoryOptionList}
                   checkedCategoryOptionList={checkedCategoryOptionList}
                   onChangeCategory={onCategoryOptionListChange}
@@ -132,7 +133,7 @@ export default function UserPostCollection({
 
                 <TableBody<UserPost | UserComment>
                   colLength={3}
-                  paginationList={paginationList}
+                  paginationList={filteredAndOrderedPostList}
                 >
                   {post => (
                     <PostTableRow
@@ -148,9 +149,11 @@ export default function UserPostCollection({
 
           {filteredAndOrderedPostList?.length !== 0 && (
             <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={onChangePage}
+              totalPages={totalPage || 1}
+              currentPage={currentPage || 1}
+              onPageChange={(page: number) => {
+                handleChangeFilter({ page, size: currFilter.size });
+              }}
             />
           )}
         </>

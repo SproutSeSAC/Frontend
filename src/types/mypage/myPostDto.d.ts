@@ -1,42 +1,14 @@
 import { postTypeObj } from '@/constants';
 import { Ptype } from '@/types/lounge';
+import { PageableType } from '@/types/pageable';
 import { RoleKey } from '@/types/user';
 
 import { PostType } from '@/components/common/tag/Tag';
 
 export namespace MyPostDto {
-  export type GetScrapedPostList = ScrapedPostList;
-  export type GetPostList = UserPost[];
-  export type GetCommentList = UserComment[];
-}
-
-interface ScrapedPostList {
-  content: UserScrap[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-    sort: {
-      sorted: boolean;
-      empty: boolean;
-      unsorted: boolean;
-    };
-    offset: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
-  sort: {
-    sorted: boolean;
-    empty: boolean;
-    unsorted: boolean;
-  };
-  first: boolean;
-  empty: boolean;
+  export type GetScrapedPostList = PageableType & { content: UserScrap[] };
+  export type GetPostList = PageableType & { content: UserPost[] };
+  export type GetCommentList = PageableType & { content: UserComment[] };
 }
 
 type UserScrap = {

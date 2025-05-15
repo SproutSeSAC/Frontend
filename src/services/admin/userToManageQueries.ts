@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import {
+  PaginationFilter,
   RoleKey,
   SessionDto,
   UserManagementTabType,
@@ -124,64 +125,58 @@ export const useGetTraineeMemo = ({ traineeId }: { traineeId: number }) => {
 };
 
 /** 사용자 찜한 글 조회 */
-export const useGetUserScrapList = ({
-  userId,
-  // params,
-}: {
-  userId: number;
-  // params: { page: number; size: number; sort?: string[] };
-}) => {
+export const useGetUserScrapList = (
+  userId: number,
+  params: PaginationFilter,
+) => {
   const getUserScrapList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetScrapList>(
       `/admin/users/${userId}/scrap`,
+      { params },
     );
     return data;
   };
 
   return useQuery({
-    queryKey: ['useGetUserScrapList', userId],
+    queryKey: ['useGetUserScrapList', userId, params],
     queryFn: getUserScrapList,
   });
 };
 
 /** 사용자 작성 글 조회 */
-export const useGetUserPostList = ({
-  userId,
-  // params,
-}: {
-  userId: number;
-  // params: { page: number; size: number; sort: string[] };
-}) => {
+export const useGetUserPostList = (
+  userId: number,
+  params: PaginationFilter,
+) => {
   const getUserPostList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetPostList>(
       `/admin/users/${userId}/post`,
+      { params },
     );
     return data;
   };
 
   return useQuery({
-    queryKey: ['useGetUserPostList', userId],
+    queryKey: ['useGetUserPostList', userId, params],
     queryFn: getUserPostList,
   });
 };
 
 /** 사용자 작성 댓글 조회 */
-export const useGetUserCommentList = ({
-  userId,
-  // params,
-}: {
-  userId: number;
-  // params: { page: number; size: number; sort: string[] };
-}) => {
+export const useGetUserCommentList = (
+  userId: number,
+  params: PaginationFilter,
+) => {
   const getUserCommentList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetCommentList>(
       `/admin/users/${userId}/comments`,
+      { params },
     );
     return data;
   };
 
   return useQuery({
-    queryKey: ['useGetUserCommentList', userId],
+    queryKey: ['useGetUserCommentList', userId, params],
     queryFn: getUserCommentList,
   });
 };

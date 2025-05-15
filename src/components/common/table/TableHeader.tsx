@@ -13,9 +13,9 @@ interface TableHeaderProps<T> {
   disabledCheck?: boolean;
   onCheckboxClick?: () => void;
   // 작성일
-  categoryOptionList: Option[];
-  onChangeSort: () => void;
+  onChangeOrder: () => void;
   // 분류
+  categoryOptionList: Option[];
   checkedCategoryOptionList: Option[];
   onChangeCategory: (value: Option[]) => void;
   // 삭제
@@ -33,7 +33,7 @@ export default function TableHeader<T>({
   onChangeCategory,
   disabledDelete,
   checkedCategoryOptionList,
-  onChangeSort,
+  onChangeOrder,
   onCheckboxClick,
 }: TableHeaderProps<T>) {
   return (
@@ -56,7 +56,7 @@ export default function TableHeader<T>({
             {name === '작성일' && (
               <button
                 type="button"
-                onClick={onChangeSort}
+                onClick={onChangeOrder}
                 className="flex w-full items-center justify-center pl-1.5"
               >
                 <span className="text-[15px]">{name}</span>

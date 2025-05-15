@@ -10,7 +10,7 @@ export interface Option {
 export type PaginationFilter = {
   page: number;
   size: number;
-  sort?: SortDisplayKey;
+  sort?: SortDisplayKey | string[];
 };
 
 export type NoticeParticipantParams = PaginationFilter & {

@@ -14,7 +14,10 @@ export namespace SessionDto {
     allList: AppliedSession[];
     nearList: AppliedSession[];
   };
-  export type GetNoticeSessionList = NoticeSessionDetail[];
+  export type GetNoticeSessionList = {
+    isLastPage: boolean;
+    noticeSession: NoticeSessionDetail[];
+  };
 }
 
 type Applicant = {
@@ -40,6 +43,9 @@ type AppliedSession = {
   endDateTime: string;
   role: RoleKey;
   ordinal: number;
+  meetingType: MeetingTypeKey;
+  meetingPlace: string;
+  satisfactionSurvey: string;
 };
 
 type NoticeSessionDetail = {

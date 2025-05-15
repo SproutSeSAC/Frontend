@@ -52,12 +52,12 @@ export const useGetNoticeSessionList = ({
         },
       );
 
-      const hasNextPage = false; //! data?.isLastPage
+      const hasNextPage = !data?.isLastPage;
 
       const nextPage = hasNextPage ? pageParam + 1 : undefined;
 
       return {
-        noticeSessionList: data,
+        noticeSessionList: data.noticeSession,
         currentPage: pageParam,
         offset: (pageParam - 1) * filterParams.size,
         nextPage,

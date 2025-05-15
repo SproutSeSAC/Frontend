@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
 // 특정 게시글 상세 조회 API
-export const useGetPostDetail = <T>(postId?: number) => {
+export const useGetPostDetail = <T>(
+  postId?: number,
+  options?: Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>,
+) => {
   return useQuery({
     queryKey: ['useGetPostDetail', postId],
     queryFn: async () => {
@@ -11,6 +14,7 @@ export const useGetPostDetail = <T>(postId?: number) => {
       return data;
     },
     enabled: !!postId,
+    ...options,
   });
 };
 

@@ -6,8 +6,8 @@ export namespace UserManagementDto {
   export type GetUserList = UserToManageList;
   export type GetMemo = UserMemo;
   export type GetScrapList = PageableType & { content: UserScrap[] };
-  export type GetPostList = UserPost[];
-  export type GetCommentList = UserComment[];
+  export type GetPostList = PageableType & { content: UserPost[] };
+  export type GetCommentList = PageableType & { content: UserComment[] };
 }
 
 type UserToManageList = {

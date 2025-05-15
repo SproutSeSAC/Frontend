@@ -11,9 +11,8 @@ import {
   myCommentTypeOptionList,
   myPostTypeOptionList,
 } from '@/constants';
-import { useDialogContext, useHandlePostTable } from '@/hooks';
-import { MyCollection as Collection, UserComment } from '@/types';
-import { UserPost } from '@/types/mypage/myPostDto';
+import { useDialogContext, useFilterData, useHandlePostTable } from '@/hooks';
+import { MyCollection as Collection, UserComment, UserPost } from '@/types';
 import { useAtom } from 'jotai';
 
 import { Header } from '@/pages/admin/UserPostCollection';
@@ -29,25 +28,29 @@ import PostTableRow from '@/components/post-collection/PostTableRow';
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
-export const ITEMS_PER_PAGE = 3;
+const initialFilter = { page: 1, size: 3, sort: ['PROJECT'] };
 
 export default function MyCollection() {
   const { showDialog } = useDialogContext();
 
   const [currCollection, setCurrCollection] = useAtom(myCollectionAtom);
 
-  const { data: postList, isLoading: isMyPostListLoading } =
-    useGetMyPostList(currCollection);
+  const { currFilter, handleChangeFilter } = useFilterData({ initialFilter });
+
+  const { data: postList, isLoading: isMyPostListLoading } = useGetMyPostList(
+    currCollection,
+    currFilter,
+  );
 
   const { data: commentList, isLoading: isMyCommentListLoading } =
-    useGetMyCommentList(currCollection);
+    useGetMyCommentList(currCollection, currFilter);
 
   const { data: scrapedPostList, isLoading: isScrapedPostListLoading } =
-    useGetMyScrapedPostList(currCollection);
+    useGetMyScrapedPostList(currCollection, currFilter);
 
   const {
-    page: { currentPage, onChangePage, totalPages },
-    sort: { onChangeSort },
+    page: { currentPage, totalPage },
+    order: { onChangeOrder },
     category: {
       checkedCategoryOptionList,
       setCategoryOptionListByCollection,
@@ -60,13 +63,11 @@ export default function MyCollection() {
       initializePostCheckedBoxList,
     },
     onDeleteConfirmClick,
-    paginationList,
     filteredAndOrderedPostList,
   } = useHandlePostTable<Collection>({
     currCollection,
     postList,
     commentList,
-    itemListPerPage: 3,
   });
 
   const handleShowDialog = async (
@@ -93,12 +94,12 @@ export default function MyCollection() {
     }
   };
 
-  const isChecked =
-    paginationList.length !== 0 &&
-    checkedPostIdList.length === paginationList.length;
+  // const isChecked =
+  //   paginationList?.length !== 0 &&
+  //   checkedPostIdList.length === paginationList.length;
 
-  const disabledDelete =
-    paginationList.length === 0 || checkedPostIdList.length === 0;
+  // const disabledDelete =
+  //   paginationList.length === 0 || checkedPostIdList.length === 0;
 
   const categoryOptionList =
     currCollection === '내가 쓴 댓글'
@@ -120,7 +121,6 @@ export default function MyCollection() {
         currCollection={currCollection}
         onTabClick={(collection: Collection) => {
           initializePostCheckedBoxList();
-          onChangePage(1);
           setCategoryOptionListByCollection(collection);
           setCurrCollection(collection);
         }}
@@ -134,23 +134,25 @@ export default function MyCollection() {
                 <TableHeader
                   headerCellList={headerCellList}
                   currCollection={currCollection}
-                  isChecked={isChecked}
+                  isChecked={false}
                   disabledCheck={false}
                   onCheckboxClick={() => {
-                    const idList = paginationList.map(({ postId }) => postId);
+                    const idList = filteredAndOrderedPostList.map(
+                      ({ postId }) => postId,
+                    );
                     return onPostCheckboxListChange(
                       checkedPostIdList.length !== 0 ? [] : idList,
                     );
                   }}
+                  onChangeOrder={onChangeOrder}
                   categoryOptionList={categoryOptionList}
-                  onChangeSort={onChangeSort}
                   checkedCategoryOptionList={checkedCategoryOptionList}
                   onChangeCategory={onCategoryOptionListChange}
-                  disabledDelete={disabledDelete}
+                  disabledDelete={false}
                   onDeleteConfirmClick={() => {}}
                 />
                 <TableBody<UserPost | UserComment>
-                  paginationList={paginationList}
+                  paginationList={filteredAndOrderedPostList}
                   colLength={5}
                 >
                   {post => (
@@ -170,16 +172,14 @@ export default function MyCollection() {
             )}
           </div>
 
-          {filteredAndOrderedPostList?.length !== 0 && (
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={(pageNum: number) => {
-                initializePostCheckedBoxList();
-                onChangePage(pageNum);
-              }}
-            />
-          )}
+          <Pagination
+            totalPages={totalPage || 1}
+            currentPage={currentPage || 1}
+            onPageChange={(page: number) => {
+              handleChangeFilter({ page, size: 3 });
+              initializePostCheckedBoxList();
+            }}
+          />
         </>
       )}
 
