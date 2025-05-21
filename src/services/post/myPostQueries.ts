@@ -7,14 +7,29 @@ import { MyPostDto, UserComment } from '@/types/mypage/myPostDto';
 
 export const useGetMyPostList = (
   collection: MyCollection,
-  params: PaginationFilter,
+  params: MyPostDto.GetPostListParams,
 ) => {
+  const postTypes =
+    params.postTypes && params.postTypes.length !== 0
+      ? { postTypes: params.postTypes?.join(',') }
+      : {};
+
   const getMyPostList = async () => {
-    const { data } = await axiosInstance.get<MyPostDto.GetPostList>(
+    const { data: postList } = await axiosInstance.get<MyPostDto.GetPostList>(
       `/mypage/getPost`,
-      { params },
+      { params: { ...params, ...postTypes } },
     );
-    return data;
+
+    return {
+      ...postList,
+      content: postList.content.map(({ postType, ptype, ...rest }) => {
+        return {
+          ptype,
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        };
+      }),
+    };
   };
 
   return useQuery({
@@ -54,12 +69,17 @@ export const useGetMyScrapedPostList = (
 
 export const useGetMyCommentList = (
   collection: MyCollection,
-  params: PaginationFilter,
+  params: MyPostDto.GetPostListParams,
 ) => {
-  const getMyScrapedPostList = async () => {
+  const postTypes =
+    params.postTypes && params.postTypes.length !== 0
+      ? { postTypes: params.postTypes?.join(',') }
+      : {};
+
+  const getMyCommentList = async () => {
     const { data } = await axiosInstance.get<MyPostDto.GetCommentList>(
       `/mypage/getComments`,
-      { params },
+      { params: { ...params, ...postTypes } },
     );
 
     return {
@@ -76,7 +96,7 @@ export const useGetMyCommentList = (
 
   return useQuery({
     queryKey: ['useGetMyCommentList', params],
-    queryFn: getMyScrapedPostList,
+    queryFn: getMyCommentList,
     enabled: collection === '내가 쓴 댓글',
   });
 };

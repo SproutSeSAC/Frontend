@@ -74,7 +74,7 @@ export default function ManagingSessionCard({
           {meetingPlace &&
             (meetingType === 'ONLINE' ? (
               <a
-                href="https://www.naver.com" // NOTE: url 변경하기
+                href={meetingPlace} // NOTE: url 변경하기
                 target="_blank"
                 rel="noreferrer"
                 className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"

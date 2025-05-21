@@ -13,3 +13,10 @@ export type AppliedSessionStatusObj = typeof appliedSessionStatusObj;
 export type AppliedSessionStatusKey = keyof AppliedSessionStatusObj;
 export type AppliedSessionStatusValue =
   AppliedSessionStatusObj[AppliedSessionStatusKey];
+
+export type SessionFilter = {
+  page: number;
+  size: number;
+  keyword: string;
+  applicationStatus?: 'ACTIVE' | 'INACTIVE';
+};

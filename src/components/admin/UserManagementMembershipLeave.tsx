@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
+import { useDeleteUserToManage } from '@/services/admin/userToManageMutation';
+
 import { rolesObj } from '@/constants';
+import { useDialogContext } from '@/hooks';
 import { UserManagementDto } from '@/types';
 
 import SquareButton from '@/components/common/button/SquareButton';
@@ -11,13 +16,24 @@ interface UserManagementMembershipLeaveProps {
 }
 
 export default function UserManagementMembershipLeave({
-  user,
+  user: { name: userName, role, userId },
   onMenuClose,
 }: UserManagementMembershipLeaveProps) {
-  const { name: userName, role } = user;
-
   const [showReconfirmMembershipLeave, setShowReconfirmMembershipLeave] =
     useState(false);
+
+  const { showToast } = useDialogContext();
+
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: deleteUser } = useDeleteUserToManage({
+    onSuccess: async () => {
+      showToast(`${userName}님이 탈퇴 처리되었습니다.`);
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetInfiniteUserList'], // NOTE: 이거 맞는지 다시한번 확인?
+      });
+    },
+  });
 
   const onClose = () => {
     onMenuClose();
@@ -36,7 +52,10 @@ export default function UserManagementMembershipLeave({
           name="삭제"
           color="mainGreen"
           className="min-w-fit !rounded-xl"
-          onClick={onClose}
+          onClick={() => {
+            deleteUser({ userId });
+            onClose();
+          }}
         />
         <SquareButton
           name="닫기"

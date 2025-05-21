@@ -42,10 +42,7 @@ export const useSSE = () => {
     const eventSource = new EventSourcePolyfill(
       `${import.meta.env.VITE_SERVER_API_URL}/sse/subscribe`,
       {
-        headers: {
-          'Access-Token': accessToken,
-          // 'Refresh-Token': refreshToken, NOTE:여기 보내야하는지 백엔드 문의
-        },
+        headers: { 'Access-Token': accessToken },
         // 서버가 정해진 시간 안에 데이터를 보내지 않을 경우 연결이 끊어지고 재연결하도록 설정하는 클라이언트 측 타이머
         // 90초 동안 서버 응답 없으면 연결 종료(onerror 로직) 및 자동 재연결 시도
         heartbeatTimeout: 90000,

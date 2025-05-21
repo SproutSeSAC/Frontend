@@ -335,9 +335,9 @@ export default function SessionApplicantManagementDetail() {
                       </span>
                       <span
                         className="text-darkGray-active"
-                        title={`${userCampuses} 캠퍼스` || '정보 없음'}
+                        title={`${userCampuses}` || '정보 없음'}
                       >
-                        {`${userCampuses} 캠퍼스` || '정보 없음'}
+                        {`${userCampuses}` || '정보 없음'}
                       </span>
 
                       <MyCourseListWithHover

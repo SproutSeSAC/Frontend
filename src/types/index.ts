@@ -1,4 +1,4 @@
-export * from '@/types/filter';
+export * from '@/types/serviceType';
 export * from '@/types/notice';
 export * from '@/types/calendar';
 export * from '@/types/specifications';
@@ -9,3 +9,4 @@ export * from '@/types/mypage';
 export * from '@/types/notification';
 export * from '@/types/session';
 export * from '@/types/admin';
+export * from '@/types/store';

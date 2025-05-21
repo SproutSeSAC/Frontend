@@ -61,7 +61,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           onEnter={handlePressEnter}
           className="ml-2 border-none px-0"
         />
-        {value !== '' && (
+        {value && value !== '' && (
           <button type="button" onClick={resetChange}>
             <BsX className="size-7 text-darkGray-active" />
           </button>

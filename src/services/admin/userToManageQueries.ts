@@ -6,10 +6,13 @@ import {
   PaginationFilter,
   RoleKey,
   SessionDto,
+  UserComment,
   UserManagementTabType,
   UserProfileDto,
 } from '@/types';
 import { UserManagementDto } from '@/types/admin/userToManageDto';
+
+import { UserCollection } from '@/pages/admin/UserPostCollection';
 
 export type UserManagementFilter = {
   page: number;
@@ -128,6 +131,7 @@ export const useGetTraineeMemo = ({ traineeId }: { traineeId: number }) => {
 export const useGetUserScrapList = (
   userId: number,
   params: PaginationFilter,
+  currCollection: UserCollection,
 ) => {
   const getUserScrapList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetScrapList>(
@@ -140,44 +144,75 @@ export const useGetUserScrapList = (
   return useQuery({
     queryKey: ['useGetUserScrapList', userId, params],
     queryFn: getUserScrapList,
+    enabled: currCollection === '찜한 글',
   });
 };
 
 /** 사용자 작성 글 조회 */
 export const useGetUserPostList = (
   userId: number,
-  params: PaginationFilter,
+  params: UserManagementDto.GetPostListParams,
+  currCollection: UserCollection,
 ) => {
+  const postTypes =
+    params.postTypes?.length !== 0
+      ? { postTypes: params.postTypes?.join(',') }
+      : {};
+
   const getUserPostList = async () => {
-    const { data } = await axiosInstance.get<UserManagementDto.GetPostList>(
-      `/admin/users/${userId}/post`,
-      { params },
-    );
-    return data;
+    const { data: postList } =
+      await axiosInstance.get<UserManagementDto.GetPostList>(
+        `/admin/users/${userId}/post`,
+        { params: { ...params, postTypes } },
+      );
+
+    return {
+      ...postList,
+      content: postList.content.map(({ postType, ptype, ...rest }) => {
+        return {
+          ptype,
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        };
+      }),
+    };
   };
 
   return useQuery({
     queryKey: ['useGetUserPostList', userId, params],
     queryFn: getUserPostList,
+    enabled: currCollection === '게시글' && !!userId,
   });
 };
 
 /** 사용자 작성 댓글 조회 */
 export const useGetUserCommentList = (
   userId: number,
-  params: PaginationFilter,
+  params: UserManagementDto.GetPostListParams,
+  currCollection: UserCollection,
 ) => {
   const getUserCommentList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetCommentList>(
       `/admin/users/${userId}/comments`,
-      { params },
+      { params: { ...params, postTypes: params.postTypes?.join(',') } },
     );
-    return data;
+
+    return {
+      ...data,
+      content: data.content.map(
+        ({ postType, ptype, ...rest }) =>
+          ({
+            ...rest,
+            postType: postType === 'PROJECT' ? ptype : postType,
+          }) as UserComment,
+      ),
+    };
   };
 
   return useQuery({
     queryKey: ['useGetUserCommentList', userId, params],
     queryFn: getUserCommentList,
+    enabled: currCollection === '댓글' && !!userId,
   });
 };
 
@@ -198,7 +233,8 @@ export const useGetUserAppliedSessionList = ({
   };
 
   return useQuery({
-    queryKey: ['useGetUserAppliedSessionList', userId],
+    queryKey: ['useGetUserAppliedSessionList', userId, type],
     queryFn: getUserAppliedSessionList,
+    enabled: !!userId,
   });
 };

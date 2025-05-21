@@ -4,12 +4,12 @@ import {
   NoticeSession,
   NoticeTargetCourse,
   NoticeWriter,
-  PageableType,
+  Pageable,
   RoleKey,
 } from '@/types';
 
 export namespace SessionDto {
-  export type GetSessionApplicantList = PageableType & { content: Applicant[] };
+  export type GetSessionApplicantList = Pageable & { content: Applicant[] };
   export type GetAppliedSessionList = {
     allList: AppliedSession[];
     nearList: AppliedSession[];
@@ -46,6 +46,7 @@ type AppliedSession = {
   meetingType: MeetingTypeKey;
   meetingPlace: string;
   satisfactionSurvey: string;
+  currentStatus: 'WAIT' | 'PARTICIPANT' | 'REJECT';
 };
 
 type NoticeSessionDetail = {

@@ -2,7 +2,7 @@ import { MouseEvent, useCallback, useState } from 'react';
 
 import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 
-import { foodFilterDisplay } from '@/constants';
+import { foodFilterDisplay } from '@/constants/store';
 import { useDialogContext, useHandleScrap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
 import {

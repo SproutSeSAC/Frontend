@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { LOUNGE_TAB_LIST } from '@/constants';
+import { loungeTabList } from '@/constants';
 import { updateQueryParams } from '@/utils';
 
 import TabNavigation from '@/components/common/TabNavigation';
@@ -29,7 +29,7 @@ export default function LoungeTabNavigation() {
   return (
     <TabNavigation
       selectValue={pType ?? 'ALL'}
-      tabList={LOUNGE_TAB_LIST}
+      tabList={loungeTabList}
       onChangeValue={handleChangeValue}
     >
       <div

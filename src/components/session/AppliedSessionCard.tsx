@@ -67,7 +67,9 @@ export default function AppliedSessionCard({
   };
 
   const isEndSession = checkIsEndSession(endDateTime);
-  const status: AppliedSessionStatusKey = isEndSession ? 'END' : 'WAIT'; // NOTE: || 'UNKNOWN';
+  const status: AppliedSessionStatusKey = isEndSession
+    ? 'END'
+    : session?.currentStatus || 'UNKNOWN';
 
   return (
     <div className="group relative flex w-full min-w-[300px] cursor-default flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card">
@@ -97,7 +99,7 @@ export default function AppliedSessionCard({
             {meetingType === 'ONLINE' &&
               (meetingPlace ? (
                 <a
-                  href="https://www.naver.com" // NOTE: url 변경하기
+                  href={meetingPlace} // NOTE: url 변경하기
                   target="_blank"
                   rel="noreferrer"
                   className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"

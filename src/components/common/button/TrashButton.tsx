@@ -4,9 +4,11 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import SquareButton from '@/components/common/button/SquareButton';
 
 interface TrashButtonProps {
-  text?: string;
+  buttonText?: string;
   disabled?: boolean;
   className?: string;
+  text?: string;
+  subText?: string;
   onClick?: () => void;
   onConfirmClick?: () => void;
 }
@@ -15,14 +17,17 @@ export default function TrashButton({
   disabled,
   className,
   onConfirmClick,
-  text = '',
+  buttonText = '',
+  text,
+  subText,
   onClick,
 }: TrashButtonProps) {
   const { hideDialog, alert } = useDialogContext();
 
   const onDeleteClick = () => {
     alert({
-      text: '정말로 삭제하시곘습니까?',
+      text: text || '정말로 삭제하시곘습니까?',
+      subText,
       children: (
         <>
           <SquareButton
@@ -54,7 +59,7 @@ export default function TrashButton({
       onClick={onClick || onDeleteClick}
       disabled={disabled}
     >
-      {text || <FaRegTrashAlt className="h-full w-full" />}
+      {buttonText || <FaRegTrashAlt className="h-full w-full" />}
     </button>
   );
 }
