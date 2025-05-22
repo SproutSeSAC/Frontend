@@ -24,7 +24,7 @@ export default function CourseManagement() {
       <Header title="교육과정 관리" />
       {userProfile && (
         <TabNavigation<CourseManagementTabType>
-          selectValue={tabName ?? 'calendar'}
+          selectValue={tabName ?? 'course'}
           tabList={
             hasSuperAdmin(userProfile.role)
               ? courseManagementTabListForHasSuperAdmin
@@ -34,9 +34,12 @@ export default function CourseManagement() {
           tabClassName="!pb-3 !px-3"
         />
       )}
-      {(tabName === null || tabName === 'calendar') && <CalendarAclTable />}
-
-      {tabName === 'course' && <PreparingPage className="mt-5 !rounded-3xl" />}
+      {(tabName === null || tabName === 'course') && (
+        <PreparingPage className="mt-5 !rounded-3xl" />
+      )}
+      {tabName === 'calendar' && hasSuperAdmin(userProfile?.role) && (
+        <CalendarAclTable />
+      )}
     </MainView>
   );
 }

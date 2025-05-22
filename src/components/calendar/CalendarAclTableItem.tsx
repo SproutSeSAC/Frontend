@@ -21,15 +21,15 @@ export default function CalendarAclTableItem({
   } = useCourseData({ courseId });
 
   const {
-    courseCalendarAcl,
+    courseAclInfo: { status, hasAclAdminList, hasNotAclAdminList },
+    onGrantAclClick,
     isGrantAclPending,
     isCalendarAclLoading,
-    courseAclInfo,
-    onGrantAclClick,
   } = useHandleAcl({ courseId, calendarId, adminList });
 
-  const notFoundStyle =
-    courseCalendarAcl === 'Not Found' ? 'bg-[#eeeeee] opacity-30' : '';
+  const notFound = status === 'Not Found';
+
+  const notFoundStyle = notFound ? 'bg-[#f1f1f1] opacity-30' : '';
 
   return (
     <tr className="group border-t hover:bg-lightGray [&:last-child>td]:border-b-0 [&>td]:border-b [&>td]:py-4">
@@ -51,7 +51,7 @@ export default function CalendarAclTableItem({
           (calendarId ? (
             <div className="w-full px-2">
               <span className="text-center text-sm tracking-tighter text-darkGray">
-                {courseCalendarAcl === 'Not Found' ? '데이터유실' : '생성완료'}
+                {notFound ? '데이터유실' : '생성완료'}
               </span>
             </div>
           ) : (
@@ -64,23 +64,23 @@ export default function CalendarAclTableItem({
 
       {/* 교육과정명 */}
       <TableDataCell
-        className={`${courseCalendarAcl ? '' : 'text-mainGray'} ${notFoundStyle} h-full overflow-hidden pr-8 text-start leading-5 tracking-tight`}
+        className={`${status === 'Created' ? '' : 'text-mainGray'} ${notFoundStyle} h-full overflow-hidden pr-8 text-start leading-5 tracking-tight`}
       >
         {courseTitle}
       </TableDataCell>
 
       {/* 캘린더 권한 부여된 유저 */}
       <TableDataCell className={notFoundStyle}>
-        {courseAclInfo.isCreated && (
+        {calendarId && (
           <div className="flex justify-start">
-            {!courseCalendarAcl && (
+            {hasAclAdminList?.length === 0 && (
               <span className="block w-full text-start text-mainGray">
                 권한대기중
               </span>
             )}
-            {courseCalendarAcl && (
+            {hasAclAdminList && (
               <ul className="flex w-full flex-wrap gap-x-6 gap-y-1">
-                {courseAclInfo?.hasAclAdminList?.map(admin => (
+                {hasAclAdminList?.map(admin => (
                   <AdminUser
                     key={admin.email}
                     admin={admin}
@@ -95,20 +95,20 @@ export default function CalendarAclTableItem({
 
       {/* 캘린더 권한 대기중인 유저 */}
       <TableDataCell className={notFoundStyle}>
-        {courseAclInfo.isCreated && (
+        {calendarId && (
           <div className="flex justify-start">
-            {!courseCalendarAcl && (
+            {hasAclAdminList?.length === 0 && (
               <span className="block w-full text-start text-mainGray">
                 권한대기중
               </span>
             )}
 
-            {courseCalendarAcl &&
-              (courseAclInfo?.hasNotAclAdminList?.length === 0 ? (
+            {hasAclAdminList &&
+              (hasNotAclAdminList?.length === 0 ? (
                 '-'
               ) : (
                 <ul className="flex w-full flex-wrap gap-x-6 gap-y-1">
-                  {courseAclInfo?.hasNotAclAdminList?.map(admin => (
+                  {hasNotAclAdminList?.map(admin => (
                     <AdminUser key={admin.nickname} admin={admin} />
                   ))}
                 </ul>
@@ -124,14 +124,14 @@ export default function CalendarAclTableItem({
         <button
           type="button"
           onClick={() => {
-            if (calendarId && courseAclInfo.hasNotAclAdminList) {
-              onGrantAclClick(calendarId, courseAclInfo.hasNotAclAdminList);
+            if (calendarId && hasNotAclAdminList) {
+              onGrantAclClick(calendarId, hasNotAclAdminList);
             }
           }}
           disabled={
-            !courseCalendarAcl ||
-            !courseAclInfo.isCreated ||
-            courseAclInfo?.hasNotAclAdminList?.length === 0 ||
+            !hasAclAdminList ||
+            status !== 'Created' ||
+            hasNotAclAdminList?.length === 0 ||
             isGrantAclPending
           }
           className="disabled:text-mainGray"

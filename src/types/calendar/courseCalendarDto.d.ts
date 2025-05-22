@@ -28,7 +28,7 @@ export type AclEmail = AdminEmail & {
 };
 
 export type CourseCalendarAcl = {
-  isCreated: boolean;
+  status: 'Created' | 'Not Created' | 'Forbidden' | 'Not Found';
   courseId: number;
   calendarId?: string;
   hasAclAdminList?: AclEmail[];
