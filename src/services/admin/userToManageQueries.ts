@@ -3,12 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/services/axiosInstance';
 
 import {
+  PaginationFilter,
   RoleKey,
   SessionDto,
+  UserComment,
   UserManagementTabType,
   UserProfileDto,
 } from '@/types';
 import { UserManagementDto } from '@/types/admin/userToManageDto';
+
+import { UserCollection } from '@/pages/admin/UserPostCollection';
 
 export type UserManagementFilter = {
   page: number;
@@ -34,7 +38,11 @@ export const useGetInfiniteUserList = (
     );
 
     return {
-      userList: data.content,
+      userList: data.content.map(user => ({
+        ...user,
+        campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
+        course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
+      })),
       totalCounts: data.totalCount,
       totalPages: Math.ceil(data.totalCount / params.size),
     };
@@ -61,7 +69,11 @@ export const useGetInfiniteTraineeList = (
     );
 
     return {
-      userList: data.content,
+      userList: data.content.map(user => ({
+        ...user,
+        campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
+        course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
+      })),
       totalCounts: data.totalCount,
       totalPages: Math.ceil(data.totalCount / params.size),
     };
@@ -116,65 +128,91 @@ export const useGetTraineeMemo = ({ traineeId }: { traineeId: number }) => {
 };
 
 /** 사용자 찜한 글 조회 */
-export const useGetUserScrapList = ({
-  userId,
-  // params,
-}: {
-  userId: number;
-  // params: { page: number; size: number; sort?: string[] };
-}) => {
+export const useGetUserScrapList = (
+  userId: number,
+  params: PaginationFilter,
+  currCollection: UserCollection,
+) => {
   const getUserScrapList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetScrapList>(
       `/admin/users/${userId}/scrap`,
+      { params },
     );
     return data;
   };
 
   return useQuery({
-    queryKey: ['useGetUserScrapList', userId],
+    queryKey: ['useGetUserScrapList', userId, params],
     queryFn: getUserScrapList,
+    enabled: currCollection === '찜한 글',
   });
 };
 
 /** 사용자 작성 글 조회 */
-export const useGetUserPostList = ({
-  userId,
-  // params,
-}: {
-  userId: number;
-  // params: { page: number; size: number; sort: string[] };
-}) => {
+export const useGetUserPostList = (
+  userId: number,
+  params: UserManagementDto.GetPostListParams,
+  currCollection: UserCollection,
+) => {
+  const postTypes =
+    params.postTypes?.length !== 0
+      ? { postTypes: params.postTypes?.join(',') }
+      : {};
+
   const getUserPostList = async () => {
-    const { data } = await axiosInstance.get<UserManagementDto.GetPostList>(
-      `/admin/users/${userId}/post`,
-    );
-    return data;
+    const { data: postList } =
+      await axiosInstance.get<UserManagementDto.GetPostList>(
+        `/admin/users/${userId}/post`,
+        { params: { ...params, postTypes } },
+      );
+
+    return {
+      ...postList,
+      content: postList.content.map(({ postType, ptype, ...rest }) => {
+        return {
+          ptype,
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        };
+      }),
+    };
   };
 
   return useQuery({
-    queryKey: ['useGetUserPostList', userId],
+    queryKey: ['useGetUserPostList', userId, params],
     queryFn: getUserPostList,
+    enabled: currCollection === '게시글' && !!userId,
   });
 };
 
 /** 사용자 작성 댓글 조회 */
-export const useGetUserCommentList = ({
-  userId,
-  // params,
-}: {
-  userId: number;
-  // params: { page: number; size: number; sort: string[] };
-}) => {
+export const useGetUserCommentList = (
+  userId: number,
+  params: UserManagementDto.GetPostListParams,
+  currCollection: UserCollection,
+) => {
   const getUserCommentList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetCommentList>(
       `/admin/users/${userId}/comments`,
+      { params: { ...params, postTypes: params.postTypes?.join(',') } },
     );
-    return data;
+
+    return {
+      ...data,
+      content: data.content.map(
+        ({ postType, ptype, ...rest }) =>
+          ({
+            ...rest,
+            postType: postType === 'PROJECT' ? ptype : postType,
+          }) as UserComment,
+      ),
+    };
   };
 
   return useQuery({
-    queryKey: ['useGetUserCommentList', userId],
+    queryKey: ['useGetUserCommentList', userId, params],
     queryFn: getUserCommentList,
+    enabled: currCollection === '댓글' && !!userId,
   });
 };
 
@@ -195,7 +233,8 @@ export const useGetUserAppliedSessionList = ({
   };
 
   return useQuery({
-    queryKey: ['useGetUserAppliedSessionList', userId],
+    queryKey: ['useGetUserAppliedSessionList', userId, type],
     queryFn: getUserAppliedSessionList,
+    enabled: !!userId,
   });
 };

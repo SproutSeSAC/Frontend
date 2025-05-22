@@ -21,21 +21,28 @@ interface UserManagementItemProps {
   className: string;
 }
 
+const initialCurrMenu: UserManagingActionMenu = {
+  label: '권한 수정',
+  email: '',
+  isOpen: false,
+};
+
 export default function UserManagementItem({
   user,
   type,
   className,
 }: UserManagementItemProps) {
-  const [currMenu, setCurrMenu] = useState<UserManagingActionMenu>({
-    label: '권한 수정',
-    email: '',
-    isOpen: false,
-  });
+  const [currMenu, setCurrMenu] =
+    useState<UserManagingActionMenu>(initialCurrMenu);
 
-  const { campus, course, name: userName, nickname, email, role } = user;
-
-  const campusList = campus.sort((a, b) => a.name.localeCompare(b.name));
-  const courseList = course.sort((a, b) => a.name.localeCompare(b.name));
+  const {
+    campus: campusList,
+    course: courseList,
+    name: userName,
+    nickname,
+    email,
+    role,
+  } = user;
 
   const campusColor =
     colorByCampusObj[
@@ -48,6 +55,15 @@ export default function UserManagementItem({
 
   return (
     <div className={`${currMenu.isOpen ? 'cursor-default' : ''} relative`}>
+      {/* 아이템별 모달 */}
+      {type === 'user-list' && currMenu.isOpen && email === currMenu.email && (
+        <UserManagementModal
+          currMenu={currMenu}
+          onMenuClose={onMenuClose}
+          user={user}
+        />
+      )}
+
       {/* 캠퍼스색상 */}
       <div className={`absolute h-full w-2 rounded-l-xl ${campusColor}`} />
 
@@ -110,14 +126,6 @@ export default function UserManagementItem({
           </div>
         )}
       </Link>
-
-      {type === 'user-list' && currMenu.isOpen && email === currMenu.email && (
-        <UserManagementModal
-          currMenu={currMenu}
-          onMenuClose={onMenuClose}
-          user={user}
-        />
-      )}
     </div>
   );
 }

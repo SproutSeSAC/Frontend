@@ -1,4 +1,6 @@
-export interface PageableType {
+import { PostTypeKey } from '@/types/serviceType';
+
+export interface Pageable {
   totalPages: number;
   totalElements: number;
   size: number;
@@ -25,3 +27,12 @@ export interface PageableType {
   last: boolean;
   empty: boolean;
 }
+
+export type PaginationFilter = {
+  page: number;
+  size: number;
+};
+
+export type SortPostTypeFilter = {
+  postTypes?: PostTypeKey[];
+};

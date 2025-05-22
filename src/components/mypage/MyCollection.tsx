@@ -7,13 +7,17 @@ import {
 import { myCollectionAtom } from '@/atoms/tableCollectionAtom';
 
 import {
+  commentTableCategoryOptionList,
   myCollectionList,
-  myCommentTypeOptionList,
-  myPostTypeOptionList,
+  traineePostTableCategoryOptionList,
 } from '@/constants';
-import { useDialogContext, useHandlePostTable } from '@/hooks';
-import { MyCollection as Collection, UserComment } from '@/types';
-import { UserPost } from '@/types/mypage/myPostDto';
+import { useDialogContext, useFilterData, useHandlePostTable } from '@/hooks';
+import {
+  MyCollection as Collection,
+  MyPostDto,
+  UserComment,
+  UserPost,
+} from '@/types';
 import { useAtom } from 'jotai';
 
 import { Header } from '@/pages/admin/UserPostCollection';
@@ -29,44 +33,65 @@ import PostTableRow from '@/components/post-collection/PostTableRow';
 import MealRecruitCardModal from '@/components/store/meal-recruit/MealRecruitCardModal';
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
-export const ITEMS_PER_PAGE = 3;
-
 export default function MyCollection() {
   const { showDialog } = useDialogContext();
 
   const [currCollection, setCurrCollection] = useAtom(myCollectionAtom);
 
-  const { data: postList, isLoading: isMyPostListLoading } =
-    useGetMyPostList(currCollection);
-
-  const { data: commentList, isLoading: isMyCommentListLoading } =
-    useGetMyCommentList(currCollection);
-
-  const { data: scrapedPostList, isLoading: isScrapedPostListLoading } =
-    useGetMyScrapedPostList(currCollection);
+  const initialFilter: MyPostDto.GetPostListParams = {
+    page: 1,
+    size: 3,
+    // order: 'latest',
+  };
 
   const {
-    page: { currentPage, onChangePage, totalPages },
-    sort: { onChangeSort },
-    category: {
-      checkedCategoryOptionList,
-      setCategoryOptionListByCollection,
-      onCategoryOptionListChange,
-    },
+    currFilter: tableFilter,
+    handleChangeFilter, //
+  } = useFilterData({ initialFilter });
+
+  const {
+    data: postList,
+    isLoading: isMyPostListLoading,
+  } = //
+    useGetMyPostList(currCollection, tableFilter);
+
+  const { data: commentList, isLoading: isMyCommentListLoading } =
+    useGetMyCommentList(currCollection, tableFilter);
+
+  const { data: scrapedPostList, isLoading: isScrapedPostListLoading } =
+    useGetMyScrapedPostList(currCollection, tableFilter);
+
+  const contentList = {
+    contentList: currCollection.includes('게시글') ? postList : commentList,
+    categoryOptionList: currCollection.includes('게시글')
+      ? traineePostTableCategoryOptionList
+      : commentTableCategoryOptionList,
+  };
+
+  const {
+    currPostList,
+    page: { totalPage },
     postCheckbox: {
       checkedPostIdList,
-      onPostCheckboxListChange,
+      isCheckBoxChecked,
+      onCheckBoxClick,
       onPostCheckboxChange,
       initializePostCheckedBoxList,
     },
-    onDeleteConfirmClick,
-    paginationList,
-    filteredAndOrderedPostList,
+    deletePost: {
+      onDeleteConfirmClick,
+      disabledDelete, //
+    },
+    order: { onChangeOrder },
+    category: {
+      checkedCategoryOptionList,
+      onChangeCategory, //
+    },
   } = useHandlePostTable<Collection>({
     currCollection,
-    postList,
-    commentList,
-    itemListPerPage: 3,
+    contentList,
+    tableFilter,
+    handleChangeFilter,
   });
 
   const handleShowDialog = async (
@@ -93,24 +118,12 @@ export default function MyCollection() {
     }
   };
 
-  const isChecked =
-    paginationList.length !== 0 &&
-    checkedPostIdList.length === paginationList.length;
-
-  const disabledDelete =
-    paginationList.length === 0 || checkedPostIdList.length === 0;
-
-  const categoryOptionList =
-    currCollection === '내가 쓴 댓글'
-      ? myCommentTypeOptionList
-      : myPostTypeOptionList;
-
   const headerCellList: Header[] = [
     '체크박스',
     '작성일',
     '분류',
     '게시글 제목',
-    '선택 삭제',
+    '선택삭제',
   ];
 
   return (
@@ -120,8 +133,7 @@ export default function MyCollection() {
         currCollection={currCollection}
         onTabClick={(collection: Collection) => {
           initializePostCheckedBoxList();
-          onChangePage(1);
-          setCategoryOptionListByCollection(collection);
+          handleChangeFilter({ postTypes: [] });
           setCurrCollection(collection);
         }}
       />
@@ -130,27 +142,24 @@ export default function MyCollection() {
         <>
           <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white p-6">
             {!isMyPostListLoading && !isMyCommentListLoading && (
-              <TableContainer colWidthList={[3, 10, 12, 70, 5]}>
+              <TableContainer colWidthList={[3, 10, 12, 64, 6]}>
                 <TableHeader
                   headerCellList={headerCellList}
                   currCollection={currCollection}
-                  isChecked={isChecked}
-                  disabledCheck={false}
-                  onCheckboxClick={() => {
-                    const idList = paginationList.map(({ postId }) => postId);
-                    return onPostCheckboxListChange(
-                      checkedPostIdList.length !== 0 ? [] : idList,
-                    );
-                  }}
-                  categoryOptionList={categoryOptionList}
-                  onChangeSort={onChangeSort}
+                  isCheckBoxChecked={isCheckBoxChecked}
+                  disabledCheckBox={false}
+                  onCheckboxClick={onCheckBoxClick}
+                  onChangeOrder={onChangeOrder}
+                  categoryOptionList={contentList.categoryOptionList}
                   checkedCategoryOptionList={checkedCategoryOptionList}
-                  onChangeCategory={onCategoryOptionListChange}
+                  onChangeCategory={onChangeCategory}
                   disabledDelete={disabledDelete}
-                  onDeleteConfirmClick={() => {}}
+                  onDeleteConfirmClick={() =>
+                    onDeleteConfirmClick(currCollection, checkedPostIdList)
+                  }
                 />
                 <TableBody<UserPost | UserComment>
-                  paginationList={paginationList}
+                  paginationList={currPostList?.content || []}
                   colLength={5}
                 >
                   {post => (
@@ -170,16 +179,14 @@ export default function MyCollection() {
             )}
           </div>
 
-          {filteredAndOrderedPostList?.length !== 0 && (
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={(pageNum: number) => {
-                initializePostCheckedBoxList();
-                onChangePage(pageNum);
-              }}
-            />
-          )}
+          <Pagination
+            totalPages={totalPage || 1}
+            currentPage={tableFilter.page}
+            onPageChange={(page: number) => {
+              handleChangeFilter({ page, size: 3 });
+              initializePostCheckedBoxList();
+            }}
+          />
         </>
       )}
 

@@ -1,8 +1,10 @@
-import { postTypeObj } from '@/constants';
-import { AppliedSessionStatusKey, RoleKey, SessionStatusKey } from '@/types';
+import {
+  AppliedSessionStatusKey,
+  PostTypeKey,
+  RoleKey,
+  SessionStatusKey,
+} from '@/types';
 import { BsX } from 'react-icons/bs';
-
-export type PostType = typeof postTypeObj;
 
 export type TagColor =
   | 'black'
@@ -20,7 +22,7 @@ export type StatusKey = AppliedSessionStatusKey | SessionStatusKey;
 interface TagProps {
   text: string;
   roleKey?: RoleKey;
-  postKey?: keyof PostType;
+  postKey?: PostTypeKey;
   statusKey?: StatusKey;
   color?: TagColor;
   size?: 'small' | 'medium' | 'big';
@@ -70,7 +72,7 @@ export default function Tag({
   };
 
   // 포스트별 색상
-  const styleByPost: { [key in keyof PostType]: string } = {
+  const styleByPost: { [key in PostTypeKey]: string } = {
     MEAL: 'bg-[#FFC3E0] text-white',
     NOTICE: 'bg-[#00AC49] text-white',
     PROJECT: 'bg-[#6FA235] text-white',

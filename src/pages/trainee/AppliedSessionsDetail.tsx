@@ -26,11 +26,7 @@ export default function AppliedSessionsDetail() {
   return (
     <MainView className="mb-32">
       <Header
-        title={
-          state?.username
-            ? `${state?.username}님이 신청한 특강 / 행사`
-            : `내가 신청한 특강 / 행사`
-        }
+        title={`${state?.username ? `${state?.username}님이` : `내가`} 신청한 특강 / 행사`}
       />
 
       {isLoading && (

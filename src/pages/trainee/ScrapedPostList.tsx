@@ -15,10 +15,10 @@ export default function ScrapedPostList() {
   const { state } = useLocation();
 
   const { data: myScrapedPostList, isLoading: isMyScrapedPostListLoading } =
-    useGetMyScrapedPostList('내가 찜한 글');
+    useGetMyScrapedPostList('내가 찜한 글', { page: 1, size: 3 });
 
   const { data: scrapList, isLoading: isScrapListLoading } =
-    useGetUserScrapList({ userId });
+    useGetUserScrapList(userId, { page: 1, size: 3 }, '찜한 글');
 
   const dataList = userId ? scrapList : myScrapedPostList;
   const isLoading = userId ? isScrapListLoading : isMyScrapedPostListLoading;

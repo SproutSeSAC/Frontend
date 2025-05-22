@@ -44,7 +44,7 @@ export default function CalendarAclTableItem({
         className={`max-w-[0px] overflow-hidden truncate ${notFoundStyle}`}
       >
         {isCalendarAclLoading && (
-          <div className="h-8 w-16 rounded-xl bg-lightGray-active" />
+          <div className="mx-auto h-8 w-16 rounded-xl bg-lightGray-active" />
         )}
 
         {!isCalendarAclLoading &&
@@ -96,22 +96,24 @@ export default function CalendarAclTableItem({
       {/* 캘린더 권한 대기중인 유저 */}
       <TableDataCell className={notFoundStyle}>
         {courseAclInfo.isCreated && (
-          <>
+          <div className="flex justify-start">
             {!courseCalendarAcl && (
-              <span className="text-mainGray">권한대기중</span>
+              <span className="block w-full text-start text-mainGray">
+                권한대기중
+              </span>
             )}
 
             {courseCalendarAcl &&
               (courseAclInfo?.hasNotAclAdminList?.length === 0 ? (
                 '-'
               ) : (
-                <ul className="flex flex-wrap gap-x-6 gap-y-1">
+                <ul className="flex w-full flex-wrap gap-x-6 gap-y-1">
                   {courseAclInfo?.hasNotAclAdminList?.map(admin => (
                     <AdminUser key={admin.nickname} admin={admin} />
                   ))}
                 </ul>
               ))}
-          </>
+          </div>
         )}
       </TableDataCell>
 

@@ -9,13 +9,13 @@ interface TableHeaderProps<T> {
   currCollection: T;
   headerCellList: string[];
   // 체크박스
-  isChecked?: boolean;
-  disabledCheck?: boolean;
+  isCheckBoxChecked?: boolean;
+  disabledCheckBox?: boolean;
   onCheckboxClick?: () => void;
   // 작성일
-  categoryOptionList: Option[];
-  onChangeSort: () => void;
+  onChangeOrder: () => void;
   // 분류
+  categoryOptionList: Option[];
   checkedCategoryOptionList: Option[];
   onChangeCategory: (value: Option[]) => void;
   // 삭제
@@ -25,15 +25,15 @@ interface TableHeaderProps<T> {
 
 export default function TableHeader<T>({
   headerCellList,
-  isChecked,
-  disabledCheck,
+  isCheckBoxChecked,
+  disabledCheckBox,
   categoryOptionList,
   currCollection,
   onDeleteConfirmClick,
   onChangeCategory,
   disabledDelete,
   checkedCategoryOptionList,
-  onChangeSort,
+  onChangeOrder,
   onCheckboxClick,
 }: TableHeaderProps<T>) {
   return (
@@ -42,12 +42,12 @@ export default function TableHeader<T>({
         {headerCellList.map(name => (
           <th key={name} className="relative pb-4 font-normal">
             {name === '체크박스' &&
-              isChecked !== undefined &&
+              isCheckBoxChecked !== undefined &&
               onCheckboxClick && (
                 <Checkbox
                   id={name}
-                  checked={isChecked}
-                  disabled={disabledCheck}
+                  checked={isCheckBoxChecked}
+                  disabled={disabledCheckBox}
                   onChange={onCheckboxClick}
                   inputClassName="!rounded-lg size-5"
                 />
@@ -56,7 +56,7 @@ export default function TableHeader<T>({
             {name === '작성일' && (
               <button
                 type="button"
-                onClick={onChangeSort}
+                onClick={onChangeOrder}
                 className="flex w-full items-center justify-center pl-1.5"
               >
                 <span className="text-[15px]">{name}</span>
@@ -86,12 +86,13 @@ export default function TableHeader<T>({
               </div>
             )}
 
-            {name === '선택삭제' && (
+            {name === '선택삭제' && onDeleteConfirmClick && (
               <TrashButton
-                text="선택삭제"
+                buttonText="선택삭제"
+                text="선택한 항목을 모두 삭제하시겠습니까?"
                 onConfirmClick={onDeleteConfirmClick}
                 disabled={disabledDelete}
-                className="mr-4 !text-black disabled:!text-mainGray"
+                className="w-full !text-black disabled:!text-mainGray"
               />
             )}
           </th>

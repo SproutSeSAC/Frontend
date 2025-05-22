@@ -3,9 +3,7 @@ import {
   Progress,
   Ptype,
   SortDisplayKey,
-  StoreMainFilterType,
 } from '@/types';
-import { StoreOptionCount } from '@/types/store/storeDto';
 
 // 진행방식
 export const progressDisplay = {
@@ -27,7 +25,7 @@ export const ptypeDisplay = {
   STUDY: '스터디',
   PROJECT: '프로젝트',
 } as const;
-export const PtypeList: Array<{
+export const ptypeList: Array<{
   id: number;
   name: string;
   key: Ptype;
@@ -39,10 +37,12 @@ export const PtypeList: Array<{
 // 프로젝트 정렬
 export const SORT_POPULARITY = 'popularity';
 export const SORT_LATEST = 'latest';
+
 export const sortDisplay = {
   popularity: '인기순',
   latest: '최신순',
 } as const;
+
 export const sortList: Array<{
   id: number;
   name: string;
@@ -56,11 +56,13 @@ export const sortList: Array<{
 export const CONTACT_METHOD_EMAIL = 'EMAIL';
 export const CONTACT_METHOD_PHONE = 'PHONE';
 export const CONTACT_METHOD_MESSENGER = 'MESSENGER';
+
 export const contactMethodDisplay = {
   EMAIL: '이메일',
   PHONE: '휴대폰',
   MESSENGER: '오픈채팅방',
 } as const;
+
 export const contactMethodList: Array<{
   id: number;
   name: string;
@@ -69,62 +71,4 @@ export const contactMethodList: Array<{
   { id: 1, name: '이메일', key: CONTACT_METHOD_EMAIL },
   { id: 2, name: '휴대폰', key: CONTACT_METHOD_PHONE },
   { id: 3, name: '오픈채팅방', key: CONTACT_METHOD_MESSENGER },
-];
-
-// food type filter
-export const FOOD_FILTER_KOREAN = 'KOREAN';
-export const FOOD_FILTER_CHINESE = 'CHINESE';
-export const FOOD_FILTER_JAPANESE = 'JAPANESE';
-export const FOOD_FILTER_WESTERN = 'WESTERN';
-export const FOOD_FILTER_ASIAN = 'ASIAN';
-export const FOOD_FILTER_SNACK = 'SNACK';
-export const FOOD_FILTER_CAFE = 'CAFE';
-export const foodFilterDisplay = {
-  KOREAN: '한식',
-  WESTERN: '양식',
-  CHINESE: '중식',
-  JAPANESE: '일식',
-  ASIAN: '아시아',
-  SNACK: '분식',
-  CAFE: '카페',
-} as const;
-
-// store main filter
-export const STORE_MAIN_FILTER_ZERO_PAY = 'isZeropay';
-export const STORE_MAIN_FILTER_UNDER_PRICE = 'underPrice';
-export const STORE_MAIN_FILTER_OVER_FIVE_PERSON = 'overFivePerson';
-export const STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES =
-  'walkTimeWithinFiveMinutes';
-export const STORE_MAIN_FILTER_ONLY_SCRAPED = 'onlyScraped';
-
-export const storeMainFilterList: Array<{
-  key: string;
-  value: StoreMainFilterType;
-  countKey: keyof StoreOptionCount;
-}> = [
-  {
-    key: '제로페이',
-    value: STORE_MAIN_FILTER_ZERO_PAY,
-    countKey: 'isZeropayCount',
-  },
-  {
-    key: '만원이하',
-    value: STORE_MAIN_FILTER_UNDER_PRICE,
-    countKey: 'isLessThan10000Price',
-  },
-  {
-    key: '5인 이상',
-    value: STORE_MAIN_FILTER_OVER_FIVE_PERSON,
-    countKey: 'isOverPerson',
-  },
-  {
-    key: '도보 5분 이내',
-    value: STORE_MAIN_FILTER_WALK_TIME_FIVE_MINUTES,
-    countKey: 'isVoucherCount',
-  },
-  {
-    key: '찜한 식당',
-    value: STORE_MAIN_FILTER_ONLY_SCRAPED,
-    countKey: 'isScrapedCount',
-  },
 ];

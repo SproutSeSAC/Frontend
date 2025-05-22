@@ -141,7 +141,7 @@ export default function UserManagementDetail() {
                     {userInfo?.campusList
                       .map(({ campusName }) => campusName.slice(0, -3))
                       .join(', ')}{' '}
-                    캠퍼스...
+                    캠퍼스
                   </span>
                   <MyCourseListWithHover
                     courseList={userInfo.courseList}

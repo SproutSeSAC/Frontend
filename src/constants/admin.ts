@@ -43,18 +43,21 @@ export const userManagementTabListForHasSuperAdmin = [
   { text: '사용자 목록', type: 'user-list' },
 ] as const;
 
-export const modifyingPermissionTabList = [
+export const modifyingPermissionStepList = [
   {
+    step: 1,
+    text: '역할',
+    type: 'role',
+  },
+  {
+    step: 2,
     text: '캠퍼스',
     type: 'campus',
   },
   {
+    step: 3,
     text: '교육과정',
     type: 'course',
-  },
-  {
-    text: '역할',
-    type: 'role',
   },
 ] as const;
 

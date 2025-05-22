@@ -6,10 +6,13 @@ import {
   useGetUserScrapList,
 } from '@/services/admin/userToManageQueries';
 
-import { myCommentTypeOptionList, myPostTypeOptionList } from '@/constants';
-import { useDialogContext, useHandlePostTable } from '@/hooks';
+import {
+  adminCategoryOptionList,
+  commentTableCategoryOptionList,
+} from '@/constants';
+import { useDialogContext, useFilterData, useHandlePostTable } from '@/hooks';
 import { UserComment } from '@/types';
-import { UserPost } from '@/types/mypage/myPostDto';
+import { MyPostDto, UserPost } from '@/types/mypage/myPostDto';
 
 import LoopLoading from '@/components/common/LoopLoading';
 import Pagination from '@/components/common/Pagination';
@@ -28,7 +31,7 @@ interface UserPostCollectionProps {
   username: string;
 }
 
-type Collection = '게시글' | '댓글' | '찜한 글';
+export type UserCollection = '게시글' | '댓글' | '찜한 글';
 
 export type Header =
   | '체크박스'
@@ -36,40 +39,58 @@ export type Header =
   | '분류'
   | '댓글 내용'
   | '게시글 제목'
-  | '선택 삭제';
+  | '선택삭제';
 
 export default function UserPostCollection({
   userId,
   username,
 }: UserPostCollectionProps) {
-  const [currCollection, setCurrCollection] = useState<Collection>('게시글');
+  const [currCollection, setCurrCollection] =
+    useState<UserCollection>('게시글');
 
   const { showDialog } = useDialogContext();
 
-  const { data: scrapList, isLoading: isUserScrapListLoading } =
-    useGetUserScrapList({ userId });
-
-  const { data: postList, isLoading: isUserPostListLoading } =
-    useGetUserPostList({ userId });
-
-  const { data: commentList, isLoading: isUserCommentListLoading } =
-    useGetUserCommentList({ userId });
+  const initialFilter: MyPostDto.GetPostListParams = {
+    page: 1,
+    size: 5,
+    // order: 'latest',
+  };
 
   const {
-    page: { currentPage, onChangePage, totalPages },
-    sort: { onChangeSort },
+    currFilter: tableFilter,
+    handleChangeFilter,
+  } = //
+    useFilterData({ initialFilter });
+
+  const { data: postList, isLoading: isUserPostListLoading } =
+    useGetUserPostList(userId, tableFilter, currCollection);
+
+  const { data: commentList, isLoading: isUserCommentListLoading } =
+    useGetUserCommentList(userId, tableFilter, currCollection);
+
+  const { data: scrapList, isLoading: isUserScrapListLoading } =
+    useGetUserScrapList(userId, tableFilter, currCollection);
+
+  const contentList = {
+    contentList: currCollection.includes('게시글') ? postList : commentList,
+    categoryOptionList: currCollection.includes('게시글')
+      ? adminCategoryOptionList
+      : commentTableCategoryOptionList,
+  };
+
+  const {
+    currPostList,
+    page: { totalPage },
+    order: { onChangeOrder },
     category: {
       checkedCategoryOptionList,
-      setCategoryOptionListByCollection,
-      onCategoryOptionListChange,
+      onChangeCategory, //
     },
-    paginationList,
-    filteredAndOrderedPostList,
-  } = useHandlePostTable<Collection>({
+  } = useHandlePostTable<UserCollection>({
     currCollection,
-    postList,
-    commentList,
-    itemListPerPage: 5,
+    contentList,
+    tableFilter,
+    handleChangeFilter,
   });
 
   const handleShowDialog = async (
@@ -96,12 +117,8 @@ export default function UserPostCollection({
     }
   };
 
-  const categoryOptionList =
-    currCollection === '댓글' ? myCommentTypeOptionList : myPostTypeOptionList;
-
-  const onCollectionTabClick = (collection: Collection) => {
-    onChangePage(1);
-    setCategoryOptionListByCollection(collection);
+  const onCollectionTabClick = (collection: UserCollection) => {
+    handleChangeFilter({ postTypes: [] });
     setCurrCollection(collection);
   };
 
@@ -109,7 +126,7 @@ export default function UserPostCollection({
 
   return (
     <>
-      <PostCollectionTabList<Collection>
+      <PostCollectionTabList<UserCollection>
         collectionList={['게시글', '댓글', '찜한 글']}
         currCollection={currCollection}
         onTabClick={onCollectionTabClick}
@@ -121,18 +138,18 @@ export default function UserPostCollection({
           <div className="mb-4 flex !min-h-[270px] flex-1 flex-col rounded-[20px] border border-mainGray-hover bg-white px-4 py-5 pb-4">
             {!isUserPostListLoading && !isUserCommentListLoading && (
               <TableContainer colWidthList={[18, 20, 55]}>
-                <TableHeader<Collection>
+                <TableHeader<UserCollection>
                   headerCellList={headerCellList}
                   currCollection={currCollection}
-                  onChangeSort={onChangeSort}
-                  categoryOptionList={categoryOptionList}
+                  onChangeOrder={onChangeOrder}
+                  categoryOptionList={contentList.categoryOptionList}
                   checkedCategoryOptionList={checkedCategoryOptionList}
-                  onChangeCategory={onCategoryOptionListChange}
+                  onChangeCategory={onChangeCategory}
                 />
 
                 <TableBody<UserPost | UserComment>
                   colLength={3}
-                  paginationList={paginationList}
+                  paginationList={currPostList?.content || []}
                 >
                   {post => (
                     <PostTableRow
@@ -146,11 +163,13 @@ export default function UserPostCollection({
             )}
           </div>
 
-          {filteredAndOrderedPostList?.length !== 0 && (
+          {currPostList?.content?.length !== 0 && (
             <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={onChangePage}
+              totalPages={totalPage || 1}
+              currentPage={tableFilter.page}
+              onPageChange={(page: number) => {
+                handleChangeFilter({ page, size: tableFilter.size });
+              }}
             />
           )}
         </>
@@ -168,6 +187,7 @@ export default function UserPostCollection({
                       key={card.postId}
                       card={card}
                       className="!w-[270px] border border-mainGray-hover"
+                      hasScrapBtn={false}
                     />
                   ))}
               </ScrollContainer>

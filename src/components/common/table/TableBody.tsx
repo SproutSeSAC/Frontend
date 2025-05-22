@@ -20,8 +20,8 @@ export default function TableBody<T extends { createdAt: string }>({
         ))
       ) : (
         <tr>
-          <td colSpan={colLength} className="w-full">
-            <span className="my-12 flex justify-center text-mainGray">
+          <td colSpan={colLength}>
+            <span className="flex justify-center py-14 text-mainGray">
               아직 정보가 없어요
             </span>
           </td>

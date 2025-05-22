@@ -99,7 +99,7 @@ export default function PostTableRow({
         </TableDataCell>
       )}
 
-      {headerCellList.includes('선택 삭제') && onDeleteConfirmClick && (
+      {headerCellList.includes('선택삭제') && onDeleteConfirmClick && (
         <TableDataCell className="[&>button]:px-2">
           <TrashButton
             className="px-1.5 py-2"

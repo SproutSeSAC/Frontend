@@ -1,42 +1,19 @@
-import { postTypeObj } from '@/constants';
 import { Ptype } from '@/types/lounge';
+import {
+  Pageable,
+  PaginationFilter,
+  SortPostTypeFilter,
+} from '@/types/pageable';
+import { PostTypeKey } from '@/types/serviceType';
 import { RoleKey } from '@/types/user';
 
-import { PostType } from '@/components/common/tag/Tag';
-
 export namespace MyPostDto {
-  export type GetScrapedPostList = ScrapedPostList;
-  export type GetPostList = UserPost[];
-  export type GetCommentList = UserComment[];
-}
+  export type GetScrapedPostList = Pageable & { content: UserScrap[] };
+  export type GetPostList = Pageable & { content: UserPost[] };
+  export type GetCommentList = Pageable & { content: UserComment[] };
 
-interface ScrapedPostList {
-  content: UserScrap[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-    sort: {
-      sorted: boolean;
-      empty: boolean;
-      unsorted: boolean;
-    };
-    offset: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
-  sort: {
-    sorted: boolean;
-    empty: boolean;
-    unsorted: boolean;
-  };
-  first: boolean;
-  empty: boolean;
+  export type GetPostListParams = PaginationFilter &
+    SortPostTypeFilter & { order?: 'latest' | 'oldest' };
 }
 
 type UserScrap = {
@@ -48,7 +25,7 @@ type UserScrap = {
   };
   postId: number;
   title: string;
-  postType: keyof typeof postTypeObj;
+  postType: PostTypeKey;
   content: string;
   ptype: Ptype;
   createdAt: string;
@@ -59,7 +36,7 @@ type UserPost = {
   postId: number;
   linkedId: number;
   clientId: number;
-  postType: keyof PostType;
+  postType: PostTypeKey;
   title: string;
   createdAt: string;
   updatedAt: string;
@@ -72,7 +49,7 @@ type UserComment = {
   postId: number;
   content: string;
   createdAt: string;
-  postType: keyof typeof postTypeObj;
+  postType: PostTypeKey;
   ptype: Ptype;
 };
 

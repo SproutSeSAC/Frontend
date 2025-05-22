@@ -14,7 +14,10 @@ export default function ScrollContainer({
   return (
     <div className="relative">
       <div className="overflow-x-scroll scrollbar-hide [&>ul>*]:flex-shrink-0">
-        <ul className={`inline-flex max-w-0 ${className}`}>{children}</ul>
+        <ul className={`inline-flex max-w-0 ${className}`}>
+          {children}
+          <div className="w-10" />
+        </ul>
       </div>
 
       {/* 끝 흐림처리 */}

@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 import { useGetPostDetail } from '@/services/post/postQueries';
 
@@ -16,7 +16,12 @@ import {
 } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
-import { AppliedSessionStatusKey, NoticeDto, SessionStatusKey } from '@/types';
+import {
+  AppliedSessionStatusKey,
+  NoticeDto,
+  NoticeSessionDetail,
+  SessionStatusKey,
+} from '@/types';
 import { SessionApplicantsStatusTabType } from '@/types/admin';
 import { formatDate, getDDay } from '@/utils';
 import { BsCalendar, BsCalendar2Minus, BsClock } from 'react-icons/bs';
@@ -29,21 +34,29 @@ import Modal from '@/components/common/modal/Modal';
 import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 
 export default function SessionApplicantManagementDetail() {
-  const { postId } = useParams();
+  const { state } = useLocation() as {
+    state?: { sessionDetail: NoticeSessionDetail };
+  };
 
+  const { postId } = useParams();
   const [searchParams] = useSearchParams();
 
   const currSessionId = searchParams.get('sessionId');
 
   const { tabName, handleChangeTab } = useHandleTabNavigation();
 
-  const { data: noticeDetail } = useGetPostDetail<NoticeDto.GetNoticeDetail>(
+  const { data: postDetail } = useGetPostDetail<NoticeDto.GetNoticeDetail>(
     +postId!,
+    { enabled: !!postId && state === null },
   );
 
-  const session = noticeDetail?.sessions?.find(
-    ({ sessionId }) => sessionId === +currSessionId!,
-  );
+  const noticeDetail = state?.sessionDetail || postDetail;
+
+  const session =
+    state?.sessionDetail?.session ||
+    postDetail?.sessions?.find(
+      ({ sessionId }) => sessionId === +currSessionId!,
+    );
 
   const { showToast, hideDialog, showDialog } = useDialogContext();
 
@@ -95,16 +108,18 @@ export default function SessionApplicantManagementDetail() {
           </p>
 
           {/* "대기" 상태가 아니었던 참가자는 아래 문구로 한번더 확인 */}
-          <div>
-            <span className="font-medium text-mainGreen-hover">
-              {oppositeStateList.map(user => user.name).join(', ')}
-            </span>{' '}
-            스프는{' '}
-            <span className="font-medium text-red-400">
-              {type === '승인' ? '반려' : '승인'}됨에서 {type}됨
-            </span>
-            으로 상태를 변경하고 알림을 보냅니다.
-          </div>
+          {oppositeStateList.length !== 0 && (
+            <div>
+              <span className="font-medium text-mainGreen-hover">
+                {oppositeStateList.map(user => user.name).join(', ')}
+              </span>{' '}
+              스프는{' '}
+              <span className="font-medium text-red-400">
+                {type === '승인' ? '반려' : '승인'}됨에서 {type}됨
+              </span>
+              으로 상태를 변경하고 알림을 보냅니다.
+            </div>
+          )}
 
           <div className="mt-8 flex justify-end gap-3">
             <SquareButton
@@ -146,17 +161,6 @@ export default function SessionApplicantManagementDetail() {
     });
   };
 
-  const STATUS_STYLES: Record<AppliedSessionStatusKey, string> = {
-    WAIT: 'text-red-500',
-    PARTICIPANT: 'text-mainGreen-hover',
-    REJECT: 'text-mainBlue-active',
-    END: 'text-gray-500',
-    UNKNOWN: 'text-gray-500',
-  };
-
-  const gridStyle =
-    'grid grid-cols-[0.5fr_0.7fr_1.5fr_1fr_0.8fr_0.7fr_0.5fr] gap-x-2.5';
-
   const allChecked = applicantList?.length === checkedList.length;
 
   const getSessionStatus = (sessionEndDateTime: string) => {
@@ -172,6 +176,17 @@ export default function SessionApplicantManagementDetail() {
   };
 
   if (!session) return null;
+
+  const STATUS_STYLES: Record<AppliedSessionStatusKey, string> = {
+    WAIT: 'text-red-500',
+    PARTICIPANT: 'text-mainGreen-hover',
+    REJECT: 'text-mainBlue-active',
+    END: 'text-gray-500',
+    UNKNOWN: 'text-gray-500',
+  };
+
+  const gridStyle =
+    'grid grid-cols-[0.5fr_0.7fr_1.5fr_1fr_0.8fr_0.7fr_0.5fr] gap-x-2.5';
 
   return (
     <MainView className="mb-32">
@@ -322,9 +337,9 @@ export default function SessionApplicantManagementDetail() {
                       </span>
                       <span
                         className="text-darkGray-active"
-                        title={`${userCampuses} 캠퍼스` || '정보 없음'}
+                        title={`${userCampuses}` || '정보 없음'}
                       >
-                        {`${userCampuses} 캠퍼스` || '정보 없음'}
+                        {`${userCampuses}` || '정보 없음'}
                       </span>
 
                       <MyCourseListWithHover

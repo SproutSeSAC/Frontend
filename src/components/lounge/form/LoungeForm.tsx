@@ -6,7 +6,7 @@ import { usePostMyPost, usePutMyPost } from '@/services/post/postMutation';
 import { useGetPostDetail } from '@/services/post/postQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
-import { PtypeList, progressList, recruitmentCountList } from '@/constants';
+import { progressList, ptypeList, recruitmentCountList } from '@/constants';
 import {
   useDialogContext,
   useHandleImage,
@@ -175,13 +175,13 @@ export default function LoungeForm() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
-                  const selectedOption = PtypeList.find(
+                  const selectedOption = ptypeList.find(
                     ({ key }) => key === value,
                   );
                   return (
                     <SingleSelectDropdown
                       defaultLabel="모집 구분"
-                      options={PtypeList}
+                      options={ptypeList}
                       selectedOption={selectedOption}
                       onChangeValue={data => onChange(data[0].key)}
                       errorMsg={error?.message}

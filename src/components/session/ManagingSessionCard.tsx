@@ -74,7 +74,7 @@ export default function ManagingSessionCard({
           {meetingPlace &&
             (meetingType === 'ONLINE' ? (
               <a
-                href="https://www.naver.com" // NOTE: url 변경하기
+                href={meetingPlace} // NOTE: url 변경하기
                 target="_blank"
                 rel="noreferrer"
                 className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"
@@ -111,6 +111,7 @@ export default function ManagingSessionCard({
       <Link
         to={`${postId}?sessionId=${session.sessionId}`}
         className="flex w-[25%] min-w-[90px] cursor-pointer items-center justify-center self-end whitespace-nowrap rounded-lg bg-darkGray px-[2%] py-[2.5%] text-sm font-normal text-white hover:bg-darkGray-hover active:bg-darkGray-active"
+        state={{ sessionDetail }}
       >
         참여자 조회
       </Link>

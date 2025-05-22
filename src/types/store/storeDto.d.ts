@@ -1,4 +1,4 @@
-import { FoodFilterDisplayKey } from '@/types/lounge';
+import { FoodFilterDisplayKey } from '@/types';
 
 export interface Store {
   id: number;

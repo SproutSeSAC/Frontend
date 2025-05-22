@@ -1,6 +1,6 @@
 import { noticeCategoryDisplay, noticeTabDisplay } from '@/constants';
-import { PaginationFilter } from '@/types/filter';
 import { NoticeDto } from '@/types/notice/noticeDto';
+import { PaginationFilter } from '@/types/serviceType';
 import { AppliedSessionStatusKey } from '@/types/session';
 import { HasAdminRole } from '@/types/user';
 
