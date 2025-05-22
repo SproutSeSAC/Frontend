@@ -108,16 +108,18 @@ export default function SessionApplicantManagementDetail() {
           </p>
 
           {/* "대기" 상태가 아니었던 참가자는 아래 문구로 한번더 확인 */}
-          <div>
-            <span className="font-medium text-mainGreen-hover">
-              {oppositeStateList.map(user => user.name).join(', ')}
-            </span>{' '}
-            스프는{' '}
-            <span className="font-medium text-red-400">
-              {type === '승인' ? '반려' : '승인'}됨에서 {type}됨
-            </span>
-            으로 상태를 변경하고 알림을 보냅니다.
-          </div>
+          {oppositeStateList.length !== 0 && (
+            <div>
+              <span className="font-medium text-mainGreen-hover">
+                {oppositeStateList.map(user => user.name).join(', ')}
+              </span>{' '}
+              스프는{' '}
+              <span className="font-medium text-red-400">
+                {type === '승인' ? '반려' : '승인'}됨에서 {type}됨
+              </span>
+              으로 상태를 변경하고 알림을 보냅니다.
+            </div>
+          )}
 
           <div className="mt-8 flex justify-end gap-3">
             <SquareButton

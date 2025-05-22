@@ -102,7 +102,7 @@ export default function PostTableRow({
       {headerCellList.includes('선택삭제') && onDeleteConfirmClick && (
         <TableDataCell className="[&>button]:px-2">
           <TrashButton
-            className="border border-blue-500 px-1.5 py-2"
+            className="px-1.5 py-2"
             onConfirmClick={() => onDeleteConfirmClick(postId)}
             disabled={deleteDisabled}
           />

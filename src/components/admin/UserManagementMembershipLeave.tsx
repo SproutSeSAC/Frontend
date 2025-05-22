@@ -30,7 +30,7 @@ export default function UserManagementMembershipLeave({
     onSuccess: async () => {
       showToast(`${userName}님이 탈퇴 처리되었습니다.`);
       await queryClient.invalidateQueries({
-        queryKey: ['useGetInfiniteUserList'], // NOTE: 이거 맞는지 다시한번 확인?
+        queryKey: ['useGetInfiniteUserList'],
       });
     },
   });
