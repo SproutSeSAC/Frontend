@@ -52,6 +52,7 @@ export const useHandleAcl = ({
 
   const getHasAclAdminList = useCallback(() => {
     if (typeof courseCalendarAcl === 'string') return [];
+
     return courseCalendarAcl?.map(acl => {
       const superAdminObj = {
         roleType: 'SUPER_ADMIN' as const,
@@ -65,6 +66,7 @@ export const useHandleAcl = ({
       );
 
       if (!admin) return acl;
+
       return { ...acl, ...admin };
     });
   }, [adminList, courseCalendarAcl]);
@@ -77,18 +79,24 @@ export const useHandleAcl = ({
     );
   }, [adminList, courseCalendarAcl]);
 
+  const getCalendarStatus = () => {
+    if (!calendarId) return 'Not Created';
+    if (courseCalendarAcl === 'Not Found' || courseCalendarAcl === 'Forbidden')
+      return courseCalendarAcl;
+    return 'Created';
+  };
+
+  const calendarStatus: CourseCalendarAcl['status'] = getCalendarStatus();
+
   const courseAclInfo: CourseCalendarAcl = {
     courseId,
-    isCreated: !!calendarId,
-
+    status: calendarStatus,
     calendarId,
     hasAclAdminList: getHasAclAdminList(),
     hasNotAclAdminList: getHasNotAclAdminList(),
   };
 
   return {
-    adminList,
-    courseCalendarAcl,
     courseAclInfo,
     onGrantAclClick,
     isCalendarAclLoading,

@@ -24,8 +24,8 @@ export const courseManagementTabList = [
 ] as const;
 
 export const courseManagementTabListForHasSuperAdmin = [
-  { text: '캘린더 관리', type: 'calendar' },
   ...courseManagementTabList,
+  { text: '캘린더 관리', type: 'calendar' },
 ] as const;
 
 /**

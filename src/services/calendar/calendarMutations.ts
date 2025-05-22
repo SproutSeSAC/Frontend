@@ -114,6 +114,7 @@ export const useGrantAcl = (
 ) => {
   const grantAclByRole = async (params: GrantAclParams) => {
     const { calendarId, hasNotAclAdminList } = params;
+
     await Promise.all(
       hasNotAclAdminList.map(async ({ email, roleType }) => {
         const acl = {
