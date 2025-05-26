@@ -8,15 +8,17 @@ import {
   useGetCourseListByCampus,
 } from '@/services/campusCourse/campusCourseQueries';
 
-import { modifyingPermissionStepList, rolesArr, rolesObj } from '@/constants';
+import { modifyingPermissionStepList, rolesObj } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { RoleKey, UserManagementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import ControllerCampusList from '@/components/admin/form/ControllerCampusList';
+import ControllerCourseList from '@/components/admin/form/ControllerCourseList';
+import ControllerRole from '@/components/admin/form/ControllerRole';
 import { userPermissionSchema } from '@/components/admin/userPermissionScheme';
 import SquareButton from '@/components/common/button/SquareButton';
-import ErrorMsg from '@/components/common/input/ErrorMsg';
 import Tag from '@/components/common/tag/Tag';
 
 interface UserManagementPermissionProps {
@@ -46,14 +48,13 @@ export default function UserManagementPermission({
     defaultValues: {
       role,
       campusIdList: userCampusList.map(({ campusId }) => campusId),
-      courseIdList: userCourseList.map(({ courseId }) => courseId),
+      courseIdList: initialUserCourseIdList,
     },
     resolver: zodResolver(userPermissionSchema),
   });
 
-  const { handleSubmit, control, setValue, trigger } = methods;
+  const { handleSubmit, control, setValue, trigger, setError } = methods;
 
-  const currRole = useWatch({ control, name: 'role' });
   const currCampusIdList = useWatch({ control, name: 'campusIdList' });
   const currCourseIdList = useWatch({ control, name: 'courseIdList' });
 
@@ -81,6 +82,17 @@ export default function UserManagementPermission({
   });
 
   const onSubmit = async (requestBody: FormValue) => {
+    const hasCourseListByCampus = courseListByCampus.map(courseList =>
+      courseList.data?.some(item => currCourseIdList.includes(item.id)),
+    );
+
+    if (hasCourseListByCampus.includes(false)) {
+      return setError('courseIdList', {
+        type: 'manual',
+        message: '캠퍼스별로 최소 하나의 교육과정을 선택해주세요.',
+      });
+    }
+
     const selectedCampusList = campusList
       ?.filter(campus => requestBody.campusIdList.includes(campus.id))
       .map(campus => campus.name)
@@ -94,7 +106,7 @@ export default function UserManagementPermission({
       )
       .map(course => course?.title);
 
-    alert({
+    return alert({
       text: `${user.name}님의 권한을 다시 한번 확인해주세요.`,
       subText: '정말로 변경하시겠습니까?',
       subTextColor: 'green',
@@ -154,12 +166,6 @@ export default function UserManagementPermission({
     });
   };
 
-  const toggleItemInArr = (arr: number[], id: number) => {
-    return arr.includes(id)
-      ? arr.filter(itemId => itemId !== id)
-      : [...arr, id];
-  };
-
   const lastStep = modifyingPermissionStepList.length;
 
   useEffect(() => {
@@ -179,176 +185,70 @@ export default function UserManagementPermission({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currStep]);
 
-  const disabledStyle = '!bg-lightGray-active !text-mainGray-hover';
-  const activeStyle = '!bg-mainBlue !text-darkGray-active font-medium';
+  const changeStep = async (step: 'prev' | 'next' | number) => {
+    const isValid = await trigger(['role', 'campusIdList', 'courseIdList']);
+
+    if (isValid) {
+      if (typeof step === 'number') {
+        setCurrStep(step);
+      } else {
+        setCurrStep(prev => {
+          if (step === 'prev') {
+            if (prev === 1) return 1;
+            return prev - 1;
+          }
+          return prev + 1;
+        });
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <ul className="flex w-full">
-          {modifyingPermissionStepList.map(({ step, text }) => (
-            <li
-              key={step}
-              className="flex w-full flex-col items-center justify-center"
+      {/* 폼 스텝 */}
+      <ul className="flex w-full">
+        {modifyingPermissionStepList.map(({ step, text }) => (
+          <li
+            key={step}
+            className="flex w-full flex-col items-center justify-center"
+          >
+            <button
+              type="button"
+              onClick={() => changeStep(step)}
+              className={`w-full py-3 text-lg font-medium ${step <= currStep ? 'text-mainBlue-active' : 'text-mainGray'}`}
             >
-              <button
-                type="button"
-                onClick={async () => {
-                  const isValid = await trigger([
-                    'role',
-                    'campusIdList',
-                    'courseIdList',
-                  ]);
-                  if (isValid) {
-                    setCurrStep(step);
-                  }
-                }}
-                className={`w-full py-3 text-lg font-medium ${step <= currStep ? 'text-mainBlue-active' : 'text-mainGray'}`}
-              >
-                {step}. {text}
-              </button>
-              <div
-                className={`${step <= currStep ? 'bg-mainBlue' : 'bg-mainGray'} h-[6px] w-full`}
-              />
-            </li>
-          ))}
-        </ul>
-
-        <div>
-          {currStep === 1 && (
-            <Controller
-              control={control}
-              name="role"
-              render={({ field: { onChange } }) => {
-                return (
-                  <div className="mb-6 mt-4 h-[300px]">
-                    <ul className="flex flex-wrap gap-3">
-                      {rolesArr?.map(({ key, label }) => (
-                        <li key={key}>
-                          <SquareButton
-                            name={label}
-                            className={
-                              currRole !== key ? disabledStyle : activeStyle
-                            }
-                            onClick={() => onChange(key)}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              }}
+              {step}. {text}
+            </button>
+            <div
+              className={`${step <= currStep ? 'bg-mainBlue' : 'bg-mainGray'} h-[6px] w-full`}
             />
-          )}
+          </li>
+        ))}
+      </ul>
 
-          {currStep === 2 && (
-            <Controller
-              control={control}
-              name="campusIdList"
-              render={({ field: { onChange }, fieldState: { error } }) => {
-                return (
-                  <div className="mb-6 mt-4 h-[300px]">
-                    <ul className="flex flex-wrap gap-3">
-                      {campusList?.map(({ name: campusName, id }) => (
-                        <li key={id}>
-                          <SquareButton
-                            name={campusName}
-                            onClick={() => {
-                              onChange(toggleItemInArr(currCampusIdList, id));
-                            }}
-                            className={
-                              !currCampusIdList.includes(id)
-                                ? disabledStyle
-                                : activeStyle
-                            }
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                    {error?.message && <ErrorMsg msg={error.message} />}
-                  </div>
-                );
-              }}
-            />
-          )}
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+          {currStep === 1 && <ControllerRole />}
+
+          {currStep === 2 && <ControllerCampusList />}
 
           {currStep === 3 &&
             courseListByCampus &&
-            courseListByCampus.length !== 0 && (
-              <Controller
-                control={control}
-                name="courseIdList"
-                render={({ field: { onChange }, fieldState: { error } }) => {
-                  return (
-                    <div className="mb-6 mt-4 h-[300px]">
-                      <ul className="flex max-h-[300px] flex-col gap-9 overflow-scroll scrollbar-hide">
-                        {courseListByCampus?.map(({ data, campusName }) => (
-                          <li key={campusName}>
-                            <div className="flex justify-between pb-2 text-sm font-medium text-darkGray-active">
-                              <span>{campusName} 교육과정</span>{' '}
-                              <span>
-                                {
-                                  data?.filter(item =>
-                                    currCourseIdList.includes(item.id),
-                                  ).length
-                                }{' '}
-                                / {data?.length}
-                              </span>
-                            </div>
-                            <ul className="flex flex-col gap-2">
-                              {data?.map(({ id, title }) => (
-                                <li key={id}>
-                                  <SquareButton
-                                    name={title}
-                                    className={`${
-                                      !currCourseIdList.includes(id)
-                                        ? disabledStyle
-                                        : activeStyle
-                                    } w-full truncate whitespace-pre !px-3 text-start`}
-                                    onClick={() =>
-                                      onChange(
-                                        toggleItemInArr(currCourseIdList, id),
-                                      )
-                                    }
-                                  />
-                                </li>
-                              ))}
-                            </ul>
-                          </li>
-                        ))}
-                      </ul>
-                      {error?.message && <ErrorMsg msg={error.message} />}
-                    </div>
-                  );
-                }}
-              />
-            )}
-        </div>
+            courseListByCampus.length !== 0 && <ControllerCourseList />}
 
-        {currStep === lastStep && (
-          <div className="ml-auto mt-auto flex gap-3">
-            <SquareButton
-              type="button"
-              name="이전"
-              color="gray"
-              onClick={async () => {
-                const isValid = await trigger([
-                  'role',
-                  'campusIdList',
-                  'courseIdList',
-                ]);
-                if (isValid) {
-                  setCurrStep(prev => {
-                    if (prev === 1) return 1;
-                    return prev - 1;
-                  });
-                }
-              }}
-            />
-            <SquareButton type="submit" name="수정하기" color="mainGreen" />
-          </div>
-        )}
-      </form>
+          {currStep === lastStep && (
+            <div className="ml-auto mt-auto flex gap-3">
+              <SquareButton
+                type="button"
+                name="이전"
+                color="gray"
+                onClick={() => changeStep('prev')}
+              />
+              <SquareButton type="submit" name="수정하기" color="mainGreen" />
+            </div>
+          )}
+        </form>
+      </FormProvider>
 
       {currStep < lastStep && (
         <div className="ml-auto mt-auto flex gap-3">
@@ -356,34 +256,13 @@ export default function UserManagementPermission({
             type="button"
             name="이전"
             color="gray"
-            onClick={async () => {
-              const isValid = await trigger([
-                'role',
-                'campusIdList',
-                'courseIdList',
-              ]);
-              if (isValid) {
-                setCurrStep(prev => {
-                  if (prev === 1) return 1;
-                  return prev - 1;
-                });
-              }
-            }}
+            onClick={() => changeStep('prev')}
           />
           <SquareButton
             type="button"
             name="다음"
             color="gray"
-            onClick={async () => {
-              const isValid = await trigger([
-                'role',
-                'campusIdList',
-                'courseIdList',
-              ]);
-              if (isValid) {
-                setCurrStep(prev => prev + 1);
-              }
-            }}
+            onClick={() => changeStep('next')}
           />
         </div>
       )}
