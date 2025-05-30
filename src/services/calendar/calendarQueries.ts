@@ -66,7 +66,15 @@ export const useGetEventsByCalendar = (
     const res =
       await axiosCalendarInstance.get<GoogleCalendarApiDto.GetCalenderEvents>(
         `/calendars/${calendarId}/events`,
+        {
+          params: {
+            singleEvents: true,
+            orderBy: 'startTime',
+            showDeleted: false,
+          },
+        },
       );
+
     return { ...res.data, calendarId };
   };
 

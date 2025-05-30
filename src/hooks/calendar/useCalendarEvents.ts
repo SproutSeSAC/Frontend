@@ -32,7 +32,7 @@ export const useCalendarEvents = () => {
         ?.map(({ isLoading, data }) => {
           if (isLoading || !data) return data;
           const { calendarId, items: eventList } = data;
-          return eventList.map(event => {
+          return eventList?.map(event => {
             if (calendarId) {
               const backgroundColor = getCalendarColor(calendarId);
               return { ...event, calendarId, backgroundColor };
