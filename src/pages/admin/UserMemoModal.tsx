@@ -20,7 +20,7 @@ interface UserMemoModalProps {
   memo: string;
 }
 
-export const formSchema = z.object({
+const formSchema = z.object({
   content: z.string().min(1, '메모가 작성되지 않았습니다.'),
 });
 

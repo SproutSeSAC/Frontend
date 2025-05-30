@@ -8,7 +8,7 @@ import { useDialogContext } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { formSchema } from '@/components/admin/UserManagementPhoneNumber';
+import { phoneSchema } from '@/components/admin/form/phoneSchema';
 import SquareButton from '@/components/common/button/SquareButton';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import Modal from '@/components/common/modal/Modal';
@@ -30,7 +30,7 @@ export default function UserPhoneNumberModal({
 
   const methods = useForm({
     defaultValues: { phoneNumber: '' },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(phoneSchema),
   });
 
   const { handleSubmit, setValue } = methods;

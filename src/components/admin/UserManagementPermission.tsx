@@ -17,7 +17,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import ControllerCampusList from '@/components/admin/form/ControllerCampusList';
 import ControllerCourseList from '@/components/admin/form/ControllerCourseList';
 import ControllerRole from '@/components/admin/form/ControllerRole';
-import { userPermissionSchema } from '@/components/admin/userPermissionScheme';
+import { userPermissionSchema } from '@/components/admin/userPermissionSchema';
 import SquareButton from '@/components/common/button/SquareButton';
 import Tag from '@/components/common/tag/Tag';
 

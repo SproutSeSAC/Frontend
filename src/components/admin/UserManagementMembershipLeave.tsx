@@ -28,8 +28,6 @@ export default function UserManagementMembershipLeave({
 
   const { mutateAsync: deleteUser } = useDeleteUserToManage({
     onSuccess: async () => {
-      // 캘린더 권한에서도 삭제.
-      // await
       showToast(`${userName}님이 탈퇴 처리되었습니다.`);
       await queryClient.invalidateQueries({
         queryKey: ['useGetInfiniteUserList'],

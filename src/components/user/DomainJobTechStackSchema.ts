@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-export type RegisterSchemaType = z.infer<typeof DomainJobTechStackSchema>;
+export type RegisterSchemaType = z.infer<typeof domainJobTechStackSchema>;
 
-export const DomainJobTechStackSchema = z.object({
+export const domainJobTechStackSchema = z.object({
   updatedJobList: z //
     .array(z.any())
     .min(1, '최소 하나의 직무를 선택해야 합니다.'),
