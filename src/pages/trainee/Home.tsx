@@ -41,7 +41,6 @@ export default function Home() {
   const { data: isWaitingAcl } = useGetIsWaitingAcl(
     userProfile?.courseList || [],
     {
-      queryKey: ['useGetIsWaitingAcl'],
       enabled:
         isSuperAdmin(userProfile?.role) &&
         (userProfile?.courseList || []).length > 0,

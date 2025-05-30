@@ -1,7 +1,7 @@
 import {
   actionLabelList,
   colorByCampusObj,
-  courseManagementTabListForHasSuperAdmin,
+  courseManagementTabListForSuperAdmin,
   modifyingPermissionStepList,
   sessionApplicantsStatusTabList,
   sessionStatusTabList,
@@ -13,8 +13,7 @@ export * from '@/types/admin/userToManageDto';
 export type UserManagementTab = typeof userManagementTabListForHasSuperAdmin;
 export type UserManagementTabType = UserManagementTab[number]['type'];
 
-export type CourseManagementTab =
-  typeof courseManagementTabListForHasSuperAdmin;
+export type CourseManagementTab = typeof courseManagementTabListForSuperAdmin;
 export type CourseManagementTabType = CourseManagementTab[number]['type'];
 
 export type SessionStatusTab = typeof sessionStatusTabList;

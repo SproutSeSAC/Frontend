@@ -178,7 +178,7 @@ export const useGetCalendarAcl = (
 
 export const useGetIsWaitingAcl = (
   courseList: UserCourse[],
-  options?: UseQueryOptions<boolean>,
+  enabled?: { enabled: boolean },
 ) => {
   const getCourseCalendarIdList = async () => {
     const requests = courseList.map(({ courseId }) =>
@@ -191,6 +191,7 @@ export const useGetIsWaitingAcl = (
       }),
     );
     const responses = await Promise.all(requests);
+
     return responses.flat() as { calendarId: string; courseId: number }[];
   };
 
@@ -246,7 +247,7 @@ export const useGetIsWaitingAcl = (
 
           return { isWaitingAcl: !!hasNotAclAdminList.length };
         } catch (err) {
-          throw new Error(`캘린더 id ${calendarId}: ${err}`);
+          return { isWaitingAcl: false };
         }
       },
     );
@@ -265,11 +266,7 @@ export const useGetIsWaitingAcl = (
   return useQuery<boolean>({
     queryKey: ['useGetIsWaitingAcl'],
     queryFn: getIsWaitingAcl,
-    enabled: courseList.length > 0,
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    ...options,
+    enabled: enabled?.enabled,
   });
 };
 
