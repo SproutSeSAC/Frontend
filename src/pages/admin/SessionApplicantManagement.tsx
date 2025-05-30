@@ -90,7 +90,7 @@ export default function SessionApplicantManagement() {
       {!isLoading &&
         (sessionList?.length === 0 ? (
           <EmptyContent
-            message="특강 / 행사가 없습니다."
+            message={`${tabName === 'INACTIVE' ? '모집 종료된' : '모집 중인'} 특강 / 행사가 없습니다.`}
             className="h-full pb-20"
           />
         ) : (

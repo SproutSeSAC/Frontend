@@ -14,7 +14,7 @@ import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropd
 import CustomDatePicker from '@/components/common/input/CustomDatePicker';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import LabeledSection from '@/components/common/input/LabeledSection';
-import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
+import { SessionSchemaType } from '@/components/notice/form/noticeFormSchema';
 
 interface ControllerSessionsProps {
   noticeType: NoticeCategoryDisplayValue;

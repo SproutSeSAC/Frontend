@@ -9,7 +9,7 @@ import {
 import { AppliedSessionStatusValue } from '@/types/session';
 import { HasAdminRole } from '@/types/user';
 
-import { NoticeFormSchemaType } from '@/components/notice/form/NoticeFormSchema';
+import { NoticeFormSchemaType } from '@/components/notice/form/noticeFormSchema';
 
 export namespace NoticeDto {
   export type GetNoticeList = {

@@ -69,7 +69,7 @@ export default function AppliedSessionCard({
   const isEndSession = checkIsEndSession(endDateTime);
   const status: AppliedSessionStatusKey = isEndSession
     ? 'END'
-    : session?.currentStatus || 'UNKNOWN';
+    : session?.participantStatus || 'UNKNOWN';
 
   return (
     <div className="group relative flex w-full min-w-[300px] cursor-default flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-card">

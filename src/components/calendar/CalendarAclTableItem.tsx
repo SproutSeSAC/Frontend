@@ -79,7 +79,7 @@ export default function CalendarAclTableItem({
               </span>
             )}
             {hasAclAdminList && (
-              <ul className="flex w-full flex-wrap gap-x-6 gap-y-1">
+              <ul className="flex w-full flex-wrap justify-start gap-x-6 gap-y-1">
                 {hasAclAdminList?.map(admin => (
                   <AdminUser
                     key={admin.email}

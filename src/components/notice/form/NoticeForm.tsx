@@ -23,7 +23,7 @@ import ControllerContentEditor from '@/components/common/text-editor/ControllerC
 import ControllerNoticeType from '@/components/notice/form/ControllerNoticeType';
 import ControllerTargetCourses from '@/components/notice/form/ControllerTargetCourses';
 import ExtraInfoForm from '@/components/notice/form/ExtraInfoForm';
-import { NoticeConditionalFormSchema } from '@/components/notice/form/NoticeFormSchema';
+import { NoticeConditionalFormSchema } from '@/components/notice/form/noticeFormSchema';
 
 export default function NoticeForm() {
   const {

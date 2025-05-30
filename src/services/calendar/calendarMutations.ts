@@ -133,6 +133,30 @@ export const useGrantAcl = (
   });
 };
 
+export const useDeleteAcl = (
+  options?: UseMutationOptions<unknown, Error, GrantAclParams>,
+) => {
+  const grantAclByRole = async (params: GrantAclParams) => {
+    const { calendarId, hasNotAclAdminList } = params;
+
+    await Promise.all(
+      hasNotAclAdminList.map(async ({ email, roleType }) => {
+        const acl = {
+          role: hasSuperAdmin(roleType) ? 'owner' : 'writer',
+          scope: { type: 'user', value: email },
+        };
+        await axiosCalendarInstance.post(`/calendars/${calendarId}/acl`, acl);
+      }),
+    );
+  };
+
+  return useMutation({
+    mutationFn: grantAclByRole,
+    mutationKey: ['useGrantAcl'],
+    ...options,
+  });
+};
+
 export const useCreateEventsForMultipleCalendars = (
   options?: UseMutationOptions<
     unknown,

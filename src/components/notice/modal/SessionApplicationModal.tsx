@@ -18,8 +18,8 @@ import {
 import SquareButton from '@/components/common/button/SquareButton';
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 import Modal from '@/components/common/modal/Modal';
-import { sessionApplicationModalFormSchema } from '@/components/notice/modal/SessionApplicationModalFormSchema';
 import SessionSelectBox from '@/components/notice/modal/SessionSelectBox';
+import { sessionApplicationModalFormSchema } from '@/components/notice/modal/sessionApplicationModalFormSchema';
 
 interface NoticeModalProps {
   sessions: NoticeSession[];

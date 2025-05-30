@@ -72,10 +72,6 @@ const mainRoutes: RouteObject[] = [
         element: <AppliedSessionsDetail />,
       },
       {
-        path: 'session-status/:userId',
-        element: <AppliedSessionsDetail />,
-      },
-      {
         path: 'scraped-posts',
         element: <ScrapedPostList />,
       },
@@ -150,7 +146,11 @@ const mainRoutes: RouteObject[] = [
         element: <ContentsManagement />,
       },
       {
-        path: 'session-status',
+        path: 'session-status/:userId',
+        element: <AppliedSessionsDetail />,
+      },
+      {
+        path: 'applicants-status',
         children: [
           {
             index: true,

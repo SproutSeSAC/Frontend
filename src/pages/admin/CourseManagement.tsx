@@ -2,13 +2,13 @@ import { useGetUserProfile } from '@/services/auth/authQueries';
 
 import {
   courseManagementTabList,
-  courseManagementTabListForHasSuperAdmin,
+  courseManagementTabListForSuperAdmin,
 } from '@/constants';
 import { useHandleTabNavigation } from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { CourseManagementTabType } from '@/types/admin';
-import { hasSuperAdmin } from '@/utils';
+import { isSuperAdmin } from '@/utils';
 
 import CalendarAclTable from '@/components/calendar/CalendarAclTable';
 import PreparingPage from '@/components/common/PreparingPage';
@@ -26,8 +26,8 @@ export default function CourseManagement() {
         <TabNavigation<CourseManagementTabType>
           selectValue={tabName ?? 'course'}
           tabList={
-            hasSuperAdmin(userProfile.role)
-              ? courseManagementTabListForHasSuperAdmin
+            isSuperAdmin(userProfile.role)
+              ? courseManagementTabListForSuperAdmin
               : courseManagementTabList
           }
           onChangeValue={handleChangeTab}
@@ -37,7 +37,7 @@ export default function CourseManagement() {
       {(tabName === null || tabName === 'course') && (
         <PreparingPage className="mt-5 !rounded-3xl" />
       )}
-      {tabName === 'calendar' && hasSuperAdmin(userProfile?.role) && (
+      {tabName === 'calendar' && isSuperAdmin(userProfile?.role) && (
         <CalendarAclTable />
       )}
     </MainView>

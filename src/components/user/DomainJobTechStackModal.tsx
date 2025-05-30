@@ -15,7 +15,7 @@ import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';
-import { DomainJobTechStackSchema } from '@/components/user/DomainJobTechStackSchema';
+import { domainJobTechStackSchema } from '@/components/user/domainJobTechStackSchema';
 
 type FormValue = {
   updatedTechStackList: TechStack[];
@@ -57,7 +57,7 @@ export default function DomainJobTechStackModal() {
   const methods = useForm<FormValue>({
     mode: 'onSubmit',
     defaultValues: defaultFormValues,
-    resolver: zodResolver(DomainJobTechStackSchema),
+    resolver: zodResolver(domainJobTechStackSchema),
   });
 
   const {

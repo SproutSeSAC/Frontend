@@ -23,7 +23,7 @@ export const courseManagementTabList = [
   { text: '교육과정 관리', type: 'course' },
 ] as const;
 
-export const courseManagementTabListForHasSuperAdmin = [
+export const courseManagementTabListForSuperAdmin = [
   ...courseManagementTabList,
   { text: '캘린더 관리', type: 'calendar' },
 ] as const;

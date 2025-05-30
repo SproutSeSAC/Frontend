@@ -29,7 +29,7 @@ export default function CalendarAclTable() {
       <thead>
         <tr>
           {headerCellList.map(({ name, className }) => (
-            <th key={name} className={`${className} pb-5 font-normal`}>
+            <th key={name} className={`${className} px-2 pb-5 font-normal`}>
               {name}
             </th>
           ))}

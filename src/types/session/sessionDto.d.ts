@@ -46,7 +46,7 @@ type AppliedSession = {
   meetingType: MeetingTypeKey;
   meetingPlace: string;
   satisfactionSurvey: string;
-  currentStatus: 'WAIT' | 'PARTICIPANT' | 'REJECT';
+  participantStatus: 'WAIT' | 'PARTICIPANT' | 'REJECT';
 };
 
 type NoticeSessionDetail = {

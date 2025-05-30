@@ -8,17 +8,19 @@ import MainView from '@/layouts/MainView';
 
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
+const filter = { page: 1, size: 3 };
+
 export default function ScrapedPostList() {
   const params = useParams();
-  const userId = Number(params?.userId);
+  const userId = params?.userId ? +params.userId : undefined;
 
   const { state } = useLocation();
 
   const { data: myScrapedPostList, isLoading: isMyScrapedPostListLoading } =
-    useGetMyScrapedPostList('내가 찜한 글', { page: 1, size: 3 });
+    useGetMyScrapedPostList('내가 찜한 글', filter);
 
   const { data: scrapList, isLoading: isScrapListLoading } =
-    useGetUserScrapList(userId, { page: 1, size: 3 }, '찜한 글');
+    useGetUserScrapList('찜한 글', filter, userId);
 
   const dataList = userId ? scrapList : myScrapedPostList;
   const isLoading = userId ? isScrapListLoading : isMyScrapedPostListLoading;

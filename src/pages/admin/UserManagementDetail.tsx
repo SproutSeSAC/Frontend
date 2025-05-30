@@ -194,7 +194,7 @@ export default function UserManagementDetail() {
                       <Title title="특강 신청 내역" />
                       {appliedSessionList?.length !== 0 && (
                         <Link
-                          to={`/session-status/${userInfo.userId}`}
+                          to={`/admin/session-status/${userInfo.userId}`}
                           className="text-mainGray-active"
                           state={{
                             userId: userInfo.userId,

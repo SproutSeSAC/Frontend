@@ -4,17 +4,10 @@ import { useDialogContext } from '@/hooks';
 import { UserManagementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { z } from 'zod';
 
+import { phoneSchema } from '@/components/admin/form/phoneSchema';
 import SquareButton from '@/components/common/button/SquareButton';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
-
-export const formSchema = z.object({
-  phoneNumber: z
-    .string()
-    .min(1, '번호가 없습니다.')
-    .regex(/^010-\d{4}-\d{4}$/, '유효한 핸드폰 번호를 입력해 주세요'),
-});
 
 interface UserManagementPhoneNumberProps {
   user: UserManagementDto.GetUserList['content'][number];
@@ -29,7 +22,7 @@ export default function UserManagementPhoneNumber({
 
   const methods = useForm({
     defaultValues: { phoneNumber },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(phoneSchema),
   });
 
   const { handleSubmit } = methods;
