@@ -11,7 +11,7 @@ import { findCurrNotice } from '@/utils';
 import { SubmitErrorHandler } from 'react-hook-form';
 
 import { Session } from '@/components/notice/form/ControllerSessions';
-import { SessionSchemaType } from '@/components/notice/form/noticeFormSchema';
+import { SessionSchemaType } from '@/components/notice/form/NoticeFormSchema';
 
 export const useSubmitNotice = () => {
   const { showToast, alert, hideDialog } = useDialogContext();

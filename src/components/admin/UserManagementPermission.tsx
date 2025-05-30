@@ -14,10 +14,10 @@ import { RoleKey, UserManagementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import { userPermissionSchema } from '@/components/admin/UserPermissionSchema';
 import ControllerCampusList from '@/components/admin/form/ControllerCampusList';
 import ControllerCourseList from '@/components/admin/form/ControllerCourseList';
 import ControllerRole from '@/components/admin/form/ControllerRole';
-import { userPermissionSchema } from '@/components/admin/userPermissionSchema';
 import SquareButton from '@/components/common/button/SquareButton';
 import Tag from '@/components/common/tag/Tag';
 
