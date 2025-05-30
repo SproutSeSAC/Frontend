@@ -15,7 +15,7 @@ import TechStackDropdown from '@/components/common/dropdown/TechStackDropdown';
 import Label from '@/components/common/input/Label';
 import Modal from '@/components/common/modal/Modal';
 import Tag from '@/components/common/tag/Tag';
-import { domainJobTechStackSchema } from '@/components/user/domainJobTechStackSchema';
+import { domainJobTechStackSchema } from '@/components/user/DomainJobTechStackSchema';
 
 type FormValue = {
   updatedTechStackList: TechStack[];

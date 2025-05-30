@@ -5,7 +5,7 @@ import { UserManagementDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { phoneSchema } from '@/components/admin/form/phoneSchema';
+import { phoneSchema } from '@/components/admin/form/PhoneSchema';
 import SquareButton from '@/components/common/button/SquareButton';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 
