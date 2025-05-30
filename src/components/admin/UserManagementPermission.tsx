@@ -157,6 +157,11 @@ export default function UserManagementPermission({
         {
           name: '확인',
           onClick: () => {
+            // 여기서 캘린더 권한도 같이 업데이트
+            // 1. 역할 변경시 '소유 권한 <=> 일정 변경권한'
+            // 2. 탈퇴 처리 시 캘린더 권한 삭제
+            // 3. 교육과정 변경 or 추가된 경우 해당 교육과정에 대한 캘린더권한을 자동으로 추가
+
             updateUserPermission({ userId, requestBody });
             hideDialog();
             onMenuClose();

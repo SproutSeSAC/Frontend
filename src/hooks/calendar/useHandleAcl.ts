@@ -46,43 +46,52 @@ export const useHandleAcl = ({
   };
 
   const {
-    data: courseCalendarAcl,
+    data: calendarAclList,
     isLoading: isCalendarAclLoading, //
   } = useGetCalendarAcl(courseId, calendarId);
 
   const getHasAclAdminList = useCallback(() => {
-    if (typeof courseCalendarAcl === 'string') return [];
+    if (typeof calendarAclList === 'string') return [];
 
-    return courseCalendarAcl?.map(acl => {
-      const superAdminObj = {
-        roleType: 'SUPER_ADMIN' as const,
-        email: SUPER_ADMIN_EMAIL,
-        nickname: '새싹 관리자',
-        name: '관리자',
-      };
+    const superAdminObj = {
+      roleType: 'SUPER_ADMIN' as const,
+      email: SUPER_ADMIN_EMAIL,
+      nickname: '새싹 관리자',
+      name: '관리자',
+    };
 
-      const admin = [...adminList, superAdminObj]?.find(
-        ({ email }) => email === acl.email,
-      );
-
-      if (!admin) return acl;
-
-      return { ...acl, ...admin };
-    });
-  }, [adminList, courseCalendarAcl]);
+    return calendarAclList
+      ?.filter(acl => {
+        const hasAclAdmin = [...adminList, superAdminObj]?.find(
+          ({ email }) => email === acl.email,
+        );
+        return !!hasAclAdmin;
+      })
+      .map(acl => {
+        const hasAclAdmin = [...adminList, superAdminObj]?.find(
+          ({ email }) => email === acl.email,
+        );
+        return { ...acl, ...hasAclAdmin };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [adminList, calendarAclList]);
 
   const getHasNotAclAdminList = useCallback(() => {
-    if (typeof courseCalendarAcl === 'string') return [];
-    return adminList.filter(
-      ({ email }) =>
-        !courseCalendarAcl?.find(({ email: aclEmail }) => email === aclEmail),
-    );
-  }, [adminList, courseCalendarAcl]);
+    if (typeof calendarAclList === 'string') return [];
+    return adminList
+      .filter(
+        ({ email }) =>
+          !calendarAclList?.find(({ email: aclEmail }) => email === aclEmail),
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [adminList, calendarAclList]);
 
   const getCalendarStatus = () => {
     if (!calendarId) return 'Not Created';
-    if (courseCalendarAcl === 'Not Found' || courseCalendarAcl === 'Forbidden')
-      return courseCalendarAcl;
+
+    if (calendarAclList === 'Not Found' || calendarAclList === 'Forbidden')
+      return calendarAclList;
+
     return 'Created';
   };
 

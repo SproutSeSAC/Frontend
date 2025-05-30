@@ -10,17 +10,19 @@ interface UserManagingActionMenuProps {
   currMenu: UserManagingActionMenu;
   onMenuClose: () => void;
   user: UserManagementDto.GetUserList['content'][number];
+  className: string;
 }
 
 export default function UserManagementModal({
   currMenu,
   onMenuClose,
   user,
+  className,
 }: UserManagingActionMenuProps) {
   const { name: userName } = user;
 
   return (
-    <div className="absolute right-0 top-0 z-40 !pb-16">
+    <div className={`absolute right-0 z-40 ${className}`}>
       <div
         className={`rounded-xl bg-white px-8 !pb-8 !pt-7 shadow-2xl ${modalSizeObj.md}`}
       >
@@ -41,8 +43,11 @@ export default function UserManagementModal({
         {currMenu.label !== '회원 탈퇴' && (
           <>
             <p className="mb-3 text-darkGray">
-              {userName}님의{' '}
-              <span className="font-medium">
+              <span className="font-medium text-mainGreen-hover underline underline-offset-4">
+                {userName}
+              </span>
+              님의{' '}
+              <span className="text-darkGray-active">
                 {currMenu.label.includes('권한')
                   ? '캠퍼스, 교육과정, 역할 권한을'
                   : '연락처를'}

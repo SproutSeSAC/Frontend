@@ -69,7 +69,7 @@ export default function UserPostCollection({
     useGetUserCommentList(userId, tableFilter, currCollection);
 
   const { data: scrapList, isLoading: isUserScrapListLoading } =
-    useGetUserScrapList(userId, tableFilter, currCollection);
+    useGetUserScrapList(currCollection, tableFilter, userId);
 
   const contentList = {
     contentList: currCollection.includes('게시글') ? postList : commentList,
@@ -134,8 +134,8 @@ export default function UserPostCollection({
       />
 
       {currCollection !== '찜한 글' && (
-        <>
-          <div className="mb-4 flex !min-h-[270px] flex-1 flex-col rounded-[20px] border border-mainGray-hover bg-white px-4 py-5 pb-4">
+        <div className="flex flex-col gap-y-6">
+          <div className="flex !min-h-[270px] flex-1 flex-col rounded-[20px] border border-mainGray-hover bg-white px-4 py-5 pb-4">
             {!isUserPostListLoading && !isUserCommentListLoading && (
               <TableContainer colWidthList={[18, 20, 55]}>
                 <TableHeader<UserCollection>
@@ -172,7 +172,7 @@ export default function UserPostCollection({
               }}
             />
           )}
-        </>
+        </div>
       )}
 
       {currCollection === '찜한 글' && (

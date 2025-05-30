@@ -24,7 +24,7 @@ import { UserManagementTabType } from '@/types/admin';
 import { hasSuperAdmin } from '@/utils';
 import { useAtom } from 'jotai';
 
-import UserManagementItem from '@/components/admin/UserManagementItem';
+import UserManagementList from '@/components/admin/UserManagementList';
 import EmptyContent from '@/components/common/EmptyContent';
 import Pagination from '@/components/common/Pagination';
 import TabNavigation from '@/components/common/TabNavigation';
@@ -152,16 +152,11 @@ export default function UserManagement() {
       </header>
 
       {data && data?.userList.length !== 0 ? (
-        <ul className="mb-16 mt-4 flex w-full flex-col gap-4">
-          {data.userList.map(user => (
-            <UserManagementItem
-              key={user.userId}
-              user={user}
-              type={tabName as 'trainee-list' | 'user-list'}
-              className={`grid gap-x-3 pl-6 pr-2 ${gridStyle}`}
-            />
-          ))}
-        </ul>
+        <UserManagementList
+          type={tabName as 'trainee-list' | 'user-list'}
+          className={`grid gap-x-3 pl-6 pr-2 ${gridStyle}`}
+          userList={data.userList}
+        />
       ) : (
         <EmptyContent
           message="사용자가 없습니다."

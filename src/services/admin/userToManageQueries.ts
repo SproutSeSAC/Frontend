@@ -129,9 +129,9 @@ export const useGetTraineeMemo = ({ traineeId }: { traineeId: number }) => {
 
 /** 사용자 찜한 글 조회 */
 export const useGetUserScrapList = (
-  userId: number,
-  params: PaginationFilter,
   currCollection: UserCollection,
+  params: PaginationFilter,
+  userId?: number,
 ) => {
   const getUserScrapList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetScrapList>(
@@ -144,7 +144,7 @@ export const useGetUserScrapList = (
   return useQuery({
     queryKey: ['useGetUserScrapList', userId, params],
     queryFn: getUserScrapList,
-    enabled: currCollection === '찜한 글',
+    enabled: currCollection === '찜한 글' && !!userId,
   });
 };
 

@@ -29,7 +29,7 @@ export default function AdminUser({ admin, accessRole }: AdminUserProps) {
   return (
     <li key={email} className="relative flex items-center">
       <div
-        className={`peer flex cursor-pointer items-center ${currentUser ? 'text-mainGreen' : 'text-text'}`}
+        className={`peer flex items-center ${currentUser ? 'text-mainGreen' : 'text-text'}`}
       >
         {hasSuperAdmin(roleType) && <FaCrown className="mr-0.5 size-3.5" />}
         {!hasSuperAdmin(roleType) && hasAdmin(roleType) && (
@@ -40,9 +40,9 @@ export default function AdminUser({ admin, accessRole }: AdminUserProps) {
       </div>
 
       {roleType && (
-        <div className="absolute left-4 top-6 z-10 hidden flex-col items-start rounded-b-xl rounded-tr-xl bg-lightGreen-hover p-4 shadow-sm hover:flex peer-hover:flex">
-          <div className="my-2 flex gap-1">
-            <span className="peer cursor-pointer truncate text-[15px] tracking-tighter text-darkGray-hover">
+        <div className="absolute left-4 top-5 z-10 hidden flex-col items-start rounded-b-xl rounded-tr-xl bg-mainGray p-4 shadow-card hover:flex peer-hover:flex">
+          <div className="mb-2 flex gap-1">
+            <span className="peer min-w-max truncate text-[15px] tracking-tighter">
               {name}
             </span>
             <Tag

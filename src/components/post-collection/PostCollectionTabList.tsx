@@ -30,7 +30,9 @@ export default function PostCollectionTabList<T extends string>({
 
       {currCollection.includes('찜한 글') && (
         <Link
-          to={`/scraped-posts/${user?.userId}`}
+          to={
+            user?.userId ? `/scraped-posts/${user?.userId}` : '/scraped-posts'
+          }
           className="ml-auto mt-3 text-darkGray"
           state={user}
         >
