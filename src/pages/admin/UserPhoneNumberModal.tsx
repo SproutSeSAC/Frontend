@@ -8,7 +8,7 @@ import { useDialogContext } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { phoneSchema } from '@/components/admin/form/PhoneSchema';
+import { phoneSchema } from '@/components/admin/form/phoneSchema';
 import SquareButton from '@/components/common/button/SquareButton';
 import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumber';
 import Modal from '@/components/common/modal/Modal';
