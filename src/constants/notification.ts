@@ -76,6 +76,11 @@ export const NOTIFICATION_TYPE: Record<number, NotificationCardInfo> = {
     alertMessage: '캘린더 권한 부여가 필요한 매니저가 있습니다.',
     buttonText: '캘린더 권한 부여 이동',
   },
+  13: {
+    borderColor: '#FFB48C',
+    alertType: '특강 / 행사',
+    alertMessage: '가 취소되었습니다.',
+  },
 };
 
 // TODO '/' 로 표시된 부분은 이동 경로 확인 후, 수정 필요
