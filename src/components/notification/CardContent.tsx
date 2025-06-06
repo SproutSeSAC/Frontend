@@ -14,7 +14,8 @@ interface CardContentProps {
 }
 
 export default function CardContent({ notification }: CardContentProps) {
-  const { id, content, isRead, createdAt, type, url, comment } = notification;
+  const { id, content, isRead, createdAt, type, url, comment, notiType } =
+    notification;
   const { deleteNotification, setNotificationAsRead } = useNotification();
   const { alertType, alertMessage, buttonText } = NOTIFICATION_TYPE[type];
 
@@ -23,8 +24,8 @@ export default function CardContent({ notification }: CardContentProps) {
     deleteNotification(notification.id);
   };
 
-  const getNotificationUrl = (notiType: number, urlId: string) => {
-    const routeUrl = NOTIFICATION_ROUTE[notiType];
+  const getNotificationUrl = (inputNotiType: number, urlId: string) => {
+    const routeUrl = NOTIFICATION_ROUTE[inputNotiType];
     return routeUrl?.replace('{id}', urlId);
   };
 
@@ -63,7 +64,7 @@ export default function CardContent({ notification }: CardContentProps) {
 
       {buttonText && (
         <Link
-          to={getNotificationUrl(type, url)}
+          to={getNotificationUrl(notiType, url)}
           className="mt-[20px] flex items-center justify-self-end rounded-lg bg-mainGray-active px-[10px] py-2 text-[15px] text-white"
         >
           {buttonText}

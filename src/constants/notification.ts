@@ -95,4 +95,5 @@ export const NOTIFICATION_ROUTE: Record<number, string> = {
   10: '/',
   11: '/',
   12: '/',
+  13: '/session-status',
 };
