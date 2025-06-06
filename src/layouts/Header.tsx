@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
@@ -43,11 +43,17 @@ export default function Header({
   const { data: { profileImageUrl } = initialUserProfile } =
     useGetUserProfile();
   const { data: notificationList } = useGetUnReadNotificationList();
+  const [hasEverOpened, setHasEverOpened] = useState(false);
 
   const openNotificationListTab = () => {
+    setHasEverOpened(true);
     setIsNotificationServerSentEventData(false);
     setIsNotificationOpenOpen(prev => !prev);
   };
+
+  const showRedDot =
+    isNotificationServerSentEvent ||
+    (!hasEverOpened && notificationList?.length !== 0);
 
   return (
     <header className="mb-10 flex items-start justify-between">
@@ -71,8 +77,7 @@ export default function Header({
             onClick={() => openNotificationListTab()}
           >
             <BsBell className="size-[26px] stroke-[0.3] font-bold text-darkGray-hover" />
-            {(isNotificationServerSentEvent ||
-              notificationList?.length !== 0) && (
+            {showRedDot && (
               <div className="absolute right-0 top-0.5 size-2 rounded-full border bg-red-500" />
             )}
           </button>
