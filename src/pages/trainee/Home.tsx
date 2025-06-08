@@ -81,15 +81,13 @@ export default function Home() {
       </Header>
 
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
-        <section className="relative flex h-full flex-col">
+        <section className="relative overflow-hidden">
           <Title title="나의 새싹 정보" className="mb-[14px]" />
           <MyCourseProgressCard />
         </section>
 
-        <section className="w-full min-w-96">
-          <div className="mb-[14px] flex items-center justify-between">
-            <Title title="주요 일정" />
-          </div>
+        <section className="overflow-hidden">
+          <Title title="주요 일정" className="mb-[14px]" />
           <Calendar
             type="small"
             className="h-[509px]"
@@ -99,14 +97,14 @@ export default function Home() {
           />
         </section>
 
-        <section>
+        <section className="overflow-hidden">
           <div className="mb-[14px] flex items-center justify-between">
             <Title title="공지사항" />
             <Link to="/notice" className={linkButtonStyle}>
               더보기
             </Link>
           </div>
-          <div className="flex h-[509px] w-full flex-col justify-between gap-5 overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
+          <div className="flex h-[509px] flex-col justify-between gap-5 overflow-hidden rounded-[20px] bg-white px-6 pb-6 pt-7">
             <div className="flex h-full flex-col border-b pb-4">
               <span className="mb-4 text-darkGray-active">마감임박</span>
               <NoticeDisplayList title="마감임박" />

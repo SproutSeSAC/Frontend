@@ -75,6 +75,7 @@ export default function NoticeForm() {
   });
 
   const {
+    reset,
     handleSubmit,
     control,
     formState: { isDirty, isSubmitted },
@@ -95,7 +96,10 @@ export default function NoticeForm() {
     if (isTrainee(role)) {
       navigate(-1);
     }
-  }, [navigate, role]);
+    if (!postId) {
+      reset(defaultNoticeFormValues);
+    }
+  }, [navigate, role, postId, reset]);
 
   return (
     <>

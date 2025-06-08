@@ -44,7 +44,7 @@ export default function NavigationBar({ type }: NavigationBarProps) {
       to: '/stores',
       icon: (
         <StoreIcon
-          className={`${iconStyle} ${pathname === '/stores' ? 'fill-mainGreen' : 'fill-mainGray'}`}
+          className={`${iconStyle} ${pathname.includes('/stores') ? 'fill-mainGreen' : 'fill-mainGray'}`}
         />
       ),
     },
@@ -53,7 +53,7 @@ export default function NavigationBar({ type }: NavigationBarProps) {
       to: '/lounge',
       icon: (
         <LoungeIcon
-          className={`${iconStyle} ${pathname === '/lounge' ? 'fill-mainGreen' : 'fill-mainGray'}`}
+          className={`${iconStyle} ${pathname.includes('/lounge') ? 'fill-mainGreen' : 'fill-mainGray'}`}
         />
       ),
     },
@@ -62,7 +62,7 @@ export default function NavigationBar({ type }: NavigationBarProps) {
       to: '/notice',
       icon: (
         <NoticeIcon
-          className={`${iconStyle} size-9 ${pathname === '/notice' ? 'stroke-mainGreen [&>path:first-child]:fill-mainGreen' : 'stroke-mainGray [&>path:first-child]:fill-mainGray'}`}
+          className={`${iconStyle} size-9 ${pathname.includes('/notice') ? 'stroke-mainGreen [&>path:first-child]:fill-mainGreen' : 'stroke-mainGray [&>path:first-child]:fill-mainGray'}`}
         />
       ),
     },

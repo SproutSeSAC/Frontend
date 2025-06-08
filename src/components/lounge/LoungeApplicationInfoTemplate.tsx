@@ -41,15 +41,17 @@ export default function LoungeApplicationInfoTemplate({
       type: '직무',
       data: position && (
         <ul className="flex w-full flex-1 flex-wrap gap-1">
-          {position?.map(({ id, name }) => (
-            <Tag
-              key={id}
-              text={name}
-              color="black"
-              size="big"
-              className="whitespace-nowrap rounded bg-black !px-2 !font-normal text-white"
-            />
-          ))}
+          {position
+            ?.sort((a, b) => a.name.localeCompare(b.name))
+            .map(({ id, name }) => (
+              <Tag
+                key={id}
+                text={name}
+                color="black"
+                size="big"
+                className="whitespace-nowrap rounded bg-black !px-2 !font-normal text-white"
+              />
+            ))}
         </ul>
       ),
     },

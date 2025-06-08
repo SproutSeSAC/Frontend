@@ -51,21 +51,17 @@ export default function CardContent({ notification }: CardContentProps) {
         </div>
 
         <div className="flex flex-col gap-[10px]">
-          <p className="line-clamp-2 w-full overflow-hidden text-ellipsis text-start text-[#2b2b2b]">
-            {`${content + alertMessage}`}
-          </p>
+          <p className="text-[#2b2b2b]">{`${content + alertMessage}`}</p>
           {comment && (
-            <p className="line-clamp-2 w-full overflow-hidden text-ellipsis text-start text-sm text-darkGray">
-              💬 {comment}
-            </p>
+            <p className="line-clamp-1 text-sm text-darkGray">💬 {comment}</p>
           )}
         </div>
       </div>
 
       {buttonText && (
         <Link
-          to={getNotificationUrl(notiType, url)}
-          className="mt-[20px] flex items-center justify-self-end rounded-lg bg-mainGray-active px-[10px] py-2 text-[15px] text-white"
+          to={getNotificationUrl(type, url)}
+          className="ml-auto mt-[20px] flex items-center rounded-lg bg-mainGray-active px-[10px] py-2 text-[15px] text-white"
         >
           {buttonText}
         </Link>
