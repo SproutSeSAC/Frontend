@@ -49,18 +49,16 @@ export default function NotificationContent() {
           return (
             <div
               key={item.id}
-              className={`relative rounded-lg border border-mainGray bg-white pb-6 pl-[22px] pr-4 pt-8 ${
+              className={`relative flex flex-col rounded-lg border border-mainGray bg-white pb-6 pl-[22px] pr-4 pt-8 ${
                 item.isRead && 'opacity-50'
-              } `}
+              }`}
             >
               <div
                 className="absolute left-0 top-0 h-full w-[7px] rounded-l-lg"
                 style={{
                   backgroundColor: NOTIFICATION_TYPE[item.type].borderColor,
                 }}
-              >
-                {` `}
-              </div>
+              />
               <CardContent notification={item} />
             </div>
           );

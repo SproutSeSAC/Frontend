@@ -17,16 +17,14 @@ export default function TitleLinkWithRoleTag({
   title,
 }: TitleLinkWithRoleTagProps) {
   return (
-    <Link to={to} className="flex h-7 w-full items-center gap-1.5">
+    <Link to={to} className="flex h-7 items-center gap-1.5">
       <Tag
         size="medium"
         roleKey={roleType}
         text={rolesObj[roleType]}
         className="!rounded-md !px-[10px] py-1.5 font-medium"
       />
-      <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-        {title}
-      </p>
+      <p className="line-clamp-1 text-sm">{title}</p>
     </Link>
   );
 }

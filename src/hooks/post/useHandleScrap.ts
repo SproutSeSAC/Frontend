@@ -7,7 +7,7 @@ import { useDialogContext } from '@/hooks';
 interface UseHandleOnScrapProps {
   postId: number;
   isScraped: boolean;
-  invalidateQueryKeys: { queryKey: (string | number)[] }[];
+  invalidateQueryKeys?: { queryKey: (string | number)[] }[];
 }
 
 export const useHandleScrap = ({
@@ -19,8 +19,10 @@ export const useHandleScrap = ({
 
   const queryClient = useQueryClient();
 
-  const { mutateAsync: postScrap, isPending: isPostScrapPending } =
-    usePostScrap();
+  const {
+    mutateAsync: postScrap,
+    isPending: isPostScrapPending, //
+  } = usePostScrap();
 
   const {
     mutateAsync: deleteScrap,
@@ -43,15 +45,18 @@ export const useHandleScrap = ({
         showToast('게시물을 찜했어요!', 1000);
       }
 
-      await Promise.all(
-        invalidateQueryKeys.map(queryKey =>
-          queryClient.invalidateQueries(queryKey),
-        ),
-      );
+      if (invalidateQueryKeys) {
+        await Promise.all(
+          invalidateQueryKeys.map(queryKey =>
+            queryClient.invalidateQueries(queryKey),
+          ),
+        );
+      }
     } catch (err) {
       showToast('게시물 찜하기를 실패했어요');
     }
   };
+
   return {
     onScrapClick,
     isPostScrapPending,

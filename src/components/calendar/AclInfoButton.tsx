@@ -32,9 +32,7 @@ export default function AclInfoButton({
 
   const { mutateAsync: insertCalendar } = useInsertCalendar({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetCalendarList'],
-      });
+      await queryClient.invalidateQueries({ queryKey: ['useGetCalendarList'] });
       await queryClient.invalidateQueries({
         queryKey: ['useGetCalendarAcl', courseId],
       });
@@ -44,46 +42,47 @@ export default function AclInfoButton({
   useEffect(() => {
     if (isError && error.response?.status === 403) {
       queryClient.setQueryData(['useGetCalendarAcl', courseId], {
-        status: 'forbidden',
+        status: 'Forbidden',
       });
     }
   }, [isError, error, queryClient, courseId]);
 
-  const alertText = {
-    notFoundCalendar: {
+  const alertList: {
+    type: 'notFoundCalendar' | 'hasNotAcl' | 'hasAclButNotInMyCalendarList';
+    text: string;
+    subText: string;
+    condition: boolean;
+  }[] = [
+    {
+      type: 'notFoundCalendar',
       text: '캘린더에 오류가 발생했습니다.',
       subText: '생성되었던 해당 캘린더가 유실되었습니다.',
+      condition: typeof aclList === 'string' && aclList === 'Not Found',
     },
-    hasNotAcl: {
+    {
+      type: 'hasNotAcl',
       text: '아직 캘린더 권한이 없는 상태입니다.',
       subText:
         '잠시만 기다려주시면 관리자가 확인 후 권한을 곧 부여해드리겠습니다.',
+      condition: typeof aclList === 'string' && aclList === 'Forbidden',
     },
-    notInMyCalendar: {
+    {
+      type: 'hasAclButNotInMyCalendarList',
       text: '캘린더 권한이 있지만 나의 캘린더 목록에는 없는 상태입니다.',
       subText: '나의 캘린더 목록에 추가하셔야 캘린더 일정을 볼 수 있습니다.',
+      condition: !!aclList?.length && typeof aclList === 'object',
     },
-  };
+  ];
 
-  // 캘린더를 찾지 못했을때
-  const notFoundCalendar =
-    aclList === 'Not Found' &&
-    typeof aclList === 'string' &&
-    'notFoundCalendar';
-  // 권한 없음
-  const hasNotAcl = !aclList?.length && 'hasNotAcl';
-  // 권한이 있지만 내 캘린더 목록에 추가하지 않아 캘린더 데이터를 못가져올 때
-  const hasAclButNotInMyCalendarList =
-    !!aclList?.length && typeof aclList === 'object' && 'notInMyCalendar';
+  const activeAlert =
+    alertList.find(alertItem => alertItem.condition) || alertList[0];
 
   const onInfoClick = () => {
+    const { text, subText, type } = activeAlert;
+
     alert({
-      ...alertText[
-        notFoundCalendar ||
-          hasNotAcl ||
-          hasAclButNotInMyCalendarList ||
-          'hasNotAcl'
-      ],
+      text,
+      subText,
       subTextColor: 'green',
       children: (
         <div className="flex gap-4">
@@ -93,7 +92,7 @@ export default function AclInfoButton({
             onClick={hideDialog}
             type="button"
           />
-          {hasAclButNotInMyCalendarList && (
+          {type === 'hasAclButNotInMyCalendarList' && (
             <SquareButton
               name="나의 캘린더에 추가"
               onClick={() => {
@@ -109,11 +108,11 @@ export default function AclInfoButton({
   };
 
   return (
-    (notFoundCalendar || hasNotAcl || hasAclButNotInMyCalendarList) &&
+    activeAlert &&
     !isLoading && (
       <button type="button" onClick={onInfoClick} className="group text-[15px]">
         <BiInfoCircle
-          className={`inline size-[20px] ${!hasAclButNotInMyCalendarList ? 'text-red-400' : 'text-mainGreen'}`}
+          className={`inline size-[20px] ${activeAlert.type !== 'hasAclButNotInMyCalendarList' ? 'text-red-400' : 'text-mainGreen'}`}
         />
       </button>
     )

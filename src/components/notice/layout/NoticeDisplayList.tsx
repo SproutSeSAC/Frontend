@@ -56,9 +56,7 @@ export default function NoticeDisplayList({
   return (
     !isLoading &&
     (noticeDisplayList?.length !== 0 ? (
-      <ul
-        className={`flex h-full w-full flex-col justify-start gap-4 ${className}`}
-      >
+      <ul className={`flex h-full flex-col justify-start gap-4 ${className}`}>
         {noticeDisplayList
           ?.slice(0, 4)
           ?.map(

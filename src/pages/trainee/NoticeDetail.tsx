@@ -163,7 +163,7 @@ export default function NoticeDetail() {
         <div className="w-full">
           <section className="w-full px-6 pb-[45px] pt-5">
             <header className="flex items-center justify-between">
-              <h1 className="text-[32px] font-semibold">
+              <h1 className="pr-4 text-[32px] font-semibold">
                 {noticeDetail?.title || '-'}
               </h1>
               <FavoriteButton

@@ -122,7 +122,8 @@ export default function Calendar({
                   ({ id, start, end, title }) => (
                     <SmallCalendarBottomEvent
                       key={id}
-                      date={`${formatDate(start, 'MM.dd HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
+                      date={formatDate(start, 'MM.dd')}
+                      time={`${formatDate(start, 'HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
                       title={title}
                     />
                   ),

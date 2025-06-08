@@ -50,7 +50,7 @@ export default function PostTableRow({
       {headerCellList.includes('체크박스') &&
         checkedPostIdList &&
         onPostCheckboxChange && (
-          <TableDataCell className="[&>label>input]:mr-0 [&>label>input]:size-5">
+          <TableDataCell className="!p-0 [&>label>input]:mr-0 [&>label>input]:size-5">
             <Checkbox
               id={postType}
               checked={!!checkedPostIdList.includes(postId)}

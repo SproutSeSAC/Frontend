@@ -7,6 +7,7 @@ import {
 
 import { useCalendarList, useDialogContext } from '@/hooks';
 import { Option } from '@/types';
+import { isSuperAdmin } from '@/utils';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import MultiSelectDropdown from '@/components/common/dropdown/MultiSelectDropdown';
@@ -39,7 +40,9 @@ export default function ControllerTargetCourses() {
     if (isNotCreatedCalendarCourseTitle.length > 0) {
       return alert({
         text: `${isNotCreatedCalendarCourseTitle.join(', ')} 캘린더가 아직 생성되어 있지 않습니다!`,
-        subText: '일정 관리 페이지에서 캘린더를 먼저 생성해주세요.',
+        subText: isSuperAdmin(userProfile?.role)
+          ? '교육과정 캘린더를 먼저 생성해주세요.'
+          : '교육과정 캘린더가 먼저 생성되어 있어야 합니다. 관리자가 생성중이니 잠시만 기다려주세요.',
         subTextColor: 'green',
         className: '!max-w-[500px]',
         buttonList: [
@@ -52,7 +55,7 @@ export default function ControllerTargetCourses() {
             name: '바로 이동하기',
             onClick: () => {
               hideDialog();
-              navigate('/admin');
+              navigate('/admin/course');
             },
           },
         ],
@@ -68,8 +71,7 @@ export default function ControllerTargetCourses() {
     if (hasNotAclCourse.length > 0) {
       return alert({
         text: `<${hasNotAclCourse.join(', ')}> 교육과정을 선택할 수 없습니다.`,
-        subText:
-          '나의 캘린더 목록에 추가되지 않았거나 캘린더 권한이 부여되지 않았습니다. 일정관리페이지에서 확인 후 조치를 취하실 수 있습니다.',
+        subText: `나의 캘린더 목록에 추가하지 않았거나 캘린더 권한이 부여되지 않았습니다.${isSuperAdmin(userProfile?.role) ? '' : ' 일정관리 페이지에서 캘린더 상태를 확인하실 수 있으며 권한이 없는 경우 관리자가 부여중이니 잠시만 기다려주세요.'}`,
         subTextColor: 'green',
         className: '!max-w-[500px]',
         buttonList: [
@@ -79,7 +81,7 @@ export default function ControllerTargetCourses() {
             onClick: hideDialog,
           },
           {
-            name: '바로 이동하기',
+            name: '일정관리 페이지 이동',
             onClick: () => {
               hideDialog();
               navigate('/schedule');

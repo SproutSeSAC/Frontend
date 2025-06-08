@@ -11,7 +11,7 @@ export const useGetJobList = (
     const response = await axiosInstance.get<SpecificationsDto.GetJobList>(
       '/specifications/jobList',
     );
-    return response.data.jobList;
+    return response.data.jobList.sort((a, b) => a.job.localeCompare(b.job));
   };
 
   return useQuery<SpecificationsDto.GetJobList['jobList']>({
@@ -30,7 +30,9 @@ export const useGetDomainList = (
     const response = await axiosInstance.get<SpecificationsDto.GetDomainList>(
       '/specifications/domainList',
     );
-    return response.data.domainList;
+    return response.data.domainList.sort((a, b) =>
+      a.domain.localeCompare(b.domain),
+    );
   };
 
   return useQuery<SpecificationsDto.GetDomainList['domainList']>({
@@ -49,7 +51,9 @@ export const useGetTechStackList = (
     const res = await axiosInstance.get<SpecificationsDto.GetTechStack>(
       '/specifications/techStackList',
     );
-    return res.data.techStackList;
+    return res.data.techStackList.sort((a, b) =>
+      a.techStack.localeCompare(b.techStack),
+    );
   };
 
   return useQuery<SpecificationsDto.GetTechStack['techStackList']>({

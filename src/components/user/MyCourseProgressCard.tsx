@@ -61,7 +61,7 @@ export default function MyCourseProgressCard() {
         className="absolute right-2 top-0.5 text-darkGray-hover"
         onClick={openModalClick}
       />
-      <div className="flex min-w-[404px] flex-1 flex-col justify-between rounded-[20px] bg-white py-5">
+      <div className="flex flex-1 flex-col justify-between rounded-[20px] bg-white py-5">
         <ul className="mb-4 flex gap-4 px-4">
           {[`D${DDay}`, `${progress}% 달성`].map(text => (
             <li key={text}>
@@ -86,7 +86,7 @@ export default function MyCourseProgressCard() {
             <img
               src={image}
               alt="성장캐릭터"
-              className="absolute rounded-full bg-white object-contain p-10"
+              className="absolute rounded-full bg-white object-contain px-0.5 pb-1"
             />
             <CircularGauge gauge={progress} />
             <span className="absolute -bottom-2 rounded-lg bg-mainGreen px-4 py-2 font-semibold text-white">
