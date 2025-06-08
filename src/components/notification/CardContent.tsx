@@ -60,7 +60,7 @@ export default function CardContent({ notification }: CardContentProps) {
 
       {buttonText && (
         <Link
-          to={getNotificationUrl(type, url)}
+          to={getNotificationUrl(notiType, url)}
           className="ml-auto mt-[20px] flex items-center rounded-lg bg-mainGray-active px-[10px] py-2 text-[15px] text-white"
         >
           {buttonText}
