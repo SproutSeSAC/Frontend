@@ -11,6 +11,7 @@ import {
 } from '@/constants';
 import {
   useDialogContext,
+  useFilterData,
   useHandleSessionApplicantList,
   useHandleTabNavigation,
 } from '@/hooks';
@@ -27,16 +28,27 @@ import { formatDate, getDDay } from '@/utils';
 import { BsCalendar, BsCalendar2Minus, BsClock } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
+import Pagination from '@/components/common/Pagination';
 import TabNavigation from '@/components/common/TabNavigation';
 import SquareButton from '@/components/common/button/SquareButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import Modal from '@/components/common/modal/Modal';
 import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 
+const initialFilter = {
+  page: 1,
+  size: 1,
+};
+
 export default function SessionApplicantManagementDetail() {
   const { state } = useLocation() as {
     state?: { sessionDetail: NoticeSessionDetail };
   };
+
+  const {
+    currFilter: tableFilter,
+    handleChangeFilter, //
+  } = useFilterData({ initialFilter });
 
   const { postId } = useParams();
   const [searchParams] = useSearchParams();
@@ -62,6 +74,7 @@ export default function SessionApplicantManagementDetail() {
 
   const {
     applicantList,
+    totalPages,
     isApplicantListLoading,
     checkedList,
 
@@ -74,6 +87,7 @@ export default function SessionApplicantManagementDetail() {
     rejectApplicant,
     isPending,
   } = useHandleSessionApplicantList({
+    ...tableFilter,
     sessionId: session?.sessionId || +currSessionId!,
     searchParticipantStatus:
       tabName === 'ALL' ? undefined : (tabName as AppliedSessionStatusKey),
@@ -193,38 +207,41 @@ export default function SessionApplicantManagementDetail() {
       <Header
         title="특강 / 행사 신청 현황"
         subTitleChildren={
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <span className="text-[#A2C27D]">
               {noticeDetail?.title} {session.ordinal}회차
             </span>
-            <div className="flex items-center gap-1">
-              <span className="text-[15px] text-darkGray">일자</span>
-              <BsCalendar size={13} className="text-darkGray" />{' '}
-              <span className="text-[15px] text-darkGray">
-                {formatDate(session.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
-              </span>
-            </div>
 
-            <div className="flex items-center gap-1">
-              <span className="text-[15px] text-darkGray">시간</span>
-              <BsClock size={13} className="text-darkGray" />
-              <span className="text-[15px] text-darkGray">
-                {formatDate(session.sessionStartDateTime, 'HH:mm')}~
-                {formatDate(session.sessionEndDateTime, 'HH:mm')}
-              </span>
-            </div>
+            <div className="flex gap-x-4">
+              <div className="flex items-center gap-1">
+                <span className="text-[15px] text-darkGray">일자</span>
+                <BsCalendar size={13} className="text-darkGray" />{' '}
+                <span className="text-[15px] text-darkGray">
+                  {formatDate(session.sessionStartDateTime, 'yyyy.MM.dd')}{' '}
+                </span>
+              </div>
 
-            <div className="flex items-center gap-1">
-              <span className="text-[15px] text-darkGray">마감</span>
-              <BsCalendar2Minus size={13} className="text-darkGray" />
-              <span className="text-[15px] text-darkGray">
-                {formatDate(
-                  noticeDetail?.applicationEndDateTime,
-                  'yyyy.MM.dd HH:mm',
-                )}{' '}
-                {noticeDetail?.applicationEndDateTime &&
-                  `(D${getDDay(noticeDetail?.applicationEndDateTime)})`}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-[15px] text-darkGray">시간</span>
+                <BsClock size={13} className="text-darkGray" />
+                <span className="text-[15px] text-darkGray">
+                  {formatDate(session.sessionStartDateTime, 'HH:mm')}~
+                  {formatDate(session.sessionEndDateTime, 'HH:mm')}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <span className="text-[15px] text-darkGray">마감</span>
+                <BsCalendar2Minus size={13} className="text-darkGray" />
+                <span className="text-[15px] text-darkGray">
+                  {formatDate(
+                    noticeDetail?.applicationEndDateTime,
+                    'yyyy.MM.dd HH:mm',
+                  )}{' '}
+                  {noticeDetail?.applicationEndDateTime &&
+                    `(D${getDDay(noticeDetail?.applicationEndDateTime)})`}
+                </span>
+              </div>
             </div>
           </div>
         }
@@ -289,87 +306,98 @@ export default function SessionApplicantManagementDetail() {
           className="h-full rounded-[20px] bg-lightGray py-20"
         />
       ) : (
-        <ul className="space-y-4">
-          {!isApplicantListLoading &&
-            applicantList?.map(
-              ({
-                noticeParticipantId,
-                userName,
-                campuses,
-                courses,
-                email,
-                phoneNumber,
-                applicationDateTime,
-                status,
-              }) => {
-                const userCampuses = campuses
-                  ?.map(({ name }) => name.slice(0, -3))
-                  .join(', ');
+        <>
+          <ul className="space-y-4">
+            {!isApplicantListLoading &&
+              applicantList?.map(
+                ({
+                  noticeParticipantId,
+                  userName,
+                  campuses,
+                  courses,
+                  email,
+                  phoneNumber,
+                  applicationDateTime,
+                  status,
+                }) => {
+                  const userCampuses = campuses
+                    ?.map(({ name }) => name.slice(0, -3))
+                    .join(', ');
 
-                return (
-                  <li key={noticeParticipantId} className="flex items-center">
-                    {getSessionStatus(session.sessionEndDateTime) ===
-                      'ACTIVE' && (
-                      <Checkbox
-                        id="applicant"
-                        checked={
-                          !!checkedList.find(
-                            ({ participantId: id }) =>
-                              id === noticeParticipantId,
-                          )
-                        }
-                        onChange={() =>
-                          onCheckedChange({
-                            noticeParticipantId,
-                            status,
-                            userName,
-                          })
-                        }
-                        inputClassName="bg-white !size-5 !mr-3"
-                      />
-                    )}
+                  return (
+                    <li key={noticeParticipantId} className="flex items-center">
+                      {getSessionStatus(session.sessionEndDateTime) ===
+                        'ACTIVE' && (
+                        <Checkbox
+                          id="applicant"
+                          checked={
+                            !!checkedList.find(
+                              ({ participantId: id }) =>
+                                id === noticeParticipantId,
+                            )
+                          }
+                          onChange={() =>
+                            onCheckedChange({
+                              noticeParticipantId,
+                              status,
+                              userName,
+                            })
+                          }
+                          inputClassName="bg-white !size-5 !mr-3"
+                        />
+                      )}
 
-                    <div
-                      className={`relative w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:text-center [&>span]:truncate`}
-                    >
-                      <span className="text-darkGray-active" title={userName}>
-                        {userName}
-                      </span>
-                      <span
-                        className="text-darkGray-active"
-                        title={`${userCampuses}` || '정보 없음'}
+                      <div
+                        className={`relative w-full ${gridStyle} items-center rounded-2xl bg-white py-4 shadow-card [&>*]:text-center [&>span]:truncate`}
                       >
-                        {`${userCampuses}` || '정보 없음'}
-                      </span>
+                        <span className="text-darkGray-active" title={userName}>
+                          {userName}
+                        </span>
+                        <span
+                          className="text-darkGray-active"
+                          title={`${userCampuses}` || '정보 없음'}
+                        >
+                          {`${userCampuses}` || '정보 없음'}
+                        </span>
 
-                      <MyCourseListWithHover
-                        courseList={courses.map(({ name }) => ({
-                          courseTitle: name,
-                        }))}
-                        hoverBoxClassName="w-[400px]"
-                      />
+                        <MyCourseListWithHover
+                          courseList={courses.map(({ name }) => ({
+                            courseTitle: name,
+                          }))}
+                          hoverBoxClassName="w-[400px]"
+                        />
 
-                      <span className="text-darkGray-active" title={email}>
-                        {email}
-                      </span>
-                      <span
-                        className="text-darkGray-active"
-                        title={phoneNumber}
-                      >
-                        {phoneNumber}
-                      </span>
-                      <span className="text-darkGray-active">
-                        {formatDate(applicationDateTime, 'MM.dd HH:mm') || '-'}
-                      </span>
-                      <span className={` ${STATUS_STYLES[status]}`}>
-                        {appliedSessionStatusObj[status]}
-                      </span>
-                    </div>
-                  </li>
-                );
-              },
-            )}
-        </ul>
+                        <span className="text-darkGray-active" title={email}>
+                          {email}
+                        </span>
+                        <span
+                          className="text-darkGray-active"
+                          title={phoneNumber}
+                        >
+                          {phoneNumber}
+                        </span>
+                        <span className="text-darkGray-active">
+                          {formatDate(applicationDateTime, 'MM.dd HH:mm') ||
+                            '-'}
+                        </span>
+                        <span className={` ${STATUS_STYLES[status]}`}>
+                          {appliedSessionStatusObj[status]}
+                        </span>
+                      </div>
+                    </li>
+                  );
+                },
+              )}
+          </ul>
+
+          <Pagination
+            totalPages={totalPages}
+            currentPage={tableFilter.page}
+            onPageChange={(page: number) => {
+              handleChangeFilter({ page });
+            }}
+          />
+        </>
       )}
     </MainView>
   );

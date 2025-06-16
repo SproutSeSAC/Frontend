@@ -11,8 +11,7 @@ import { extractValidParams } from '@/utils';
 export const useGetLoungeProjectList = (params: LoungeProjectFilter) => {
   const [searchParams] = useSearchParams();
 
-  const { page, size, position, techStack, meetingType, sort, keyword } =
-    params;
+  const { position, techStack, meetingType, sort, keyword, ...rest } = params;
 
   const tabParams =
     extractValidParams(searchParams).pType === 'ALL'
@@ -36,15 +35,16 @@ export const useGetLoungeProjectList = (params: LoungeProjectFilter) => {
 
   const sortParams = sort ? { sort } : {};
 
+  const keywordParams = keyword ? { keyword } : {};
+
   const newParams = {
-    page,
-    size,
-    keyword,
+    ...rest,
     ...sortParams,
     ...positionParams,
     ...techStackParams,
     ...meetingTypeParams,
     ...onScrapedParams,
+    ...keywordParams,
   };
 
   const isEditing = extractValidParams(searchParams).pType === 'EDIT';
@@ -54,7 +54,7 @@ export const useGetLoungeProjectList = (params: LoungeProjectFilter) => {
     queryFn: async () => {
       const { data } = await axiosInstance.get<LoungeDto.GetProjectList>(
         '/project',
-        { params: newParams },
+        { params: { ...newParams, page: newParams.page - 1 } },
       );
       return data;
     },

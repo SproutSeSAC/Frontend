@@ -1,4 +1,5 @@
 import { appliedSessionStatusObj, sessionStatusObj } from '@/constants';
+import { PaginationFilter } from '@/types/pageable';
 
 export * from '@/types/session/participantDto';
 export * from '@/types/session/sessionDto';
@@ -14,9 +15,7 @@ export type AppliedSessionStatusKey = keyof AppliedSessionStatusObj;
 export type AppliedSessionStatusValue =
   AppliedSessionStatusObj[AppliedSessionStatusKey];
 
-export type SessionFilter = {
-  page: number;
-  size: number;
+export type SessionFilter = PaginationFilter & {
   keyword: string;
   applicationStatus?: 'ACTIVE' | 'INACTIVE';
 };

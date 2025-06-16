@@ -83,10 +83,10 @@ export default function LoungeForm() {
   const { data: projectsDetail } = useGetPostDetail<LoungeDto.GetProjectDetail>(
     Number(modifyProjectId || 0),
   );
-  const { mutateAsync: postProject } =
+  const { mutateAsync: postProject, isPending: isPostProjectPending } =
     usePostMyPost<LoungeDto.PostProjectParams>();
 
-  const { mutateAsync: putProject } =
+  const { mutateAsync: putProject, isPending: isEditProjectPending } =
     usePutMyPost<LoungeDto.PostProjectParams>();
 
   const { techStackList } = useTechStackList();
@@ -114,6 +114,8 @@ export default function LoungeForm() {
   const { handleImagesInHtmlContent } = useHandleImage();
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
+    if (isPostProjectPending || isEditProjectPending) return;
+
     const descriptionWithHandledImage = await handleImagesInHtmlContent(
       data.projectDescription,
       modifyProjectId ? projectsDetail?.description : undefined,

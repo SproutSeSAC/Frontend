@@ -129,41 +129,43 @@ export default function UserPostCollection({
       <PostCollectionTabList<UserCollection>
         collectionList={['게시글', '댓글', '찜한 글']}
         currCollection={currCollection}
-        onTabClick={onCollectionTabClick}
+        onTabClick={(collection: UserCollection) => {
+          handleChangeFilter({ postTypes: [], page: 1 });
+          onCollectionTabClick(collection);
+        }}
         user={{ userId, username }}
       />
 
       {currCollection !== '찜한 글' && (
         <div className="flex flex-col gap-y-6">
           <div className="flex !min-h-[270px] flex-1 flex-col rounded-[20px] border border-mainGray-hover bg-white px-4 py-5 pb-4">
-            {!isUserPostListLoading && !isUserCommentListLoading && (
-              <TableContainer colWidthList={[18, 20, 55]}>
-                <TableHeader<UserCollection>
-                  headerCellList={headerCellList}
-                  currCollection={currCollection}
-                  onChangeOrder={onChangeOrder}
-                  categoryOptionList={contentList.categoryOptionList}
-                  checkedCategoryOptionList={checkedCategoryOptionList}
-                  onChangeCategory={onChangeCategory}
-                />
+            <TableContainer colWidthList={[18, 20, 55]}>
+              <TableHeader<UserCollection>
+                headerCellList={headerCellList}
+                currCollection={currCollection}
+                onChangeOrder={onChangeOrder}
+                categoryOptionList={contentList.categoryOptionList}
+                checkedCategoryOptionList={checkedCategoryOptionList}
+                onChangeCategory={onChangeCategory}
+              />
 
-                <TableBody<UserPost | UserComment>
-                  colLength={3}
-                  paginationList={currPostList?.content || []}
-                >
-                  {post => (
-                    <PostTableRow
-                      headerCellList={headerCellList}
-                      handleShowDialog={handleShowDialog}
-                      post={post}
-                    />
-                  )}
-                </TableBody>
-              </TableContainer>
-            )}
+              <TableBody<UserPost | UserComment>
+                colLength={3}
+                paginationList={currPostList?.content || []}
+                isLoading={isUserPostListLoading || isUserCommentListLoading}
+              >
+                {post => (
+                  <PostTableRow
+                    headerCellList={headerCellList}
+                    handleShowDialog={handleShowDialog}
+                    post={post}
+                  />
+                )}
+              </TableBody>
+            </TableContainer>
           </div>
 
-          {currPostList?.content?.length !== 0 && (
+          {currPostList?.content?.length !== 0 && totalPage && (
             <Pagination
               totalPages={totalPage || 1}
               currentPage={tableFilter.page}

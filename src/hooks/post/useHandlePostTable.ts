@@ -70,7 +70,7 @@ export const useHandlePostTable = <T extends string>({
 
   const onChangeCategory = (optionList: Option[]) => {
     const postTypes = optionList.map(({ key }) => key as PostTypeKey);
-    handleChangeFilter({ postTypes });
+    handleChangeFilter({ postTypes, page: 1 });
   };
 
   const onChangeOrder = () => {

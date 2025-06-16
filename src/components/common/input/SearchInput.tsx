@@ -50,7 +50,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         className={`flex h-12 w-[422px] items-center justify-between bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${inputStyle === 'rounded' ? 'rounded-full' : 'rounded-xl'} px-4 ${!isFocus && 'text-gray-400'} ${className}`}
         htmlFor={name}
       >
-        {!isFocus && <FaMagnifyingGlass />}
+        {!isFocus && <FaMagnifyingGlass className="mr-2" />}
         <TextInput
           ref={ref}
           name={name}
@@ -59,7 +59,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           onChange={onChange}
           toggleFocus={onToggleFocus}
           onEnter={handlePressEnter}
-          className="ml-2 border-none px-0"
+          className="border-none px-0"
         />
         {value && value !== '' && (
           <button type="button" onClick={resetChange}>
