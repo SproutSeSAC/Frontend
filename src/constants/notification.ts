@@ -96,4 +96,5 @@ export const NOTIFICATION_ROUTE: Record<number, string> = {
   11: '/',
   12: '/',
   13: '/session-status',
+  14: '/admin/applicants-status/{id}?sessionId={session}&tab=ALL',
 };
