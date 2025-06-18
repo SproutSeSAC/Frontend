@@ -26,7 +26,11 @@ export default function CardContent({ notification }: CardContentProps) {
 
   const getNotificationUrl = (inputNotiType: number, urlId: string) => {
     const routeUrl = NOTIFICATION_ROUTE[inputNotiType];
-    return routeUrl?.replace('{id}', urlId);
+    const urls = urlId.split(',');
+    if (urls.length === 1) {
+      return routeUrl?.replace('{id}', urlId);
+    }
+    return routeUrl?.replace('{id}', urls[0]).replace('{session}', urls[1]);
   };
 
   return (
