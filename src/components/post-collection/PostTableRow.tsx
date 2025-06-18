@@ -14,7 +14,7 @@ interface PostTableRowProps {
   headerCellList: Header[];
   post: UserPost | UserComment;
   checkedPostIdList?: number[];
-  onPostCheckboxChange?: (postId: number) => void;
+  onCheckboxChange?: (postId: number) => void;
   handleShowDialog?: (
     postType: 'MEAL' | 'STORE',
     linkedId: number,
@@ -24,11 +24,14 @@ interface PostTableRowProps {
   onDeleteConfirmClick?: (postId: number) => void;
 }
 
+// 내가 쓴 댓글은 commentId로 적용
+// 내가 쓴 글은 postId로 적용...
+
 export default function PostTableRow({
   headerCellList,
   post,
   checkedPostIdList,
-  onPostCheckboxChange,
+  onCheckboxChange,
   handleShowDialog,
   deleteDisabled,
   onDeleteConfirmClick,
@@ -45,16 +48,18 @@ export default function PostTableRow({
   const nickname =
     (post as UserPost)?.createdNickName || (post as UserComment)?.userNickname;
 
+  const id = (post as UserComment)?.commentId || (post as UserPost)?.postId;
+
   return (
     <tr className="hover:bg-gray4 group">
       {headerCellList.includes('체크박스') &&
         checkedPostIdList &&
-        onPostCheckboxChange && (
+        onCheckboxChange && (
           <TableDataCell className="!p-0 [&>label>input]:mr-0 [&>label>input]:size-5">
             <Checkbox
               id={postType}
-              checked={!!checkedPostIdList.includes(postId)}
-              onChange={() => onPostCheckboxChange(postId)}
+              checked={!!checkedPostIdList.includes(id)}
+              onChange={() => onCheckboxChange(id)}
               inputClassName="!rounded-lg"
             />
           </TableDataCell>
@@ -103,7 +108,7 @@ export default function PostTableRow({
         <TableDataCell className="[&>button]:px-2">
           <TrashButton
             className="px-1.5 py-2"
-            onConfirmClick={() => onDeleteConfirmClick(postId)}
+            onConfirmClick={() => onDeleteConfirmClick(id)}
             disabled={deleteDisabled}
           />
         </TableDataCell>

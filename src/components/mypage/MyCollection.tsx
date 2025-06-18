@@ -41,7 +41,7 @@ export default function MyCollection() {
   const initialFilter: MyPostDto.GetPostListParams = {
     page: 1,
     size: 3,
-    // order: 'latest',
+    // order: 'latest',  NOTE: 최신순 정렬 적용 필요
   };
 
   const {
@@ -72,10 +72,10 @@ export default function MyCollection() {
     currPostList,
     page: { totalPage },
     postCheckbox: {
-      checkedPostIdList,
+      currCheckedIdList,
       isCheckBoxChecked,
-      onCheckBoxClick,
-      onPostCheckboxChange,
+      onHeaderCheckBoxClick,
+      onTableItemCheckboxChange,
       initializePostCheckedBoxList,
     },
     deletePost: {
@@ -147,14 +147,14 @@ export default function MyCollection() {
                 currCollection={currCollection}
                 isCheckBoxChecked={isCheckBoxChecked}
                 disabledCheckBox={false}
-                onCheckboxClick={onCheckBoxClick}
+                onCheckboxClick={onHeaderCheckBoxClick}
                 onChangeOrder={onChangeOrder}
                 categoryOptionList={contentList.categoryOptionList}
                 checkedCategoryOptionList={checkedCategoryOptionList}
                 onChangeCategory={onChangeCategory}
                 disabledDelete={disabledDelete}
                 onDeleteConfirmClick={() =>
-                  onDeleteConfirmClick(currCollection, checkedPostIdList)
+                  onDeleteConfirmClick(currCollection, currCheckedIdList)
                 }
               />
               <TableBody<UserPost | UserComment>
@@ -167,8 +167,8 @@ export default function MyCollection() {
                     headerCellList={headerCellList}
                     post={post}
                     handleShowDialog={handleShowDialog}
-                    checkedPostIdList={checkedPostIdList}
-                    onPostCheckboxChange={onPostCheckboxChange}
+                    checkedPostIdList={currCheckedIdList}
+                    onCheckboxChange={onTableItemCheckboxChange}
                     onDeleteConfirmClick={(postId: number) =>
                       onDeleteConfirmClick(currCollection, [postId])
                     }

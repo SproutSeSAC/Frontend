@@ -81,7 +81,7 @@ export default function Home() {
       </Header>
 
       <div className="mb-14 grid grid-cols-[1.2fr_1fr_1fr] grid-rows-[auto_auto] gap-x-8">
-        <section className="relative overflow-hidden">
+        <section className="relative h-full overflow-hidden">
           <Title title="나의 새싹 정보" className="mb-[14px]" />
           <MyCourseProgressCard />
         </section>

@@ -31,22 +31,22 @@ export const useHandlePostTable = <T extends string>({
 }: UseHandlePostTableProps<T>) => {
   const queryClient = useQueryClient();
 
-  const [checkedPostIdList, setCheckedPostIdList] = useState<number[]>([]);
+  const [currCheckedIdList, setCurrCheckedIdList] = useState<number[]>([]);
 
-  const onPostCheckboxChange = (postId: number) => {
-    setCheckedPostIdList(prev => {
-      if (prev.includes(postId)) {
-        return prev.filter(checkedPostId => checkedPostId !== postId);
+  const onTableItemCheckboxChange = (Id: number) => {
+    setCurrCheckedIdList(prev => {
+      if (prev.includes(Id)) {
+        return prev.filter(checkedPostId => checkedPostId !== Id);
       }
-      return [...prev, postId];
+      return [...prev, Id];
     });
   };
 
   const onPostCheckboxListChange = (postIdList: number[]) => {
-    setCheckedPostIdList(postIdList);
+    setCurrCheckedIdList(postIdList);
   };
 
-  const initializePostCheckedBoxList = () => setCheckedPostIdList([]);
+  const initializePostCheckedBoxList = () => setCurrCheckedIdList([]);
 
   const { mutateAsync: deletePost, isPending: isDeletePostPending } =
     useDeleteMyPost();
@@ -56,11 +56,11 @@ export const useHandlePostTable = <T extends string>({
 
   const isCheckBoxChecked =
     contentList?.content.length !== 0 &&
-    checkedPostIdList.length === contentList?.content.length;
+    currCheckedIdList.length === contentList?.content.length;
 
-  const onCheckBoxClick = () => {
+  const onHeaderCheckBoxClick = () => {
     const idList = contentList?.content.map(({ postId }) => postId) || [];
-    const checkedIdList = checkedPostIdList.length !== 0 ? [] : idList;
+    const checkedIdList = currCheckedIdList.length !== 0 ? [] : idList;
     return onPostCheckboxListChange(checkedIdList);
   };
 
@@ -79,7 +79,7 @@ export const useHandlePostTable = <T extends string>({
   };
 
   const disabledDelete =
-    contentList?.content.length === 0 || checkedPostIdList.length === 0;
+    contentList?.content.length === 0 || currCheckedIdList.length === 0;
 
   const onDeleteConfirmClick = (collection: T, postIdList: number[]) => {
     initializePostCheckedBoxList();
@@ -106,10 +106,10 @@ export const useHandlePostTable = <T extends string>({
       currentPage: contentList?.number,
     },
     postCheckbox: {
-      checkedPostIdList,
+      currCheckedIdList,
       isCheckBoxChecked,
-      onCheckBoxClick,
-      onPostCheckboxChange,
+      onHeaderCheckBoxClick,
+      onTableItemCheckboxChange,
       initializePostCheckedBoxList,
     },
     order: {
