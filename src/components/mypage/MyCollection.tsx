@@ -167,7 +167,7 @@ export default function MyCollection() {
                     headerCellList={headerCellList}
                     post={post}
                     handleShowDialog={handleShowDialog}
-                    checkedPostIdList={currCheckedIdList}
+                    checkedIdList={currCheckedIdList}
                     onCheckboxChange={onTableItemCheckboxChange}
                     onDeleteConfirmClick={(postId: number) =>
                       onDeleteConfirmClick(currCollection, [postId])

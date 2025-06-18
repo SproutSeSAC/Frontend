@@ -10,32 +10,29 @@ import TrashButton from '@/components/common/button/TrashButton';
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
 
-interface PostTableRowProps {
+interface PostTableRowProps<T> {
   headerCellList: Header[];
-  post: UserPost | UserComment;
-  checkedPostIdList?: number[];
-  onCheckboxChange?: (postId: number) => void;
+  post: T;
+  checkedIdList?: number[];
+  onCheckboxChange?: (id: number) => void;
   handleShowDialog?: (
     postType: 'MEAL' | 'STORE',
     linkedId: number,
     data: { comment: string; nickname: string },
   ) => void;
   deleteDisabled?: boolean;
-  onDeleteConfirmClick?: (postId: number) => void;
+  onDeleteConfirmClick?: (id: number) => void;
 }
 
-// 내가 쓴 댓글은 commentId로 적용
-// 내가 쓴 글은 postId로 적용...
-
-export default function PostTableRow({
+export default function PostTableRow<T extends UserPost | UserComment>({
   headerCellList,
   post,
-  checkedPostIdList,
+  checkedIdList,
   onCheckboxChange,
   handleShowDialog,
   deleteDisabled,
   onDeleteConfirmClick,
-}: PostTableRowProps) {
+}: PostTableRowProps<T>) {
   const { createdAt, postId, postType } = post;
 
   const type = {
@@ -44,21 +41,33 @@ export default function PostTableRow({
     STUDY: 'lounge',
   };
 
-  const title = (post as UserPost)?.title || (post as UserComment)?.content;
-  const nickname =
-    (post as UserPost)?.createdNickName || (post as UserComment)?.userNickname;
+  function isUserComment(data: UserPost | UserComment): data is UserComment {
+    return 'commentId' in data;
+  }
 
-  const id = (post as UserComment)?.commentId || (post as UserPost)?.postId;
+  const data = isUserComment(post)
+    ? {
+        id: post?.commentId,
+        title: post.content,
+        nickname: post.userNickname,
+      }
+    : {
+        id: post.postId,
+        title: post.title,
+        nickname: post.createdNickName,
+      };
+
+  const { id, title, nickname } = data;
 
   return (
     <tr className="hover:bg-gray4 group">
       {headerCellList.includes('체크박스') &&
-        checkedPostIdList &&
+        checkedIdList &&
         onCheckboxChange && (
           <TableDataCell className="!p-0 [&>label>input]:mr-0 [&>label>input]:size-5">
             <Checkbox
               id={postType}
-              checked={!!checkedPostIdList.includes(id)}
+              checked={!!checkedIdList.includes(id)}
               onChange={() => onCheckboxChange(id)}
               inputClassName="!rounded-lg"
             />

@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 
+import { UserComment, UserPost } from '@/types';
+
 import LoopLoading from '@/components/common/LoopLoading';
 
 interface TableBodyProps<T> {
@@ -10,7 +12,7 @@ interface TableBodyProps<T> {
   isLoading: boolean;
 }
 
-export default function TableBody<T extends { createdAt: string }>({
+export default function TableBody<T extends UserPost | UserComment>({
   paginationList,
   children,
   colLength,
