@@ -21,7 +21,7 @@ import LoungeForm from '@/components/lounge/form/LoungeForm';
 
 const initialFilter: LoungeProjectFilter = {
   page: 1,
-  size: 20,
+  size: 21,
   keyword: '',
 };
 
