@@ -11,6 +11,8 @@ import { useGetSessionApplicantList } from '@/services/session/sessionsQueries';
 import { Applicant, AppliedSessionStatusKey } from '@/types';
 
 interface UseHandleSessionApplicantListProps {
+  page: number;
+  size: number;
   sessionId: number;
   searchParticipantStatus?: AppliedSessionStatusKey;
 }
@@ -23,10 +25,9 @@ const initialApplicantList = {
   nextPage: null,
 };
 
-export const useHandleSessionApplicantList = ({
-  sessionId,
-  searchParticipantStatus,
-}: UseHandleSessionApplicantListProps) => {
+export const useHandleSessionApplicantList = (
+  params: UseHandleSessionApplicantListProps,
+) => {
   const [checkedList, setCheckedList] = useState<
     { participantId: number; name: string; status: AppliedSessionStatusKey }[]
   >([]);
@@ -34,18 +35,13 @@ export const useHandleSessionApplicantList = ({
   const queryClient = useQueryClient();
 
   const {
-    data: { content: applicantList = [] } = initialApplicantList,
+    data: { content: applicantList = [], totalPages } = initialApplicantList,
     isLoading: isApplicantListLoading,
-  } = useGetSessionApplicantList({
-    sessionId,
-    page: 1,
-    size: 10,
-    searchParticipantStatus,
-  });
+  } = useGetSessionApplicantList(params);
 
   const invalidateQueries = async () => {
     await queryClient.invalidateQueries({
-      queryKey: ['useGetSessionApplicantList', sessionId],
+      queryKey: ['useGetSessionApplicantList', params.sessionId],
     });
   };
 
@@ -96,6 +92,7 @@ export const useHandleSessionApplicantList = ({
 
   return {
     applicantList,
+    totalPages,
     isApplicantListLoading,
     checkedList,
     onCheckedChange,

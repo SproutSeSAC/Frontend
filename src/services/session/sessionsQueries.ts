@@ -4,7 +4,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { AppliedSessionStatusKey, SessionDto } from '@/types';
+import { AppliedSessionStatusKey, PaginationFilter, SessionDto } from '@/types';
 
 /** TRAINEE API */
 export const useGetAppliedSessionList = (type = 'allList') => {
@@ -25,10 +25,7 @@ export const useGetAppliedSessionList = (type = 'allList') => {
 export const useGetNoticeSessionList = ({
   filterParams,
 }: {
-  filterParams: {
-    page: number;
-    size: number;
-  };
+  filterParams: PaginationFilter;
 }) => {
   const [searchParams] = useSearchParams();
   const tabName = searchParams.get('tab');
@@ -40,56 +37,42 @@ export const useGetNoticeSessionList = ({
 
   return useInfiniteQuery({
     queryKey: ['useGetNoticeSessionList', params],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam = 0 }) => {
       const { data } = await axiosInstance.get<SessionDto.GetNoticeSessionList>(
         `/notices/sessions`,
         {
           params: {
             ...params,
-            offset: (pageParam - 1) * filterParams.size,
+            offset: pageParam * filterParams.size,
             page: pageParam,
           },
         },
       );
 
-      const hasNextPage = !data?.isLastPage;
-
-      const nextPage = hasNextPage ? pageParam + 1 : undefined;
-
       return {
         noticeSessionList: data.noticeSession,
         currentPage: pageParam,
-        offset: (pageParam - 1) * filterParams.size,
-        nextPage,
+        offset: pageParam * filterParams.size,
+        nextPage: !data?.isLastPage ? pageParam + 1 : undefined,
       };
     },
     getNextPageParam: lastPage => lastPage.nextPage,
-    initialPageParam: 1,
+    initialPageParam: 0,
   });
 };
 
-export const useGetSessionApplicantList = ({
-  sessionId,
-  page = 1,
-  size = 10,
-  searchParticipantStatus,
-}: {
+export const useGetSessionApplicantList = (params: {
   sessionId: number;
-  page?: number;
-  size?: number;
+  page: number;
+  size: number;
   searchParticipantStatus?: AppliedSessionStatusKey;
 }) => {
   const getSessionApplicantList = async () => {
     const { data } =
       await axiosInstance.get<SessionDto.GetSessionApplicantList>(
-        `/notices/sessions/${sessionId}`,
+        `/notices/sessions/${params.sessionId}`,
         {
-          params: {
-            sessionId,
-            page,
-            size,
-            searchParticipantStatus,
-          },
+          params: { ...params, page: params.page - 1 },
         },
       );
     return {
@@ -102,12 +85,8 @@ export const useGetSessionApplicantList = ({
     };
   };
   return useQuery<SessionDto.GetSessionApplicantList>({
-    queryKey: [
-      'useGetSessionApplicantList',
-      sessionId,
-      searchParticipantStatus,
-    ],
+    queryKey: ['useGetSessionApplicantList', params],
     queryFn: getSessionApplicantList,
-    enabled: !!Number(sessionId),
+    enabled: !!Number(params.sessionId),
   });
 };

@@ -34,31 +34,27 @@ export const useGetInfiniteNoticeList = (filterParams: NoticeFilter) => {
 
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteNoticeList', noticeFilerParams],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam = 0 }) => {
       const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
         `/notices`,
         {
           params: {
             ...noticeFilerParams,
-            offset: (pageParam - 1) * filterParams.size,
             page: pageParam,
+            offset: pageParam * filterParams.size,
           },
         },
       );
 
-      const hasNextPage = !data.isLastPage;
-
-      const nextPage = hasNextPage ? pageParam + 1 : undefined;
-
       return {
         notices: data.notices,
         currentPage: pageParam,
-        offset: (pageParam - 1) * filterParams.size,
-        nextPage,
+        offset: pageParam * filterParams.size,
+        nextPage: !data.isLastPage ? pageParam + 1 : undefined,
       };
     },
     getNextPageParam: lastPage => lastPage.nextPage,
-    initialPageParam: 1,
+    initialPageParam: 0,
   });
 };
 
@@ -67,16 +63,16 @@ export const useGetInfiniteSessionNoticeList = (
 ) => {
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteSessionNoticeList', filterParams],
-    queryFn: async ({ pageParam = 1 }) => {
-      const offset = (pageParam - 1) * filterParams.size;
+    queryFn: async ({ pageParam = 0 }) => {
+      const offset = pageParam * filterParams.size;
 
       const [specialLectureRes, eventRes] = await Promise.all([
         axiosInstance.get<NoticeDto.GetNoticeList>(`/notices`, {
           params: {
             ...filterParams,
             noticeType: 'SPECIAL_LECTURE',
-            offset,
             page: pageParam,
+            offset,
           },
         }),
         axiosInstance.get<NoticeDto.GetNoticeList>(`/notices`, {
@@ -105,7 +101,7 @@ export const useGetInfiniteSessionNoticeList = (
       };
     },
     getNextPageParam: lastPage => lastPage.nextPage,
-    initialPageParam: 1,
+    initialPageParam: 0,
   });
 };
 
@@ -113,7 +109,7 @@ export const useGetThisWeekNoticeList = () => {
   const getThisWeekNotice = async () => {
     const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
       `/notices`,
-      { params: { page: 1, size: 20 } },
+      { params: { page: 0, size: 20 } },
     );
     const thisWeekNotice = data.notices
       .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))

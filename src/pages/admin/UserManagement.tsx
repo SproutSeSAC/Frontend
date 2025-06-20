@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import {
   UserManagementFilter,
   useGetInfiniteTraineeList,
@@ -38,7 +40,7 @@ type InitialFilter = Pick<
 
 const initialFilter: InitialFilter = {
   page: 1,
-  size: 7,
+  size: 10,
   keyword: '',
 };
 
@@ -64,16 +66,28 @@ export default function UserManagement() {
     selectedCampusOption,
     courseOptionList,
     selectedCourseOption,
-    courseListByCampus,
+    courseListByCampusData,
   } = useFilterCampusCourse({ selectedCampusId, selectedCourseId });
 
-  const userFilter = {
-    ...debouncedFilter,
-    campusId: selectedCampusId || campusOptionList[0]?.id,
-    courseId: selectedCourseId || courseOptionList[0]?.id,
-  };
+  const campusAndCourseId = useMemo(() => {
+    const selectAllCourseOption =
+      !selectedCampusId ||
+      selectedCampusId === 0 ||
+      !selectedCourseId ||
+      selectedCourseId === 0;
+
+    const courseId = !selectAllCourseOption
+      ? { courseId: selectedCourseId }
+      : {};
+
+    return selectedCampusId && selectedCampusId !== 0
+      ? { campusId: selectedCampusId, ...courseId }
+      : {};
+  }, [selectedCampusId, selectedCourseId]);
 
   const currTab = (tabName ?? 'trainee-list') as UserManagementTabType;
+
+  const userFilter = { ...debouncedFilter, ...campusAndCourseId };
 
   const { data: userList } = useGetInfiniteUserList(currTab, userFilter);
 
@@ -105,7 +119,13 @@ export default function UserManagement() {
             ? userManagementTabListForHasSuperAdmin
             : userManagementTabList
         }
-        onChangeValue={handleChangeTab}
+        onChangeValue={(type: string) => {
+          if (currTab !== type) {
+            setSelectedCampusId(campusOptionList[0].id);
+            setSelectedCourseId(courseOptionList[0].id);
+          }
+          handleChangeTab(type);
+        }}
         tabClassName="!p-3"
       />
 
@@ -115,18 +135,29 @@ export default function UserManagement() {
             defaultLabel="캠퍼스 선택"
             options={campusOptionList}
             selectedOption={selectedCampusOption}
-            onChangeValue={option => setSelectedCampusId(option[0].id)}
+            onChangeValue={option => {
+              if (selectedCampusId !== option[0].id) {
+                handleChangeFilter({ page: initialFilter.page });
+              }
+              setSelectedCampusId(option[0].id);
+            }}
             selectBoxClassName="w-full rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
         )}
 
-        {courseListByCampus?.length !== 0 && (
+        {courseListByCampusData[0]?.data?.length !== 0 && (
           <SingleSelectDropdown
             defaultLabel="교육과정 선택"
             options={courseOptionList}
             selectedOption={selectedCourseOption}
-            onChangeValue={option => setSelectedCourseId(option[0].id)}
+            onChangeValue={option => {
+              if (selectedCourseId !== option[0].id) {
+                setSelectedCourseId(courseOptionList[0].id);
+                handleChangeFilter({ page: initialFilter.page });
+              }
+              setSelectedCourseId(option[0].id);
+            }}
             selectBoxClassName="!max-w-[450px] rounded-xl border-0 justify-between items-center h-12"
             optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
@@ -136,7 +167,10 @@ export default function UserManagement() {
           name="search"
           value={currFilter.keyword}
           placeholder="이름을 입력해주세요."
-          onChange={handleChangeKeyword}
+          onChange={event => {
+            handleChangeFilter({ page: initialFilter.page });
+            handleChangeKeyword(event);
+          }}
           className="ml-auto text-lg"
           inputStyle="square"
           resetChange={handleResetFilter}

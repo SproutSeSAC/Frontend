@@ -61,7 +61,7 @@ export default function MyCourseProgressCard() {
         className="absolute right-2 top-0.5 text-darkGray-hover"
         onClick={openModalClick}
       />
-      <div className="flex flex-1 flex-col justify-between rounded-[20px] bg-white py-5">
+      <div className="flex h-[509px] flex-col justify-between rounded-[20px] bg-white py-5">
         <ul className="mb-4 flex gap-4 px-4">
           {[`D${DDay}`, `${progress}% 달성`].map(text => (
             <li key={text}>

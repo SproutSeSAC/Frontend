@@ -2,11 +2,13 @@ import { useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useDialogContext } from '@/hooks/common/useDialogContext';
+
 import { useDeleteComment } from '@/services/comment/commentMutations';
 import { useDeleteMyPost } from '@/services/post/postMutation';
 
 import { Option, PostTypeKey, UserManagementDto } from '@/types';
-import { MyPostDto } from '@/types/mypage/myPostDto';
+import { MyPostDto, UserComment, UserPost } from '@/types/mypage/myPostDto';
 
 type ContentList = {
   contentList?:
@@ -25,28 +27,29 @@ interface UseHandlePostTableProps<T> {
 }
 
 export const useHandlePostTable = <T extends string>({
+  currCollection,
   contentList: { contentList, categoryOptionList },
   tableFilter,
   handleChangeFilter,
 }: UseHandlePostTableProps<T>) => {
   const queryClient = useQueryClient();
 
-  const [checkedPostIdList, setCheckedPostIdList] = useState<number[]>([]);
+  const [currCheckedIdList, setCurrCheckedIdList] = useState<number[]>([]);
 
-  const onPostCheckboxChange = (postId: number) => {
-    setCheckedPostIdList(prev => {
-      if (prev.includes(postId)) {
-        return prev.filter(checkedPostId => checkedPostId !== postId);
+  const onTableItemCheckboxChange = (Id: number) => {
+    setCurrCheckedIdList(prev => {
+      if (prev.includes(Id)) {
+        return prev.filter(checkedPostId => checkedPostId !== Id);
       }
-      return [...prev, postId];
+      return [...prev, Id];
     });
   };
 
-  const onPostCheckboxListChange = (postIdList: number[]) => {
-    setCheckedPostIdList(postIdList);
+  const onPostCheckboxListChange = (idList: number[]) => {
+    setCurrCheckedIdList(idList);
   };
 
-  const initializePostCheckedBoxList = () => setCheckedPostIdList([]);
+  const initializePostCheckedBoxList = () => setCurrCheckedIdList([]);
 
   const { mutateAsync: deletePost, isPending: isDeletePostPending } =
     useDeleteMyPost();
@@ -56,11 +59,15 @@ export const useHandlePostTable = <T extends string>({
 
   const isCheckBoxChecked =
     contentList?.content.length !== 0 &&
-    checkedPostIdList.length === contentList?.content.length;
+    currCheckedIdList.length === contentList?.content.length;
 
-  const onCheckBoxClick = () => {
-    const idList = contentList?.content.map(({ postId }) => postId) || [];
-    const checkedIdList = checkedPostIdList.length !== 0 ? [] : idList;
+  const onHeaderCheckBoxClick = () => {
+    const idList = currCollection.includes('게시글')
+      ? (contentList?.content as UserPost[]).map(({ postId }) => postId)
+      : (contentList?.content as UserComment[]).map(({ commentId: id }) => id);
+
+    const checkedIdList = currCheckedIdList.length !== 0 ? [] : idList;
+
     return onPostCheckboxListChange(checkedIdList);
   };
 
@@ -70,7 +77,7 @@ export const useHandlePostTable = <T extends string>({
 
   const onChangeCategory = (optionList: Option[]) => {
     const postTypes = optionList.map(({ key }) => key as PostTypeKey);
-    handleChangeFilter({ postTypes });
+    handleChangeFilter({ postTypes, page: 1 });
   };
 
   const onChangeOrder = () => {
@@ -79,24 +86,46 @@ export const useHandlePostTable = <T extends string>({
   };
 
   const disabledDelete =
-    contentList?.content.length === 0 || checkedPostIdList.length === 0;
+    contentList?.content.length === 0 || currCheckedIdList.length === 0;
 
-  const onDeleteConfirmClick = (collection: T, postIdList: number[]) => {
+  const { showToast } = useDialogContext();
+
+  const handleBatchDelete = async (
+    deleteFn: (id: number) => void,
+    idList: number[],
+    queryKey: string[],
+  ) => {
+    const results = await Promise.allSettled(idList.map(deleteFn));
+    await queryClient.invalidateQueries({ queryKey });
+    const errorCounts = results.filter(r => r.status === 'rejected').length;
+
+    if (errorCounts) {
+      showToast(
+        `삭제 중 일부 항목에 오류가 발생하여 삭제하지 못했습니다. 오류 발생 항목 개수: ${errorCounts}`,
+      );
+    } else {
+      showToast('선택한 항목이 삭제되었습니다.');
+    }
+  };
+
+  const onDeleteConfirmClick = async (collection: T, idList: number[]) => {
+    if (collection.includes('게시글')) {
+      await handleBatchDelete(
+        id => deletePost({ postId: id }),
+        idList,
+        ['useGetMyPostList'], //
+      );
+    }
+
+    if (collection.includes('댓글')) {
+      await handleBatchDelete(
+        id => deleteComment({ commentId: id }),
+        idList,
+        ['useGetMyCommentList'], //
+      );
+    }
+
     initializePostCheckedBoxList();
-
-    return postIdList.map(async postId => {
-      if (collection.includes('게시글')) {
-        await deletePost({ postId });
-        await queryClient.invalidateQueries({ queryKey: ['useGetMyPostList'] });
-      }
-      if (collection.includes('댓글')) {
-        await deleteComment({ commentId: postId });
-        await queryClient.invalidateQueries({
-          queryKey: ['useGetMyCommentList'],
-        });
-      }
-      return postId;
-    });
   };
 
   return {
@@ -106,10 +135,10 @@ export const useHandlePostTable = <T extends string>({
       currentPage: contentList?.number,
     },
     postCheckbox: {
-      checkedPostIdList,
+      currCheckedIdList,
       isCheckBoxChecked,
-      onCheckBoxClick,
-      onPostCheckboxChange,
+      onHeaderCheckBoxClick,
+      onTableItemCheckboxChange,
       initializePostCheckedBoxList,
     },
     order: {

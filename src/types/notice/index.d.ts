@@ -1,6 +1,6 @@
 import { noticeCategoryDisplay, noticeTabDisplay } from '@/constants';
 import { NoticeDto } from '@/types/notice/noticeDto';
-import { PaginationFilter } from '@/types/serviceType';
+import { PaginationFilter } from '@/types/pageable';
 import { AppliedSessionStatusKey } from '@/types/session';
 import { HasAdminRole } from '@/types/user';
 
@@ -62,11 +62,11 @@ export type NoticeSession = {
 
 /* Notice 필터 */
 export type NoticeFilter = PaginationFilter & {
+  offset?: boolean;
   noticeType?: NoticeCategoryDisplayKey;
   roleType?: NoticeTabDisplayKey;
   keyword?: string;
   onlyScraped?: boolean;
-  offset?: boolean;
 };
 
 export type NoticeCommentParams = {

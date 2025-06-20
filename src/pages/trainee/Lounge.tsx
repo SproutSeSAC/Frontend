@@ -47,7 +47,7 @@ export default function Lounge() {
   const pType = searchParams.get('pType');
 
   const {
-    data: { projects = [], totalPages, currentPage } = initialProjectList,
+    data: { projects = [], totalPages } = initialProjectList,
     isLoading,
   } = useGetLoungeProjectList(debouncedFilter);
 
@@ -171,7 +171,7 @@ export default function Lounge() {
       {projects.length !== 0 && (
         <Pagination
           totalPages={totalPages}
-          currentPage={currentPage}
+          currentPage={currFilter.page}
           onPageChange={(pageNumber: number) => {
             handleChangeFilter({ page: pageNumber });
           }}

@@ -12,12 +12,12 @@ export const useGetMyPostList = (
   const postTypes =
     params.postTypes && params.postTypes.length !== 0
       ? { postTypes: params.postTypes?.join(',') }
-      : {};
+      : { postTypes: 'PROJECT,STUDY,MEAL' };
 
   const getMyPostList = async () => {
     const { data: postList } = await axiosInstance.get<MyPostDto.GetPostList>(
       `/mypage/getPost`,
-      { params: { ...params, ...postTypes } },
+      { params: { ...params, page: params.page - 1, ...postTypes } },
     );
 
     return {
@@ -39,34 +39,6 @@ export const useGetMyPostList = (
   });
 };
 
-export const useGetMyScrapedPostList = (
-  collection: MyCollection,
-  params: PaginationFilter,
-) => {
-  const getMyScrapedPostList = async () => {
-    const { data: postList } =
-      await axiosInstance.get<MyPostDto.GetScrapedPostList>(
-        `/mypage/getScrap`,
-        { params },
-      );
-
-    return {
-      ...postList,
-      content: postList.content.map(({ postType, ptype, ...rest }) => {
-        return {
-          ...rest,
-          postType: postType === 'PROJECT' ? ptype : postType,
-        };
-      }),
-    };
-  };
-  return useQuery({
-    queryKey: ['useGetMyScrapedPostList', params],
-    queryFn: getMyScrapedPostList,
-    enabled: collection === '내가 찜한 글',
-  });
-};
-
 export const useGetMyCommentList = (
   collection: MyCollection,
   params: MyPostDto.GetPostListParams,
@@ -79,7 +51,7 @@ export const useGetMyCommentList = (
   const getMyCommentList = async () => {
     const { data } = await axiosInstance.get<MyPostDto.GetCommentList>(
       `/mypage/getComments`,
-      { params: { ...params, ...postTypes } },
+      { params: { ...params, page: params.page - 1, ...postTypes } },
     );
 
     return {
@@ -98,5 +70,33 @@ export const useGetMyCommentList = (
     queryKey: ['useGetMyCommentList', params],
     queryFn: getMyCommentList,
     enabled: collection === '내가 쓴 댓글',
+  });
+};
+
+export const useGetMyScrapedPostList = (
+  collection: MyCollection,
+  params: PaginationFilter,
+) => {
+  const getMyScrapedPostList = async () => {
+    const { data: postList } =
+      await axiosInstance.get<MyPostDto.GetScrapedPostList>(
+        `/mypage/getScrap`,
+        { params: { ...params, page: params.page - 1 } },
+      );
+
+    return {
+      ...postList,
+      content: postList.content.map(({ postType, ptype, ...rest }) => {
+        return {
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        };
+      }),
+    };
+  };
+  return useQuery({
+    queryKey: ['useGetMyScrapedPostList', params],
+    queryFn: getMyScrapedPostList,
+    enabled: collection === '내가 찜한 글',
   });
 };

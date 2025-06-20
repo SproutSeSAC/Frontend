@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import {
   initialUserProfile,
   useGetUserProfile,
@@ -20,28 +22,41 @@ export const useFilterCampusCourse = ({
    * 캠퍼스 목록
    * - 매니저가 '갖고 있는' 캠퍼스만 나타낸다.
    * */
-  const campusOptionList = campusList?.map(({ id, campusName }) => ({
-    id,
-    name: campusName,
-  }));
+  const campusOptionList = [
+    { id: 0, campusName: '전체캠퍼스' },
+    ...campusList,
+  ]?.map(({ id, campusName }) => ({ id, name: campusName }));
 
-  const currCampusId = selectedCampusId || campusList[0]?.id;
+  const currCampusId = selectedCampusId || campusOptionList[0]?.id;
 
   const selectedCampusOption = campusOptionList?.find(
     ({ id }) => id === currCampusId,
   );
 
-  const courseListByCampusData = useGetCourseListByCampus([currCampusId]);
-
-  const courseListByCampus = courseListByCampusData[0].data;
+  const courseListByCampusData = useGetCourseListByCampus(
+    currCampusId === 0 || !currCampusId ? [] : [currCampusId],
+  );
 
   /**
    * 캠퍼스별 교육과정 목록
    * - 매니저가 '갖고 있는' 캠퍼스별 교육과정만 나타낸다.
    */
-  const courseOptionList = (courseListByCampus || [])
-    .map(({ id, title: name }) => ({ id, name }))
-    .filter(({ id }) => !!courseList.find(({ courseId }) => courseId === id));
+  const courseOptionList = useMemo(() => {
+    const selectAllCourseOption = { id: 0, name: '전체 교육과정' };
+
+    if (selectedCampusId === 0 || !selectedCampusId) {
+      return [selectAllCourseOption];
+    }
+
+    const courseListByCampus = courseListByCampusData[0]?.data;
+    const allCourseList =
+      courseListByCampus?.map(({ id, title: name }) => ({ id, name })) || [];
+
+    return [selectAllCourseOption, ...allCourseList].filter(
+      ({ id }) =>
+        id === 0 || !!courseList.find(({ courseId }) => courseId === id),
+    );
+  }, [courseList, courseListByCampusData, selectedCampusId]);
 
   const selectedCourseOption =
     courseOptionList?.find(({ id }) => id === selectedCourseId) ||
@@ -52,6 +67,6 @@ export const useFilterCampusCourse = ({
     selectedCampusOption,
     courseOptionList,
     selectedCourseOption,
-    courseListByCampus,
+    courseListByCampusData,
   };
 };

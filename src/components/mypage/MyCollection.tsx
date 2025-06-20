@@ -41,7 +41,7 @@ export default function MyCollection() {
   const initialFilter: MyPostDto.GetPostListParams = {
     page: 1,
     size: 3,
-    // order: 'latest',
+    // order: 'latest',  NOTE: 최신순 정렬 적용 필요
   };
 
   const {
@@ -72,10 +72,10 @@ export default function MyCollection() {
     currPostList,
     page: { totalPage },
     postCheckbox: {
-      checkedPostIdList,
+      currCheckedIdList,
       isCheckBoxChecked,
-      onCheckBoxClick,
-      onPostCheckboxChange,
+      onHeaderCheckBoxClick,
+      onTableItemCheckboxChange,
       initializePostCheckedBoxList,
     },
     deletePost: {
@@ -133,60 +133,61 @@ export default function MyCollection() {
         currCollection={currCollection}
         onTabClick={(collection: Collection) => {
           initializePostCheckedBoxList();
-          handleChangeFilter({ postTypes: [] });
+          handleChangeFilter({ postTypes: [], page: 1 });
           setCurrCollection(collection);
         }}
       />
 
       {currCollection !== '내가 찜한 글' && (
         <>
-          <div className="mb-8 flex min-h-[230px] flex-col rounded-[20px] bg-white p-6">
-            {!isMyPostListLoading && !isMyCommentListLoading && (
-              <TableContainer colWidthList={[3, 10, 12, 64, 6]}>
-                <TableHeader
-                  headerCellList={headerCellList}
-                  currCollection={currCollection}
-                  isCheckBoxChecked={isCheckBoxChecked}
-                  disabledCheckBox={false}
-                  onCheckboxClick={onCheckBoxClick}
-                  onChangeOrder={onChangeOrder}
-                  categoryOptionList={contentList.categoryOptionList}
-                  checkedCategoryOptionList={checkedCategoryOptionList}
-                  onChangeCategory={onChangeCategory}
-                  disabledDelete={disabledDelete}
-                  onDeleteConfirmClick={() =>
-                    onDeleteConfirmClick(currCollection, checkedPostIdList)
-                  }
-                />
-                <TableBody<UserPost | UserComment>
-                  paginationList={currPostList?.content || []}
-                  colLength={5}
-                >
-                  {post => (
-                    <PostTableRow
-                      headerCellList={headerCellList}
-                      post={post}
-                      handleShowDialog={handleShowDialog}
-                      checkedPostIdList={checkedPostIdList}
-                      onPostCheckboxChange={onPostCheckboxChange}
-                      onDeleteConfirmClick={(postId: number) =>
-                        onDeleteConfirmClick(currCollection, [postId])
-                      }
-                    />
-                  )}
-                </TableBody>
-              </TableContainer>
-            )}
+          <div className="mb-8 flex min-h-[220px] flex-col rounded-[20px] bg-white px-6 pb-4 pt-6">
+            <TableContainer colWidthList={[3, 10, 12, 64, 6]}>
+              <TableHeader
+                headerCellList={headerCellList}
+                currCollection={currCollection}
+                isCheckBoxChecked={isCheckBoxChecked}
+                disabledCheckBox={false}
+                onCheckboxClick={onHeaderCheckBoxClick}
+                onChangeOrder={onChangeOrder}
+                categoryOptionList={contentList.categoryOptionList}
+                checkedCategoryOptionList={checkedCategoryOptionList}
+                onChangeCategory={onChangeCategory}
+                disabledDelete={disabledDelete}
+                onDeleteConfirmClick={() =>
+                  onDeleteConfirmClick(currCollection, currCheckedIdList)
+                }
+              />
+              <TableBody<UserPost | UserComment>
+                paginationList={currPostList?.content || []}
+                colLength={5}
+                isLoading={isMyCommentListLoading || isMyPostListLoading}
+              >
+                {post => (
+                  <PostTableRow
+                    headerCellList={headerCellList}
+                    post={post}
+                    handleShowDialog={handleShowDialog}
+                    checkedIdList={currCheckedIdList}
+                    onCheckboxChange={onTableItemCheckboxChange}
+                    onDeleteConfirmClick={(postId: number) =>
+                      onDeleteConfirmClick(currCollection, [postId])
+                    }
+                  />
+                )}
+              </TableBody>
+            </TableContainer>
           </div>
 
-          <Pagination
-            totalPages={totalPage || 1}
-            currentPage={tableFilter.page}
-            onPageChange={(page: number) => {
-              handleChangeFilter({ page, size: 3 });
-              initializePostCheckedBoxList();
-            }}
-          />
+          {totalPage && (
+            <Pagination
+              totalPages={totalPage}
+              currentPage={tableFilter.page}
+              onPageChange={(page: number) => {
+                handleChangeFilter({ page, size: 3 });
+                initializePostCheckedBoxList();
+              }}
+            />
+          )}
         </>
       )}
 
@@ -195,11 +196,9 @@ export default function MyCollection() {
           {!isScrapedPostListLoading &&
             (scrapedPostList?.content.length !== 0 ? (
               <ul className="grid min-h-[230px] grid-cols-3 gap-5">
-                {scrapedPostList?.content
-                  ?.slice(0, 3)
-                  ?.map(card => (
-                    <ScrapedPostCard key={card.postId} card={card} />
-                  ))}
+                {scrapedPostList?.content?.map(card => (
+                  <ScrapedPostCard key={card.postId} card={card} />
+                ))}
               </ul>
             ) : (
               <div className="flex h-[230px] items-center justify-center rounded-[20px] border bg-white p-3">

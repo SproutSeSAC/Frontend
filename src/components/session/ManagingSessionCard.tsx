@@ -63,7 +63,10 @@ export default function ManagingSessionCard({
         )}
       </div>
 
-      <h4 className="mt-3 line-clamp-2 text-xl font-medium text-black">
+      <h4
+        className="mt-3 line-clamp-2 text-xl font-medium text-black"
+        title={`${title} ${session.ordinal}회차`}
+      >
         {title} {session.ordinal}회차
       </h4>
 
@@ -74,7 +77,7 @@ export default function ManagingSessionCard({
           {meetingPlace &&
             (meetingType === 'ONLINE' ? (
               <a
-                href={meetingPlace} // NOTE: url 변경하기
+                href={meetingPlace}
                 target="_blank"
                 rel="noreferrer"
                 className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"

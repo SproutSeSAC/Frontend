@@ -10,7 +10,7 @@ export default function SmallCalendarBottomEvent({
   time,
 }: SmallCalendarBottomEventProps) {
   return (
-    <li className="line-clamp-1 flex w-full items-center">
+    <li className="line-clamp-1 flex w-full items-center py-1">
       <div className="min-w-[154px]">
         <span className="inline-block w-[50px] text-justify text-mainGray-active">
           {date}

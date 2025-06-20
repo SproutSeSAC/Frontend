@@ -14,9 +14,7 @@ import { UserManagementDto } from '@/types/admin/userToManageDto';
 
 import { UserCollection } from '@/pages/admin/UserPostCollection';
 
-export type UserManagementFilter = {
-  page: number;
-  size: number;
+export type UserManagementFilter = PaginationFilter & {
   offset?: number;
   campusId?: number;
   courseId?: number;
@@ -24,33 +22,36 @@ export type UserManagementFilter = {
   roles?: RoleKey[];
 };
 
+const getUserList = async (params: UserManagementFilter, url: string) => {
+  const { keyword, page, ...rest } = params;
+
+  const { data } = await axiosInstance.get<UserManagementDto.GetUserList>(url, {
+    params: {
+      ...rest,
+      ...(keyword !== '' ? { keyword } : {}),
+      page: page - 1,
+    },
+  });
+
+  return {
+    userList: data.content.map(user => ({
+      ...user,
+      campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
+      course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
+    })),
+    totalCounts: data.totalCount,
+    totalPages: Math.ceil(data.totalCount / params.size),
+  };
+};
+
 /** 사용자 목록 조회 */
 export const useGetInfiniteUserList = (
   currTab: UserManagementTabType,
   params: UserManagementFilter,
 ) => {
-  const getUserList = async () => {
-    const offset = (params.page - 1) * params.size;
-
-    const { data } = await axiosInstance.get<UserManagementDto.GetUserList>(
-      `/admin/users`,
-      { params: { ...params, offset } },
-    );
-
-    return {
-      userList: data.content.map(user => ({
-        ...user,
-        campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
-        course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
-      })),
-      totalCounts: data.totalCount,
-      totalPages: Math.ceil(data.totalCount / params.size),
-    };
-  };
-
   return useQuery({
     queryKey: ['useGetInfiniteUserList', params],
-    queryFn: getUserList,
+    queryFn: () => getUserList(params, `/admin/users`),
     enabled: currTab === 'user-list',
   });
 };
@@ -60,28 +61,9 @@ export const useGetInfiniteTraineeList = (
   currTab: UserManagementTabType,
   params: UserManagementFilter,
 ) => {
-  const getUserList = async () => {
-    const offset = (params.page - 1) * params.size;
-
-    const { data } = await axiosInstance.get<UserManagementDto.GetUserList>(
-      `/admin/users/trainees`,
-      { params: { ...params, offset } },
-    );
-
-    return {
-      userList: data.content.map(user => ({
-        ...user,
-        campus: user.campus.sort((a, b) => a.name.localeCompare(b.name)),
-        course: user.course.sort((a, b) => a.name.localeCompare(b.name)),
-      })),
-      totalCounts: data.totalCount,
-      totalPages: Math.ceil(data.totalCount / params.size),
-    };
-  };
-
   return useQuery({
     queryKey: ['useGetInfiniteTraineeList', params],
-    queryFn: getUserList,
+    queryFn: () => getUserList(params, `/admin/users/trainees`),
     enabled: currTab === 'trainee-list',
   });
 };
@@ -136,7 +118,7 @@ export const useGetUserScrapList = (
   const getUserScrapList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetScrapList>(
       `/admin/users/${userId}/scrap`,
-      { params },
+      { params: { ...params, page: params.page - 1 } },
     );
     return data;
   };
@@ -155,15 +137,15 @@ export const useGetUserPostList = (
   currCollection: UserCollection,
 ) => {
   const postTypes =
-    params.postTypes?.length !== 0
-      ? { postTypes: params.postTypes?.join(',') }
-      : {};
+    params.postTypes && params.postTypes?.length !== 0
+      ? params.postTypes?.join(',')
+      : 'NOTICE,PROJECT,STUDY,MEAL';
 
   const getUserPostList = async () => {
     const { data: postList } =
       await axiosInstance.get<UserManagementDto.GetPostList>(
         `/admin/users/${userId}/post`,
-        { params: { ...params, postTypes } },
+        { params: { ...params, page: params.page - 1, postTypes } },
       );
 
     return {
@@ -194,7 +176,13 @@ export const useGetUserCommentList = (
   const getUserCommentList = async () => {
     const { data } = await axiosInstance.get<UserManagementDto.GetCommentList>(
       `/admin/users/${userId}/comments`,
-      { params: { ...params, postTypes: params.postTypes?.join(',') } },
+      {
+        params: {
+          ...params,
+          page: params.page - 1,
+          postTypes: params.postTypes?.join(','),
+        },
+      },
     );
 
     return {

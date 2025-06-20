@@ -66,6 +66,7 @@ export default function Notice() {
         placeholder="찾으시는 공지사항 내용을 입력해 주세요"
         onChange={handleChangeKeyword}
         resetChange={handleResetKeyword}
+        inputStyle="square"
         className="mt-6 w-full"
       />
 

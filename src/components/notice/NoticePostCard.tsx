@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useNoticeIncrementViewCount } from '@/services/post/noticeMutations';
 
@@ -33,15 +33,20 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
 
   const { mutateAsync: postViewCount } = useNoticeIncrementViewCount();
 
+  const navigate = useNavigate();
+
   const onViewCount = useCallback(async () => {
     await postViewCount({ noticeId: notice.noticeId });
-  }, [notice.noticeId, postViewCount]);
+    navigate(`/notice/post/${notice.postId}`);
+  }, [navigate, notice.noticeId, notice.postId, postViewCount]);
 
   return (
-    <Link
-      to={`/notice/post/${notice.postId}`}
-      className="flex w-full flex-col rounded-2xl bg-white p-4 px-6 py-4"
+    <div
+      role="button"
+      tabIndex={0}
+      className="flex w-full cursor-pointer flex-col rounded-2xl bg-white p-4 px-6 py-4"
       onClick={onViewCount}
+      onKeyDown={e => e.key === 'Enter' && onViewCount()}
     >
       <div className="flex w-full items-center justify-between">
         <Tag
@@ -85,6 +90,6 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
           {formatDate(notice.createdDateTime)}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

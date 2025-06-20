@@ -22,7 +22,7 @@ export const useGetInfiniteStoreList = () => {
 
   return useInfiniteQuery({
     queryKey: ['useGetInfiniteStoreList', newSearchParams],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam = 0 }) => {
       const { data } = await axiosInstance.get<GetStoreListResponse>(
         `/store/list`,
         {
@@ -40,7 +40,7 @@ export const useGetInfiniteStoreList = () => {
       };
     },
     getNextPageParam: lastPage => lastPage.nextPage,
-    initialPageParam: 1,
+    initialPageParam: 0,
   });
 };
 
