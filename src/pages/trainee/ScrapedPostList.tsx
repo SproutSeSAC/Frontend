@@ -8,7 +8,7 @@ import MainView from '@/layouts/MainView';
 
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
-const filter = { page: 1, size: 3 };
+const filter = { page: 1, size: 100 };
 
 export default function ScrapedPostList() {
   const params = useParams();
