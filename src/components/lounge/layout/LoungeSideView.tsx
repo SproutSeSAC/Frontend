@@ -19,7 +19,7 @@ export default function LoungeSideView() {
               key={project.projectId}
               className="border-t pt-3.5 first:border-t-0"
             >
-              <Link to={`/lounge/post/${project.projectId}`}>
+              <Link to={`/lounge/post/${project.postId}`}>
                 <h2 className="line-clamp-3 text-darkGray-hover">
                   {project.title}
                 </h2>

@@ -120,7 +120,15 @@ export const useGetUserScrapList = (
       `/admin/users/${userId}/scrap`,
       { params: { ...params, page: params.page - 1 } },
     );
-    return data;
+    return {
+      ...data,
+      content: data.content.map(({ postType, ptype, ...rest }) => {
+        return {
+          ...rest,
+          postType: postType === 'PROJECT' ? ptype : postType,
+        };
+      }),
+    };
   };
 
   return useQuery({
