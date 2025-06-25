@@ -90,6 +90,7 @@ interface GetLoungeProjectComment {
 
 interface GetEndingTomorrowProject {
   projectId: number;
+  postId: number;
   title: string;
   content: string;
   userNickname: string;
