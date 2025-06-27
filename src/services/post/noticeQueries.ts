@@ -109,7 +109,7 @@ export const useGetThisWeekNoticeList = () => {
   const getThisWeekNotice = async () => {
     const { data } = await axiosInstance.get<NoticeDto.GetNoticeList>(
       `/notices`,
-      { params: { page: 0, size: 20 } },
+      { params: { page: 0, size: 21 } },
     );
     const thisWeekNotice = data.notices
       .filter(({ createdDateTime }) => isInThisWeek(createdDateTime))
