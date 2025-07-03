@@ -7,13 +7,16 @@ export const useGetPostDetail = <T>(
   postId?: number,
   options?: Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>,
 ) => {
+  const getPost = async () => {
+    const { data } = await axiosInstance.get<T>(`/posts/${postId}`);
+    return data;
+  };
+
   return useQuery({
     queryKey: ['useGetPostDetail', postId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<T>(`/posts/${postId}`);
-      return data;
-    },
+    queryFn: getPost,
     enabled: !!postId,
+    retry: false,
     ...options,
   });
 };

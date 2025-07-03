@@ -109,7 +109,7 @@ export default function UserManagement() {
   const { data, labelList, gridStyle } = dataTypeObj[currTab];
 
   return (
-    <MainView className="mb-20">
+    <MainView>
       <Header title="사용자 관리" />
 
       <TabNavigation<UserManagementTabType>
@@ -194,7 +194,7 @@ export default function UserManagement() {
       ) : (
         <EmptyContent
           message="사용자가 없습니다."
-          className="mb-16 mt-4 h-full min-h-[500px] rounded-[20px] border bg-lightGray py-20"
+          className="mt-4 h-full min-h-[500px] rounded-[20px] bg-white py-20"
         />
       )}
 

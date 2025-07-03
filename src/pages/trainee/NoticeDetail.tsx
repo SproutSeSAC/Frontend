@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -41,8 +41,11 @@ export default function NoticeDetail() {
 
   const { data: userProfile = initialUserProfile } = useGetUserProfile();
 
-  const { data: noticeDetail, isLoading: isNoticeDetailLoading } =
-    useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
+  const {
+    data: noticeDetail,
+    isLoading: isNoticeDetailLoading,
+    error,
+  } = useGetPostDetail<NoticeDto.GetNoticeDetail>(postId);
 
   const { deletePostImages } = useHandleImage();
 
@@ -150,6 +153,21 @@ export default function NoticeDetail() {
   ]);
 
   const onBackClick = () => navigate('/notice');
+
+  const { alert, hideDialog } = useDialogContext();
+
+  useEffect(() => {
+    const errorStatus = (error as unknown as { status: number })?.status;
+    if (errorStatus) {
+      navigate(-1);
+      alert({
+        text: '게시글을 찾을 수 없습니다.',
+        showDim: true,
+        buttonList: [{ name: '확인', onClick: hideDialog, color: 'gray' }],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   return (
     <div className="flex w-full">

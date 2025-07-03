@@ -74,7 +74,7 @@ export default function Notice() {
         {noticeCategoryList.map(({ key, name }) => (
           <li
             key={key}
-            className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-mainGreen text-white' : 'border border-solid border-lightGray text-darkGray-active'}`}
+            className={`rounded-2xl ${currFilter.noticeType === key ? 'bg-mainGreen text-white' : 'border border-solid border-lightGray bg-lightGray text-darkGray-active'}`}
           >
             <button
               type="button"
@@ -103,7 +103,7 @@ export default function Notice() {
       {noticeList.length === 0 && !isLoading && (
         <EmptyContent
           message={`${tab === 'BOOKMARK' ? '북마크한' : '등록된'} 공지사항이 없습니다.`}
-          className="mt-32"
+          className="mt-16"
         />
       )}
     </>

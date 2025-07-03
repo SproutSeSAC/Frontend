@@ -20,7 +20,7 @@ export default function CourseManagement() {
   const { data: userProfile } = useGetUserProfile();
 
   return (
-    <MainView>
+    <MainView className="!pb-12">
       <Header title="교육과정 관리" />
       {userProfile && (
         <TabNavigation<CourseManagementTabType>

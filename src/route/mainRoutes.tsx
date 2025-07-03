@@ -2,37 +2,40 @@ import { Suspense, lazy } from 'react';
 
 import { RouteObject } from 'react-router-dom';
 
-import ContentsManagement from '@/pages/admin/ContentsManagement';
-import CourseManagement from '@/pages/admin/CourseManagement';
-import UserManagement from '@/pages/admin/UserManagement';
-import UserManagementDetail from '@/pages/admin/UserManagementDetail';
+const Layout = lazy(() => import('@/layouts/Layout'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
+const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
 
+const Home = lazy(() => import('@/pages/trainee/Home'));
+const Schedule = lazy(() => import('@/pages/trainee/Schedule'));
+const LoungeLayout = lazy(() => import('@/layouts/LoungeLayout'));
+const Lounge = lazy(() => import('@/pages/trainee/Lounge'));
+const LoungeDetail = lazy(() => import('@/pages/trainee/LoungeDetail'));
+const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
+const Notice = lazy(() => import('@/pages/trainee/Notice'));
+const NoticeDetail = lazy(() => import('@/pages/trainee/NoticeDetail'));
+const Store = lazy(() => import('@/pages/trainee/Store'));
+const StoreDetail = lazy(() => import('@/pages/trainee/StoreDetail'));
+const MyPage = lazy(() => import('@/pages/trainee/MyPage'));
 const ScrapedPostList = lazy(() => import('@/pages/trainee/ScrapedPostList'));
 const AppliedSessionsDetail = lazy(
   () => import('@/pages/trainee/AppliedSessionsDetail'),
 );
 
-const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
-const Notice = lazy(() => import('@/pages/trainee/Notice'));
-const NoticeDetail = lazy(() => import('@/pages/trainee/NoticeDetail'));
-const Layout = lazy(() => import('@/layouts/Layout'));
-const LoungeLayout = lazy(() => import('@/layouts/LoungeLayout'));
-const Home = lazy(() => import('@/pages/trainee/Home'));
-const Lounge = lazy(() => import('@/pages/trainee/Lounge'));
-const LoungeDetail = lazy(() => import('@/pages/trainee/LoungeDetail'));
-const MyPage = lazy(() => import('@/pages/trainee/MyPage'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
-const Schedule = lazy(() => import('@/pages/trainee/Schedule'));
-const Store = lazy(() => import('@/pages/trainee/Store'));
-const StoreDetail = lazy(() => import('@/pages/trainee/StoreDetail'));
 const AdminHome = lazy(() => import('@/pages/admin/AdminHome'));
-const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
-
-const SessionApplicantManagementDetail = lazy(
-  () => import('@/pages/admin/SessionApplicantManagementDetail'),
+const ContentsManagement = lazy(
+  () => import('@/pages/admin/ContentsManagement'),
+);
+const CourseManagement = lazy(() => import('@/pages/admin/CourseManagement'));
+const UserManagement = lazy(() => import('@/pages/admin/UserManagement'));
+const UserManagementDetail = lazy(
+  () => import('@/pages/admin/UserManagementDetail'),
 );
 const SessionApplicantManagement = lazy(
   () => import('@/pages/admin/SessionApplicantManagement'),
+);
+const SessionApplicantManagementDetail = lazy(
+  () => import('@/pages/admin/SessionApplicantManagementDetail'),
 );
 
 const mainRoutes: RouteObject[] = [

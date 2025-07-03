@@ -169,8 +169,8 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
                 );
               }}
               errorMsg={error?.message}
-              selectBoxClassName="w-full h-[46px] p-5 bg-lightGray rounded-lg border border-mainGray-active justify-between items-center inline-flex"
-              optionClassName="text-sm hover:rounded-sm hover:bg-lightGray-hover pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
+              selectBoxClassName="w-full h-[46px]  p-5 bg-lightGray-hover rounded-lg border border-mainGray-active justify-between items-center inline-flex"
+              optionClassName="hover:rounded-sm text-[17px] hover:bg-lightGray-hover pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
             />
           );
         }}

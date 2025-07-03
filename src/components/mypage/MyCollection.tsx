@@ -178,7 +178,7 @@ export default function MyCollection() {
             </TableContainer>
           </div>
 
-          {totalPage && (
+          {!!totalPage && (
             <Pagination
               totalPages={totalPage}
               currentPage={tableFilter.page}

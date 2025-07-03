@@ -8,7 +8,7 @@ interface Props {
 export default function MainView({ children, className }: Props) {
   return (
     <main
-      className={`flex min-h-screen flex-1 flex-col pb-10 pl-3 pr-[50px] pt-[60px] ${className}`}
+      className={`flex min-h-screen flex-1 flex-col pb-28 pl-3 pr-[50px] pt-[60px] ${className}`}
     >
       {children}
     </main>
