@@ -234,7 +234,7 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.campusIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base !border-darkGray"
+                                    selectBoxClassName="!h-[50px] !text-base"
                                   />
                                 );
                               }}

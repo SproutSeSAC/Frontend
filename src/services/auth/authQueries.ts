@@ -29,8 +29,7 @@ export const getCalendarToken = () =>
 
 // 리프레시 토큰
 export const getNewAccessToken = () =>
-  axiosInstance.get('/login/refresh').catch(error => {
-    console.log('리프레시 error:', error);
+  axiosInstance.get('/login/refresh').catch(() => {
     window.location.href = `${window.location.origin}/login`;
   });
 

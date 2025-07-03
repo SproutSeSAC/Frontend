@@ -65,8 +65,13 @@ axiosInstance.interceptors.response.use(
         case 404:
           return redirectToLogin();
 
+        case 304:
+          if (originalRequest.url !== '/api/login/check') {
+            return handleNewAccessToken();
+          }
+          break;
+
         default:
-        // NOTE: 에러처리
         // redirectToLogin();
         // alert(
         //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
