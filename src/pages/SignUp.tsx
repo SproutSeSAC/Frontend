@@ -270,7 +270,7 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.courseIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden !border-darkGray"
+                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden"
                                     onSelectBoxClick={triggerCourseIdListError}
                                     hasFullCheck={!!options.length}
                                     optionClassName="text-start tracking-tight leading-5"
@@ -284,7 +284,7 @@ export default function SignUp() {
                                       onChange(data.map(({ id }) => id));
                                     }}
                                     errorMsg={errors.courseIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden !border-darkGray"
+                                    selectBoxClassName="!h-[50px] !text-base overflow-hidden"
                                     onSelectBoxClick={triggerCourseIdListError}
                                     optionClassName="text-start tracking-tight whitespace-pre-wrap leading-5"
                                   />
@@ -320,7 +320,7 @@ export default function SignUp() {
                                         });
                                       }}
                                       isMarkTechStackList
-                                      selectBoxClassName="!h-[50px] !text-base !border-darkGray"
+                                      selectBoxClassName="!h-[50px] !text-base"
                                       errorMsg={err?.message}
                                     />
                                   );

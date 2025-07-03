@@ -69,7 +69,7 @@ axiosInstance.interceptors.response.use(
           if (originalRequest.url !== '/api/login/check') {
             return handleNewAccessToken();
           }
-          break;
+          return redirectToLogin();
 
         default:
         // redirectToLogin();
