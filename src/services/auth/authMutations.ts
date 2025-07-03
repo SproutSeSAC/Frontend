@@ -31,7 +31,6 @@ export const useUpdateUserProfile = (
   });
 };
 
-// 나의 프로필 이미지 업데이트하기
 export const useUpdateProfileImage = (
   options?: UseMutationOptions<
     unknown,
