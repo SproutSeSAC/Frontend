@@ -220,7 +220,7 @@ export default function SignUp() {
                                       onChange([data[0]?.id]);
                                     }}
                                     errorMsg={errors.campusIdList?.message}
-                                    selectBoxClassName="!h-[50px] !text-base !border-darkGray"
+                                    selectBoxClassName="!h-[50px] !text-base"
                                   />
                                 ) : (
                                   <MultiSelectDropdown

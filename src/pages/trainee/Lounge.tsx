@@ -150,7 +150,7 @@ export default function Lounge() {
         </button>
       </div>
 
-      <ul className="mb-[90px] grid grid-cols-3 gap-6">
+      <ul className="grid grid-cols-3 gap-6">
         {projects.map(project => (
           <li key={project.id} className="[&>a]:!w-full">
             <LoungePostCard card={project} />
@@ -159,7 +159,10 @@ export default function Lounge() {
       </ul>
 
       {projects.length === 0 && !isLoading && (
-        <EmptyContent message="모집중인 프로젝트가 없습니다." />
+        <EmptyContent
+          message="모집중인 프로젝트가 없습니다."
+          className="mt-16"
+        />
       )}
 
       {isLoading && (

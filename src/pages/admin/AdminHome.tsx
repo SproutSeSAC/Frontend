@@ -10,7 +10,7 @@ export default function AdminHome() {
   const { data } = useGetUserProfile();
 
   return (
-    <MainView>
+    <MainView className="!pb-12">
       <Header title={`${data?.name || ''} 관리자님, 환영합니다!`}>
         <RoleSwitchButton title="플랫폼으로 전환" />
       </Header>

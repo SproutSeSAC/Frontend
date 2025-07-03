@@ -5,7 +5,7 @@ import PreparingPage from '@/components/common/PreparingPage';
 
 export default function ContentsManagement() {
   return (
-    <MainView>
+    <MainView className="!pb-12">
       <Header title="콘텐츠 관리" />
       <PreparingPage />
     </MainView>

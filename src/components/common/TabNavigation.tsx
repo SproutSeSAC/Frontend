@@ -36,12 +36,12 @@ export default function TabNavigation<T>({
     <nav
       className={`flex items-end justify-between text-lg font-semibold ${selectedStyle.point === 'border' ? 'border-b' : ''}`}
     >
-      <ul className="flex flex-wrap justify-start gap-4">
+      <ul className="flex flex-wrap justify-start gap-5">
         {tabList.map(({ text, type }) => (
           <li
             role="presentation"
             key={text}
-            className={`relative flex cursor-pointer flex-col items-center justify-center whitespace-nowrap px-5 pb-[19px] pt-4 ${selectValue === type ? `${borderStyle} ${colorStyle}` : 'text-mainGray'} ${tabClassName}`}
+            className={`relative flex cursor-pointer flex-col items-center justify-center whitespace-nowrap px-2 pb-[19px] pt-4 ${selectValue === type ? `${borderStyle} ${colorStyle}` : 'text-mainGray'} ${tabClassName}`}
             onClick={e => onChangeValue(type, e)}
             onKeyDown={e => {
               if (e.key === 'Escape' || e.key === ' ') {

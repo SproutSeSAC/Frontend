@@ -103,7 +103,7 @@ export default function Notice() {
       {noticeList.length === 0 && !isLoading && (
         <EmptyContent
           message={`${tab === 'BOOKMARK' ? '북마크한' : '등록된'} 공지사항이 없습니다.`}
-          className="mt-32"
+          className="mt-16"
         />
       )}
     </>

@@ -17,6 +17,7 @@ import { useAtom } from 'jotai';
 import LoadingPage from '@/pages/LoadingPage';
 
 import Calendar from '@/components/calendar/Calendar';
+import EmptyContent from '@/components/common/EmptyContent';
 import Title from '@/components/common/Title';
 import RoleSwitchButton from '@/components/common/button/RoleSwitchButton';
 import SwiperContainer from '@/components/common/container/SwiperContainer';
@@ -129,12 +130,20 @@ export default function Home() {
           </Link>
         </div>
 
-        <SwiperContainer
-          slideList={loungeList?.projects || []}
-          slideItemClassName="min-w-[275px]"
-        >
-          {item => <LoungePostCard card={item} />}
-        </SwiperContainer>
+        {loungeList?.projects.length !== 0 ? (
+          <SwiperContainer
+            slideList={loungeList?.projects || []}
+            slideItemClassName="min-w-[275px]"
+          >
+            {item => <LoungePostCard card={item} />}
+          </SwiperContainer>
+        ) : (
+          <EmptyContent
+            message="프로젝트가 없습니다."
+            size="sm"
+            className="flex h-64 rounded-xl bg-white"
+          />
+        )}
       </section>
     </MainView>
   );
