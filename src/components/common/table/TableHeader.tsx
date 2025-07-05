@@ -57,7 +57,7 @@ export default function TableHeader<T>({
               <button
                 type="button"
                 onClick={onChangeOrder}
-                className="flex w-full items-center justify-center pl-1.5"
+                className="flex w-full min-w-16 items-center justify-center pl-1.5"
               >
                 <span className="text-[15px]">{name}</span>
                 <BiExpandVertical className="inline size-5 cursor-pointer px-0.5 text-darkGray-hover" />

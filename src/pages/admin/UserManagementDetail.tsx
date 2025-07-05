@@ -245,7 +245,12 @@ export default function UserManagementDetail() {
                             )}
                             {'job' in data && (
                               <span className="pr-3 leading-5 tracking-tight">
-                                {data.job}
+                                <Tag
+                                  text={data.job}
+                                  size="big"
+                                  color="lightGreen"
+                                  className="!py-[8px] px-[14px] !font-normal"
+                                />
                               </span>
                             )}
                             {'techStack' in data && (
