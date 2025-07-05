@@ -30,16 +30,14 @@ export default function PostDetailsTemplate({
 }: PostDetailsTemplateProps) {
   return (
     <>
-      <header className="mt-12 flex items-center justify-between border-b border-b-lightGray pb-6">
+      <header className="mb-5 mt-7 flex items-center justify-between border-b border-b-mainGray pb-5">
         <div>
           <div className="flex items-center gap-2">
             <UserImage imageNameSegment={imageNameSegment} />
-            <span className="text-[22px]">
-              {nickname ? `@${nickname}` : name}
-            </span>
+            <span className="text-xl">{nickname ? `@${nickname}` : name}</span>
           </div>
 
-          <ul className="mt-3 flex items-center gap-10 text-lg text-darkGray-active">
+          <ul className="mt-3 flex items-center gap-10 text-lg text-darkGray-hover">
             <li className="flex items-center gap-3">
               <span>작성일</span>
               <span>
@@ -70,7 +68,7 @@ export default function PostDetailsTemplate({
 
       <article
         id="quill-content"
-        className="ql-editor mt-6 text-lg"
+        className="ql-editor !mt-0 !p-0"
         dangerouslySetInnerHTML={{ __html: description || '' }}
       />
     </>

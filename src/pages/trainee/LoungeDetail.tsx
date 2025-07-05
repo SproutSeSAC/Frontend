@@ -68,58 +68,57 @@ export default function LoungeDetail() {
 
   const postWriter = userProfile?.nickname === postDetail?.writerNickName;
 
-  return (
-    <div className="flex w-full">
-      <BackButton />
+  return isPostDetailLoading ? (
+    <div className="flex h-[60vh] items-center justify-center">
+      <LoopLoading />
+    </div>
+  ) : (
+    <>
+      <section className="mb-7 w-full">
+        <BackButton />
 
-      <div className="w-full">
-        {!isPostDetailLoading ? (
-          <div className="w-full px-6 pb-[45px] pt-5">
-            <header className="flex items-center justify-between">
-              <h1 className="text-[32px] font-semibold">{postDetail?.title}</h1>
-              <FavoriteButton
-                isFavorite={postDetail?.isScraped ?? false}
-                onClick={onScrapClick}
-                size={24}
-                disabled={isPostScrapPending || isDeleteScrapPending}
-              />
-            </header>
-            <Tag
-              color="green"
-              size="big"
-              text={postDetail ? ptypeDisplay[postDetail.ptype] : ''}
-              className="mt-12 w-fit"
-            />
+        <header className="mt-7 flex items-center justify-between">
+          <h1 className="pr-4 text-2xl font-semibold">{postDetail?.title}</h1>
+          <FavoriteButton
+            isFavorite={postDetail?.isScraped ?? false}
+            onClick={onScrapClick}
+            size={24}
+            disabled={isPostScrapPending || isDeleteScrapPending}
+          />
+        </header>
 
-            {postDetail && (
-              <LoungeApplicationInfoTemplate
-                recruitmentStart={postDetail.recruitmentStart}
-                recruitmentEnd={postDetail.recruitmentEnd}
-                recruitmentCount={postDetail?.recruitmentCount || 0}
-                position={postDetail?.position || []}
-                contactMethod={postDetail.contactMethod}
-                contactDetail={postDetail.contactDetail}
-                meetingType={postDetail.meetingType}
-                techStack={postDetail?.techStack || []}
-              />
-            )}
-            <PostDetailsTemplate
-              actions={postWriter ? actions : []}
-              imageNameSegment={postDetail?.imgUrl}
-              nickname={postDetail?.writerNickName || '-'}
-              createdAt={postDetail?.createdAt}
-              viewCount={postDetail?.viewCount}
-              description={postDetail?.description}
-            />
-          </div>
-        ) : (
-          <div className="flex h-[60vh] items-center justify-center">
-            <LoopLoading />
-          </div>
+        <Tag
+          color="green"
+          size="big"
+          text={postDetail?.ptype ? ptypeDisplay[postDetail?.ptype] : '-'}
+          className="mb-3 mt-4 w-fit px-[10px] py-[5px]"
+        />
+
+        {postDetail && (
+          <LoungeApplicationInfoTemplate
+            ptype={postDetail?.ptype || '-'}
+            recruitmentStart={postDetail.recruitmentStart}
+            recruitmentEnd={postDetail.recruitmentEnd}
+            recruitmentCount={postDetail?.recruitmentCount || 0}
+            position={postDetail?.position || []}
+            contactMethod={postDetail.contactMethod}
+            contactDetail={postDetail.contactDetail}
+            meetingType={postDetail.meetingType}
+            techStack={postDetail?.techStack || []}
+          />
         )}
 
-        <CommentTemplate postId={postId} />
-      </div>
-    </div>
+        <PostDetailsTemplate
+          actions={postWriter ? actions : []}
+          imageNameSegment={postDetail?.imgUrl}
+          nickname={postDetail?.writerNickName || '-'}
+          createdAt={postDetail?.createdAt}
+          viewCount={postDetail?.viewCount}
+          description={postDetail?.description}
+        />
+      </section>
+
+      <CommentTemplate postId={postId} />
+    </>
   );
 }

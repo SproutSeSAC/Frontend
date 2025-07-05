@@ -37,7 +37,7 @@ import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 
 const initialFilter = {
   page: 1,
-  size: 1,
+  size: 10,
 };
 
 export default function SessionApplicantManagementDetail() {

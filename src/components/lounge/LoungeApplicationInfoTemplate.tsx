@@ -24,6 +24,7 @@ export default function LoungeApplicationInfoTemplate({
   | 'contactDetail'
   | 'meetingType'
   | 'techStack'
+  | 'ptype'
 >) {
   const loungeApplicationInfo = [
     {
@@ -58,12 +59,12 @@ export default function LoungeApplicationInfoTemplate({
     {
       type: '스택',
       data: techStack && (
-        <ul className="flex w-full flex-1 flex-wrap gap-1">
+        <ul className="flex w-full flex-1 flex-wrap gap-2">
           {techStack
             ?.sort((a, b) => a.jobName.localeCompare(b.jobName))
             ?.sort((a, b) => a.name.localeCompare(b.name))
             .map(({ id, path, name }) => (
-              <img key={id} src={path} alt={name} className="size-10" />
+              <img key={id} src={path} alt={name} className="size-7" />
             ))}
         </ul>
       ),
@@ -84,11 +85,13 @@ export default function LoungeApplicationInfoTemplate({
   ] as const;
 
   return (
-    <ul className="mt-4 grid list-none grid-cols-2 gap-5 rounded-[20px] bg-white p-4 px-5 py-6">
+    <ul className="grid list-none grid-cols-2 gap-x-4 gap-y-3 rounded-[20px] bg-white p-7">
       {loungeApplicationInfo.map(({ type, data }) => (
-        <li key={type} className="flex items-center gap-3 text-[22px]">
-          <h4 className="min-w-10 text-mainGray-active">{type}</h4>
-          <span className="mx-2 text-mainGray-active">|</span>
+        <li key={type} className="flex items-center gap-2.5 text-xl">
+          <h4 className="min-w-12 border-r-2 leading-[23px] tracking-tighter text-mainGray-active">
+            {type}
+          </h4>
+
           {data}
         </li>
       ))}

@@ -15,25 +15,24 @@ export default function Faq({ faq }: Props) {
     <Accordion
       title={faq.title}
       className="border-l-[8px] border-[#ffe96f]"
-      titleClassName="text-lg p-5"
+      titleClassName="[&>h3]:text-lg [&>h3]:pl-4 [&>button]:p-5"
     >
-      <p className="px-5 pb-4 pt-0">
-        {faq.body === '' ? (
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis optioprovident possimus quibusdam. Quia voluptas ea iusto! Error, quae? Ipsamea deserunt soluta molestiae error iusto a incidunt neque hic.'
-        ) : (
-          <button
-            type="button"
-            onClick={async () => {
-              await showDialog({
-                key: 'MEMBERSHIP-LEAVE-TYPE',
-                element: <MembershipLeaveModal />,
-              });
-            }}
-          >
-            {faq.body}
-          </button>
-        )}
-      </p>
+      <p className="p-5 pl-4 pt-2 text-start text-base">{faq.body}</p>
+
+      {faq.title.includes('탈퇴') && (
+        <button
+          type="button"
+          onClick={async () => {
+            await showDialog({
+              key: 'MEMBERSHIP-LEAVE-TYPE',
+              element: <MembershipLeaveModal />,
+            });
+          }}
+          className="mx-5 mb-5 rounded-lg bg-lightGray-active px-4 py-2 text-base"
+        >
+          회원 탈퇴하기
+        </button>
+      )}
     </Accordion>
   );
 }

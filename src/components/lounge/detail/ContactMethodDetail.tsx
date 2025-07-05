@@ -32,15 +32,13 @@ export default function ContactMethodDetail({
   };
 
   const commonContactMethodStyle =
-    'decoration-gray-1 underline decoration-solid decoration-0 flex gap-1 item-center';
+    'underline underline-offset-[2px] flex gap-1 item-center';
 
   return contactMethod === CONTACT_METHOD_MESSENGER ? (
-    <div className={commonContactMethodStyle}>
-      <a href={contactDetail}>
-        {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
-      </a>
-      <BsLink45Deg size={22} className="mt-1" />
-    </div>
+    <a href={contactDetail} className={` ${commonContactMethodStyle}`}>
+      {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
+      <BsLink45Deg size={20} className="mt-1.5" />
+    </a>
   ) : (
     <button
       type="button"
@@ -48,7 +46,7 @@ export default function ContactMethodDetail({
       className={commonContactMethodStyle}
     >
       {contactMethod ? contactMethodDisplay[contactMethod] : '-'}
-      <BsCopy className="ml-1 mt-1" size={22} />
+      <BsCopy className="ml-1 mt-1.5" size={20} />
     </button>
   );
 }
