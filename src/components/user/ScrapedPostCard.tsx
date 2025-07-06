@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import { usePostAddViewCount } from '@/services/post/postMutation';
 
 import { postTypeObj } from '@/constants';
 import { useHandleScrap } from '@/hooks';
@@ -17,7 +19,7 @@ interface ScrapedPostCardProps {
 }
 
 export default function ScrapedPostCard({
-  card: { postId, postType, title, content, writer },
+  card: { postId, postType, title, content, writer, linkedId },
   className,
   hasScrapBtn = true,
 }: ScrapedPostCardProps) {
@@ -36,13 +38,27 @@ export default function ScrapedPostCard({
   const postLink =
     postType === 'PROJECT' || postType === 'STUDY' ? 'lounge' : postType;
 
+  const { mutateAsync: addViewCount } = usePostAddViewCount(
+    postType === 'NOTICE' ? 'notices' : 'project',
+  );
+
+  const navigate = useNavigate();
+
+  const onViewCount = useCallback(async () => {
+    await addViewCount({ linkedId });
+    navigate(`/${postLink.toLocaleLowerCase()}/post/${postId}`);
+  }, [addViewCount, linkedId, navigate, postLink, postId]);
+
   return (
     <li
       className={`flex h-[238px] w-full flex-col justify-between rounded-3xl bg-white ${className}`}
     >
-      <Link
-        to={`/${postLink.toLocaleLowerCase()}/post/${postId}`}
-        className="flex h-full flex-col justify-between p-5"
+      <div
+        role="link"
+        tabIndex={0}
+        className="flex w-full cursor-pointer flex-col rounded-2xl bg-white p-4 px-6 py-4"
+        onClick={onViewCount}
+        onKeyDown={e => e.key === 'Enter' && onViewCount()}
       >
         <div className="flex items-center justify-between">
           <Tag
@@ -71,7 +87,7 @@ export default function ScrapedPostCard({
             <span className="text-xs opacity-60">@{writer.nickname}</span>
           </div>
         </div>
-      </Link>
+      </div>
     </li>
   );
 }

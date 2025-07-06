@@ -174,7 +174,7 @@ export default function NoticeDetail() {
   ) : (
     <>
       <section className="mb-7 w-full">
-        <BackButton />
+        <BackButton onClick={() => navigate('/notice')} />
 
         <header className="mt-7 flex items-center justify-between">
           <h1 className="pr-4 text-2xl font-semibold">{noticeDetail?.title}</h1>

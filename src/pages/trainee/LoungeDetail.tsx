@@ -75,7 +75,7 @@ export default function LoungeDetail() {
   ) : (
     <>
       <section className="mb-7 w-full">
-        <BackButton />
+        <BackButton onClick={() => navigate('/lounge')} />
 
         <header className="mt-7 flex items-center justify-between">
           <h1 className="pr-4 text-2xl font-semibold">{postDetail?.title}</h1>
@@ -88,9 +88,9 @@ export default function LoungeDetail() {
         </header>
 
         <Tag
-          color="green"
           size="big"
-          text={postDetail?.ptype ? ptypeDisplay[postDetail?.ptype] : '-'}
+          postKey={postDetail?.ptype}
+          text={postDetail?.ptype ? `#${ptypeDisplay[postDetail?.ptype]}` : '-'}
           className="mb-3 mt-4 w-fit px-[10px] py-[5px]"
         />
 

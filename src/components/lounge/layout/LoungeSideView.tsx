@@ -1,12 +1,30 @@
-import { Link } from 'react-router-dom';
+import { useCallback } from 'react';
+
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetEndingTomorrowProjects } from '@/services/post/loungeQueries';
+import { usePostAddViewCount } from '@/services/post/postMutation';
 
 import Title from '@/components/common/Title';
 import UserImage from '@/components/user/UserImage';
 
 export default function LoungeSideView() {
+  const params = useParams();
+
   const { data: endingTomorrowProjectList } = useGetEndingTomorrowProjects();
+
+  const { mutateAsync: addViewCount } = usePostAddViewCount('project');
+
+  const navigate = useNavigate();
+
+  const onViewCount = useCallback(
+    async (linkedId: number, postId: number) => {
+      if (params?.postId ? +params.postId === postId : false) return;
+      await addViewCount({ linkedId });
+      navigate(`/lounge/post/${postId}`);
+    },
+    [addViewCount, navigate, params.postId],
+  );
 
   return (
     <div className="max-h-[90vh] min-h-60 overflow-y-scroll rounded-[20px] bg-white px-5 py-6">
@@ -14,27 +32,27 @@ export default function LoungeSideView() {
 
       {endingTomorrowProjectList && endingTomorrowProjectList?.length !== 0 ? (
         <ul className="flex flex-col gap-3.5">
-          {endingTomorrowProjectList?.map(project => (
-            <li
-              key={project.projectId}
-              className="border-t pt-3.5 first:border-t-0"
-            >
-              <Link to={`/lounge/post/${project.postId}`}>
-                <h2 className="line-clamp-3 text-darkGray-hover">
-                  {project.title}
-                </h2>
-                <div className="mt-2 flex items-center gap-2">
-                  <UserImage
-                    className="size-[22px]"
-                    imageNameSegment={project.imgUrl}
-                  />
-                  <span className="tracking-tight">
-                    @ {project.userNickname}
-                  </span>
+          {endingTomorrowProjectList?.map(
+            ({ projectId, postId, title, imgUrl, userNickname }) => (
+              <li key={projectId} className="border-t pt-3.5 first:border-t-0">
+                <div
+                  role="link"
+                  tabIndex={0}
+                  onClick={() => onViewCount(projectId, postId)}
+                  onKeyDown={e => e.key === 'Enter' && onViewCount}
+                >
+                  <h2 className="line-clamp-3 text-darkGray-hover">{title}</h2>
+                  <div className="mt-2 flex items-center gap-2">
+                    <UserImage
+                      className="size-[22px]"
+                      imageNameSegment={imgUrl}
+                    />
+                    <span className="tracking-tight">@ {userNickname}</span>
+                  </div>
                 </div>
-              </Link>
-            </li>
-          ))}
+              </li>
+            ),
+          )}
         </ul>
       ) : (
         <span className="inline-block w-full pt-14 text-center text-mainGray-active">

@@ -24,6 +24,7 @@ type UserScrap = {
     profileImg: string;
   };
   postId: number;
+  linkedId: number;
   title: string;
   postType: PostTypeKey;
   content: string;
@@ -47,6 +48,7 @@ type UserComment = {
   commentId: number;
   userNickname: string;
   postId: number;
+  linkedId: number;
   content: string;
   createdAt: string;
   postType: PostTypeKey;

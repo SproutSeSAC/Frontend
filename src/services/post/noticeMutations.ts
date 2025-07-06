@@ -26,12 +26,3 @@ export const usePatchNoticeStatus = (
     ...options,
   });
 };
-
-export const useNoticeIncrementViewCount = () => {
-  return useMutation<boolean, AxiosError, { noticeId: number }>({
-    mutationFn: async ({ noticeId }: { noticeId: number }) => {
-      const { data } = await axiosInstance.post(`/notices/${noticeId}/view`);
-      return data;
-    },
-  });
-};

@@ -72,15 +72,17 @@ export default function CalendarCheckBoxList({
           <ul className="flex flex-col gap-2">
             {category === '개인 캘린더' &&
               calendarList?.map(({ id, summary, backgroundColor, primary }) => (
-                <Checkbox
-                  key={id}
-                  id={id}
-                  text={primary ? '기본 캘린더' : summary}
-                  checked={!!currentCalendarIds?.includes(id)}
-                  onChange={() => onCheckBoxChange(id)}
-                  textClassName="!text-black"
-                  checkBoxColor={backgroundColor}
-                />
+                <li key={id} className="[&>label]:items-start">
+                  <Checkbox
+                    id={id}
+                    text={primary ? '기본 캘린더' : summary}
+                    checked={!!currentCalendarIds?.includes(id)}
+                    onChange={() => onCheckBoxChange(id)}
+                    textClassName="!text-black"
+                    checkBoxColor={backgroundColor}
+                    inputClassName="mt-1"
+                  />
+                </li>
               ))}
           </ul>
         </Accordion>

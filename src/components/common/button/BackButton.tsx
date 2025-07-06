@@ -17,7 +17,7 @@ export default function BackButton({ onClick }: BackButtonProps) {
     <button
       type="button"
       onClick={onBackClick}
-      className="flex size-8 items-center justify-center rounded bg-mainGreen text-white"
+      className="flex size-8 items-center justify-center rounded bg-mainGreen-hover text-white"
     >
       <Icon name="ChevronLeft" />
     </button>
