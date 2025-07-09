@@ -94,7 +94,7 @@ export default function SessionApplicationModal({
             name="sessionIdList"
             render={({ field: { onChange, value: selectedIdList } }) => {
               return (
-                <ul className="mb-6 mt-4 grid grid-cols-2 justify-between gap-x-6 gap-y-4">
+                <ul className="mb-2 mt-4 grid grid-cols-2 justify-between gap-x-6 gap-y-4">
                   {sessions.map(session => {
                     const { sessionId, currentStatus } = session;
 
@@ -144,7 +144,7 @@ export default function SessionApplicationModal({
             type="submit"
             disabled={formDisabled}
             color={formDisabled ? 'lightGray' : 'mainGreen'}
-            className="h-full self-end whitespace-nowrap px-3 text-lg"
+            className="mt-4 h-full self-end whitespace-nowrap px-16 text-lg font-medium"
           />
         </form>
       </FormProvider>

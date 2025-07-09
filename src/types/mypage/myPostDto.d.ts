@@ -13,7 +13,7 @@ export namespace MyPostDto {
   export type GetCommentList = Pageable & { content: UserComment[] };
 
   export type GetPostListParams = PaginationFilter &
-    SortPostTypeFilter & { order?: 'latest' | 'oldest' };
+    SortPostTypeFilter & { sort?: 'updated_At,DESC' | 'updated_At,ASC' };
 }
 
 type UserScrap = {

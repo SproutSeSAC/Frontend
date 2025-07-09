@@ -1,5 +1,6 @@
 import { NoticeSession } from '@/types';
 import { formatDate } from '@/utils';
+import { BsCheckCircle } from 'react-icons/bs';
 
 import ErrorMsg from '@/components/common/input/ErrorMsg';
 
@@ -32,10 +33,10 @@ export default function SessionSelectBox({
 
   const initialStyle =
     initialSessionStatus || !isSelected
-      ? 'bg-white [&>h3]:text-black [&>h4]:text-darkGray-active border-darkGray'
+      ? 'bg-white [&>h3]:text-black [&>h4]:text-darkGray border-darkGray'
       : '';
   const isSelectedStyle = isSelected
-    ? 'bg-darkGreen text-white [&>h4]:text-lightGray border-darkGray'
+    ? 'bg-lightGreen-active [&>h4]:text-mainGreen-active border-lightGreen-active'
     : '';
 
   const boxStyle = isSelected ? isSelectedStyle : initialStyle;
@@ -51,8 +52,14 @@ export default function SessionSelectBox({
         aria-label={`수업일시: ${sessionDate} ${sessionTime}`}
         onClick={onClick}
         disabled={disabled}
-        className={`flex w-full cursor-pointer flex-col gap-1 rounded-2xl border px-5 py-6 ${boxStyle} ${disabledStyle}`}
+        className={`relative flex w-full cursor-pointer flex-col gap-1 rounded-2xl border p-4 ${boxStyle} ${disabledStyle}`}
       >
+        {isSelected && (
+          <BsCheckCircle
+            className="absolute left-3 top-3 text-mainGreen-active"
+            size={20}
+          />
+        )}
         <h3 className="mb-1 text-lg font-medium">{session.ordinal}회차</h3>
         <h4>수업 일시</h4>
         <span>{sessionDate}</span>

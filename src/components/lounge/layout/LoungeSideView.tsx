@@ -41,13 +41,15 @@ export default function LoungeSideView() {
                   onClick={() => onViewCount(projectId, postId)}
                   onKeyDown={e => e.key === 'Enter' && onViewCount}
                 >
-                  <h2 className="line-clamp-3 text-darkGray-hover">{title}</h2>
-                  <div className="mt-2 flex items-center gap-2">
+                  <h2 className="line-clamp-3">{title}</h2>
+                  <div className="mt-2 flex items-center gap-1.5">
                     <UserImage
                       className="size-[22px]"
                       imageNameSegment={imgUrl}
                     />
-                    <span className="tracking-tight">@ {userNickname}</span>
+                    <span className="tracking-tight text-darkGray-hover">
+                      @{userNickname}
+                    </span>
                   </div>
                 </div>
               </li>

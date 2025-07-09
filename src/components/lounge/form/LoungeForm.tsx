@@ -13,7 +13,7 @@ import {
   usePageBlocker,
   useTechStackList,
 } from '@/hooks';
-import { ContactMethodDisplayKey, Progress } from '@/types';
+import { ContactMethodDisplayKey, Option, Progress } from '@/types';
 import { LoungeDto } from '@/types/lounge/loungeDto';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -121,8 +121,16 @@ export default function LoungeForm() {
       modifyProjectId ? projectsDetail?.description : undefined,
     );
 
+    const requiredStacks = data.requiredStacks.includes(0)
+      ? []
+      : data.requiredStacks;
+
+    const positions = data.positions.includes(0) ? [] : data.positions;
+
     const params = {
       ...data,
+      requiredStacks,
+      positions,
       recruitmentCount: Number(data.recruitmentCount),
       projectDescription: descriptionWithHandledImage,
     } as LoungeDto.PostProjectParams;
@@ -156,6 +164,32 @@ export default function LoungeForm() {
     },
     [showToast],
   );
+
+  const jobOptionList = [{ id: 0, job: '제한 없음' }, ...(jobList || [])]?.map(
+    ({ id, job }) => ({ id, name: job }),
+  );
+
+  const techStackOptionList = [{ id: 0, name: '제한 없음' }, ...techStackList];
+
+  const onChangeOptionList = (
+    type: '직무' | '기술 스택',
+    data: Option[],
+    onChange: (optionList: number[]) => void,
+  ) => {
+    const selectedIds = data.map(item => item.id);
+
+    if (selectedIds.includes(0) && selectedIds.length > 1) {
+      showToast(
+        data[0].id === 0
+          ? '먼저 "제한 없음" 옵션을 해제해주세요.'
+          : `선택한 ${type} 옵션을 해제했습니다.`,
+      );
+      const result = selectedIds.filter(id => id === 0);
+      return onChange(result);
+    }
+
+    return onChange(selectedIds);
+  };
 
   return (
     <FormProvider {...methods}>
@@ -194,7 +228,7 @@ export default function LoungeForm() {
             </LabeledSection>
 
             <LabeledSection label="모집 기간">
-              <div className="flex w-full items-center gap-2">
+              <div className="flex h-[59px] w-full items-center gap-2">
                 <ControllerDateTime type="date" name="startDate" />
                 <span className="text-xl">~</span>
                 <ControllerDateTime type="date" name="endDate" />
@@ -220,6 +254,7 @@ export default function LoungeForm() {
                       selectedOption={selectedOption}
                       onChangeValue={data => onChange(data[0].id)}
                       errorMsg={error?.message}
+                      selectBoxClassName="h-[59px]"
                     />
                   );
                 }}
@@ -238,13 +273,10 @@ export default function LoungeForm() {
                     <MultiSelectDropdown
                       defaultLabel="모집 직무"
                       value={value}
-                      options={
-                        jobList?.map(({ id, job }) => ({ id, name: job })) || []
+                      options={jobOptionList}
+                      onChangeValue={data =>
+                        onChangeOptionList('직무', data, onChange)
                       }
-                      onChangeValue={data => {
-                        const ids = data.map(item => item.id);
-                        onChange(ids);
-                      }}
                       errorMsg={error?.message}
                     />
                   );
@@ -290,11 +322,10 @@ export default function LoungeForm() {
                       defaultTabValue="백엔드"
                       errorMsg={error?.message}
                       value={value}
-                      options={techStackList}
-                      onChangeValue={data => {
-                        const ids = data.map(item => item.id);
-                        onChange(ids);
-                      }}
+                      options={techStackOptionList}
+                      onChangeValue={data =>
+                        onChangeOptionList('기술 스택', data, onChange)
+                      }
                     />
                   );
                 }}

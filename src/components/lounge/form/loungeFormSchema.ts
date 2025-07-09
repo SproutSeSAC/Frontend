@@ -23,14 +23,20 @@ export const loungeFormSchema = z
     ]),
 
     positions: z
-      .array(z.number().min(1, '모집직무를 선택해 주세요.'))
-      .min(1, '모집직무를 선택해 주세요.'),
+      .array(z.number())
+      .min(1, '모집직무를 선택해 주세요.')
+      .refine(val => val.includes(0) || val, {
+        message: '모집직무를 선택해 주세요.',
+      }),
 
     meetingType: z.string().min(1, '모집유형을 선택해주세요.'),
 
     requiredStacks: z
-      .array(z.number().min(1, '필요스택을 선택해 주세요.'))
-      .min(1, '필요스택을 선택해 주세요.'),
+      .array(z.number())
+      .min(1, '필요스택을 선택해 주세요.')
+      .refine(val => val.includes(0) || val, {
+        message: '필요스택을 선택해 주세요.',
+      }),
 
     contactMethod: z.union([
       z.string().min(1, '연락방법을 선택해 주세요.'),

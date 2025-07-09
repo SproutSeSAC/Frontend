@@ -252,7 +252,7 @@ export default function SessionApplicantManagementDetail() {
           tabList={sessionApplicantsStatusTabList}
           selectValue={tabName ?? 'ALL'}
           onChangeValue={handleChangeTab}
-          tabClassName="!pb-3 !px-3"
+          tabClassName="!pb-3 !px-4"
         />
 
         <div className="flex items-center space-x-4">

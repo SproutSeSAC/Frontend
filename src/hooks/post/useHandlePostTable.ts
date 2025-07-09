@@ -81,8 +81,11 @@ export const useHandlePostTable = <T extends string>({
   };
 
   const onChangeOrder = () => {
-    const order = tableFilter.order === 'latest' ? 'oldest' : 'latest';
-    handleChangeFilter({ order });
+    const sort =
+      tableFilter.sort === 'updated_At,DESC'
+        ? 'updated_At,ASC'
+        : 'updated_At,DESC';
+    handleChangeFilter({ sort });
   };
 
   const disabledDelete =

@@ -23,6 +23,7 @@ export default function LoungeTabNavigation() {
       selectValue={pType ?? 'ALL'}
       tabList={loungeTabList}
       onChangeValue={handleChangeValue}
+      tabClassName="!px-4"
     />
   );
 }

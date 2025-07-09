@@ -58,7 +58,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       </form>
 
       {!isCommentListLoading && (
-        <ul className="mt-20 flex flex-col gap-y-10">
+        <ul className="mt-10 flex flex-col gap-y-10">
           {commentList.map(
             ({
               id,
@@ -137,7 +137,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                   </form>
                 ) : (
                   <>
-                    <p className="mb-3 mt-2">{content}</p>
+                    <p className="mb-3 mt-2 whitespace-pre-wrap">{content}</p>
                     <div>
                       <span className="pr-3 text-darkGray">
                         {formatDate(createAt, 'yyyy.MM.dd')}

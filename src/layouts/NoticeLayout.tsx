@@ -66,6 +66,7 @@ export default function NoticeLayout() {
             tabList={NOTICE_TAB_LIST}
             selectValue={tabName ?? 'ALL'}
             onChangeValue={handleChangeValue}
+            tabClassName="!px-4"
           />
         )}
         <Outlet />

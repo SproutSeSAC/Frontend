@@ -31,7 +31,7 @@ export default function CourseManagement() {
               : courseManagementTabList
           }
           onChangeValue={handleChangeTab}
-          tabClassName="!pb-3 !px-3"
+          tabClassName="!pb-3 !px-4"
         />
       )}
       {(tabName === null || tabName === 'course') && (

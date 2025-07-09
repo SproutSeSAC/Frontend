@@ -14,7 +14,7 @@ export interface OptionItem {
   id: number;
   name: string;
   iconImageUrl?: string;
-  type: string;
+  type?: string;
 }
 
 interface MultiSelectDropdownProps {
@@ -91,6 +91,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
     () =>
       Array.from(
         options
+          .filter(({ type }) => type)
           .reduce((acc, curr) => {
             if (!acc.has(curr.type)) {
               acc.set(curr.type, { text: curr.type, type: curr.type });
@@ -145,7 +146,8 @@ const TechStackDropdown = memo(function TechStackDropdown({
           tabList={tabList}
           onChangeValue={handleTabValue}
           selectValue={tabValue}
-          tabClassName="pb-[7px]"
+          tabClassName="pb-[7px] px-3"
+          className="px-5"
         />
         <ul className="flex flex-wrap gap-2.5 p-4">
           {filteredOptionsByTab.map(option => (
@@ -154,9 +156,22 @@ const TechStackDropdown = memo(function TechStackDropdown({
               option={option}
               onChangeValue={handleSelectOptionChange}
               isSelected={checkIsSelected(option)}
+              // disabled={disabled}
             />
           ))}
         </ul>
+
+        <label className="mb-4 ml-6 flex w-fit cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            checked={checkIsSelected({ id: 0, name: '제한 없음' })}
+            onChange={() =>
+              handleSelectOptionChange({ id: 0, name: '제한 없음' })
+            }
+            className="size-4 rounded border-darkGray"
+          />
+          <span>제한 없음</span>
+        </label>
       </SelectBox>
     </>
   );
