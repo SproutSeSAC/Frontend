@@ -31,10 +31,13 @@ export default function LoungeSideView() {
       <Title as="h2" title="마감 하루전!" className="mb-3" highlight="마감" />
 
       {endingTomorrowProjectList && endingTomorrowProjectList?.length !== 0 ? (
-        <ul className="flex flex-col gap-3.5">
+        <ul className="flex flex-col">
           {endingTomorrowProjectList?.map(
             ({ projectId, postId, title, imgUrl, userNickname }) => (
-              <li key={projectId} className="border-t pt-3.5 first:border-t-0">
+              <li
+                key={projectId}
+                className="cursor-pointer border-t py-2.5 first:border-t-0"
+              >
                 <div
                   role="link"
                   tabIndex={0}

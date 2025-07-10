@@ -40,34 +40,40 @@ export default function LoungeApplicationInfoTemplate({
     },
     {
       type: '직무',
-      data: position && (
-        <ul className="flex w-full flex-1 flex-wrap gap-1.5">
-          {position
-            ?.sort((a, b) => a.name.localeCompare(b.name))
-            .map(({ id, name }) => (
-              <Tag
-                key={id}
-                text={name}
-                color="black"
-                size="big"
-                className="whitespace-nowrap rounded bg-black !px-3 !font-normal text-white"
-              />
-            ))}
-        </ul>
-      ),
+      data:
+        position.length === 0 ? (
+          <span>제한 없음</span>
+        ) : (
+          <ul className="flex w-full flex-1 flex-wrap gap-1.5">
+            {position
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              .map(({ id, name }) => (
+                <Tag
+                  key={id}
+                  text={name}
+                  color="black"
+                  size="big"
+                  className="whitespace-nowrap rounded bg-black !px-3 !font-normal text-white"
+                />
+              ))}
+          </ul>
+        ),
     },
     {
       type: '스택',
-      data: techStack && (
-        <ul className="flex w-full flex-1 flex-wrap gap-2">
-          {techStack
-            ?.sort((a, b) => a.jobName.localeCompare(b.jobName))
-            ?.sort((a, b) => a.name.localeCompare(b.name))
-            .map(({ id, path, name }) => (
-              <img key={id} src={path} alt={name} className="size-7" />
-            ))}
-        </ul>
-      ),
+      data:
+        techStack.length === 0 ? (
+          <span>제한 없음</span>
+        ) : (
+          <ul className="flex w-full flex-1 flex-wrap gap-2">
+            {techStack
+              ?.sort((a, b) => a.jobName.localeCompare(b.jobName))
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              .map(({ id, path, name }) => (
+                <img key={id} src={path} alt={name} className="size-7" />
+              ))}
+          </ul>
+        ),
     },
     {
       type: '유형',

@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { contactMethodList } from '@/constants';
 import { ContactMethodDisplayKey } from '@/types';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -9,7 +7,7 @@ import ControllerPhoneNumber from '@/components/common/input/ControllerPhoneNumb
 import TextInput from '@/components/common/input/TextInput';
 
 export default function ContactMethodContainer() {
-  const { control, setValue, clearErrors } = useFormContext();
+  const { control } = useFormContext();
 
   const contactMethod: ContactMethodDisplayKey | '' = useWatch({
     control,
@@ -21,11 +19,6 @@ export default function ContactMethodContainer() {
     EMAIL: '이메일을 입력해주세요.',
     MESSENGER: '오픈채팅방 링크를 입력해주세요.',
   };
-
-  useEffect(() => {
-    setValue('contactDetail', '');
-    clearErrors('contactDetail');
-  }, [clearErrors, contactMethod, setValue]);
 
   return (
     <div className={`${contactMethod && 'flex gap-2'}`}>

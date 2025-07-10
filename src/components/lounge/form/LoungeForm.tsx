@@ -22,6 +22,7 @@ import {
   SubmitErrorHandler,
   SubmitHandler,
   useForm,
+  useWatch,
 } from 'react-hook-form';
 import { BsLink45Deg } from 'react-icons/bs';
 
@@ -62,9 +63,18 @@ const changeDataToFieldValues = (
     recruitmentType: data?.ptype || '',
     startDate: data?.recruitmentStart || '',
     endDate: data?.recruitmentEnd || '',
-    positions: data && data.position ? data.position.map(item => item.id) : [],
-    requiredStacks:
-      data && data.techStack ? data.techStack.map(item => item.id) : [],
+    // eslint-disable-next-line no-nested-ternary
+    positions: !data
+      ? []
+      : data?.position.length === 0
+        ? [0]
+        : data?.position.map(item => item.id),
+    // eslint-disable-next-line no-nested-ternary
+    requiredStacks: !data
+      ? []
+      : data.techStack.length === 0
+        ? [0]
+        : data.techStack.map(item => item.id),
     projectTitle: data?.title || '',
     projectDescription: data?.description || '',
   };
@@ -83,6 +93,7 @@ export default function LoungeForm() {
   const { data: projectsDetail } = useGetPostDetail<LoungeDto.GetProjectDetail>(
     Number(modifyProjectId || 0),
   );
+
   const { mutateAsync: postProject, isPending: isPostProjectPending } =
     usePostMyPost<LoungeDto.PostProjectParams>();
 
@@ -102,6 +113,9 @@ export default function LoungeForm() {
     control,
     formState: { isDirty, isSubmitting },
   } = methods;
+
+  const currCampusIdList = useWatch({ control, name: 'projectDescription' });
+  console.log(currCampusIdList);
 
   usePageBlocker({
     isBlockRefresh: true,

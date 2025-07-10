@@ -53,7 +53,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
     <div
       role="link"
       tabIndex={0}
-      className="flex h-full flex-col items-start justify-between rounded-[20px] border border-solid border-lightGray bg-white p-4"
+      className="flex h-full cursor-pointer flex-col items-start justify-between rounded-[20px] border border-solid border-lightGray bg-white p-4"
       onClick={onViewCount}
       onKeyDown={e => e.key === 'Enter' && onViewCount}
     >

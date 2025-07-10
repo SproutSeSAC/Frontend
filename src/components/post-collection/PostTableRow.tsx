@@ -123,7 +123,7 @@ export default function PostTableRow<T extends UserPost | UserComment>({
               tabIndex={0}
               onClick={onViewCount}
               onKeyDown={e => e.key === 'Enter' && onViewCount}
-              className="underline"
+              className="cursor-pointer underline"
             >
               {title}
             </div>
