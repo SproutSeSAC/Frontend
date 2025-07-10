@@ -97,9 +97,9 @@ export default function AppliedSessionCard({
           <span>|</span>
           <span className="overflow-x-scroll truncate whitespace-nowrap scrollbar-hide">
             {meetingType === 'ONLINE' &&
-              (meetingPlace ? (
+              (meetingPlace && status === 'PARTICIPANT' ? (
                 <a
-                  href={meetingPlace} // NOTE: url 변경하기
+                  href={meetingPlace}
                   target="_blank"
                   rel="noreferrer"
                   className="overflow-x-scroll truncate whitespace-nowrap text-blue-300 underline underline-offset-1 scrollbar-hide"
@@ -107,7 +107,7 @@ export default function AppliedSessionCard({
                   {meetingPlace}
                 </a>
               ) : (
-                <span className="text-darkGray">미정</span>
+                <span className="text-darkGray">참여 확정시 링크 제공</span>
               ))}
 
             {meetingType === 'OFFLINE' &&
@@ -116,7 +116,7 @@ export default function AppliedSessionCard({
                   {meetingPlace}
                 </span>
               ) : (
-                <span className="text-darkGray">미정</span>
+                <span className="text-darkGray">참여 확정시 장소 제공</span>
               ))}
           </span>
         </li>

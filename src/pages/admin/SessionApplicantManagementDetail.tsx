@@ -1,5 +1,7 @@
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useGetPostDetail } from '@/services/post/postQueries';
 
 import {
@@ -41,6 +43,8 @@ const initialFilter = {
 };
 
 export default function SessionApplicantManagementDetail() {
+  const queryClient = useQueryClient();
+
   const { state } = useLocation() as {
     state?: { sessionDetail: NoticeSessionDetail };
   };
@@ -81,7 +85,6 @@ export default function SessionApplicantManagementDetail() {
     onCheckedChange,
     onAllClearCheckedChange,
     onAllCheckedChange,
-    invalidateQueries,
 
     acceptApplicant,
     rejectApplicant,
@@ -159,7 +162,9 @@ export default function SessionApplicantManagementDetail() {
                       return null;
                     }),
                   );
-                  await invalidateQueries();
+                  await queryClient.invalidateQueries({
+                    queryKey: ['useGetSessionApplicantList'],
+                  });
                   showToast(`선택한 참가자들을 모두 ${type}했습니다.`);
                   onAllClearCheckedChange();
                   hideDialog();
