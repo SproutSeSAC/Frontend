@@ -18,7 +18,7 @@ import { extractValidParams } from '@/utils';
 export const useGetInfiniteStoreList = ({
   userCampusId,
 }: {
-  userCampusId: number;
+  userCampusId?: number;
 }) => {
   const [searchParams] = useSearchParams();
   const newSearchParams = extractValidParams(searchParams);
@@ -43,12 +43,13 @@ export const useGetInfiniteStoreList = ({
         nextPage: data.stores.length === pageSize ? pageParam + 1 : undefined,
       };
     },
+    enabled: !!userCampusId,
     getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 0,
   });
 };
 
-export const useGetFilterCount = (campusId: number) => {
+export const useGetFilterCount = (campusId?: number) => {
   return useQuery({
     queryKey: ['useGetFilterCount', campusId],
     queryFn: async () => {

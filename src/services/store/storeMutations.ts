@@ -64,7 +64,7 @@ export const usePostMeal = () => {
   });
 };
 
-export const usePutMealPost = () => {
+export const usePutMealParticipate = () => {
   return useMutation<boolean, AxiosError, PutMealPost>({
     mutationFn: async requestBody => {
       const { data } = await axiosInstance.put(
@@ -85,12 +85,10 @@ export const usePutMealPostLeave = () => {
   });
 };
 
-export const usePutMealPostDelete = () => {
+export const useDeleteMealPost = () => {
   return useMutation<boolean, AxiosError, PutMealPost>({
-    mutationFn: async requestBody => {
-      const { data } = await axiosInstance.delete(`/mealPost`, {
-        data: requestBody,
-      });
+    mutationFn: async ({ mealPostId }: { mealPostId: number }) => {
+      const { data } = await axiosInstance.delete(`/mealPost/${mealPostId}`);
       return data;
     },
   });

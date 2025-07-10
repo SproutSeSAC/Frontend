@@ -3,7 +3,8 @@ import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import {
-  usePutMealPost,
+  useDeleteMealPost,
+  usePutMealParticipate,
   usePutMealPostLeave,
 } from '@/services/store/storeMutations';
 import { useGetMealPostDetail } from '@/services/store/storeQueries';
@@ -27,22 +28,29 @@ export default function MealRecruitCardModal({
   isParticipant,
   isOwner,
 }: MealRecruitCardModalProps) {
-  const { hideDialog, showToast } = useDialogContext();
-
   const queryClient = useQueryClient();
+
   const { data, isLoading } = useGetMealPostDetail(id);
+
+  const { hideDialog, showToast, alert } = useDialogContext();
 
   const {
     mutateAsync: joinMeal,
     isPending: isJoinMealPending,
     isIdle: isJoinIdle,
-  } = usePutMealPost();
+  } = usePutMealParticipate();
 
   const {
     mutateAsync: leaveMeal,
     isPending: isLeaveMealPending,
     isIdle: isLeaveIdle,
   } = usePutMealPostLeave();
+
+  const {
+    mutateAsync: deleteMeal,
+    isPending: isDeleteMealPending,
+    isIdle: isDeleteIdle,
+  } = useDeleteMealPost();
 
   const handleJoinClick = useCallback(async () => {
     try {
@@ -60,17 +68,59 @@ export default function MealRecruitCardModal({
 
   const handleLeaveClick = useCallback(async () => {
     try {
-      await leaveMeal({ mealPostId: id });
-      await queryClient.invalidateQueries({
-        queryKey: ['useGetInfiniteMealPostList'],
-      });
-      hideDialog();
-      showToast('한끼팟 나가기에 성공하였습니다.');
+      if (isOwner) {
+        await alert({
+          text: '정말로 한끼팟을 폭파하시겠습니까?',
+          subText: '다른 참여자들은 모두 자동으로 나가지게 됩니다.',
+          children: (
+            <>
+              <SquareButton
+                name="취소"
+                onClick={hideDialog}
+                color="gray"
+                type="button"
+              />
+              <SquareButton
+                type="button"
+                name="확인"
+                onClick={async () => {
+                  await deleteMeal({ mealPostId: id });
+                  await hideDialog();
+                  await queryClient.invalidateQueries({
+                    queryKey: ['useGetInfiniteMealPostList'],
+                  });
+                  showToast('한끼팟을 폭파했습니다.');
+                }}
+              />
+            </>
+          ),
+        });
+      } else {
+        await leaveMeal({ mealPostId: id });
+        await hideDialog();
+        await queryClient.invalidateQueries({
+          queryKey: ['useGetInfiniteMealPostList'],
+        });
+        showToast('한끼팟 나가기에 성공하였습니다.');
+      }
     } catch (err) {
       hideDialog();
-      showToast('한끼팟 나가기에 실패했습니다.');
+      showToast(
+        isOwner
+          ? '한끼팟을 폭파하지 못했습니다.'
+          : '한끼팟 나가기에 실패했습니다.',
+      );
     }
-  }, [id, queryClient, hideDialog, showToast, leaveMeal]);
+  }, [
+    isOwner,
+    queryClient,
+    showToast,
+    alert,
+    hideDialog,
+    deleteMeal,
+    id,
+    leaveMeal,
+  ]);
 
   return (
     !isLoading &&
@@ -165,13 +215,17 @@ export default function MealRecruitCardModal({
             />
           )}
 
-          {isParticipant && !isOwner && (
+          {isParticipant && (
             <SquareButton
               type="button"
-              name="한끼팟 나가기"
+              name={isOwner ? '한끼팟 폭파' : '한끼팟 나가기'}
               className="w-full flex-1"
               onClick={handleLeaveClick}
-              disabled={isLeaveMealPending || !isLeaveIdle}
+              disabled={
+                isOwner
+                  ? isDeleteMealPending || !isDeleteIdle
+                  : isLeaveMealPending || !isLeaveIdle
+              }
             />
           )}
         </div>

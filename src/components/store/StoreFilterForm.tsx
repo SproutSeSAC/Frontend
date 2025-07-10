@@ -42,9 +42,9 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
 
   const userCampus = userProfile?.campusList[0].id;
 
-  const campusId = Number(searchParams.get('campusId')) || userCampus || 1; // .
+  const campusId = Number(searchParams.get('campusId')) || userCampus;
 
-  const { data: filterCount } = useGetFilterCount(+campusId);
+  const { data: filterCount } = useGetFilterCount(campusId);
 
   const { showDialog } = useDialogContext();
 

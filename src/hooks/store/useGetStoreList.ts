@@ -6,7 +6,7 @@ import { Store } from '@/types/store/storeDto';
 export const useGetStoreList = () => {
   const { data: userProfile } = useGetUserProfile();
 
-  const userCampusId = userProfile?.campusList[0].id || 1;
+  const userCampusId = userProfile?.campusList[0].id;
 
   const {
     data = { pages: [{ stores: [], totalPages: 0 }], pageParams: [] },
