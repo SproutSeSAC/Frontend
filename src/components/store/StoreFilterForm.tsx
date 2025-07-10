@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
@@ -37,7 +38,11 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
 
   const { data: campusList } = useGetCampusList();
 
-  const campusId = Number(searchParams.get('campusId')) || 1;
+  const { data: userProfile } = useGetUserProfile();
+
+  const userCampus = userProfile?.campusList[0].id;
+
+  const campusId = Number(searchParams.get('campusId')) || userCampus || 1; // .
 
   const { data: filterCount } = useGetFilterCount(+campusId);
 

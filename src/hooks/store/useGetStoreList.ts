@@ -1,15 +1,20 @@
+import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetInfiniteStoreList } from '@/services/store/storeQueries';
 
 import { Store } from '@/types/store/storeDto';
 
 export const useGetStoreList = () => {
+  const { data: userProfile } = useGetUserProfile();
+
+  const userCampusId = userProfile?.campusList[0].id || 1;
+
   const {
     data = { pages: [{ stores: [], totalPages: 0 }], pageParams: [] },
     fetchNextPage,
     hasNextPage,
     isFetching,
     isLoading,
-  } = useGetInfiniteStoreList();
+  } = useGetInfiniteStoreList({ userCampusId });
 
   const excellentIndex = data?.pages.map(item => item.stores);
 

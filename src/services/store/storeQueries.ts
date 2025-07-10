@@ -15,7 +15,11 @@ import {
 } from '@/types/store/storeMealPostDto';
 import { extractValidParams } from '@/utils';
 
-export const useGetInfiniteStoreList = () => {
+export const useGetInfiniteStoreList = ({
+  userCampusId,
+}: {
+  userCampusId: number;
+}) => {
   const [searchParams] = useSearchParams();
   const newSearchParams = extractValidParams(searchParams);
   const pageSize = 10;
@@ -28,7 +32,7 @@ export const useGetInfiniteStoreList = () => {
         {
           params: {
             page: pageParam,
-            campusId: newSearchParams.campusId || 1,
+            campusId: newSearchParams.campusId || userCampusId,
             ...newSearchParams,
             size: pageSize,
           },
