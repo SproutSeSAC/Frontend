@@ -22,7 +22,6 @@ import {
   SubmitErrorHandler,
   SubmitHandler,
   useForm,
-  useWatch,
 } from 'react-hook-form';
 import { BsLink45Deg } from 'react-icons/bs';
 
@@ -113,9 +112,6 @@ export default function LoungeForm() {
     control,
     formState: { isDirty, isSubmitting },
   } = methods;
-
-  const currCampusIdList = useWatch({ control, name: 'projectDescription' });
-  console.log(currCampusIdList);
 
   usePageBlocker({
     isBlockRefresh: true,

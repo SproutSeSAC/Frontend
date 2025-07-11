@@ -27,7 +27,7 @@ export default function Schedule() {
     <MainView className="mb-20 h-screen !min-h-[900px]">
       <Header
         title={`${userProfile?.name} 스프님 새싹 일정`}
-        highlight="새싹"
+        highlight="새싹 일정"
       />
 
       {!isCalendarDataLoading && !isCourseCalendarStatusLoading && (

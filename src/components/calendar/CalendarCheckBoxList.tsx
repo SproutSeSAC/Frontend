@@ -58,33 +58,37 @@ export default function CalendarCheckBoxList({
           titleClassName="text-mainGreen text-sm text-darkGray-active mb-3 [&>button>svg]:text-xs [&>button>svg]:text-darkGray-active"
           initialOpen
         >
-          <ul className="flex flex-col gap-2">
-            {category === '교육과정 캘린더' &&
-              calendarList?.map(calendar => (
+          {category === '교육과정 캘린더' && (
+            <ul className="flex flex-col gap-2">
+              {calendarList?.map(calendar => (
                 <CourseCalendarCheckBox
                   key={calendar.courseId}
                   calendar={calendar}
                   onChange={() => onCheckBoxChange(calendar.calendarId)}
                 />
               ))}
-          </ul>
+            </ul>
+          )}
 
-          <ul className="flex flex-col gap-2">
-            {category === '개인 캘린더' &&
-              calendarList?.map(({ id, summary, backgroundColor, primary }) => (
-                <li key={id} className="[&>label]:items-start">
-                  <Checkbox
-                    id={id}
-                    text={primary ? '기본 캘린더' : summary}
-                    checked={!!currentCalendarIds?.includes(id)}
-                    onChange={() => onCheckBoxChange(id)}
-                    textClassName="!text-black"
-                    checkBoxColor={backgroundColor}
-                    inputClassName="mt-1"
-                  />
-                </li>
-              ))}
-          </ul>
+          {category === '개인 캘린더' && (
+            <ul className="flex flex-col gap-2">
+              {calendarList?.map(
+                ({ id, summary, backgroundColor, primary }) => (
+                  <li key={id} className="[&>label]:items-start">
+                    <Checkbox
+                      id={id}
+                      text={primary ? '기본 캘린더' : summary}
+                      checked={!!currentCalendarIds?.includes(id)}
+                      onChange={() => onCheckBoxChange(id)}
+                      textClassName="!text-black"
+                      checkBoxColor={backgroundColor}
+                      inputClassName="mt-1 border"
+                    />
+                  </li>
+                ),
+              )}
+            </ul>
+          )}
         </Accordion>
       ))}
     </ul>

@@ -65,15 +65,32 @@ export const useCalendarList = () => {
     }
   }, []);
 
+  // 맨처음 로컬스토리지에 값 없으면 다 저장.
+  // 로컬스토리지에 값 가져오기
   useEffect(() => {
     const courseCalendarIdList = courseCalendarList
-      .filter(detail => detail?.accessRole)
+      .filter(({ calendarId }) => calendarId)
       .map(({ calendarId }) => calendarId);
+
+    // const selectedCourseCalendarIdList = localStorage
+    //   .getItem('selectedCourseCalendarIdList')
+    //   ?.split(', ');
+
+    // if (
+    //   !selectedCourseCalendarIdList ||
+    //   selectedCourseCalendarIdList?.length === 0
+    // ) {
+    //   localStorage.setItem(
+    //     'selectedCourseCalendarIdList',
+    //     courseCalendarIdList.join(', '),
+    //   );
+    // }
 
     if (courseCalendarIdList?.length !== 0) {
       setCurrShowingCalendarIds(courseCalendarIdList);
     }
-  }, [setCurrShowingCalendarIds, courseCalendarList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseCalendarList]);
 
   return {
     allCalendarList,
