@@ -1,4 +1,8 @@
-import { Link } from 'react-router-dom';
+import { useCallback } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import { usePostAddViewCount } from '@/services/post/postMutation';
 
 import { postTypeObj } from '@/constants';
 import { UserComment, UserPost } from '@/types/mypage/myPostDto';
@@ -33,7 +37,7 @@ export default function PostTableRow<T extends UserPost | UserComment>({
   deleteDisabled,
   onDeleteConfirmClick,
 }: PostTableRowProps<T>) {
-  const { createdAt, postId, postType } = post;
+  const { createdAt, postId, postType, linkedId } = post;
 
   const type = {
     NOTICE: 'notice',
@@ -58,6 +62,20 @@ export default function PostTableRow<T extends UserPost | UserComment>({
       };
 
   const { id, title, nickname } = data;
+
+  const { mutateAsync: addViewCount } = usePostAddViewCount(
+    postType === 'NOTICE' ? 'notices' : 'project',
+  );
+
+  const navigate = useNavigate();
+
+  const onViewCount = useCallback(async () => {
+    await addViewCount({ linkedId });
+    navigate(
+      `/${type[postType as 'PROJECT' | 'STUDY' | 'NOTICE']}/post/${postId}`,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addViewCount, navigate, post, postId, postType]);
 
   return (
     <tr className="hover:bg-gray4 group">
@@ -85,30 +103,30 @@ export default function PostTableRow<T extends UserPost | UserComment>({
       {(headerCellList.includes('댓글 내용') ||
         headerCellList.includes('게시글 제목')) && (
         <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-2 text-start">
+          {/* 맛집, 한끼팟 타입 */}
           {(postType === 'MEAL' || postType === 'STORE') && handleShowDialog ? (
             <button
               type="button"
               className="underline"
               onClick={() =>
-                handleShowDialog(
-                  postType,
-                  (post as UserPost)?.linkedId || postId,
-                  {
-                    comment: title,
-                    nickname,
-                  },
-                )
+                handleShowDialog(postType, linkedId || postId, {
+                  comment: title,
+                  nickname,
+                })
               }
             >
               {title}
             </button>
           ) : (
-            <Link
-              to={`/${type[postType as 'PROJECT' | 'STUDY' | 'NOTICE']}/post/${postId}`}
-              className="underline"
+            <div
+              role="link"
+              tabIndex={0}
+              onClick={onViewCount}
+              onKeyDown={e => e.key === 'Enter' && onViewCount}
+              className="cursor-pointer underline"
             >
               {title}
-            </Link>
+            </div>
           )}
         </TableDataCell>
       )}

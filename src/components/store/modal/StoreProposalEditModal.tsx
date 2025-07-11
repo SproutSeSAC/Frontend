@@ -83,7 +83,7 @@ export default function StoreProposalEditModal({
         <SquareButton
           name="제보하기"
           type="submit"
-          className="mt-10 self-end"
+          className="mt-10 self-end px-16"
           disabled={isPending || !isIdle}
         />
       </form>

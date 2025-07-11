@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { contactMethodList } from '@/constants';
 import { ContactMethodDisplayKey } from '@/types';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -22,10 +20,7 @@ export default function ContactMethodContainer() {
     MESSENGER: '오픈채팅방 링크를 입력해주세요.',
   };
 
-  useEffect(() => {
-    setValue('contactDetail', '');
-    clearErrors('contactDetail');
-  }, [clearErrors, contactMethod, setValue]);
+  const currContactMethod = useWatch({ control, name: 'contactMethod' });
 
   return (
     <div className={`${contactMethod && 'flex gap-2'}`}>
@@ -43,14 +38,25 @@ export default function ContactMethodContainer() {
               options={contactMethodList}
               selectedOption={selectedOption}
               errorMsg={error?.message}
-              onChangeValue={data => onChange(data[0].key)}
+              onChangeValue={data => {
+                if (currContactMethod === data[0].key) return;
+
+                setValue('contactDetail', '');
+                clearErrors('contactDetail');
+                onChange(data[0].key);
+              }}
             />
           );
         }}
       />
 
       {contactMethod &&
-        (contactMethod !== 'PHONE' ? (
+        (contactMethod === 'PHONE' ? (
+          <ControllerPhoneNumber
+            name="contactDetail"
+            className="!h-[57px] !border-mainGray !pl-2"
+          />
+        ) : (
           <Controller
             control={control}
             name="contactDetail"
@@ -70,11 +76,6 @@ export default function ContactMethodContainer() {
                 </div>
               );
             }}
-          />
-        ) : (
-          <ControllerPhoneNumber
-            name="contactDetail"
-            className="!h-[57px] !border-mainGray !pl-2"
           />
         ))}
     </div>

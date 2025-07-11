@@ -18,12 +18,14 @@ export default function FavoriteButton({
   onClick,
   disabled,
 }: FavoriteButtonProps) {
+  const iconClassName = 'cursor-pointer text-mainGreen';
+
   return (
     <button type="button" onClick={onClick} disabled={disabled}>
       {isFavorite ? (
-        <BsHeartFill size={size} className="cursor-pointer text-mainGreen" />
+        <BsHeartFill size={size} className={iconClassName} />
       ) : (
-        <BsHeart size={size} className="cursor-pointer text-mainGreen" />
+        <BsHeart size={size} className={iconClassName} />
       )}
     </button>
   );

@@ -37,7 +37,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
 
   return (
     <section className="mb-24 mt-10">
-      <header className="flex gap-2 text-2xl font-semibold">
+      <header className="flex gap-2 pl-2 text-xl font-semibold">
         <h4 className="">댓글</h4>
         <span className="text-mainGreen">{commentList.length}</span>
       </header>
@@ -45,20 +45,20 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <textarea
           {...register('content')}
-          className="my-2.5 w-full resize-none rounded border border-solid border-lightGray p-[15px] outline-none"
+          className="mb-3 mt-2.5 w-full resize-none rounded-lg border border-solid border-mainGray p-[15px] outline-none"
           placeholder="댓글을 작성해 주세요."
           rows={5}
         />
         <SquareButton
           type="submit"
-          name="등록"
-          className="self-end px-5"
+          name="등록하기"
+          className="w-[35%] min-w-[200px] self-end py-2"
           disabled={isPostCommentPending}
         />
       </form>
 
       {!isCommentListLoading && (
-        <ul className="mt-8 flex flex-col gap-8">
+        <ul className="mt-10 flex flex-col gap-y-10">
           {commentList.map(
             ({
               id,
@@ -67,13 +67,13 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
               createAt,
             }) => (
               <li key={id} className="flex w-full flex-col gap-2">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <UserImage
                       className="size-[30px]"
                       imageNameSegment={profileImg ?? ''}
                     />
-                    <span className="text-[15px]">
+                    <span className="text-[15px] font-medium">
                       {nickname ? `@${nickname}` : '-'}
                     </span>
                     <Tag
@@ -85,17 +85,17 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
 
                   {nickname === profileCard?.profile?.nickname &&
                     !isEditingComment.isEditing && (
-                      <div className="flex items-center gap-3">
+                      <div className="ml-5 flex items-center gap-2">
                         <EditButton
                           label="댓글 수정하기"
                           onClick={() => {
                             toggleEditingComment(id);
                             reset({ editedContent: content });
                           }}
-                          className="!size-4 pb-0.5"
+                          className="!size-5"
                         />
                         <TrashButton
-                          className="!size-5 pt-0.5"
+                          className="!size-5 p-[1px]"
                           onConfirmClick={() => onDeleteCommentClick(id)}
                           disabled={isDeleteCommentPending}
                         />
@@ -113,29 +113,39 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                   >
                     <textarea
                       {...register('editedContent')}
-                      className="mb-2 w-full resize-none rounded border border-solid border-lightGray p-[15px] focus:outline-none"
+                      className="mb-2 w-full resize-none rounded-lg border border-mainGray p-[15px] focus:outline-none"
                       placeholder="댓글을 수정해 주세요."
                       rows={5}
                     />
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-darkGray">
-                        {formatDate(createAt, 'yyyy.MM.dd HH:mm')}
-                      </span>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <span className="pr-3 text-darkGray">
+                          {formatDate(createAt, 'yyyy.MM.dd')}
+                        </span>
+                        <span className="text-darkGray">
+                          {formatDate(createAt, 'HH:mm')}
+                        </span>
+                      </div>
                       <SquareButton
                         type="submit"
-                        name="수정"
-                        className="self-end px-5"
+                        name="수정하기"
+                        color="lightGreen"
+                        className="w-[25%] min-w-[200px] self-end !py-2"
                         disabled={isEditCommentPending}
                       />
                     </div>
                   </form>
                 ) : (
                   <>
-                    <p className="my-3">{content}</p>
-                    <span className="text-darkGray">
-                      {formatDate(createAt, 'yyyy.MM.dd HH:mm')}
-                    </span>
+                    <p className="mb-3 mt-2 whitespace-pre-wrap">{content}</p>
+                    <div>
+                      <span className="pr-3 text-darkGray">
+                        {formatDate(createAt, 'yyyy.MM.dd')}
+                      </span>
+                      <span className="text-darkGray">
+                        {formatDate(createAt, 'HH:mm')}
+                      </span>
+                    </div>
                   </>
                 )}
               </li>

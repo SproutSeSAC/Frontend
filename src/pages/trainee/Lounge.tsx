@@ -150,20 +150,21 @@ export default function Lounge() {
         </button>
       </div>
 
-      <ul className="grid grid-cols-3 gap-6">
-        {projects.map(project => (
-          <li key={project.id} className="[&>a]:!w-full">
-            <LoungePostCard card={project} />
-          </li>
+      {!isLoading &&
+        (projects.length === 0 ? (
+          <EmptyContent
+            message="모집중인 프로젝트가 없습니다."
+            className="mt-16"
+          />
+        ) : (
+          <ul className="mb-16 grid grid-cols-3 gap-6">
+            {projects.map(project => (
+              <li key={project.id} className="[&>a]:!w-full">
+                <LoungePostCard card={project} />
+              </li>
+            ))}
+          </ul>
         ))}
-      </ul>
-
-      {projects.length === 0 && !isLoading && (
-        <EmptyContent
-          message="모집중인 프로젝트가 없습니다."
-          className="mt-16"
-        />
-      )}
 
       {isLoading && (
         <div className="flex w-full justify-center py-10">

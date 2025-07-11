@@ -71,10 +71,15 @@ export default function TextEditor({
 
     input.onchange = async () => {
       if (!input.files?.[0]) return;
+
       const onloadFn = (result: string) => {
         if (quillRef.current) {
           const range = quillRef.current.getSelection();
-          quillRef.current.insertEmbed(range?.index || 0, 'image', result);
+          const index = range?.index ?? 0;
+
+          quillRef.current.insertEmbed(index, 'image', result);
+          quillRef.current.insertText(index + 1, '\n\n', 'user');
+          quillRef.current.setSelection(index + 3, 0);
         }
       };
       onImageChange(input.files?.[0], 1, onloadFn);

@@ -79,3 +79,15 @@ export const useDeleteAllScrap = (
     ...options,
   });
 };
+
+/** 포스트 뷰 증가 API */
+export const usePostAddViewCount = (postType: 'project' | 'notices') => {
+  return useMutation<boolean, AxiosError, { linkedId: number }>({
+    mutationFn: async requestParams => {
+      const { data } = await axiosInstance.post(
+        `/${postType}/${requestParams.linkedId}/view`,
+      );
+      return data;
+    },
+  });
+};

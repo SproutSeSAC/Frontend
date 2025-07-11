@@ -126,7 +126,7 @@ export default function UserManagement() {
           }
           handleChangeTab(type);
         }}
-        tabClassName="!p-3"
+        tabClassName="!p-3 !px-4"
       />
 
       <div className="my-4 flex items-center justify-between gap-4">

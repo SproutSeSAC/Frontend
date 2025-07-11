@@ -4,7 +4,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
 import CustomDatePicker from '@/components/common/input/CustomDatePicker';
-import ErrorMsg from '@/components/common/input/ErrorMsg';
+
+// import ErrorMsg from '@/components/common/input/ErrorMsg';
 
 interface ControllerDateTimeProps {
   type?: 'date' | 'dateTime';
@@ -21,7 +22,7 @@ export default function ControllerDateTime({
   } = useFormContext();
 
   return (
-    <div className="relative flex w-full flex-col">
+    <div className="relative flex h-full w-full flex-col">
       {type === 'date' && (
         <Controller
           control={control}
@@ -31,12 +32,14 @@ export default function ControllerDateTime({
               <CustomDatePicker
                 id={name}
                 currentDate={value ? new Date(value) : undefined}
+                className={`h-[59px] ${errors[name]?.message ? 'border-red-500' : 'border-mainGray'}`}
                 onChange={data => {
                   if (data) {
                     const dateTime = formatDate(data, "yyyy-MM-dd'T'HH:mm:ss");
                     onChange(dateTime);
                   }
                 }}
+                errorMsg={errors[name]?.message as string}
               />
             );
           }}
@@ -111,12 +114,12 @@ export default function ControllerDateTime({
         />
       )}
 
-      {errors[name]?.message && (
+      {/* {errors[name]?.message && (
         <ErrorMsg
           msg={errors[name]?.message as string}
-          className="absolute -bottom-6 right-0 pr-2"
+          className="absolute -bottom-6 left-0 pl-2"
         />
-      )}
+      )} */}
     </div>
   );
 }

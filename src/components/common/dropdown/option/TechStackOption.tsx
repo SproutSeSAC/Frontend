@@ -4,12 +4,14 @@ interface TechStackOptionProps {
   option: OptionItem;
   isSelected: boolean;
   onChangeValue: (option: OptionItem) => void;
+  disabled?: boolean;
 }
 
 export default function TechStackOption({
   option,
   isSelected,
   onChangeValue,
+  disabled,
 }: TechStackOptionProps) {
   return (
     <li
@@ -22,6 +24,7 @@ export default function TechStackOption({
           checked={isSelected}
           onChange={() => onChangeValue(option)}
           className="hidden"
+          disabled={disabled}
         />
         {option.name}
       </label>

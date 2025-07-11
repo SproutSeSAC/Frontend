@@ -25,11 +25,11 @@ export default function HeaderMenu() {
   const handleLogout = async () => {
     deleteCookie(ACCESS_TOKEN_KEY);
     sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
-    navigate('/login');
-    hideDialog();
     await axiosInstance.get('/sproutLogout', {
       withCredentials: true,
     });
+    hideDialog();
+    navigate('/login');
   };
 
   const onLogOutClick = () => {

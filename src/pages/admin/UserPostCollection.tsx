@@ -53,7 +53,7 @@ export default function UserPostCollection({
   const initialFilter: MyPostDto.GetPostListParams = {
     page: 1,
     size: 5,
-    // order: 'latest',
+    sort: 'updated_At,DESC',
   };
 
   const {

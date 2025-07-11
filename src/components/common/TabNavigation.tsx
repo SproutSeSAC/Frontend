@@ -10,6 +10,7 @@ interface TabNavigationProps<T> {
   ) => void;
   selectValue: string;
   children?: ReactNode;
+  className?: string;
   tabClassName?: string;
   selectedStyle?: {
     point: 'dot' | 'border';
@@ -23,6 +24,7 @@ export default function TabNavigation<T>({
   selectValue,
   onChangeValue,
   tabClassName,
+  className,
   selectedStyle = { point: 'border', color: 'black' },
 }: TabNavigationProps<T>) {
   const borderStyle = selectedStyle.point === 'border' ? 'border-b-2' : '';
@@ -34,9 +36,9 @@ export default function TabNavigation<T>({
 
   return (
     <nav
-      className={`flex items-end justify-between text-lg font-semibold ${selectedStyle.point === 'border' ? 'border-b' : ''}`}
+      className={`flex items-end justify-between text-lg font-semibold ${selectedStyle.point === 'border' ? 'border-b' : ''} ${className}`}
     >
-      <ul className="flex flex-wrap justify-start gap-5">
+      <ul className="flex flex-wrap justify-start">
         {tabList.map(({ text, type }) => (
           <li
             role="presentation"

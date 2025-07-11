@@ -72,7 +72,7 @@ export default function StoreReviewForm({
         showToast('댓글을 등록했어요!', 1000);
         reset();
         queryClient.invalidateQueries({
-          queryKey: ['useGetStoreDetail', storeId],
+          queryKey: ['useGetPostDetail', storeId],
         });
       } catch (err) {
         showToast('댓글을 등록하지 못했어요.');

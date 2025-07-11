@@ -41,7 +41,7 @@ export default function MyCollection() {
   const initialFilter: MyPostDto.GetPostListParams = {
     page: 1,
     size: 3,
-    // order: 'latest',  NOTE: 최신순 정렬 적용 필요
+    sort: 'updated_At,DESC',
   };
 
   const {

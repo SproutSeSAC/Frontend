@@ -38,7 +38,7 @@ export default function AppliedSessionsDetail() {
       {!isLoading &&
         (myAppliedSessionList?.length === 0 ? (
           <EmptyContent
-            message="신청한 이벤트가 없습니다."
+            message="신청한 특강/행사가 없습니다."
             className="h-full pb-20"
           />
         ) : (

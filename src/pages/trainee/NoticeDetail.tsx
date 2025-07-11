@@ -152,8 +152,6 @@ export default function NoticeDetail() {
     userProfile.userId,
   ]);
 
-  const onBackClick = () => navigate('/notice');
-
   const { alert, hideDialog } = useDialogContext();
 
   useEffect(() => {
@@ -169,88 +167,82 @@ export default function NoticeDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
-  return (
-    <div className="flex w-full">
-      <BackButton onClick={onBackClick} />
-
-      {isNoticeDetailLoading ? (
-        <div className="ml-2 flex h-[80vh] w-full items-center justify-center">
-          <LoopLoading />
-        </div>
-      ) : (
-        <div className="w-full">
-          <section className="w-full px-6 pb-[45px] pt-5">
-            <header className="flex items-center justify-between">
-              <h1 className="pr-4 text-[32px] font-semibold">
-                {noticeDetail?.title || '-'}
-              </h1>
-              <FavoriteButton
-                isFavorite={noticeDetail?.isScraped ?? false}
-                onClick={onScrapClick}
-                size={24}
-                disabled={isPostScrapPending || isDeleteScrapPending}
-              />
-            </header>
-
-            <div className="mt-12 flex gap-2">
-              {noticeDetail?.writer?.role && (
-                <Tag
-                  roleKey={noticeDetail?.writer?.role}
-                  size="big"
-                  text={rolesObj[noticeDetail?.writer?.role]}
-                  className="px-[10px] py-[5px]"
-                />
-              )}
-              {noticeDetail?.noticeType && (
-                <Tag
-                  size="big"
-                  color="gray"
-                  text={noticeCategoryDisplay[noticeDetail?.noticeType]}
-                  className="px-[10px] py-[5px]"
-                />
-              )}
-              {noticeDetail?.writer?.userId === userProfile?.userId && (
-                <div className="group relative ml-auto flex items-center justify-center">
-                  <button className="px-2">
-                    <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
-                  </button>
-
-                  <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
-                    <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
-                      {actions.map(action => (
-                        <li key={action.label}>
-                          <button
-                            onClick={action.onClick}
-                            className={action.className}
-                          >
-                            {action.label}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {noticeDetail?.noticeType &&
-              findCurrNotice(noticeDetail?.noticeType)?.needExtraInfo && (
-                <NoticeApplicationInfoTemplate notice={noticeDetail} />
-              )}
-
-            <PostDetailsTemplate
-              name={noticeDetail?.writer?.userName || '-'}
-              createdAt={noticeDetail?.createdAt}
-              viewCount={noticeDetail?.viewCount || 0}
-              description={noticeDetail?.content || '-'}
-              actions={sessionActionList()}
-              imageNameSegment={noticeDetail?.writer?.profileUrl}
-            />
-          </section>
-
-          <CommentTemplate postId={postId} />
-        </div>
-      )}
+  return isNoticeDetailLoading ? (
+    <div className="ml-2 flex h-[80vh] w-full items-center justify-center">
+      <LoopLoading />
     </div>
+  ) : (
+    <>
+      <section className="mb-7 w-full">
+        <BackButton onClick={() => navigate('/notice')} />
+
+        <header className="mt-7 flex items-center justify-between">
+          <h1 className="pr-4 text-2xl font-semibold">{noticeDetail?.title}</h1>
+          <FavoriteButton
+            isFavorite={noticeDetail?.isScraped ?? false}
+            onClick={onScrapClick}
+            size={24}
+            disabled={isPostScrapPending || isDeleteScrapPending}
+          />
+        </header>
+
+        <div className="mb-3 mt-4 flex gap-2">
+          {noticeDetail?.writer?.role && (
+            <Tag
+              roleKey={noticeDetail?.writer?.role}
+              size="big"
+              text={rolesObj[noticeDetail?.writer?.role]}
+              className="px-[10px] py-[5px]"
+            />
+          )}
+          {noticeDetail?.noticeType && (
+            <Tag
+              size="big"
+              color="gray"
+              text={noticeCategoryDisplay[noticeDetail?.noticeType]}
+              className="px-[10px] py-[5px]"
+            />
+          )}
+          {noticeDetail?.writer?.userId === userProfile?.userId && (
+            <div className="group relative ml-auto flex items-center justify-center">
+              <button className="px-2">
+                <IoEllipsisHorizontalSharp className="size-7 text-darkGray-active" />
+              </button>
+
+              <div className="absolute right-0 top-5 z-10 hidden py-4 hover:block group-hover:block">
+                <ul className="flex w-[90px] flex-col items-center gap-3 rounded-md bg-white p-3 shadow-card">
+                  {actions.map(action => (
+                    <li key={action.label}>
+                      <button
+                        onClick={action.onClick}
+                        className={action.className}
+                      >
+                        {action.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {noticeDetail?.noticeType &&
+          findCurrNotice(noticeDetail?.noticeType)?.needExtraInfo && (
+            <NoticeApplicationInfoTemplate notice={noticeDetail} />
+          )}
+
+        <PostDetailsTemplate
+          name={noticeDetail?.writer?.userName || '-'}
+          createdAt={noticeDetail?.createdAt}
+          viewCount={noticeDetail?.viewCount || 0}
+          description={noticeDetail?.content || '-'}
+          actions={sessionActionList()}
+          imageNameSegment={noticeDetail?.writer?.profileUrl}
+        />
+      </section>
+
+      <CommentTemplate postId={postId} />
+    </>
   );
 }

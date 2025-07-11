@@ -96,12 +96,10 @@ export default function MyCourseProgressCard() {
         </div>
 
         {/* 캠퍼스 */}
-        <div className="mb-7 flex items-center px-4">
-          <img src={sproutLogo} alt="새싹 로고" className="size-5 p-1" />
-          <span className="mr-2 text-sm font-bold">
-            {campusList[0]?.campusName}
-          </span>
-          <span className="text-sm font-medium text-darkGray-active">
+        <div className="mb-5 flex items-center px-4">
+          <img src={sproutLogo} alt="새싹 로고" className="size-6 p-1" />
+          <span className="mr-2 font-bold">{campusList[0]?.campusName}</span>
+          <span className="font-medium text-darkGray-active">
             {courseList?.[0]?.courseStartDate?.replaceAll('-', '.')} ~{' '}
             {courseList?.[0]?.courseEndDate?.replaceAll('-', '.')}
           </span>
@@ -111,44 +109,67 @@ export default function MyCourseProgressCard() {
         <div className="flex w-full flex-1 flex-col justify-between gap-1.5 pl-4">
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">도메인</span>
-            <ScrollContainer className="gap-3" isBlurRight>
-              {domainList?.map(({ id, domain }) => (
-                <li key={id}>
-                  <Tag
-                    text={domain}
-                    size="big"
-                    color="grayLight"
-                    className="px-[14px] py-[10px] !font-normal"
-                  />
-                </li>
-              ))}
-            </ScrollContainer>
+            {domainList.length !== 0 ? (
+              <ScrollContainer className="gap-3" isBlurRight>
+                {domainList?.map(({ id, domain }) => (
+                  <li key={id}>
+                    <Tag
+                      text={domain}
+                      size="big"
+                      color="grayLight"
+                      className="px-[14px] !font-normal"
+                    />
+                  </li>
+                ))}
+              </ScrollContainer>
+            ) : (
+              <span className="text-sm text-mainGray-hover">
+                선택된 도메인이 없습니다.
+              </span>
+            )}
           </div>
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">직무</span>
-            <ScrollContainer className="gap-4" isBlurRight>
-              {jobList?.map(({ job, id }) => (
-                <li key={id} className="leading-5 tracking-tight">
-                  {job}
-                </li>
-              ))}
-            </ScrollContainer>
+            {jobList.length !== 0 ? (
+              <ScrollContainer className="gap-3" isBlurRight>
+                {jobList?.map(({ job, id }) => (
+                  <li key={id} className="leading-5 tracking-tight">
+                    <Tag
+                      text={job}
+                      size="big"
+                      color="lightGreen"
+                      className="px-[14px] !font-normal"
+                    />
+                  </li>
+                ))}
+              </ScrollContainer>
+            ) : (
+              <span className="text-sm text-mainGray-hover">
+                선택된 직무가 없습니다.
+              </span>
+            )}
           </div>
 
           <div className="flex w-full items-center [&>div]:flex-1">
             <span className="w-20 text-sm font-semibold">기술 스택</span>
-            <ScrollContainer className="gap-3" isBlurRight>
-              {techStackList?.map(({ id, techStack, iconImageUrl }) => (
-                <li key={id} className="size-7">
-                  <img
-                    src={iconImageUrl}
-                    alt={techStack}
-                    className="size-full"
-                  />
-                </li>
-              ))}
-            </ScrollContainer>
+            {techStackList.length !== 0 ? (
+              <ScrollContainer className="gap-3" isBlurRight>
+                {techStackList?.map(({ id, techStack, iconImageUrl }) => (
+                  <li key={id} className="size-7">
+                    <img
+                      src={iconImageUrl}
+                      alt={techStack}
+                      className="size-full"
+                    />
+                  </li>
+                ))}
+              </ScrollContainer>
+            ) : (
+              <span className="text-sm text-mainGray-hover">
+                선택된 기술스택이 없습니다.
+              </span>
+            )}
           </div>
         </div>
       </div>

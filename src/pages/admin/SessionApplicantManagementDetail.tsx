@@ -1,5 +1,7 @@
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useGetPostDetail } from '@/services/post/postQueries';
 
 import {
@@ -25,7 +27,7 @@ import {
 } from '@/types';
 import { SessionApplicantsStatusTabType } from '@/types/admin';
 import { formatDate, getDDay } from '@/utils';
-import { BsCalendar, BsCalendar2Minus, BsClock } from 'react-icons/bs';
+import { BsCalendar, BsClock } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
 import Pagination from '@/components/common/Pagination';
@@ -37,10 +39,12 @@ import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 
 const initialFilter = {
   page: 1,
-  size: 1,
+  size: 10,
 };
 
 export default function SessionApplicantManagementDetail() {
+  const queryClient = useQueryClient();
+
   const { state } = useLocation() as {
     state?: { sessionDetail: NoticeSessionDetail };
   };
@@ -81,7 +85,6 @@ export default function SessionApplicantManagementDetail() {
     onCheckedChange,
     onAllClearCheckedChange,
     onAllCheckedChange,
-    invalidateQueries,
 
     acceptApplicant,
     rejectApplicant,
@@ -159,7 +162,9 @@ export default function SessionApplicantManagementDetail() {
                       return null;
                     }),
                   );
-                  await invalidateQueries();
+                  await queryClient.invalidateQueries({
+                    queryKey: ['useGetSessionApplicantList'],
+                  });
                   showToast(`선택한 참가자들을 모두 ${type}했습니다.`);
                   onAllClearCheckedChange();
                   hideDialog();
@@ -232,7 +237,7 @@ export default function SessionApplicantManagementDetail() {
 
               <div className="flex items-center gap-1">
                 <span className="text-[15px] text-darkGray">마감</span>
-                <BsCalendar2Minus size={13} className="text-darkGray" />
+                <BsCalendar size={13} className="text-darkGray" />
                 <span className="text-[15px] text-darkGray">
                   {formatDate(
                     noticeDetail?.applicationEndDateTime,
@@ -252,7 +257,7 @@ export default function SessionApplicantManagementDetail() {
           tabList={sessionApplicantsStatusTabList}
           selectValue={tabName ?? 'ALL'}
           onChangeValue={handleChangeTab}
-          tabClassName="!pb-3 !px-3"
+          tabClassName="!pb-3 !px-4"
         />
 
         <div className="flex items-center space-x-4">

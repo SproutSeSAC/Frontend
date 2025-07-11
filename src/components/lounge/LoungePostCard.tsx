@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { usePostIncrementViewCount } from '@/services/post/loungeMutations';
+import { usePostAddViewCount } from '@/services/post/postMutation';
 
 import { progressDisplay, ptypeDisplay } from '@/constants';
 import { useHandleScrap } from '@/hooks';
@@ -33,7 +33,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
     meetingType,
   } = card;
 
-  const { mutateAsync: postViewCount } = usePostIncrementViewCount();
+  const { mutateAsync: addViewCount } = usePostAddViewCount('project');
 
   const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
     useHandleScrap({
@@ -42,15 +42,20 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
       invalidateQueryKeys: [{ queryKey: ['useGetLoungeProjectList'] }],
     });
 
+  const navigate = useNavigate();
+
   const onViewCount = useCallback(async () => {
-    await postViewCount({ projectId: id });
-  }, [id, postViewCount]);
+    await addViewCount({ linkedId: id });
+    navigate(`/lounge/post/${postId}`);
+  }, [addViewCount, id, navigate, postId]);
 
   return (
-    <Link
-      to={`/lounge/post/${postId}`}
-      className="flex h-full w-[275px] flex-col items-start justify-between rounded-[20px] border border-solid border-lightGray bg-white p-4"
+    <div
+      role="link"
+      tabIndex={0}
+      className="flex h-full cursor-pointer flex-col items-start justify-between rounded-[20px] border border-solid border-lightGray bg-white p-4"
       onClick={onViewCount}
+      onKeyDown={e => e.key === 'Enter' && onViewCount}
     >
       <div className="flex w-full items-center justify-between">
         <Tag postKey={ptype} size="medium" text={`#${ptypeDisplay[ptype]}`} />
@@ -131,6 +136,6 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           <span>{progressDisplay[meetingType]}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

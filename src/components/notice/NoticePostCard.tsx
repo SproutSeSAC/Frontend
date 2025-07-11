@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useNoticeIncrementViewCount } from '@/services/post/noticeMutations';
+import { usePostAddViewCount } from '@/services/post/postMutation';
 
 import { noticeCategoryDisplay, rolesObj } from '@/constants';
 import { useHandleScrap } from '@/hooks';
@@ -31,18 +31,18 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
       invalidateQueryKeys: [{ queryKey: ['useGetInfiniteNoticeList'] }],
     });
 
-  const { mutateAsync: postViewCount } = useNoticeIncrementViewCount();
+  const { mutateAsync: addViewCount } = usePostAddViewCount('notices');
 
   const navigate = useNavigate();
 
   const onViewCount = useCallback(async () => {
-    await postViewCount({ noticeId: notice.noticeId });
+    await addViewCount({ linkedId: notice.noticeId });
     navigate(`/notice/post/${notice.postId}`);
-  }, [navigate, notice.noticeId, notice.postId, postViewCount]);
+  }, [navigate, notice.noticeId, notice.postId, addViewCount]);
 
   return (
     <div
-      role="button"
+      role="link"
       tabIndex={0}
       className="flex w-full cursor-pointer flex-col rounded-2xl bg-white p-4 px-6 py-4"
       onClick={onViewCount}

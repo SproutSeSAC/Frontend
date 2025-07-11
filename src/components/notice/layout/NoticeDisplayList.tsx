@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+
 import {
   useGetCloseSoonNoticeList,
   useGetThisWeekNoticeList,
 } from '@/services/post/noticeQueries';
+import { usePostAddViewCount } from '@/services/post/postMutation';
 
 import { HasAdminRole, NoticeDisplay } from '@/types';
 
@@ -28,6 +31,8 @@ export default function NoticeDisplayList({
     isLoading: isInfiniteNoticListLoading,
   } = useGetThisWeekNoticeList();
 
+  const { mutateAsync: addViewCount } = usePostAddViewCount('notices');
+
   const noticeObj: {
     [key in NoticeTitle]: (NoticeDisplay & {
       manager?: { role: keyof HasAdminRole };
@@ -40,6 +45,8 @@ export default function NoticeDisplayList({
   const noticeDisplayList = noticeObj[title];
 
   const isLoading = isCloseSoonNoticeList || isInfiniteNoticListLoading;
+
+  const navigate = useNavigate();
 
   return (
     !isLoading &&
@@ -56,6 +63,11 @@ export default function NoticeDisplayList({
                     title === '마감임박' && manager ? manager.role : roleType
                   }
                   title={noticeTitle}
+                  onClick={async event => {
+                    event.preventDefault();
+                    await addViewCount({ linkedId: noticeId });
+                    navigate(`/notice/post/${postId}`);
+                  }}
                 />
               </li>
             ),
