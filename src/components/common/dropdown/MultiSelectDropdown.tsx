@@ -53,6 +53,7 @@ export default function MultiSelectDropdown({
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
 
+  const activeOptions = options.filter(({ isDisabled }) => !isDisabled);
   const selectedOptions = options.filter(({ id }) => value?.includes(id));
 
   const checkIsSelected = useCallback(
@@ -79,9 +80,10 @@ export default function MultiSelectDropdown({
 
   const handleFullCheck = useCallback(() => {
     const updatedOptions =
-      selectedOptions.length !== options.length ? options : [];
+      selectedOptions.length !== activeOptions.length ? activeOptions : [];
+
     return onChangeValue(updatedOptions);
-  }, [onChangeValue, options, selectedOptions.length]);
+  }, [activeOptions, onChangeValue, selectedOptions.length]);
 
   const onResetClick = useCallback(() => {
     onChangeValue([]);
@@ -120,14 +122,14 @@ export default function MultiSelectDropdown({
             {hasFullCheck && (
               <label
                 className={`mt-2 flex cursor-pointer items-center rounded-lg px-3 py-1.5 hover:bg-lightGray ${
-                  selectedOptions.length === options.length
-                    ? 'text-mainGray'
+                  selectedOptions.length === activeOptions.length
+                    ? 'text-darkGray-hover'
                     : 'text-black'
                 } ${optionClassName}`}
               >
                 <input
                   type="checkbox"
-                  checked={selectedOptions.length === options.length}
+                  checked={selectedOptions.length === activeOptions.length}
                   onChange={handleFullCheck}
                   className="mr-3 size-4 rounded border-gray-300"
                 />
@@ -142,6 +144,7 @@ export default function MultiSelectDropdown({
                 onOptionClick={handleCheckboxChange}
                 isMultiSelectOption
                 className={optionClassName}
+                disabled={option.isDisabled}
               />
             ))}
           </ContainerComponent>

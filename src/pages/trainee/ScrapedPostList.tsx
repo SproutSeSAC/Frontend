@@ -6,6 +6,7 @@ import { useGetMyScrapedPostList } from '@/services/post/myPostQueries';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 
+import EmptyContent from '@/components/common/EmptyContent';
 import ScrapedPostCard from '@/components/user/ScrapedPostCard';
 
 const filter = { page: 1, size: 100 };
@@ -30,12 +31,16 @@ export default function ScrapedPostList() {
       <Header
         title={userId ? `${state?.username}님의 찜한 글` : '내가 찜한 글'}
       />
-      <ul className="grid grid-cols-3 gap-8">
-        {!isLoading &&
-          dataList?.content?.map(card => (
-            <ScrapedPostCard key={card.postId} card={card} />
-          ))}
-      </ul>
+      {!isLoading &&
+        (dataList?.content.length !== 0 ? (
+          <ul className="grid grid-cols-3 gap-8">
+            {dataList?.content?.map(card => (
+              <ScrapedPostCard key={card.postId} card={card} />
+            ))}
+          </ul>
+        ) : (
+          <EmptyContent message="찜한 글이 없습니다." className="h-full" />
+        ))}
     </MainView>
   );
 }

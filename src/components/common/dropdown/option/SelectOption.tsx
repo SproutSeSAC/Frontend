@@ -6,6 +6,7 @@ interface SelectOptionProps {
   onOptionClick: (option: Option) => void;
   isMultiSelectOption?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -21,20 +22,25 @@ export default function SelectOption({
   onOptionClick,
   isMultiSelectOption = false,
   className = '',
+  disabled,
 }: SelectOptionProps) {
   return (
     <li key={option.id} className="rounded-lg first:mt-2 last:mb-2">
       {isMultiSelectOption ? (
         <label
-          className={`flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-start hover:bg-lightGray-active ${isSelected ? 'text-mainGray' : 'text-black'} ${className}`}
+          className={`flex items-center rounded-lg px-3 py-1.5 text-start hover:bg-lightGray-active ${disabled ? '' : 'cursor-pointer'} ${className}`}
         >
           <input
             type="checkbox"
             checked={isSelected}
             onChange={() => onOptionClick(option)}
-            className="mr-3 size-4 min-h-4 min-w-4 rounded border-darkGray"
+            className={`mr-3 size-4 min-h-4 min-w-4 ${disabled ? 'appearance-none rounded-[3px] border border-mainGray-active' : ''}`}
           />
-          <span>{option.name}</span>
+          <span
+            className={`${disabled ? 'text-mainGray' : ''} ${isSelected ? 'text-darkGray-hover' : 'text-black'}`}
+          >
+            {option.name}
+          </span>
         </label>
       ) : (
         <button

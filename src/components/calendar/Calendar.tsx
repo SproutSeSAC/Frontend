@@ -119,14 +119,16 @@ export default function Calendar({
             ((sideViewEvents as FullCalendarEvent[]).length !== 0 ? (
               <ul className="flex w-full flex-col justify-center gap-2 px-2 pt-2">
                 {(sideViewEvents as FullCalendarEvent[]).map(
-                  ({ id, start, end, title }) => (
-                    <SmallCalendarBottomEvent
-                      key={id}
-                      date={formatDate(start, 'MM.dd')}
-                      time={`${formatDate(start, 'HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
-                      title={title}
-                    />
-                  ),
+                  ({ id, start, end, title, url }) =>
+                    url && (
+                      <SmallCalendarBottomEvent
+                        key={id}
+                        date={formatDate(start, 'MM.dd')}
+                        time={`${formatDate(start, 'HH:mm')} ~ ${formatDate(end, 'HH:mm')}`}
+                        title={title}
+                        to={url}
+                      />
+                    ),
                 )}
               </ul>
             ) : (

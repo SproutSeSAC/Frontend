@@ -144,7 +144,7 @@ export default function SessionApplicationModal({
             type="submit"
             disabled={formDisabled}
             color={formDisabled ? 'lightGray' : 'mainGreen'}
-            className="mt-4 h-full self-end whitespace-nowrap px-16 text-lg font-medium"
+            className="mt-4 h-full self-end whitespace-nowrap !px-16 text-lg font-medium"
           />
         </form>
       </FormProvider>
