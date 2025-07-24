@@ -2,8 +2,6 @@ import { MouseEvent } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { axiosInstance } from '@/services/axiosInstance';
-
 import { NOTIFICATION_ROUTE, NOTIFICATION_TYPE } from '@/constants';
 import { useNotification } from '@/hooks';
 import { Notification } from '@/types';
@@ -31,7 +29,6 @@ export default function CardContent({ notification }: CardContentProps) {
     const urls = urlId.split(',');
 
     if (urls.length === 1) {
-      axiosInstance.post(`/posts/${urlId}/view`);
       return routeUrl?.replace('{id}', urlId);
     }
     return routeUrl?.replace('{id}', urls[0]).replace('{session}', urls[1]);
