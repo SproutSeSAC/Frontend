@@ -2,6 +2,8 @@ import { MouseEvent } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { axiosInstance } from '@/services/axiosInstance';
+
 import { NOTIFICATION_ROUTE, NOTIFICATION_TYPE } from '@/constants';
 import { useNotification } from '@/hooks';
 import { Notification } from '@/types';
@@ -32,6 +34,18 @@ export default function CardContent({ notification }: CardContentProps) {
       return routeUrl?.replace('{id}', urlId);
     }
     return routeUrl?.replace('{id}', urls[0]).replace('{session}', urls[1]);
+  };
+
+  const handleLinkClick = async () => {
+    const urls = url.split(',');
+
+    if (urls.length === 1) {
+      try {
+        await axiosInstance.post(`/posts/${url}/view`);
+      } catch (error) {
+        console.error('Post view 요청 실패:', error);
+      }
+    }
   };
 
   return (
@@ -66,6 +80,7 @@ export default function CardContent({ notification }: CardContentProps) {
       {buttonText && (
         <Link
           to={getNotificationUrl(notiType, url)}
+          onClick={handleLinkClick}
           className="ml-auto mt-[20px] flex items-center rounded-lg bg-mainGray-active px-[10px] py-2 text-[15px] text-white"
         >
           {buttonText}
