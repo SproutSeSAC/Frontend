@@ -27,6 +27,7 @@ interface MultiSelectDropdownProps {
   isMarkTechStackList?: boolean;
   boxShape?: SelectBoxShape;
   selectBoxClassName?: string;
+  hasUnlimitOption?: boolean;
 }
 
 /**
@@ -53,6 +54,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
   isMarkTechStackList = false,
   boxShape = 'inputShape',
   selectBoxClassName = '',
+  hasUnlimitOption,
 }: MultiSelectDropdownProps) {
   const [tabValue, setTabValue] = useState(defaultTabValue);
   const [open, setOpen] = useState(false);
@@ -112,6 +114,8 @@ const TechStackDropdown = memo(function TechStackDropdown({
 
   const handleSelectBoxClick = () => setOpen(prev => !prev);
 
+  const unlimitOption = { id: 0, name: '제한 없음' };
+
   return (
     <>
       {isMarkTechStackList && value.length !== 0 && (
@@ -149,6 +153,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
           tabClassName="pb-[7px] px-3"
           className="px-5"
         />
+
         <ul className="flex flex-wrap gap-2.5 p-4">
           {filteredOptionsByTab.map(option => (
             <TechStackOption
@@ -156,22 +161,21 @@ const TechStackDropdown = memo(function TechStackDropdown({
               option={option}
               onChangeValue={handleSelectOptionChange}
               isSelected={checkIsSelected(option)}
-              // disabled={disabled}
             />
           ))}
         </ul>
 
-        <label className="mb-4 ml-6 flex w-fit cursor-pointer items-center gap-2">
-          <input
-            type="checkbox"
-            checked={checkIsSelected({ id: 0, name: '제한 없음' })}
-            onChange={() =>
-              handleSelectOptionChange({ id: 0, name: '제한 없음' })
-            }
-            className="size-4 rounded border-darkGray"
-          />
-          <span>제한 없음</span>
-        </label>
+        {hasUnlimitOption && (
+          <label className="mb-4 ml-5 flex w-fit cursor-pointer items-center gap-2">
+            <input
+              type="checkbox"
+              checked={checkIsSelected(unlimitOption)}
+              onChange={() => handleSelectOptionChange(unlimitOption)}
+              className="size-4 rounded border-darkGray"
+            />
+            <span>제한 없음</span>
+          </label>
+        )}
       </SelectBox>
     </>
   );

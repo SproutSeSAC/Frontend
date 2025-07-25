@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
-
 import { storeMapDetailsAtom } from '@/atoms/storeDetailsAtom';
 
 import { useStoreMap } from '@/hooks';
@@ -11,10 +9,14 @@ import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
-export default function StoreMap({ storeList }: { storeList: Store[] }) {
+export default function StoreMap({
+  storeList,
+  toggleShowList,
+}: {
+  storeList: Store[];
+  toggleShowList: () => void;
+}) {
   const storeMapDetails = useAtomValue(storeMapDetailsAtom);
-
-  const [searchParams] = useSearchParams();
 
   const {
     modalOpen,
@@ -28,7 +30,6 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
     lng: Number(storeMapDetails.longitude || storeList[0]?.longitude),
     zoom: storeMapDetails.zoom > 15 ? storeMapDetails.zoom : 15,
   });
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (isMapReady) {
@@ -39,18 +40,14 @@ export default function StoreMap({ storeList }: { storeList: Store[] }) {
   }, [addMarker, isMapReady, storeList]);
 
   return (
-    <div className="relative w-full pl-5">
+    <div className="relative ml-5 w-full overflow-hidden rounded-2xl">
       <div ref={storeMapRef} className="size-full" />
 
       <button
         type="button"
         aria-label="리스트로 돌아가기"
-        className="absolute right-3 top-3 rounded-lg bg-white p-2.5 shadow-card"
-        onClick={() => {
-          const queryParams = Object.fromEntries(searchParams.entries());
-          const queryString = new URLSearchParams(queryParams).toString();
-          return navigate(`/stores?${queryString}`);
-        }}
+        className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-lg bg-white shadow-xl"
+        onClick={toggleShowList}
       >
         <BsList size={18} />
       </button>

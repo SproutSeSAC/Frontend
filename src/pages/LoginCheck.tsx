@@ -32,6 +32,7 @@ export default function LoginCheck() {
     };
 
     const accessToken = !!getCookie(ACCESS_TOKEN_KEY);
+
     if (accessToken) {
       handleLoginPost();
     } else {

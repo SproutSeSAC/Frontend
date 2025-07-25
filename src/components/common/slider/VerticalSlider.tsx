@@ -18,8 +18,8 @@ interface VerticalSliderProps<T> {
   children: (item: T) => ReactNode;
   spaceBetween: number;
   slideItemHeight: number;
-  containerHeightOffset: number; // TODO : 개선필요
-  paginationHeightOffset: number; // TODO : 개선필요
+  containerHeightOffset: number;
+  paginationHeightOffset: number;
   isLoading?: boolean;
   hideNextButton?: boolean;
 }
@@ -63,7 +63,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
   return (
     <div className="relative flex h-full flex-col justify-between">
       <div
-        className="overflow-hidden"
+        className="store-slider-container overflow-hidden"
         style={{ height: `${windowHeight - containerHeightOffset}px` }}
       >
         <Swiper
@@ -99,7 +99,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
         </div>
       )}
       {!hideNextButton && slideList.length > 0 && (
-        <div className="flex justify-center">
+        <div className="mb-4 flex justify-center">
           <SlideNextButton swiper={swiperInstance} />
         </div>
       )}

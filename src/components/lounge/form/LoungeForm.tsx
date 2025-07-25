@@ -336,6 +336,7 @@ export default function LoungeForm() {
                       onChangeValue={data =>
                         onChangeOptionList('기술 스택', data, onChange)
                       }
+                      hasUnlimitOption
                     />
                   );
                 }}

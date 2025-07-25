@@ -137,7 +137,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   }, [parsedValues]);
 
   return (
-    <form className="flex h-full w-[22%] min-w-[280px] max-w-[380px] flex-shrink-0 flex-col gap-6 pr-4">
+    <form className="flex h-full w-[10%] min-w-[280px] max-w-[340px] flex-shrink-0 flex-col gap-6 pr-4">
       <div className="flex w-full items-center justify-between">
         <h3 className="ml-1 whitespace-nowrap text-xl font-semibold">
           나의 위치 찾기

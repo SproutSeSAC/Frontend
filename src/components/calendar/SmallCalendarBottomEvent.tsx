@@ -21,6 +21,7 @@ export default function SmallCalendarBottomEvent({
         </span>
         <span className="text-mainGray-active">{time}</span>
       </div>
+
       <span className="ml-1.5 mr-2 text-mainGray-active">|</span>
       <span className="truncate tracking-tight">{title}</span>
     </Link>

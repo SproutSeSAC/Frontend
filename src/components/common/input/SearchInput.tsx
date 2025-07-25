@@ -47,7 +47,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <label
-        className={`flex h-12 w-[422px] items-center justify-between bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${inputStyle === 'rounded' ? 'rounded-full' : 'rounded-xl'} px-4 ${!isFocus && 'text-gray-400'} ${className}`}
+        className={`flex h-12 items-center justify-between bg-white hover:text-black hover:outline hover:outline-1 hover:outline-gray-300 ${inputStyle === 'rounded' ? 'rounded-full' : 'rounded-xl'} px-4 ${!isFocus && 'text-gray-400'} ${className}`}
         htmlFor={name}
       >
         {!isFocus && <FaMagnifyingGlass className="mr-2" />}

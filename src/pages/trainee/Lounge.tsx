@@ -102,9 +102,13 @@ export default function Lounge() {
               value={selectedTechStackOption.map(({ id }) => id)}
               onChangeValue={value => {
                 const newValue = value.map(item => item.id);
-                handleChangeFilter({ techStack: newValue });
+
+                handleChangeFilter({
+                  techStack: newValue.includes(0) ? [] : newValue,
+                });
               }}
               boxShape="buttonShape"
+              hasUnlimitOption
             />
           )}
 

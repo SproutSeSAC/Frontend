@@ -73,7 +73,7 @@ export const useSSE = () => {
 
   /** --메세지 publish */
   const publishMessage = async (clientID: number) => {
-    const message = '🥪 한끼팟에 신청자가 있습니다.'; // TODO 알림케이스에 맞는 메세지 발행
+    const message = '🥪 한끼팟에 신청자가 있습니다.';
 
     try {
       await axiosInstance.post(
