@@ -3,7 +3,10 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useGetUserProfile } from '@/services/auth/authQueries';
-import { useGetIsWaitingAcl } from '@/services/calendar/calendarQueries';
+import {
+  useGetCourseWithCalendarList,
+  useGetIsWaitingAcl,
+} from '@/services/calendar/calendarQueries';
 import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 
 import { initialLogin } from '@/atoms/initialLoginAtom';
@@ -39,13 +42,17 @@ export default function Home() {
     isFetched,
   } = useGetUserProfile();
 
-  const { data: isWaitingAcl } = useGetIsWaitingAcl(
+  const { data: courseWithCalendarList } = useGetCourseWithCalendarList(
     userProfile?.courseList || [],
-    {
-      enabled:
-        isSuperAdmin(userProfile?.role) &&
-        (userProfile?.courseList || []).length > 0,
-    },
+  );
+
+  const enabled =
+    isSuperAdmin(userProfile?.role) &&
+    (userProfile?.courseList || []).length > 0;
+
+  const { data: isWaitingAcl } = useGetIsWaitingAcl(
+    courseWithCalendarList || [],
+    { enabled },
   );
 
   const {

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { ACCESS_TOKEN_KEY } from '@/constants';
+import { HEADER_ACCESS_TOKEN_KEY } from '@/constants';
 import { getCookie } from '@/utils';
 import { AxiosError } from 'axios';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -13,7 +13,7 @@ import { EventSourcePolyfill } from 'event-source-polyfill';
  */
 
 export const useSSE = () => {
-  const accessToken = getCookie(ACCESS_TOKEN_KEY);
+  const accessToken = getCookie(HEADER_ACCESS_TOKEN_KEY);
 
   const [isConnected, setIsConnected] = useState(false);
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null);

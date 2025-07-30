@@ -4,7 +4,7 @@ import {
 } from '@/services/auth/authQueries';
 
 import { redirectToLogin } from '@/App';
-import { ACCESS_TOKEN_KEY, CALENDAR_TOKEN_KEY } from '@/constants';
+import { CALENDAR_TOKEN_KEY, HEADER_ACCESS_TOKEN_KEY } from '@/constants';
 import { getCookie, setCookie } from '@/utils';
 import axios, {
   AxiosHeaders,
@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const headers = new AxiosHeaders(config.headers);
 
-    const accessToken = getCookie(ACCESS_TOKEN_KEY);
+    const accessToken = getCookie(HEADER_ACCESS_TOKEN_KEY);
 
     if (accessToken) {
       headers.set('Access-Token', accessToken);
@@ -43,6 +43,7 @@ axiosInstance.interceptors.response.use(
   },
   async error => {
     const originalRequest = error.config;
+
     if (error.response && !originalRequest.retry) {
       originalRequest.retry = true;
 
@@ -53,7 +54,7 @@ axiosInstance.interceptors.response.use(
 
         const newAccessToken = res.data.access_token;
         originalRequest.headers['Access-Token'] = newAccessToken;
-        setCookie(ACCESS_TOKEN_KEY, newAccessToken, 1);
+        setCookie(HEADER_ACCESS_TOKEN_KEY, newAccessToken, 1);
 
         return axiosInstance(originalRequest);
       };
@@ -116,12 +117,25 @@ axiosCalendarInstance.interceptors.response.use(
       return axiosCalendarInstance(originalRequest);
     };
 
+    const handleNewAccessToken = async () => {
+      const res = await getNewAccessToken();
+
+      if (res?.status !== 200) return redirectToLogin();
+
+      const newAccessToken = res.data.access_token;
+      originalRequest.headers['Access-Token'] = newAccessToken;
+      setCookie(HEADER_ACCESS_TOKEN_KEY, newAccessToken, 1);
+      return axiosCalendarInstance(originalRequest);
+    };
+
     if (error.response && !originalRequest.retry) {
       originalRequest.retry = true;
 
       /** Google Calendar API 에러 문서:
        * https://developers.google.com/workspace/calendar/api/guides/errors?hl=ko#errors_suggested_actions */
       switch (error.response.status) {
+        case 400:
+          return handleNewAccessToken();
         case 401:
           return handleCalendarToken();
 

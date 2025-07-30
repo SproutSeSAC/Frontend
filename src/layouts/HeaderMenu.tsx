@@ -4,7 +4,11 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { ACCESS_TOKEN_KEY, CALENDAR_TOKEN_KEY } from '@/constants';
+import {
+  ACCESS_TOKEN_KEY,
+  CALENDAR_TOKEN_KEY,
+  HEADER_ACCESS_TOKEN_KEY,
+} from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { deleteCookie } from '@/utils';
 
@@ -24,10 +28,9 @@ export default function HeaderMenu() {
 
   const handleLogout = async () => {
     deleteCookie(ACCESS_TOKEN_KEY);
+    deleteCookie(HEADER_ACCESS_TOKEN_KEY);
     sessionStorage.removeItem(CALENDAR_TOKEN_KEY);
-    await axiosInstance.get('/sproutLogout', {
-      withCredentials: true,
-    });
+    await axiosInstance.get('/sproutLogout', { withCredentials: true });
     hideDialog();
     navigate('/login');
   };

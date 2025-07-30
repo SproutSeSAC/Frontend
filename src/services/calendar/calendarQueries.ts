@@ -12,7 +12,9 @@ import {
   GoogleCalendarApiDto,
   UserCourse,
 } from '@/types';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+
+const hasCalendarToken = !!sessionStorage.getItem(CALENDAR_TOKEN_KEY);
 
 export const useGetCalendarList = (
   options?: UseQueryOptions<GoogleCalendarApiDto.GetCalendarList>,
@@ -31,7 +33,7 @@ export const useGetCalendarList = (
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: false,
-    enabled: !!sessionStorage.getItem(CALENDAR_TOKEN_KEY),
+    enabled: hasCalendarToken,
     ...options,
   });
 };
@@ -51,7 +53,7 @@ export const useGetCalendarEvents = (
   return useQuery({
     queryKey: ['useGetCalendarEvents', calendarId],
     queryFn: getCalendarEvents,
-    enabled: !!calendarId,
+    enabled: !!calendarId && hasCalendarToken,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     ...options,
@@ -83,7 +85,7 @@ export const useGetEventsByCalendar = (
       return {
         queryKey: ['useGetEventsByCalendar', calendarId],
         queryFn: () => getCalendarEvents(calendarId),
-        enabled: !!calendarId,
+        enabled: !!calendarId && hasCalendarToken,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         ...options,
@@ -107,7 +109,7 @@ export const useGetAdminEmailListByCourse = (
   return useQuery({
     queryKey: ['useGetAdminEmailListByCourse', courseId],
     queryFn: getManagerEmailListByCourse,
-    enabled: !!courseId,
+    enabled: !!courseId && hasCalendarToken,
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -167,7 +169,7 @@ export const useGetCalendarAcl = (
   return useQuery<unknown, AxiosError, AclEmail[] | string>({
     queryKey: ['useGetCalendarAcl', courseId],
     queryFn: getCalendarAcl,
-    enabled: !!calendarId && !!courseId,
+    enabled: !!calendarId && !!courseId && hasCalendarToken,
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -176,25 +178,16 @@ export const useGetCalendarAcl = (
   });
 };
 
+const getCourseCalendarData = (courseId: number) => {
+  return axiosInstance.get(`/user/calendar/${courseId}`);
+};
+
+type CourseWithCalendarId = UserCourse & { calendarId?: string };
+
 export const useGetIsWaitingAcl = (
-  courseList: UserCourse[],
+  courseWithCalendarIdList: CourseWithCalendarId[],
   enabled?: { enabled: boolean },
 ) => {
-  const getCourseCalendarIdList = async () => {
-    const requests = courseList.map(({ courseId }) =>
-      axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
-        return res.data.length !== 0
-          ? res.data.map(({ calendarId }: CourseCalendarDto.Get) => {
-              return { calendarId, courseId };
-            })
-          : [];
-      }),
-    );
-    const responses = await Promise.all(requests);
-
-    return responses.flat() as { calendarId: string; courseId: number }[];
-  };
-
   const getAdminListByCourse: (
     courseId: number,
   ) => Promise<AdminEmail[]> = async (courseId: number) => {
@@ -228,9 +221,7 @@ export const useGetIsWaitingAcl = (
   };
 
   const getHasNotAclList = async () => {
-    const courseCalendarList = await getCourseCalendarIdList();
-
-    const requests = courseCalendarList.map(
+    const requests = courseWithCalendarIdList.map(
       async ({ calendarId, courseId }) => {
         if (!calendarId || !courseId) return { isWaitingAcl: false };
 
@@ -266,40 +257,37 @@ export const useGetIsWaitingAcl = (
   return useQuery<boolean>({
     queryKey: ['useGetIsWaitingAcl'],
     queryFn: getIsWaitingAcl,
-    enabled: enabled?.enabled,
+    enabled: enabled?.enabled && hasCalendarToken,
   });
 };
 
-export const useGetCourseCalendarStatusList = (
-  courseList: {
-    courseId: number;
-    courseTitle: string;
-  }[],
-  options?: UseQueryOptions<
-    (CourseCalendarDto.Get & { courseTitle: string })[]
-  >,
+// 일단 캘린더 아이디까지 포함된 교육과정 데이터로 변환하기
+export const useGetCourseWithCalendarList = (
+  courseList: UserCourse[],
+  options?: UseQueryOptions<CourseWithCalendarId[]>,
 ) => {
-  const getCourseCalendarStatusList = async () => {
-    const requests = courseList.map(({ courseId, courseTitle }) =>
-      axiosInstance.get(`/user/calendar/${courseId}`).then(res => {
-        const baseDetail = { courseId, courseTitle };
+  const getCourseWithCalendarList = async () => {
+    const requests = courseList.map(async course => {
+      const courseCalendarIdList: AxiosResponse<CourseCalendarDto.Get[]> =
+        await getCourseCalendarData(course.courseId);
 
-        return res.data.length === 0
-          ? [baseDetail]
-          : res.data.map(({ calendarId }: CourseCalendarDto.Get) => {
-              return { ...baseDetail, calendarId };
-            });
-      }),
-    );
-    const responses = await Promise.all(requests);
+      return courseCalendarIdList.data.length === 0
+        ? [course]
+        : courseCalendarIdList.data.map(({ calendarId }) => ({
+            ...course,
+            calendarId,
+          }));
+    });
+
+    const responses = (await Promise.all(requests)) as CourseWithCalendarId[][];
     return responses
       .flat()
       .sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
   };
 
-  return useQuery<(CourseCalendarDto.Get & { courseTitle: string })[]>({
-    queryKey: ['useGetCourseCalendarStatusList'],
-    queryFn: getCourseCalendarStatusList,
+  return useQuery({
+    queryKey: ['useGetCourseWithCalendarList'],
+    queryFn: getCourseWithCalendarList,
     enabled: courseList.length > 0,
     retry: false,
     refetchOnMount: false,

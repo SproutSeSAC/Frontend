@@ -92,10 +92,11 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                             toggleEditingComment(id);
                             reset({ editedContent: content });
                           }}
-                          className="!size-5"
+                          size={15}
                         />
                         <TrashButton
-                          className="!size-5 p-[1px]"
+                          text="해당 댓글을 삭제하시겠습니까?"
+                          className="!size-4"
                           onConfirmClick={() => onDeleteCommentClick(id)}
                           disabled={isDeleteCommentPending}
                         />

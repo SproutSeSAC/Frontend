@@ -55,7 +55,9 @@ export const useCalendarEvents = () => {
       .map(({ calendarId }) => calendarId);
   }, [courseCalendarList]);
 
-  const courseCalendarEventList = useGetEventsByCalendar(courseCalendarIdList);
+  const courseCalendarEventList = useGetEventsByCalendar(
+    courseCalendarIdList as string[],
+  );
 
   // 현재 선택된 캘린더의 이벤트 목록
   const fullCalendarEvents: FullCalendarEvent[] = useMemo(() => {
