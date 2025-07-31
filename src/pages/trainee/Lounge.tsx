@@ -6,8 +6,8 @@ import { useGetLoungeProjectList } from '@/services/post/loungeQueries';
 import { useGetJobList } from '@/services/specifications/specificationsQueries';
 
 import { progressList, sortList } from '@/constants';
-import { useFilterData, useTechStackList } from '@/hooks';
-import { LoungeProjectFilter, Progress, SortDisplayKey } from '@/types';
+import { useDialogContext, useFilterData, useTechStackList } from '@/hooks';
+import { LoungeProjectFilter, Option, Progress, SortDisplayKey } from '@/types';
 import { BsArrowCounterclockwise } from 'react-icons/bs';
 
 import EmptyContent from '@/components/common/EmptyContent';
@@ -53,20 +53,24 @@ export default function Lounge() {
 
   const { data: jobList } = useGetJobList();
 
-  const { techStackList, isTechStackListLoading } = useTechStackList();
+  const jobOptionList = [{ id: 0, job: '제한 없음' }, ...(jobList || [])]?.map(
+    ({ id, job }) => ({ id, name: job }),
+  );
+
+  const { isTechStackListLoading, techStackOptionList } = useTechStackList();
 
   const selectedTechStackOption = useMemo(() => {
     const { techStack } = debouncedFilter;
-    return techStackList?.filter(({ id }) => techStack?.includes(id));
-  }, [debouncedFilter, techStackList]);
+    return techStackOptionList?.filter(({ id }) => techStack?.includes(id));
+  }, [debouncedFilter, techStackOptionList]);
 
   const selectedPositionOption = useMemo(() => {
     const { position } = debouncedFilter;
-    const selectedPosition = jobList
+    const selectedPosition = jobOptionList
       ?.filter(({ id }) => position?.includes(id))
-      .map(({ id, job }) => ({ id, name: job }))?.[0];
+      .map(({ id, name }) => ({ id, name }))?.[0];
     return selectedPosition;
-  }, [debouncedFilter, jobList]);
+  }, [debouncedFilter, jobOptionList]);
 
   const selectedProgressOption = useMemo(() => {
     const { meetingType } = debouncedFilter;
@@ -78,7 +82,43 @@ export default function Lounge() {
     return sortList?.filter(({ key }) => sort?.includes(key))?.[0];
   }, [debouncedFilter]);
 
+  const { showToast } = useDialogContext();
+
   if (pType === 'EDIT') return <LoungeForm />;
+
+  const onChangeOptionList = (
+    type: '직무' | '기술 스택',
+    data: Option[],
+    onChange: (optionList: {
+      techStack?: number[];
+      position?: number[];
+    }) => void,
+  ) => {
+    const selectedIds = data.map(item => item.id);
+
+    if (selectedIds.includes(0) && selectedIds.length > 1) {
+      showToast(
+        data[0].id === 0
+          ? '먼저 "제한 없음" 옵션을 해제해주세요.'
+          : `선택한 ${type} 옵션을 해제했습니다.`,
+      );
+      const filteredUnlimitOption = selectedIds.filter(id => id === 0);
+
+      const optionByType = {
+        직무: { position: filteredUnlimitOption },
+        '기술 스택': { techStack: filteredUnlimitOption },
+      };
+
+      return onChange(optionByType[type]);
+    }
+
+    const dataByType = {
+      직무: { position: selectedIds },
+      '기술 스택': { techStack: selectedIds },
+    };
+
+    return onChange(dataByType[type]);
+  };
 
   return (
     <>
@@ -98,14 +138,10 @@ export default function Lounge() {
             <TechStackDropdown
               defaultLabel="기술 스택"
               defaultTabValue="백엔드"
-              options={techStackList}
+              options={techStackOptionList}
               value={selectedTechStackOption.map(({ id }) => id)}
               onChangeValue={value => {
-                const newValue = value.map(item => item.id);
-
-                handleChangeFilter({
-                  techStack: newValue.includes(0) ? [] : newValue,
-                });
+                onChangeOptionList('기술 스택', value, handleChangeFilter);
               }}
               boxShape="buttonShape"
               hasUnlimitOption
@@ -113,11 +149,10 @@ export default function Lounge() {
           )}
 
           <SingleSelectDropdown
-            defaultLabel="포지션"
-            options={jobList?.map(({ id, job }) => ({ id, name: job })) || []}
+            defaultLabel="직무"
+            options={jobOptionList}
             onChangeValue={value => {
-              const newValue = value.map(item => item.id);
-              handleChangeFilter({ position: newValue });
+              onChangeOptionList('직무', value, handleChangeFilter);
             }}
             boxShape="buttonShape"
             selectedOption={selectedPositionOption}

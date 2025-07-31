@@ -92,7 +92,7 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
           ))}
         </ul>
       ) : (
-        <span className="my-4">스택 제한 없음</span>
+        <span className="my-4 text-sm text-darkGray">스택 제한 없음</span>
       )}
 
       <div className="flex flex-col gap-2 text-xs">

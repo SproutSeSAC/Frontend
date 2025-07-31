@@ -171,7 +171,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
               type="checkbox"
               checked={checkIsSelected(unlimitOption)}
               onChange={() => handleSelectOptionChange(unlimitOption)}
-              className="size-4 rounded border-darkGray"
+              className="size-4 cursor-pointer rounded border-darkGray"
             />
             <span>제한 없음</span>
           </label>
