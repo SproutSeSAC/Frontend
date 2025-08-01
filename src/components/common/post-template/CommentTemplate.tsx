@@ -36,9 +36,9 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
   } = useHandleComment({ postId, reset });
 
   return (
-    <section className="mb-24 mt-10">
-      <header className="flex gap-2 pl-2 text-xl font-semibold">
-        <h4 className="">댓글</h4>
+    <section className="mb-24 mt-16">
+      <header className="flex gap-2 pl-1 text-xl font-semibold">
+        <h4>댓글</h4>
         <span className="text-mainGreen">{commentList.length}</span>
       </header>
 

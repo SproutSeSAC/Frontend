@@ -83,34 +83,36 @@ export default function NoticeApplicationInfoTemplate({
     {
       type: '일시',
       data: sessions
-        ? sessions.map((item, index) => (
-            <li key={item.sessionId} className="flex gap-1.5 tracking-normal">
-              <Tag
-                text={`${index + 1}회차`}
-                color="grayLight"
-                size="big"
-                className="!min-w-14 !px-2.5 !py-0"
-              />
-              <div className="flex-1 leading-[23px]">
-                <span className="inline-block min-w-[110px] shrink-0 pr-2">
-                  {formatDate(item.sessionStartDateTime, 'yyyy.MM.dd')}
-                </span>
-                <span className="inline-block tracking-tighter text-darkGray-hover">
-                  {formatDate(item.sessionStartDateTime, 'a h시 mm분')}
-                </span>
-                <span className="px-1 text-darkGray-hover">~</span>
-                <span className="tracking-tighter text-darkGray-hover">
-                  {formatDate(item.sessionEndDateTime, 'a h시 mm분')}
-                </span>
-              </div>
-            </li>
-          ))
+        ? sessions
+            .sort((a, b) => a.ordinal - b.ordinal)
+            .map(item => (
+              <li key={item.sessionId} className="flex gap-1.5 tracking-normal">
+                <Tag
+                  text={`${item.ordinal}회차`}
+                  color="grayLight"
+                  size="big"
+                  className="!min-w-14 !px-2.5 !py-0"
+                />
+                <div className="flex-1 leading-[23px]">
+                  <span className="inline-block min-w-[110px] shrink-0 pr-2">
+                    {formatDate(item.sessionStartDateTime, 'yyyy.MM.dd')}
+                  </span>
+                  <span className="inline-block tracking-tighter text-darkGray-hover">
+                    {formatDate(item.sessionStartDateTime, 'a h시 mm분')}
+                  </span>
+                  <span className="px-1 text-darkGray-hover">~</span>
+                  <span className="tracking-tighter text-darkGray-hover">
+                    {formatDate(item.sessionEndDateTime, 'a h시 mm분')}
+                  </span>
+                </div>
+              </li>
+            ))
         : '-',
     },
   ] as const;
 
   return (
-    <ul className="grid list-none grid-cols-2 gap-x-6 gap-y-6 rounded-[20px] bg-white p-7">
+    <ul className="flex flex-col gap-x-6 gap-y-6 rounded-[20px] bg-white p-7">
       {noticeApplicationInfo.map(({ type, data }) => (
         <li
           key={type}

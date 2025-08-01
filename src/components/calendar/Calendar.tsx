@@ -10,6 +10,8 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import FullCalendar from '@fullcalendar/react';
 import rrulePlugin from '@fullcalendar/rrule';
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 import SmallCalendarBottomEvent from '@/components/calendar/SmallCalendarBottomEvent';
 import LoopLoading from '@/components/common/LoopLoading';
@@ -89,6 +91,12 @@ export default function Calendar({
           dayCellContent={({ dayNumberText }) =>
             `${dayNumberText.slice(0, -1)}`
           }
+          eventMouseEnter={({ el, event }) => {
+            tippy(el, {
+              content: event.title,
+              placement: 'top',
+            });
+          }}
           eventClick={event => {
             event.jsEvent.preventDefault();
             navigate(event.event.url);

@@ -9,18 +9,13 @@ import {
   useGetCourseWithCalendarList,
 } from '@/services/calendar/calendarQueries';
 
-import { calendarIdsAtom } from '@/atoms/calendarAtom';
-
 import { CALENDAR_ADDRESS_ID, CALENDAR_TOKEN_KEY } from '@/constants';
 import { Calendar } from '@/types';
-import { useSetAtom } from 'jotai';
 
 /**
  * 구글 캘린더 데이터 관련 훅
  */
 export const useCalendarList = () => {
-  const setCurrShowingCalendarIds = useSetAtom(calendarIdsAtom);
-
   const { data: userProfile } = useGetUserProfile();
 
   const {
@@ -67,17 +62,6 @@ export const useCalendarList = () => {
       getCalendarToken();
     }
   }, []);
-
-  useEffect(() => {
-    const courseCalendarIdList = courseCalendarList
-      .filter(({ calendarId }) => calendarId)
-      .map(({ calendarId }) => calendarId) as string[]; // NOTE: 타입 정리
-
-    if (courseCalendarIdList?.length !== 0) {
-      setCurrShowingCalendarIds(courseCalendarIdList);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseCalendarList]);
 
   return {
     allCalendarList,
