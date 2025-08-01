@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginCheck } from '@/services/auth/authQueries';
 
-import { HEADER_ACCESS_TOKEN_KEY } from '@/constants';
+import { ACCESS_TOKEN_KEY, HEADER_ACCESS_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { getCookie } from '@/utils';
 import axios from 'axios';
@@ -32,7 +32,9 @@ export default function LoginCheck() {
       }
     };
 
-    const accessToken = !!getCookie(HEADER_ACCESS_TOKEN_KEY);
+    console.log(!!getCookie(`ACC : ${ACCESS_TOKEN_KEY}`));
+    console.log(!!getCookie(`H-ACC : ${HEADER_ACCESS_TOKEN_KEY}`));
+    const accessToken = !!getCookie(ACCESS_TOKEN_KEY);
     // 아 여기 프론트에서 저장하는거랑 서버에서 저장하거랑 이름이 똑같아서 프론트에서 저장한 이전 쿠키를 쓰는건가???? 같은 이름이라서?
 
     if (accessToken) {
