@@ -77,7 +77,10 @@ export const useSubmitNotice = () => {
     const events = targetCalendar.map(({ calendarId }) => ({
       calendarId,
       events: eventsFromSession,
-    }));
+    })) as {
+      calendarId: string;
+      events: GoogleCalendarApiDto.PostEvent[];
+    }[];
 
     return mutateCreateEvent(events);
   };
