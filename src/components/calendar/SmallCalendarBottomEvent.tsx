@@ -14,7 +14,7 @@ export default function SmallCalendarBottomEvent({
   to,
 }: SmallCalendarBottomEventProps) {
   return (
-    <Link to={to} className="line-clamp-1 flex w-full items-center py-1">
+    <Link to={to} className="group relative flex w-full items-center py-1">
       <div className="min-w-[154px]">
         <span className="inline-block w-[50px] text-justify text-mainGray-active">
           {date}
@@ -24,6 +24,10 @@ export default function SmallCalendarBottomEvent({
 
       <span className="ml-1.5 mr-2 text-mainGray-active">|</span>
       <span className="truncate tracking-tight">{title}</span>
+
+      <div className="absolute -bottom-8 right-0 z-40 hidden rounded-lg bg-black px-3 py-1 group-hover:block">
+        <span className="text-white">{title}</span>
+      </div>
     </Link>
   );
 }
