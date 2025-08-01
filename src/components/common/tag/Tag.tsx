@@ -41,7 +41,7 @@ export default function Tag({
   className,
 }: TagProps) {
   const styleBySize = {
-    small: 'text-xs px-1.5 rounded',
+    small: 'text-xs px-1.5 py-[2px] rounded',
     medium: 'text-sm px-2.5 py-1 rounded-md',
     big: 'text-base rounded-lg py-1.5 px-[14px]',
   };

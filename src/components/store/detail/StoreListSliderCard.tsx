@@ -40,7 +40,7 @@ export default function StoreListSliderCard({
   return (
     <div
       key={slideItem.id}
-      className="flex h-[147px] w-full gap-[11px] overflow-hidden"
+      className="flex h-[150px] w-full gap-[11px] overflow-hidden"
       onClick={() => {
         setStoreMapDetails(mapDetails);
         setIsZoomBehaviorFlag(true);
@@ -62,8 +62,9 @@ export default function StoreListSliderCard({
       <div className="flex w-full flex-col gap-4">
         <header className="font-semibold">
           <div className="flex w-full items-start justify-between gap-0.5">
-            <h2>{slideItem.name || ''}</h2>
-            <div className="mt-1 flex items-center gap-1">
+            <h2>{slideItem.name}</h2>
+
+            <div className="mt-0.5 flex items-center gap-1">
               <FavoriteButton
                 size={18}
                 isFavorite={slideItem.isScraped}
@@ -75,16 +76,19 @@ export default function StoreListSliderCard({
               </span>
             </div>
           </div>
-          <p className="pb-2 pt-1 text-xs text-darkGray-active">
-            {slideItem.foodType ? foodFilterDisplay[slideItem.foodType] : '-'}
-          </p>
+
+          {slideItem.foodType && (
+            <span className="text-xs text-darkGray-active">
+              {foodFilterDisplay[slideItem.foodType]}
+            </span>
+          )}
         </header>
 
         {slideItem.storeMenuList.length > 0 && (
           <div>
             <h3 className="mb-1 text-xs font-semibold">대표 메뉴</h3>
             <ul className="flex flex-col gap-1 text-[11px]">
-              {slideItem.storeMenuList.map(item => {
+              {slideItem.storeMenuList.slice(0, 3).map(item => {
                 return (
                   <li key={item.id} className="flex gap-2">
                     <span className="line-clamp-1 flex-1">{item.name}</span>

@@ -1,22 +1,25 @@
 import { ForwardedRef, forwardRef } from 'react';
 
+import { useCollapsibleSideView } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
 
+import ChevronButton from '@/components/common/button/ChevronButton';
 import CollapsibleSideView from '@/components/common/container/CollapsibleSideView';
 import StoreListSlider from '@/components/store/detail/StoreListSlider';
 
 interface StoreListSideViewProps {
-  sideViewOpen: boolean;
-  onClose: () => void;
   storeList: Store[];
   isLoading: boolean;
 }
 
 export default forwardRef(function StoreListSideView(
-  { sideViewOpen, onClose, storeList, isLoading }: StoreListSideViewProps,
+  { storeList, isLoading }: StoreListSideViewProps,
   ref?: ForwardedRef<HTMLDivElement>,
 ) {
-  const headerContent = <span className="mb-10 text-[24px]">식당 리스트</span>;
+  const { sideViewOpen, openSideView, closeSideView } =
+    useCollapsibleSideView();
+
+  const headerContent = <span className="text-[22px]">식당 리스트</span>;
 
   const mainContent = (
     <StoreListSlider
@@ -28,12 +31,22 @@ export default forwardRef(function StoreListSideView(
   );
 
   return (
-    <CollapsibleSideView
-      sideViewOpen={sideViewOpen}
-      onClose={onClose}
-      className="sticky mr-5 max-w-[284px] pb-5 pt-11"
-      headerContent={headerContent}
-      mainContent={mainContent}
-    />
+    <>
+      <CollapsibleSideView
+        sideViewOpen={sideViewOpen}
+        onClose={closeSideView}
+        className="sticky right-0 top-0 h-screen max-w-[310px] pb-10 pt-[60px]"
+        headerContent={headerContent}
+        mainContent={mainContent}
+      />
+
+      {!sideViewOpen && (
+        <ChevronButton
+          direction="ChevronLeft"
+          handleClose={openSideView}
+          className="absolute right-0 top-[60px]"
+        />
+      )}
+    </>
   );
 });

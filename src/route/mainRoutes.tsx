@@ -15,7 +15,6 @@ const NoticeLayout = lazy(() => import('@/layouts/NoticeLayout'));
 const Notice = lazy(() => import('@/pages/trainee/Notice'));
 const NoticeDetail = lazy(() => import('@/pages/trainee/NoticeDetail'));
 const Store = lazy(() => import('@/pages/trainee/Store'));
-const StoreDetail = lazy(() => import('@/pages/trainee/StoreDetail'));
 const MyPage = lazy(() => import('@/pages/trainee/MyPage'));
 const ScrapedPostList = lazy(() => import('@/pages/trainee/ScrapedPostList'));
 const AppliedSessionsDetail = lazy(
@@ -85,10 +84,6 @@ const mainRoutes: RouteObject[] = [
       {
         path: 'stores',
         element: <Store />,
-      },
-      {
-        path: 'stores/detail-location',
-        element: <StoreDetail />,
       },
       {
         path: 'schedule',

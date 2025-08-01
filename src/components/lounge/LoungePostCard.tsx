@@ -74,26 +74,30 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
       </div>
 
       <h4
-        className="mt-3 line-clamp-2 overflow-hidden text-ellipsis whitespace-normal font-medium"
+        className="mt-3 line-clamp-2 flex-1 overflow-hidden text-ellipsis whitespace-normal font-medium"
         style={{ wordBreak: 'break-word' }}
       >
         {title}
       </h4>
 
-      <ul className="my-4 flex gap-2">
-        {techStacks?.map(techStack => (
-          <img
-            key={techStack.name}
-            src={techStack.imageUrl}
-            alt={techStack.name}
-            className="size-5"
-          />
-        ))}
-      </ul>
+      {techStacks?.length !== 0 ? (
+        <ul className="my-4 flex gap-2">
+          {techStacks?.map(techStack => (
+            <img
+              key={techStack.name}
+              src={techStack.imageUrl}
+              alt={techStack.name}
+              className="size-5"
+            />
+          ))}
+        </ul>
+      ) : (
+        <span className="my-4 text-sm text-darkGray">스택 제한 없음</span>
+      )}
 
       <div className="flex flex-col gap-2 text-xs">
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-mainGray">
+          <span className="lounge-text-divider leading-4 text-mainGray-active">
             기간
           </span>
 
@@ -103,33 +107,37 @@ export default function LoungePostCard({ card }: LoungePostCardProps) {
         </div>
 
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-mainGray">
+          <span className="lounge-text-divider leading-4 text-mainGray-active">
             모집
           </span>
 
-          <span>{recruitmentCount}</span>
+          <span>{recruitmentCount}명</span>
         </div>
 
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-mainGray">
+          <span className="lounge-text-divider leading-4 text-mainGray-active">
             직무
           </span>
 
-          <ul className="flex flex-1 flex-wrap gap-1 overflow-hidden">
-            {positionNames?.map(tag => (
-              <Tag
-                key={tag}
-                text={tag}
-                color="gray"
-                size="small"
-                className="text-xs"
-              />
-            ))}
-          </ul>
+          {positionNames.length !== 0 ? (
+            <ul className="flex flex-1 flex-wrap gap-1 overflow-hidden">
+              {positionNames?.map(tag => (
+                <Tag
+                  key={tag}
+                  text={tag}
+                  color="gray"
+                  size="small"
+                  className="text-xs"
+                />
+              ))}
+            </ul>
+          ) : (
+            <span>제한 없음</span>
+          )}
         </div>
 
         <div className="flex">
-          <span className="lounge-text-divider leading-4 text-mainGray">
+          <span className="lounge-text-divider leading-4 text-mainGray-active">
             유형
           </span>
 

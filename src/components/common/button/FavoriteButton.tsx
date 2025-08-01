@@ -18,7 +18,7 @@ export default function FavoriteButton({
   onClick,
   disabled,
 }: FavoriteButtonProps) {
-  const iconClassName = 'cursor-pointer text-mainGreen';
+  const iconClassName = 'cursor-pointer mt-0.5 text-mainGreen';
 
   return (
     <button type="button" onClick={onClick} disabled={disabled}>

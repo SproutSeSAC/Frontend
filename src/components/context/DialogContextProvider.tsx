@@ -13,7 +13,7 @@ import LoadingAlert, {
 } from '@/components/common/modal/LoadingAlert';
 
 interface Dialog {
-  key: string; // TODO : key 타입 명확하게 수정필요해 보임
+  key: string;
   element: ReactNode;
   visible: boolean;
 }

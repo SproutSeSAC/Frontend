@@ -14,12 +14,18 @@ export default function MyCourseListWithHover({
       <div className="peer flex items-center">
         {courseList.length > 1 ? (
           courseList.slice(0, 1).map(({ courseTitle }) => (
-            <span key={courseTitle} className="line-clamp-1">
-              {courseTitle}
+            <span key={courseTitle} className="flex">
+              <span className="line-clamp-1 text-darkGray">{courseTitle}</span>
+
+              <span className="min-w-fit pl-2 text-mainGray-hover">
+                외 {courseList.length - 1}개의 교육과정
+              </span>
             </span>
           ))
         ) : (
-          <span className="line-clamp-1">{courseList[0]?.courseTitle}</span>
+          <span className="line-clamp-1 text-darkGray">
+            {courseList[0]?.courseTitle}
+          </span>
         )}
       </div>
 

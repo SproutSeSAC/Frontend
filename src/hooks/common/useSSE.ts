@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { axiosInstance } from '@/services/axiosInstance';
 
-import { ACCESS_TOKEN_KEY } from '@/constants';
+import { HEADER_ACCESS_TOKEN_KEY } from '@/constants';
 import { getCookie } from '@/utils';
 import { AxiosError } from 'axios';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -13,7 +13,7 @@ import { EventSourcePolyfill } from 'event-source-polyfill';
  */
 
 export const useSSE = () => {
-  const accessToken = getCookie(ACCESS_TOKEN_KEY);
+  const accessToken = getCookie(HEADER_ACCESS_TOKEN_KEY);
 
   const [isConnected, setIsConnected] = useState(false);
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null);
@@ -73,7 +73,7 @@ export const useSSE = () => {
 
   /** --메세지 publish */
   const publishMessage = async (clientID: number) => {
-    const message = '🥪 한끼팟에 신청자가 있습니다.'; // TODO 알림케이스에 맞는 메세지 발행
+    const message = '🥪 한끼팟에 신청자가 있습니다.';
 
     try {
       await axiosInstance.post(

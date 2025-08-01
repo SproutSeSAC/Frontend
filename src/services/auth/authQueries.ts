@@ -4,7 +4,6 @@ import { axiosInstance } from '@/services/axiosInstance';
 
 import { CALENDAR_TOKEN_KEY } from '@/constants';
 import { UserProfileDto } from '@/types';
-import { AxiosError } from 'axios';
 
 // 로그인 검증
 export const loginCheck = () => axiosInstance.get('/login/check');
@@ -21,19 +20,12 @@ export const getVerifyNicknameResult = (nickname: string) =>
 
 // 캘린더 인증
 export const getCalendarToken = () =>
-  axiosInstance
-    .get('/user/calendar')
-    .then(res => {
-      const calendarAccessToken = res.data.access_token;
-      if (calendarAccessToken) {
-        sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
-      }
-    })
-    .catch((err: AxiosError) => {
-      if (err.response?.status === 400) {
-        window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
-      }
-    });
+  axiosInstance.get('/user/calendar').then(res => {
+    const calendarAccessToken = res.data.access_token;
+    if (calendarAccessToken) {
+      sessionStorage.setItem(CALENDAR_TOKEN_KEY, calendarAccessToken);
+    }
+  });
 
 // 리프레시 토큰
 export const getNewAccessToken = () =>

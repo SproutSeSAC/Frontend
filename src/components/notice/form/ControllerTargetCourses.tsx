@@ -44,7 +44,7 @@ export default function ControllerTargetCourses() {
           ? '교육과정 캘린더를 먼저 생성해주세요.'
           : '교육과정 캘린더가 먼저 생성되어 있어야 합니다. 관리자가 생성중이니 잠시만 기다려주세요.',
         subTextColor: 'green',
-        className: '!max-w-[500px]',
+        className: '!max-w-[500px] max-h-[80vh] overflow-scroll',
         buttonList: [
           {
             name: '나가기',
@@ -98,10 +98,11 @@ export default function ControllerTargetCourses() {
       control={control}
       name="targetCourseIdList"
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const courseListOption = userProfile?.courseList.map(
-          ({ courseId, courseTitle }) => ({
+        const courseListOption = courseCalendarList.map(
+          ({ courseId, courseTitle, calendarId }) => ({
             id: courseId,
             name: courseTitle,
+            isDisabled: !calendarId,
           }),
         );
 

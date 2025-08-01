@@ -14,5 +14,9 @@ export const useTechStackList = () => {
     }));
   }, [data]);
 
-  return { techStackList, isTechStackListLoading };
+  const techStackOptionList = useMemo(() => {
+    return [{ id: 0, name: '제한 없음' }, ...techStackList];
+  }, [techStackList]);
+
+  return { techStackList, isTechStackListLoading, techStackOptionList };
 };

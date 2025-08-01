@@ -127,7 +127,7 @@ export default function StoreCard({
         </SwiperContainer>
       )}
 
-      <header className="mb-2 flex items-center justify-between font-semibold">
+      <header className="mb-2 flex items-start justify-between font-semibold">
         <h2 className="text-lg">
           <span className="mr-1.5">{storeData.name || ''}</span>
           <span className="text-mainGray-active">

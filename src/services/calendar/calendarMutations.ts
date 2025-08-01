@@ -203,10 +203,10 @@ export const useUpdateEvent = (
   });
 };
 
-export const useDeleteEvent = (
+export const useDeleteEventList = (
   options?: UseMutationOptions<unknown, Error, FullCalendarEvent[]>,
 ) => {
-  const deleteEvent = async (eventList: FullCalendarEvent[]) => {
+  const deleteEventList = async (eventList: FullCalendarEvent[]) => {
     await Promise.all(
       eventList.map(async ({ id, calendarId }) => {
         return axiosCalendarInstance.delete(
@@ -217,8 +217,8 @@ export const useDeleteEvent = (
   };
 
   return useMutation({
-    mutationFn: deleteEvent,
-    mutationKey: ['useDeleteEvent'],
+    mutationFn: deleteEventList,
+    mutationKey: ['useDeleteEventList'],
     ...options,
   });
 };

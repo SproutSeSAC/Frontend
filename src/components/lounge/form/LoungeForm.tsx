@@ -99,7 +99,7 @@ export default function LoungeForm() {
   const { mutateAsync: putProject, isPending: isEditProjectPending } =
     usePutMyPost<LoungeDto.PostProjectParams>();
 
-  const { techStackList } = useTechStackList();
+  const { techStackOptionList } = useTechStackList();
 
   const methods = useForm<FormValues>({
     defaultValues: changeDataToFieldValues(),
@@ -178,8 +178,6 @@ export default function LoungeForm() {
   const jobOptionList = [{ id: 0, job: '제한 없음' }, ...(jobList || [])]?.map(
     ({ id, job }) => ({ id, name: job }),
   );
-
-  const techStackOptionList = [{ id: 0, name: '제한 없음' }, ...techStackList];
 
   const onChangeOptionList = (
     type: '직무' | '기술 스택',
@@ -336,6 +334,7 @@ export default function LoungeForm() {
                       onChangeValue={data =>
                         onChangeOptionList('기술 스택', data, onChange)
                       }
+                      hasUnlimitOption
                     />
                   );
                 }}

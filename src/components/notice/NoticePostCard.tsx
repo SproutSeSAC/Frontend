@@ -12,12 +12,26 @@ import { BsEye } from 'react-icons/bs';
 
 import FavoriteButton from '@/components/common/button/FavoriteButton';
 import Tag from '@/components/common/tag/Tag';
+import MyCourseListWithHover from '@/components/user/MyCourseListWithHover';
 
 interface NoticePostCardProps {
   notice: NoticeDisplay;
 }
 
-export default function NoticePostCard({ notice }: NoticePostCardProps) {
+export default function NoticePostCard({
+  notice: {
+    postId,
+    isScraped,
+    noticeId,
+    roleType,
+    viewCount,
+    title,
+    content,
+    noticeType,
+    targetCourse,
+    createdDateTime,
+  },
+}: NoticePostCardProps) {
   const stripHTML = useCallback((htmlString: string) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
@@ -26,8 +40,8 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
 
   const { onScrapClick, isPostScrapPending, isDeleteScrapPending } =
     useHandleScrap({
-      postId: notice.postId,
-      isScraped: notice.isScraped,
+      postId,
+      isScraped,
       invalidateQueryKeys: [{ queryKey: ['useGetInfiniteNoticeList'] }],
     });
 
@@ -36,9 +50,9 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
   const navigate = useNavigate();
 
   const onViewCount = useCallback(async () => {
-    await addViewCount({ linkedId: notice.noticeId });
-    navigate(`/notice/post/${notice.postId}`);
-  }, [navigate, notice.noticeId, notice.postId, addViewCount]);
+    await addViewCount({ linkedId: noticeId });
+    navigate(`/notice/post/${postId}`);
+  }, [navigate, noticeId, postId, addViewCount]);
 
   return (
     <div
@@ -50,18 +64,18 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
     >
       <div className="flex w-full items-center justify-between">
         <Tag
-          roleKey={notice.roleType}
+          roleKey={roleType}
           size="big"
-          text={rolesObj[notice.roleType]}
+          text={rolesObj[roleType]}
           className="text-base"
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-mainGray">
             <BsEye size={20} />
-            <span>{notice.viewCount || 0}</span>
+            <span>{viewCount || 0}</span>
           </div>
           <FavoriteButton
-            isFavorite={notice.isScraped}
+            isFavorite={isScraped}
             onClick={onScrapClick}
             size={20}
             disabled={isPostScrapPending || isDeleteScrapPending}
@@ -70,24 +84,24 @@ export default function NoticePostCard({ notice }: NoticePostCardProps) {
       </div>
 
       <div className="mt-6">
-        <h4 className="text-xl font-semibold">{notice.title || '-'}</h4>
+        <h4 className="text-xl font-semibold">{title || '-'}</h4>
         <p className="mt-3 max-w-[960px] break-words text-lg text-darkGray-active">
-          {stripHTML(notice.content)}
+          {stripHTML(content)}
         </p>
 
-        <div className="mt-6 border-b border-solid border-lightGray pb-[18px]">
-          <span className="notice-text-divider leading-4 text-black">
-            {noticeCategoryDisplay[notice.noticeType]}
+        <div className="mt-6 flex">
+          <span className="notice-text-divider min-w-fit">
+            {noticeCategoryDisplay[noticeType]}
           </span>
-          <span className="leading-4 text-mainGray">
-            {(notice?.targetCourse || []).map(target => {
-              return <span key={target}>{target}</span>;
-            })}
-          </span>
+
+          <MyCourseListWithHover
+            courseList={targetCourse.map(courseTitle => ({ courseTitle }))}
+            hoverBoxClassName="min-w-[550px]"
+          />
         </div>
 
         <div className="mt-4 w-full text-right text-mainGray">
-          {formatDate(notice.createdDateTime)}
+          {formatDate(createdDateTime)}
         </div>
       </div>
     </div>

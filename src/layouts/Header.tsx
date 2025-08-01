@@ -56,9 +56,14 @@ export default function Header({
     (!hasEverOpened && notificationList?.length !== 0);
 
   return (
-    <header className="mb-10 flex items-start justify-between">
+    <header className="mb-10 flex items-start justify-between gap-4">
       <section>
-        <Title as="h1" title={title} highlight={highlight} className="mb-3" />
+        <Title
+          as="h1"
+          title={title}
+          highlight={highlight}
+          className="mb-3 min-w-fit"
+        />
         {homePathname && (
           <h2 className="text-lg font-semibold text-[#A2C27D]">
             Seoul Software Academy
@@ -68,8 +73,8 @@ export default function Header({
         {subTitleChildren && subTitleChildren}
       </section>
 
-      <section className="flex items-center gap-7">
-        <section>{children}</section>
+      <section className="flex flex-1 items-center justify-end gap-7">
+        {children}
 
         <aside className="flex items-center">
           <button

@@ -70,6 +70,7 @@ export const useGetEndingTomorrowProjects = () => {
     queryFn: async () => {
       const { data } = await axiosInstance.get<LoungeDto.GetEndingTomorrowList>(
         `/project/ending-close`,
+        { params: { size: 3, days: 1 } },
       );
       return data;
     },
