@@ -47,6 +47,12 @@ axiosInstance.interceptors.response.use(
     if (error.response && !originalRequest.retry) {
       originalRequest.retry = true;
 
+      const handleRefreshCalendarToken = async () => {
+        // NOTE: 에러처리 체크하기
+        await axiosInstance.get('/oauth2/authorization/refresh');
+        return axiosInstance(originalRequest);
+      };
+
       const handleNewAccessToken = async () => {
         const res = await getNewAccessToken();
 
@@ -60,11 +66,20 @@ axiosInstance.interceptors.response.use(
       };
 
       switch (error.response.status) {
+        case 400:
+          if (originalRequest.url === 'api/user/calendar') {
+            return handleRefreshCalendarToken();
+          }
+          break;
+
         case 401:
           return handleNewAccessToken();
 
         case 404:
-          return redirectToLogin();
+          redirectToLogin();
+          return alert(
+            `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
+          );
 
         case 304:
           if (originalRequest.url !== '/api/login/check') {
@@ -73,10 +88,6 @@ axiosInstance.interceptors.response.use(
           return redirectToLogin();
 
         default:
-        // redirectToLogin();
-        // alert(
-        //   `예상치 못한 에러가 발생했습니다. (코드: ${error.response.status})`,
-        // );
       }
     }
     return Promise.reject(error);
@@ -136,6 +147,7 @@ axiosCalendarInstance.interceptors.response.use(
       switch (error.response.status) {
         case 400:
           return handleNewAccessToken();
+
         case 401:
           return handleCalendarToken();
 
