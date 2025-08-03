@@ -14,6 +14,7 @@ import CardContent from '@/components/notification/CardContent';
 
 export default function NotificationContent() {
   const isNotificationOpen = useAtomValue(notificationOpenAtom);
+  const { setNotificationAsRead } = useNotification();
   const { data: notificationList, refetch } = useGetNotificationList();
   const { deleteAllNotification, setAllNotificationAsRead } = useNotification();
 
@@ -51,7 +52,18 @@ export default function NotificationContent() {
               key={item.id}
               className={`relative flex flex-col rounded-lg border border-mainGray bg-white pb-6 pl-[22px] pr-4 pt-8 ${
                 item.isRead && 'opacity-50'
-              }`}
+              } cursor-pointer`}
+              onClick={() => {
+                if (!item.isRead) setNotificationAsRead(item.id);
+              }}
+              tabIndex={0}
+              role="button"
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  if (!item.isRead) setNotificationAsRead(item.id);
+                }
+              }}
             >
               <div
                 className="absolute left-0 top-0 h-full w-[7px] rounded-l-lg"
