@@ -9,15 +9,20 @@ export const usePostComment = (
   options?: UseMutationOptions<
     unknown,
     Error,
-    { imgUrl: string; content: string }
+    { imgUrl: string; content: string; rate: number }
   >,
 ) => {
-  return useMutation<unknown, AxiosError, { imgUrl: string; content: string }>({
-    mutationFn: async ({ content, imgUrl }) => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    { imgUrl: string; content: string; rate: number }
+  >({
+    mutationFn: async ({ content, imgUrl, rate }) => {
       const { data } = await axiosInstance.post(`/comments`, {
         postId,
         content,
         imgUrl,
+        rate,
       });
       return data;
     },
@@ -29,7 +34,13 @@ export const usePatchComment = (
   options?: UseMutationOptions<
     unknown,
     Error,
-    { commentId: number; postId: number; content: string; imgUrl: string }
+    {
+      commentId: number;
+      postId: number;
+      content: string;
+      imgUrl: string;
+      rate: number;
+    }
   >,
 ) => {
   return useMutation({

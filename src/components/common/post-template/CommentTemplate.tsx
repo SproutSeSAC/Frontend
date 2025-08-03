@@ -42,7 +42,10 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
         <span className="text-mainGreen">{commentList.length}</span>
       </header>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+      <form
+        onSubmit={handleSubmit(data => onSubmit({ ...data, rate: -1 }))}
+        className="flex flex-col"
+      >
         <textarea
           {...register('content')}
           className="mb-3 mt-2.5 w-full resize-none rounded-lg border border-solid border-mainGray p-[15px] outline-none"
@@ -108,7 +111,7 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                 isEditingComment.commentId === id ? (
                   <form
                     onSubmit={handleSubmit(({ editedContent }) =>
-                      onEditSubmit({ editedContent, commentId: id }),
+                      onEditSubmit({ editedContent, commentId: id, rate: -1 }),
                     )}
                     className="flex flex-col"
                   >
