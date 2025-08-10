@@ -24,14 +24,14 @@ export default function Schedule() {
   if (isCalendarDataLoading || isLoading) return <LoadingPage />;
 
   return (
-    <MainView className="mb-20 h-screen !min-h-[900px]">
+    <MainView className="h-screen !min-h-[800px] !pb-12">
       <Header
         title={`${userProfile?.name} 스프님 새싹 일정`}
         highlight="새싹 일정"
       />
 
       {!isCalendarDataLoading && !isCourseCalendarStatusLoading && (
-        <div className="flex h-full gap-6">
+        <div className="flex h-full gap-6 overflow-hidden">
           <CalendarCheckBoxList
             courseCalendarList={courseCalendarList}
             personalCalendarList={personalCalendarList || []}

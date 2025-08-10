@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
+
 import { storeMapDetailsAtom } from '@/atoms/storeDetailsAtom';
 
 import { useStoreMap } from '@/hooks';
@@ -9,14 +11,25 @@ import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
-export default function StoreMap({
-  storeList,
-  toggleShowList,
-}: {
+interface StoreMapProp {
+  currCampusId: number;
   storeList: Store[];
-  toggleShowList: () => void;
-}) {
+  toggleViewType: () => void;
+}
+
+export default function StoreMap({
+  currCampusId,
+  storeList,
+  toggleViewType,
+}: StoreMapProp) {
   const storeMapDetails = useAtomValue(storeMapDetailsAtom);
+
+  const { data: campusList } = useGetCampusList();
+
+  const currCampus = campusList?.find(campus => campus.id === currCampusId);
+
+  const CAMPUS_LAT = +(currCampus?.latitude || 37.655604);
+  const CAMPUS_LON = +(currCampus?.longitude || 127.0129929);
 
   const {
     modalOpen,
@@ -26,8 +39,13 @@ export default function StoreMap({
     isMapReady,
     modalOpenInitValue,
   } = useStoreMap({
-    lat: Number(storeMapDetails.latitude || storeList[0]?.latitude),
-    lng: Number(storeMapDetails.longitude || storeList[0]?.longitude),
+    lat:
+      Number(storeMapDetails.latitude || storeList[0]?.latitude) || +CAMPUS_LAT,
+
+    lng:
+      Number(storeMapDetails.longitude || storeList[0]?.longitude) ||
+      +CAMPUS_LON,
+
     zoom: storeMapDetails.zoom > 15 ? storeMapDetails.zoom : 15,
   });
 
@@ -40,14 +58,14 @@ export default function StoreMap({
   }, [addMarker, isMapReady, storeList]);
 
   return (
-    <div className="relative ml-5 w-full overflow-hidden rounded-2xl">
+    <div className="relative size-full overflow-hidden rounded-2xl">
       <div ref={storeMapRef} className="size-full" />
 
       <button
         type="button"
         aria-label="리스트로 돌아가기"
         className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-lg bg-white shadow-xl"
-        onClick={toggleShowList}
+        onClick={toggleViewType}
       >
         <BsList size={18} />
       </button>

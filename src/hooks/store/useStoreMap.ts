@@ -164,6 +164,7 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
   }, []);
 
   return {
+    markerListRef,
     storeMapRef,
     isMapReady,
     modalOpen,

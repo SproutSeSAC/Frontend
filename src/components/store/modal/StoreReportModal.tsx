@@ -55,7 +55,7 @@ export default function StoreReportModal() {
   };
 
   return (
-    <Modal onClose={hideDialog} title="맛집 제보하기">
+    <Modal onClose={hideDialog} title="맛집 제보하기" zIndex={1000}>
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
         className="flex flex-col gap-10"

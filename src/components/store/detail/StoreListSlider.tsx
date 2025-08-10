@@ -30,10 +30,10 @@ export default forwardRef(function StoreListSlider(
           {storeList.length > 0 && (
             <VerticalSlider<Store>
               slideList={storeList}
-              slideItemHeight={147}
+              slideItemHeight={240}
               spaceBetween={10}
-              containerHeightOffset={160}
-              paginationHeightOffset={240}
+              containerHeightOffset={120}
+              paginationHeightOffset={200}
               hideNextButton={!sideViewOpen}
               isLoading={isLoading}
               ref={ref}

@@ -9,7 +9,12 @@ import { useDialogContext } from '@/hooks';
 import { PostMeal } from '@/types/store/storeMealPostDto';
 import { formatDate } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  SubmitErrorHandler,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 
 import SquareButton from '@/components/common/button/SquareButton';
 import SingleSelectDropdown from '@/components/common/dropdown/SingleSelectDropdown';
@@ -23,14 +28,16 @@ import { mealRecruitSchema } from '@/components/store/meal-recruit/mealRecruitSc
 const defaultStyle = 'h-full rounded-xl px-4 py-[13px] text-lg';
 
 interface FormValues extends Omit<PostMeal, 'appointmentTime'> {
-  date: Date | null;
+  date: string | null;
   hourTime: number;
   minuteTime: number | null;
 }
 
 export default function MealRecruitModal() {
   const queryClient = useQueryClient();
+
   const { hideDialog, showToast } = useDialogContext();
+
   const methods = useForm<FormValues>({
     defaultValues: {
       title: '',
@@ -43,6 +50,7 @@ export default function MealRecruitModal() {
     },
     resolver: zodResolver(mealRecruitSchema),
   });
+
   const { control, handleSubmit } = methods;
 
   const { mutateAsync: postMealRecruit, isPending, isIdle } = usePostMyPost();
@@ -95,8 +103,10 @@ export default function MealRecruitModal() {
     [showToast],
   );
 
+  const selectedDate = useWatch({ control, name: 'date' });
+
   return (
-    <Modal onClose={hideDialog} title="한끼팟 만들기">
+    <Modal onClose={hideDialog} title="한끼팟 만들기" zIndex={100}>
       <div className="mb-4 text-base font-normal text-mainGray-active">
         다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
       </div>
@@ -148,12 +158,26 @@ export default function MealRecruitModal() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
-                  const selectedOption = hours.find(({ id }) => id === value);
+                  const now = new Date();
+                  const currentDate = now.toLocaleDateString();
+                  const currentHour = now.getHours();
+
+                  const filteredAfterCurrentHour = hours.filter(
+                    ({ id }) => id >= currentHour,
+                  );
+
+                  const options =
+                    selectedDate === currentDate
+                      ? filteredAfterCurrentHour
+                      : hours;
+
+                  const selectedOption = options.find(({ id }) => id === value);
+
                   return (
                     <div className="flex w-full flex-col">
                       <SingleSelectDropdown
                         defaultLabel="시"
-                        options={hours}
+                        options={options}
                         selectedOption={selectedOption}
                         onChangeValue={data => onChange(data[0].id)}
                         errorMsg={error?.message}
@@ -171,13 +195,26 @@ export default function MealRecruitModal() {
                   field: { onChange, value },
                   fieldState: { error },
                 }) => {
+                  const now = new Date();
+                  const currentDate = now.toLocaleDateString();
+                  const currentMinutes = now.getMinutes();
+
+                  const filteredAfterCurrentMin = minutes.filter(
+                    ({ id }) => id > currentMinutes,
+                  );
+
+                  const options =
+                    selectedDate === currentDate
+                      ? filteredAfterCurrentMin
+                      : minutes;
+
                   const selectedOption = minutes.find(({ id }) => id === value);
 
                   return (
                     <div className="flex w-full flex-col">
                       <SingleSelectDropdown
                         defaultLabel="분"
-                        options={minutes}
+                        options={options}
                         selectedOption={selectedOption}
                         onChangeValue={data => onChange(data[0].id)}
                         errorMsg={error?.message}
@@ -190,6 +227,7 @@ export default function MealRecruitModal() {
               />
             </div>
           </LabeledSection>
+
           <LabeledSection label="식당">
             <Controller
               control={control}
@@ -207,6 +245,7 @@ export default function MealRecruitModal() {
               }}
             />
           </LabeledSection>
+
           <LabeledSection label="인원">
             <Controller
               control={control}
@@ -233,6 +272,7 @@ export default function MealRecruitModal() {
               }}
             />
           </LabeledSection>
+
           <LabeledSection label="모임장소" className="col-span-2">
             <Controller
               control={control}

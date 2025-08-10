@@ -5,8 +5,7 @@ import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { foodFilterDisplay } from '@/constants/store';
 import { useDialogContext, useHandleScrap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
-import { BsClockFill, BsFillTelephoneFill, BsGeoAltFill } from 'react-icons/bs';
-import { PiArrowSquareInThin } from 'react-icons/pi';
+import { BsBoxArrowUpRight, BsClockFill, BsGeoAltFill } from 'react-icons/bs';
 
 import Icon from '@/components/common/Icon';
 import FavoriteButton from '@/components/common/button/FavoriteButton';
@@ -16,19 +15,17 @@ import StoreMenuImage from '@/components/store/StoreMenuImage';
 import StoreProposalEditModal from '@/components/store/modal/StoreProposalEditModal';
 
 interface StoreCardProps {
-  width: string;
-  height: string;
   storeData: Store;
   showFavoriteButton?: boolean;
   isOpenStoreProposalEditModal?: boolean;
+  className?: string;
 }
 
 export default function StoreCard({
-  width = 'w-full',
-  height,
   storeData,
   showFavoriteButton = true,
   isOpenStoreProposalEditModal,
+  className,
   ...rest
 }: StoreCardProps) {
   const { showDialog } = useDialogContext();
@@ -100,37 +97,33 @@ export default function StoreCard({
 
   return (
     <article
-      className={`${width} flex flex-col gap-3 ${isOpenStoreProposalEditModal ? 'mt-6' : 'mt-3'}`}
+      className={`flex !h-fit w-full flex-col gap-3 ${isOpenStoreProposalEditModal ? 'mt-6' : 'mt-3'}`}
       {...rest}
     >
       {storeImageList.length === 1 ? (
         <StoreMenuImage
           src={storeImageList[0].path}
-          width="w-full "
-          height="h-[16.5rem]"
+          className="!h-[14rem] w-full"
         />
       ) : (
         <SwiperContainer
           slideList={storeImageList}
-          arrowClassName="absolute hover:bg-black mx-1 !size-14 p-2 hover:disabled:bg-transparent hover:bg-opacity-50 z-10 h-fit rounded-full disabled:!text-mainGray !text-white"
+          arrowClassName="absolute p-3 hover:bg-black hover:bg-opacity-50 disabled:hidden z-10 rounded-full text-white"
+          slideItemClassName="!h-fit"
           slidesPerView={1}
         >
           {item => {
             return (
-              <StoreMenuImage
-                src={item.path}
-                width=" w-full"
-                height="h-[16.5rem]"
-              />
+              <StoreMenuImage src={item.path} className="h-[14rem] w-full" />
             );
           }}
         </SwiperContainer>
       )}
 
-      <header className="mb-2 flex items-start justify-between font-semibold">
-        <h2 className="text-lg">
+      <header className="flex items-start justify-between font-semibold">
+        <h2 className="text-lg leading-[22px]">
           <span className="mr-1.5">{storeData.name || ''}</span>
-          <span className="text-mainGray-active">
+          <span className="text-base text-mainGray-active">
             {storeData.foodType ? foodFilterDisplay[storeData.foodType] : '-'}
           </span>
         </h2>
@@ -151,13 +144,14 @@ export default function StoreCard({
             isFavorite={storeData.isScraped}
             onClick={onScrapClick}
             disabled={isPostScrapPending || isDeleteScrapPending}
+            className="ml-1"
           />
         )}
       </header>
 
       <ul className="flex flex-col gap-2">
         <li className="relative flex w-fit max-w-full items-center">
-          <BsGeoAltFill className="mr-1.5 size-3.5 min-w-fit text-mainGray-hover" />
+          <BsGeoAltFill className="mr-1.5 size-4 min-w-fit text-mainGray-hover" />
 
           <span className="mr-1.5 text-darkGray-active">
             {storeData.campusName}
@@ -172,7 +166,7 @@ export default function StoreCard({
             onClick={handleOpenNaverLink}
             className="peer flex items-center justify-center text-sm"
           >
-            <PiArrowSquareInThin className="text-darkGray-active" size={18} />
+            <BsBoxArrowUpRight className="stroke-1 text-darkGray" size={13} />
           </button>
 
           <div className="absolute -right-[88px] -top-10 hidden rounded-md rounded-bl-none bg-mainGreen bg-opacity-90 px-3 py-2 peer-hover:block">
@@ -200,7 +194,7 @@ export default function StoreCard({
 
             <div className="absolute -right-[5%] top-8 z-20 hidden min-w-max whitespace-normal rounded-md bg-mainGreen px-4 py-3 text-white group-hover:block">
               {/* 삼각형 */}
-              <div className="absolute -top-1.5 right-[2%] h-0 w-0 -translate-x-1/2 border-x-8 border-b-8 border-x-transparent border-b-mainGreen" />
+              <div className="absolute -top-1.5 right-[0%] h-0 w-0 -translate-x-1/2 border-x-8 border-b-8 border-x-transparent border-b-mainGreen" />
               <ul className="flex flex-col gap-1">
                 {storeData.workingDay.split(/, |\(|\)/).map(workingDay => (
                   <li key={workingDay}>{workingDay}</li>
@@ -213,13 +207,6 @@ export default function StoreCard({
             </div>
           </div>
         </li>
-
-        {storeData.contact && (
-          <li className="flex items-center">
-            <BsFillTelephoneFill className="mr-1.5 size-3.5 min-w-fit text-mainGray-hover" />
-            <span className="text-darkGray-active">{storeData.contact}</span>
-          </li>
-        )}
       </ul>
 
       <div className="flex gap-1 overflow-x-auto scrollbar-hide">

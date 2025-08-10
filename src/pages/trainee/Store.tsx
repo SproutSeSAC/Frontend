@@ -22,19 +22,26 @@ import StoreModal from '@/components/store/modal/StoreModal';
 export default function Store() {
   const navigate = useNavigate();
 
-  const observeRef = useRef(null);
-  const [isMap, setIsMap] = useState(false);
+  const [isMap, setIsMap] = useState(true);
+
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { showDialog, hideDialog } = useDialogContext();
 
-  const { storeList, fetchNextPage, hasNextPage, isLoading } =
-    useGetStoreList();
+  const {
+    storeList,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    currCampusId, //
+  } = useGetStoreList();
 
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
   };
+
+  const observeRef = useRef(null);
 
   useObserver({ runFucAtIntersect, target: observeRef, threshold: 0.1 });
 
@@ -47,16 +54,17 @@ export default function Store() {
     });
   };
 
-  const toggleShowList = () => setIsMap(prev => !prev);
+  const toggleViewType = () => setIsMap(prev => !prev);
 
   return (
     <>
-      <MainView className="h-screen !min-h-[1000px]">
+      <MainView className="!pb-12">
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
           <SearchInput
             name="keyword"
             placeholder="검색어를 입력해 주세요"
             className="ml-32 max-w-[422px] flex-1"
+            onChange={e => setSearchKeyword(e.target.value)}
             onEnter={() => {
               updateQueryParams(
                 searchParams,
@@ -66,7 +74,6 @@ export default function Store() {
               );
             }}
             value={searchKeyword}
-            onChange={e => setSearchKeyword(e.target.value)}
             resetChange={() => {
               setSearchKeyword('');
               const params = new URLSearchParams(searchParams);
@@ -78,17 +85,20 @@ export default function Store() {
 
         <MealRecruitList />
 
-        <section className="flex h-1/2 w-full flex-1 rounded-[20px] bg-white p-5">
-          <StoreFilterForm onReset={() => setSearchKeyword('')} />
+        <section className="flex !h-[75vh] min-h-[700px] w-full gap-x-8 rounded-[20px] bg-white p-5">
+          <StoreFilterForm
+            currCampusId={currCampusId}
+            onReset={() => setSearchKeyword('')}
+          />
 
           {!isMap && (
-            <div className="relative flex w-full flex-col px-5">
+            <div className="relative flex size-full flex-col">
               <header className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
                 <h3 className="text-xl font-semibold text-black">
                   맛집 리스트
                 </h3>
                 <button
-                  onClick={toggleShowList}
+                  onClick={toggleViewType}
                   className="flex size-10 items-center justify-center rounded-lg bg-lightGray-active p-2.5 shadow-xl"
                 >
                   <BsMap size={18} />
@@ -98,8 +108,8 @@ export default function Store() {
               {!isLoading && storeList && (
                 <>
                   {storeList.length > 0 && (
-                    <div className="overflow-y-scroll scrollbar-hide">
-                      <ul className="grid grid-cols-3 gap-9 pb-12 text-base">
+                    <div className="size-full overflow-y-scroll scrollbar-hide">
+                      <ul className="grid grid-cols-3 gap-7 pb-12 text-base">
                         {storeList.map(storeData => (
                           <div
                             key={storeData.id}
@@ -113,11 +123,7 @@ export default function Store() {
                               }
                             }}
                           >
-                            <StoreCard
-                              width="w-full"
-                              height="h-full"
-                              storeData={storeData}
-                            />
+                            <StoreCard storeData={storeData} />
                           </div>
                         ))}
                       </ul>
@@ -143,8 +149,12 @@ export default function Store() {
             </div>
           )}
 
-          {isMap && (
-            <StoreMap storeList={storeList} toggleShowList={toggleShowList} />
+          {isMap && currCampusId && (
+            <StoreMap
+              currCampusId={currCampusId}
+              storeList={storeList}
+              toggleViewType={toggleViewType}
+            />
           )}
         </section>
       </MainView>

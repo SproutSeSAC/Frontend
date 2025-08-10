@@ -5,6 +5,7 @@ interface FavoriteButtonProps {
   isFavorite: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
+  className?: string;
 }
 
 /**
@@ -17,11 +18,17 @@ export default function FavoriteButton({
   isFavorite,
   onClick,
   disabled,
+  className,
 }: FavoriteButtonProps) {
   const iconClassName = 'cursor-pointer mt-0.5 text-mainGreen';
 
   return (
-    <button type="button" onClick={onClick} disabled={disabled}>
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`${className}`}
+    >
       {isFavorite ? (
         <BsHeartFill size={size} className={iconClassName} />
       ) : (

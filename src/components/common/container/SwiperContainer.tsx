@@ -30,7 +30,7 @@ export default function SwiperContainer<T extends { id: number }>({
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <div className="relative flex h-[265px] items-center justify-between">
+    <div className="relative flex items-center justify-between">
       <button
         onClick={e => {
           e.stopPropagation();
@@ -42,10 +42,10 @@ export default function SwiperContainer<T extends { id: number }>({
             setSlide({ isBeginning, isEnd });
           }
         }}
-        className={`left-0 flex w-[4vw] items-center justify-center py-5 text-darkGray disabled:text-[#e7e7e7] ${arrowClassName}`}
+        className={`left-1 flex items-center justify-center text-darkGray disabled:text-mainGray ${arrowClassName}`}
         disabled={slide.isBeginning}
       >
-        <Icon name="ChevronLeft" className="size-14" />
+        <Icon name="ChevronLeft" className="size-full" />
       </button>
 
       <Swiper
@@ -67,7 +67,7 @@ export default function SwiperContainer<T extends { id: number }>({
         {slideList.map((item: T) => (
           <SwiperSlide
             key={item.id}
-            className={`h-full w-full ${slideItemClassName}`}
+            className={`size-full ${slideItemClassName}`}
           >
             {children(item)}
           </SwiperSlide>
@@ -85,10 +85,10 @@ export default function SwiperContainer<T extends { id: number }>({
             setSlide({ isBeginning, isEnd });
           }
         }}
-        className={`right-0 flex w-[4vw] items-center justify-center py-5 text-darkGray disabled:text-mainGray ${arrowClassName}`}
+        className={`right-1 flex items-center justify-center text-darkGray disabled:text-mainGray ${arrowClassName}`}
         disabled={slide.isEnd}
       >
-        <Icon name="ChevronRight" className="size-14" />
+        <Icon name="ChevronRight" className="size-full" />
       </button>
     </div>
   );

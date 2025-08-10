@@ -55,7 +55,7 @@ export default function StoreModal({
 
   return createPortal(
     <>
-      <div className="fixed left-[36%] top-[5%] z-20 m-[15px] h-[85vh] w-[420px] -translate-x-[40%] transform overflow-y-auto rounded-[20px] bg-white px-7 pb-16 pt-[15px] shadow-modal scrollbar-hide">
+      <div className="fixed left-[36%] top-[5%] z-[101] m-[15px] h-[85vh] w-[420px] -translate-x-[40%] transform overflow-y-auto rounded-[20px] bg-white px-7 pb-16 pt-[15px] shadow-modal scrollbar-hide">
         {store && storeDetail && !isStoreDetailLoading && (
           <>
             <header className="mb-[10px] flex items-center justify-between">
@@ -79,8 +79,6 @@ export default function StoreModal({
             <StoreCard
               isOpenStoreProposalEditModal
               showFavoriteButton={false}
-              width="w-full"
-              height="h-[269px]"
               storeData={{
                 ...store,
                 longitude: store.longitude,
@@ -113,7 +111,7 @@ export default function StoreModal({
       </div>
 
       <div
-        className="fixed inset-0 z-10"
+        className="z-100 fixed inset-0"
         onClick={onClose}
         onKeyDown={event => {
           if (event.key === 'Escape') {

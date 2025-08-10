@@ -81,7 +81,7 @@ export default function Home() {
   const linkButtonStyle = 'pr-[10px] tracking-tight text-darkGray';
 
   return (
-    <MainView className="pb-20">
+    <MainView>
       <Header title={`${userProfile?.name} 스프님, 환영합니다!`}>
         {hasAdmin(userProfile?.role) && (
           <RoleSwitchButton title="관리자로 전환" />
@@ -140,7 +140,7 @@ export default function Home() {
         {loungeList?.projects.length !== 0 ? (
           <SwiperContainer
             slideList={loungeList?.projects || []}
-            slideItemClassName="min-w-[275px]"
+            slideItemClassName="min-w-[275px] !h-[265px]"
           >
             {item => <LoungePostCard card={item} />}
           </SwiperContainer>

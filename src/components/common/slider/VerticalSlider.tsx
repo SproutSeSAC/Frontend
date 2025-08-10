@@ -24,15 +24,34 @@ interface VerticalSliderProps<T> {
   hideNextButton?: boolean;
 }
 
-function SlideNextButton({ swiper }: { swiper: SwiperType | null }) {
+function SlideNextButton({
+  direction,
+  swiper,
+  className,
+}: {
+  direction: 'prev' | 'next';
+  swiper: SwiperType | null;
+  className?: string;
+}) {
+  const directionObj = {
+    prev: {
+      func: () => swiper?.slidePrev(),
+      iconName: 'ChevronUp' as const,
+    },
+    next: {
+      func: () => swiper?.slideNext(),
+      iconName: 'ChevronDown' as const,
+    },
+  };
+
   return (
     <button
       type="button"
-      aria-label="더 보기"
-      className="z-10 pb-1 pt-3"
-      onClick={() => swiper?.slideNext()}
+      aria-label="더보기"
+      className={`z-10 p-2 ${className}`}
+      onClick={directionObj[direction].func}
     >
-      <Icon name="ChevronDown" opacity={0.4} />
+      <Icon name={directionObj[direction].iconName} opacity={0.5} />
     </button>
   );
 }
@@ -63,7 +82,7 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
   return (
     <div className="relative flex h-full flex-col justify-between">
       <div
-        className="store-slider-container overflow-hidden"
+        className="overflow-hidden"
         style={{ height: `${windowHeight - containerHeightOffset}px` }}
       >
         <Swiper
@@ -98,9 +117,19 @@ const VerticalSlider = forwardRef(function VerticalSlider<T>(
           <LoopLoading size={60} />
         </div>
       )}
+
       {!hideNextButton && slideList.length > 0 && (
-        <div className="mb-4 flex justify-center">
-          <SlideNextButton swiper={swiperInstance} />
+        <div className="absolute bottom-[4vh] flex w-full items-center justify-center gap-x-5">
+          <SlideNextButton
+            direction="prev"
+            swiper={swiperInstance}
+            className="flex size-[50px] items-center justify-center rounded-full bg-mainGray bg-opacity-80 shadow-xl hover:bg-darkGray-active hover:bg-opacity-80 hover:text-white"
+          />
+          <SlideNextButton
+            direction="next"
+            swiper={swiperInstance}
+            className="flex size-[50px] items-center justify-center rounded-full bg-mainGray bg-opacity-60 shadow-2xl hover:bg-darkGray-active hover:bg-opacity-80 hover:text-white"
+          />
         </div>
       )}
     </div>

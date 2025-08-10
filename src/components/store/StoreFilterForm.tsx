@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetUserProfile } from '@/services/auth/authQueries';
 import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
 import { useGetFilterCount } from '@/services/store/storeQueries';
 
@@ -19,6 +18,7 @@ import StoreReportModal from '@/components/store/modal/StoreReportModal';
 
 interface StoreFilterFormProps {
   onReset: () => void;
+  currCampusId?: number;
 }
 
 interface FormValues {
@@ -33,24 +33,21 @@ interface FormValues {
   foodTypeList: string[];
 }
 
-export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
+export default function StoreFilterForm({
+  onReset,
+  currCampusId,
+}: StoreFilterFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { data: campusList } = useGetCampusList();
 
-  const { data: userProfile } = useGetUserProfile();
-
-  const userCampus = userProfile?.campusList[0].id;
-
-  const campusId = Number(searchParams.get('campusId')) || userCampus;
-
-  const { data: filterCount } = useGetFilterCount(campusId);
+  const { data: filterCount } = useGetFilterCount(currCampusId);
 
   const { showDialog } = useDialogContext();
 
   const parsedValues = useMemo(() => {
     return {
-      campusId,
+      campusId: currCampusId,
       sprout: {
         isZeropay: searchParams.get('isZeropay') === 'true',
         overFivePerson: searchParams.get('overFivePerson') === 'true',
@@ -63,11 +60,11 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
         ? searchParams.get('foodTypeList')!.split(',')
         : [],
     };
-  }, [campusId, searchParams]);
+  }, [currCampusId, searchParams]);
 
   const { control, setValue, getValues, reset } = useForm<FormValues>({
     defaultValues: {
-      campusId,
+      campusId: currCampusId,
       sprout: {
         isZeropay: false,
         overFivePerson: false,
@@ -137,7 +134,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
   }, [parsedValues]);
 
   return (
-    <form className="flex h-full w-[10%] min-w-[280px] max-w-[340px] flex-shrink-0 flex-col gap-6 pr-4">
+    <form className="flex h-full w-[5%] min-w-[200px] max-w-[300px] flex-shrink-0 flex-col gap-6">
       <div className="flex w-full items-center justify-between">
         <h3 className="ml-1 whitespace-nowrap text-xl font-semibold">
           나의 위치 찾기
@@ -246,7 +243,7 @@ export default function StoreFilterForm({ onReset }: StoreFilterFormProps) {
 
       <button
         type="button"
-        className="h-[46px] w-full items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-darkGray-active hover:bg-lightGreen-active active:bg-mainGreen active:text-white"
+        className="mt-auto h-[46px] w-full items-center justify-center gap-2.5 rounded-lg bg-lightGreen-hover px-3.5 py-2.5 text-lg font-semibold text-darkGray-active hover:bg-lightGreen-active active:bg-mainGreen active:text-white"
         onClick={async () => {
           await showDialog({
             key: 'STORE-REPORT-TYPE',

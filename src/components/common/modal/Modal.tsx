@@ -26,6 +26,7 @@ interface Props {
   modalSize?: Modalsize;
   headerSize?: HeaderSize;
   headerType?: 'title-xIcon' | 'squareBackBtn-title' | 'onlyTitle';
+  zIndex?: number;
 }
 
 export default function Modal({
@@ -35,6 +36,7 @@ export default function Modal({
   modalSize = 'md',
   headerSize = '2xl',
   headerType = 'title-xIcon',
+  zIndex = 40,
 }: Props) {
   const el = document.getElementById('modal') as Element;
 
@@ -54,7 +56,7 @@ export default function Modal({
   return createPortal(
     <>
       <section
-        className={`fixed inset-0 z-40 m-auto h-fit max-h-[90vh] min-h-[180px] overflow-hidden rounded-2xl bg-white ${modalSizeObj[modalSize]}`}
+        className={`fixed inset-0 z-40 m-auto h-fit max-h-[90vh] min-h-[180px] overflow-hidden rounded-2xl bg-white ${modalSizeObj[modalSize]} z-[${zIndex}]`}
       >
         {title && (
           <header
@@ -108,7 +110,7 @@ export default function Modal({
           }
         }}
         onClick={onClose}
-        className="fixed inset-0 z-30 h-[100vh] w-full bg-[rgba(43,43,43,0.6)]"
+        className={`fixed inset-0 z-30 z-[${zIndex - 1}] h-[100vh] w-full bg-[rgba(43,43,43,0.6)]`}
       />
     </>,
     el,
