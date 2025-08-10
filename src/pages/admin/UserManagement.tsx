@@ -141,8 +141,8 @@ export default function UserManagement() {
               }
               setSelectedCampusId(option[0].id);
             }}
-            selectBoxClassName="w-full rounded-xl border-0 justify-between items-center h-12"
-            optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
+            selectBoxClassName="!text-base !w-full rounded-xl border-0 justify-between items-center h-12"
+            optionClassName="hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
         )}
 
@@ -158,20 +158,21 @@ export default function UserManagement() {
               }
               setSelectedCourseId(option[0].id);
             }}
-            selectBoxClassName="!max-w-[450px] rounded-xl border-0 justify-between items-center h-12"
-            optionClassName="text-lg hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
+            selectBoxClassName="!text-base !max-w-[450px] rounded-xl border-0 justify-between items-center h-12"
+            dropdownBoxClassName="!min-w-fit"
+            optionClassName="hover:bg-lightGray-active !py-2 pl-1 data-[selected=true]:text-black data-[selected=true]:font-bold"
           />
         )}
 
         <SearchInput
           name="search"
           value={currFilter.keyword}
-          placeholder="이름을 입력해주세요."
+          placeholder="사용자 이름을 입력해주세요"
           onChange={event => {
             handleChangeFilter({ page: initialFilter.page });
             handleChangeKeyword(event);
           }}
-          className="ml-auto text-lg"
+          className="ml-auto"
           inputStyle="square"
           resetChange={handleResetFilter}
         />

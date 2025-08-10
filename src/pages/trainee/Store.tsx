@@ -1,8 +1,13 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-import { useDialogContext, useGetStoreList, useObserver } from '@/hooks';
+import {
+  useDialogContext,
+  useFilterData,
+  useGetStoreList,
+  useObserver,
+} from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { Store as StoreType } from '@/types/store/storeDto';
@@ -20,12 +25,16 @@ import MealRecruitList from '@/components/store/meal-recruit/MealRecruitList';
 import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function Store() {
-  const navigate = useNavigate();
-
   const [isMap, setIsMap] = useState(true);
 
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const {
+    currFilter,
+    handleChangeKeyword,
+    handleResetKeyword,
+    debouncedFilter,
+  } = useFilterData({ initialFilter: { keyword: '' } });
 
   const { showDialog, hideDialog } = useDialogContext();
 
@@ -37,15 +46,15 @@ export default function Store() {
     currCampusId, //
   } = useGetStoreList();
 
+  const observeRef = useRef(null);
+
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
   };
 
-  const observeRef = useRef(null);
-
   useObserver({ runFucAtIntersect, target: observeRef, threshold: 0.1 });
 
-  const onOpenModal = async (store: StoreType) => {
+  const onOpenStoreModal = async (store: StoreType) => {
     await showDialog({
       key: 'STORE_MODAL',
       element: (
@@ -56,30 +65,32 @@ export default function Store() {
 
   const toggleViewType = () => setIsMap(prev => !prev);
 
+  const handleSearchParams = (keyword?: string) => {
+    if (!keyword) {
+      const params = new URLSearchParams(searchParams);
+      params.delete('keyword');
+      setSearchParams(params);
+    } else {
+      updateQueryParams(searchParams, setSearchParams, 'keyword', keyword);
+    }
+  };
+
+  useEffect(() => {
+    handleSearchParams(debouncedFilter.keyword);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedFilter.keyword]);
+
   return (
     <>
       <MainView className="!pb-12">
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
           <SearchInput
             name="keyword"
-            placeholder="검색어를 입력해 주세요"
+            value={currFilter.keyword}
+            placeholder="찾으시는 맛집을 검색해보세요"
             className="ml-32 max-w-[422px] flex-1"
-            onChange={e => setSearchKeyword(e.target.value)}
-            onEnter={() => {
-              updateQueryParams(
-                searchParams,
-                setSearchParams,
-                'keyword',
-                searchKeyword,
-              );
-            }}
-            value={searchKeyword}
-            resetChange={() => {
-              setSearchKeyword('');
-              const params = new URLSearchParams(searchParams);
-              params.delete('keyword');
-              navigate(`/stores`);
-            }}
+            onChange={handleChangeKeyword}
+            resetChange={handleResetKeyword}
           />
         </Header>
 
@@ -88,7 +99,7 @@ export default function Store() {
         <section className="flex !h-[75vh] min-h-[700px] w-full gap-x-8 rounded-[20px] bg-white p-5">
           <StoreFilterForm
             currCampusId={currCampusId}
-            onReset={() => setSearchKeyword('')}
+            onReset={handleResetKeyword}
           />
 
           {!isMap && (
@@ -114,12 +125,12 @@ export default function Store() {
                           <div
                             key={storeData.id}
                             className="aspect-square"
-                            onClick={() => onOpenModal(storeData)}
+                            onClick={() => onOpenStoreModal(storeData)}
                             role="button"
                             tabIndex={0}
                             onKeyDown={e => {
                               if (e.key === 'Enter') {
-                                onOpenModal(storeData);
+                                onOpenStoreModal(storeData);
                               }
                             }}
                           >

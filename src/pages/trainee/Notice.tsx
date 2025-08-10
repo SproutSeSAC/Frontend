@@ -63,7 +63,7 @@ export default function Notice() {
       <SearchInput
         name="search"
         value={currFilter.keyword}
-        placeholder="찾으시는 공지사항 내용을 입력해 주세요"
+        placeholder="찾으시는 공지사항을 검색해 주세요"
         onChange={handleChangeKeyword}
         resetChange={handleResetKeyword}
         inputStyle="square"

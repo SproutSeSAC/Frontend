@@ -27,7 +27,7 @@ export const useFilterData = <T>({ initialFilter }: { initialFilter: T }) => {
 
   const debouncedKeyword = useDebounce(
     (currFilter as { keyword: string }).keyword,
-    700,
+    1000,
   );
 
   const debouncedFilter = {

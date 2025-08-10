@@ -125,7 +125,7 @@ export default function Lounge() {
       <SearchInput
         name="search"
         value={currFilter.keyword}
-        placeholder="검색어를 입력해 주세요"
+        placeholder="찾으시는 프로젝트를 검색해 주세요"
         onChange={handleChangeKeyword}
         resetChange={handleResetKeyword}
         inputStyle="square"

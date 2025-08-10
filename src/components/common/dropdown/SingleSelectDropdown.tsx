@@ -18,6 +18,7 @@ interface SingleSelectDropdownProps {
   errorMsg?: string;
   boxShape?: SelectBoxShape;
   selectBoxClassName?: string;
+  dropdownBoxClassName?: string;
   optionClassName?: string;
 }
 
@@ -31,6 +32,7 @@ interface SingleSelectDropdownProps {
  * @param errorMsg - 폼 관련 에러 메시지입니다.
  * @param boxShape - 라운지에서의 버튼 모양이거나 모집글에서의 input 모양 둘중 하나를 선택할 수 있습니다. props로 설정하지 않았을 시 기본값은 input 모양입니다.
  * @param selectBoxClassName - 셀렉트 박스 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
+ * @param dropdownBoxClassName - 드롭다운 박스 스타일 커스텀, 아래로 펼쳐지는 박스 스타일을 변경 가능합니다.
  * @param optionClassName - 옵션 리스트 박스가 아닌 하나의 옵션 스타일 커스텀, 현재 기본 스타일에서 변경 가능합니다.
  */
 
@@ -44,6 +46,7 @@ export default function SingleSelectDropdown({
   errorMsg,
   boxShape = 'inputShape',
   selectBoxClassName = '',
+  dropdownBoxClassName = '',
   optionClassName = '',
 }: SingleSelectDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -83,7 +86,8 @@ export default function SingleSelectDropdown({
       errorMsg={errorMsg}
       selectedOptionLabel={selectedOption?.name}
       boxShape={boxShape}
-      className={selectBoxClassName}
+      selectBoxClassName={selectBoxClassName}
+      dropdownBoxClassName={dropdownBoxClassName}
     >
       {options.map(option => (
         <SelectOption
