@@ -32,7 +32,7 @@ export default function ControllerDateTime({
               <CustomDatePicker
                 id={name}
                 currentDate={value ? new Date(value) : undefined}
-                className={`h-[59px] ${errors[name]?.message ? 'border-red-500' : 'border-mainGray'}`}
+                className={`h-[60px] ${errors[name]?.message ? 'border-red-500' : 'border-mainGray'}`}
                 onChange={data => {
                   if (data) {
                     const dateTime = formatDate(data, "yyyy-MM-dd'T'HH:mm:ss");

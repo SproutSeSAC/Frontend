@@ -44,7 +44,7 @@ export default function MealRecruitDateSelectBox({
         errorMsg={errorMsg}
         selectedOptionLabel={selectedOptions?.id}
         boxShape="buttonShape"
-        className={`${errorMsg ? 'border-red-500' : ''} relative flex w-full items-center gap-5 text-start ${selectedOptions ? '!text-black' : 'text-mainGray-hover'} rounded-xl border border-solid border-mainGray bg-white px-4 py-[9px] text-lg`}
+        selectBoxClassName={`${errorMsg ? 'border-red-500' : ''} relative flex w-full h-[50px] items-center gap-5 text-start ${selectedOptions ? '!text-black' : 'text-mainGray-hover'} rounded-xl border border-solid border-mainGray bg-white px-4 py-[9px] text-lg`}
       >
         {dateOptions.map((option, idx) => (
           <li

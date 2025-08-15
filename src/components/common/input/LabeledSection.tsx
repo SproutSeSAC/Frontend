@@ -16,7 +16,9 @@ export default function LabeledSection({
   tooltip,
 }: LabeledSectionProps) {
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div
+      className={`flex flex-col gap-2 [&>*:last-child]:min-h-[50px] ${className}`}
+    >
       {tooltip ? (
         <div className="flex items-center gap-1.5">
           <span className="pl-[5px] text-lg font-medium">{label}</span>

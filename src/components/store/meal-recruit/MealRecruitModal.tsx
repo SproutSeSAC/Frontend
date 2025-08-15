@@ -106,7 +106,7 @@ export default function MealRecruitModal() {
   const selectedDate = useWatch({ control, name: 'date' });
 
   return (
-    <Modal onClose={hideDialog} title="한끼팟 만들기" zIndex={100}>
+    <Modal onClose={hideDialog} title="한끼팟 만들기" zIndex={200}>
       <div className="mb-4 text-base font-normal text-mainGray-active">
         다른 사람들의 이야기가 궁금한가요? 함께 식사할 사람을 찾아봐요!
       </div>

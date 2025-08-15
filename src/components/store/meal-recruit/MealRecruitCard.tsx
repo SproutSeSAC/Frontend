@@ -94,7 +94,7 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
   return (
     <div
       ref={cardRef}
-      className="relative z-10 flex h-[74px] w-[346px] items-center justify-between rounded-xl border border-lightGray-active bg-white px-5 py-[15px] shadow-[2px_4px_12px_0px_rgba(0,0,0,0.0)]"
+      className="relative flex h-[74px] w-[346px] items-center justify-between rounded-xl border border-lightGray-active bg-white px-5 py-[15px] shadow-[2px_4px_12px_0px_rgba(0,0,0,0.0)]"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -122,7 +122,7 @@ export default function MealRecruitCard({ post }: MealRecruitCardProps) {
 
       {isHovered && (
         <ul
-          className="fixed z-20 flex w-[346px] flex-col gap-2 rounded-2xl border border-lightGray-active bg-white px-4 py-6 text-sm shadow-md"
+          className="fixed z-[1000] flex w-[346px] flex-col gap-2 rounded-2xl border border-lightGray-active bg-white px-4 py-6 text-sm shadow-md"
           style={tooltipStyle}
         >
           <li className="flex items-center gap-2">
