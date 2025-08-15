@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { useGetUserProfileCard } from '@/services/auth/authQueries';
 
@@ -21,8 +21,9 @@ interface CommentTemplateProps {
 }
 
 export default function CommentTemplate({ postId }: CommentTemplateProps) {
-  const [searchParams] = useSearchParams();
   const targetRef = useRef<HTMLDivElement | null>(null);
+
+  const { state } = useLocation();
 
   const { data: profileCard } = useGetUserProfileCard();
 
@@ -48,13 +49,13 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
   } = useHandleComment({ postId, reset });
 
   useEffect(() => {
-    if (searchParams.get('scrollTo') === 'target' && !isCommentListLoading) {
+    if (state === 'commentList' && !isCommentListLoading) {
       targetRef.current?.scrollIntoView({
         behavior: 'instant',
         block: 'start',
       });
     }
-  }, [searchParams, isCommentListLoading]);
+  }, [state, isCommentListLoading]);
 
   return (
     <section ref={targetRef} className="mb-24 mt-16">
