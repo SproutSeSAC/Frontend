@@ -1,6 +1,6 @@
 import {
   storeMapDetailsAtom,
-  zoomBehaviorFlagAtom,
+  storeModalOpenAtom,
 } from '@/atoms/storeDetailsAtom';
 
 import { foodFilterDisplay } from '@/constants';
@@ -19,7 +19,8 @@ export default function StoreListSliderCard({
   slideItem,
 }: StoreListSliderCardProps) {
   const setStoreMapDetails = useSetAtom(storeMapDetailsAtom);
-  const setIsZoomBehaviorFlag = useSetAtom(zoomBehaviorFlagAtom);
+
+  const setStoreModalOpen = useSetAtom(storeModalOpenAtom);
 
   const { onScrapClick, isDeleteScrapPending, isPostScrapPending } =
     useHandleScrap({
@@ -31,7 +32,7 @@ export default function StoreListSliderCard({
   const {
     latitude,
     longitude,
-    id,
+    id: storeId,
     storeImageList,
     isScraped,
     scrapCount,
@@ -41,27 +42,25 @@ export default function StoreListSliderCard({
   } = slideItem;
 
   const mapDetails = {
-    latitude,
-    longitude,
-    id,
-    zoom: 20,
+    storeId,
+    lat: +latitude,
+    lng: +longitude,
+  };
+
+  const onCardClick = () => {
+    setStoreModalOpen({ storeId, open: true });
+    setStoreMapDetails(mapDetails);
   };
 
   return (
     <div
-      key={id}
+      key={storeId}
       className="flex h-fit w-full flex-col gap-[8px] overflow-hidden"
-      onClick={() => {
-        setStoreMapDetails(mapDetails);
-        setIsZoomBehaviorFlag(true);
-      }}
+      onClick={onCardClick}
       role="button"
       tabIndex={0}
       onKeyDown={e => {
-        if (e.key === 'Enter') {
-          setStoreMapDetails(mapDetails);
-          setIsZoomBehaviorFlag(true);
-        }
+        if (e.key === 'Enter') onCardClick();
       }}
     >
       <StoreMenuImage

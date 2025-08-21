@@ -43,7 +43,7 @@ export default function Store() {
     fetchNextPage,
     hasNextPage,
     isLoading,
-    currCampusId, //
+    currCampus, //
   } = useGetStoreList();
 
   const observeRef = useRef(null);
@@ -57,9 +57,7 @@ export default function Store() {
   const onOpenStoreModal = async (store: StoreType) => {
     await showDialog({
       key: 'STORE_MODAL',
-      element: (
-        <StoreModal postId={store.postId} onClose={hideDialog} store={store} />
-      ),
+      element: <StoreModal store={store} onClose={hideDialog} />,
     });
   };
 
@@ -80,6 +78,8 @@ export default function Store() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilter.keyword]);
 
+  if (!currCampus) return null;
+
   return (
     <>
       <MainView className="!pb-12">
@@ -98,7 +98,7 @@ export default function Store() {
 
         <section className="flex !h-[75vh] min-h-[700px] w-full gap-x-8 rounded-[20px] bg-white p-5">
           <StoreFilterForm
-            currCampusId={currCampusId}
+            currCampusId={currCampus.id}
             onReset={handleResetKeyword}
           />
 
@@ -160,9 +160,9 @@ export default function Store() {
             </div>
           )}
 
-          {isMap && currCampusId && (
+          {isMap && (
             <StoreMap
-              currCampusId={currCampusId}
+              currCampus={currCampus}
               storeList={storeList}
               toggleViewType={toggleViewType}
             />

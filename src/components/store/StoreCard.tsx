@@ -131,7 +131,7 @@ export default function StoreCard({
         {isOpenStoreProposalEditModal && (
           <button
             onClick={onOpenStoreProposalEditModalClick}
-            className="flex items-center justify-center text-base font-semibold text-mainGray-active"
+            className="flex min-w-fit items-center justify-center font-semibold text-mainGray-active"
           >
             정보 수정 제안하기
             <Icon name="ChevronRight" width={18} height={18} />

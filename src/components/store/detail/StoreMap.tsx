@@ -1,61 +1,71 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import { useGetCampusList } from '@/services/campusCourse/campusCourseQueries';
+import { CampusListData } from '@/services/campusCourse/campusCourseQueries';
 
-import { storeMapDetailsAtom } from '@/atoms/storeDetailsAtom';
+import { storeModalOpenAtom } from '@/atoms/storeDetailsAtom';
 
 import { useStoreMap } from '@/hooks';
 import { Store } from '@/types/store/storeDto';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { BsList } from 'react-icons/bs';
 
 import StoreModal from '@/components/store/modal/StoreModal';
 
 interface StoreMapProp {
-  currCampusId: number;
+  currCampus: CampusListData['campusList'][number];
   storeList: Store[];
   toggleViewType: () => void;
 }
 
 export default function StoreMap({
-  currCampusId,
+  currCampus,
   storeList,
   toggleViewType,
 }: StoreMapProp) {
-  const storeMapDetails = useAtomValue(storeMapDetailsAtom);
+  const [storeModalOpen, setStoreModalOpen] = useAtom(storeModalOpenAtom);
 
-  const { data: campusList } = useGetCampusList();
-
-  const currCampus = campusList?.find(campus => campus.id === currCampusId);
-
-  const CAMPUS_LAT = +(currCampus?.latitude || 37.655604);
-  const CAMPUS_LON = +(currCampus?.longitude || 127.0129929);
+  const campusMapDetail = useMemo(() => {
+    return {
+      storeId: 'CAMPUS_MARKER' as const,
+      lat: +currCampus.latitude,
+      lng: +currCampus.longitude,
+    };
+  }, [currCampus.latitude, currCampus.longitude]);
 
   const {
-    modalOpen,
-    setModalOpen,
     storeMapRef,
+    storeMapInstanceRef,
     addMarker,
     isMapReady,
-    modalOpenInitValue,
+    markerListRef,
   } = useStoreMap({
-    lat:
-      Number(storeMapDetails.latitude || storeList[0]?.latitude) || +CAMPUS_LAT,
-
-    lng:
-      Number(storeMapDetails.longitude || storeList[0]?.longitude) ||
-      +CAMPUS_LON,
-
-    zoom: storeMapDetails.zoom > 15 ? storeMapDetails.zoom : 15,
+    initialMapDetail: campusMapDetail,
   });
 
   useEffect(() => {
     if (isMapReady) {
-      storeList.forEach(store =>
-        addMarker(Number(store?.latitude), Number(store?.longitude), store.id),
+      markerListRef.current.forEach(marker => marker.setMap(null));
+      markerListRef.current = [];
+
+      storeMapInstanceRef?.current?.setCenter(
+        new naver.maps.LatLng(+currCampus.latitude, +currCampus.longitude),
       );
+
+      storeList.forEach(({ latitude, longitude, id }) =>
+        addMarker({ lat: +latitude, lng: +longitude, storeId: id }),
+      );
+
+      addMarker(campusMapDetail);
     }
-  }, [addMarker, isMapReady, storeList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currCampus, isMapReady, markerListRef, storeList]);
+
+  const storeDetail = storeList.find(
+    ({ postId }) => postId === storeModalOpen.storeId,
+  );
+
+  const closeModal = () =>
+    setStoreModalOpen(prev => ({ ...prev, open: false }));
 
   return (
     <div className="relative size-full overflow-hidden rounded-2xl">
@@ -70,32 +80,8 @@ export default function StoreMap({
         <BsList size={18} />
       </button>
 
-      {modalOpen.open && (
-        <StoreModal
-          onClose={() => setModalOpen(modalOpenInitValue)}
-          postId={
-            storeList.find(({ postId }) => postId === modalOpen.id)?.postId ||
-            storeList[0].postId
-          }
-          store={
-            storeList.find(store => store.id === modalOpen.id) || storeList[0]
-          }
-        />
-      )}
-
-      {modalOpen.open && (
-        <div
-          className="fixed inset-0 z-10"
-          onClick={() => setModalOpen(modalOpenInitValue)}
-          onKeyDown={event => {
-            if (event.key === 'Escape') {
-              setModalOpen(modalOpenInitValue);
-            }
-          }}
-          tabIndex={-1}
-          role="button"
-          aria-label="모달 닫기"
-        />
+      {storeModalOpen.open && storeDetail && (
+        <StoreModal store={storeDetail} onClose={closeModal} />
       )}
     </div>
   );

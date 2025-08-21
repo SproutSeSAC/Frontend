@@ -18,20 +18,17 @@ import StoreReviewForm from '@/components/store/modal/StoreReviewForm';
 
 interface StoreModalProps {
   onClose: () => void;
-  postId: number;
-  store?: Store;
+  store: Store;
 }
 
-export default function StoreModal({
-  onClose,
-  postId,
-  store,
-}: StoreModalProps) {
+export default function StoreModal({ onClose, store }: StoreModalProps) {
   const el = document.getElementById('modal') as Element;
 
   const [tab, setTab] = useState('menu');
 
   const { data: profile } = useGetUserProfile();
+
+  const { postId } = store;
 
   const { data: storeDetail, isLoading: isStoreDetailLoading } =
     useGetPostDetail<GetStoreDetailResponse>(postId);
@@ -55,7 +52,7 @@ export default function StoreModal({
 
   return createPortal(
     <>
-      <div className="fixed left-[36%] top-[5%] z-[101] m-[15px] h-[85vh] w-[420px] -translate-x-[40%] transform overflow-y-auto rounded-[20px] bg-white px-7 pb-16 pt-[15px] shadow-modal scrollbar-hide">
+      <div className="fixed left-[30%] top-[5%] z-[101] m-[15px] h-[85vh] w-[420px] -translate-x-[40%] transform overflow-y-auto rounded-[20px] bg-white px-7 pb-16 pt-[15px] shadow-modal scrollbar-hide">
         {store && storeDetail && !isStoreDetailLoading && (
           <>
             <header className="mb-[10px] flex items-center justify-between">

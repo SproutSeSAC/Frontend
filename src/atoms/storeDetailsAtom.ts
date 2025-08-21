@@ -1,15 +1,16 @@
 import { atom } from 'jotai';
 
-const initData = {
-  latitude: '',
-  longitude: '',
-  id: 0,
-  zoom: 0,
+export type StoreMapDetail = {
+  storeId: number | 'CAMPUS_MARKER';
+  lat: number;
+  lng: number;
 };
 
-export const storeMapDetailsAtom = atom(initData);
-export const zoomBehaviorFlagAtom = atom(false);
+export const storeMapDetailsAtom = atom<StoreMapDetail | null>(null);
 
-export const resetStoreMapDetailsAtom = atom(null, (_, set) =>
-  set(storeMapDetailsAtom, initData),
-);
+const modalOpenInitValue = {
+  open: false,
+  storeId: 0,
+};
+
+export const storeModalOpenAtom = atom(modalOpenInitValue);
