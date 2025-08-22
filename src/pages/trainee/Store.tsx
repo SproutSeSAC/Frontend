@@ -1,8 +1,13 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-import { useDialogContext, useGetStoreList, useObserver } from '@/hooks';
+import {
+  useDialogContext,
+  useFilterData,
+  useGetStoreList,
+  useObserver,
+} from '@/hooks';
 import Header from '@/layouts/Header';
 import MainView from '@/layouts/MainView';
 import { Store as StoreType } from '@/types/store/storeDto';
@@ -20,17 +25,28 @@ import MealRecruitList from '@/components/store/meal-recruit/MealRecruitList';
 import StoreModal from '@/components/store/modal/StoreModal';
 
 export default function Store() {
-  const navigate = useNavigate();
+  const [isMap, setIsMap] = useState(true);
 
-  const observeRef = useRef(null);
-  const [isMap, setIsMap] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const {
+    currFilter,
+    handleChangeKeyword,
+    handleResetKeyword,
+    debouncedFilter,
+  } = useFilterData({ initialFilter: { keyword: '' } });
 
   const { showDialog, hideDialog } = useDialogContext();
 
-  const { storeList, fetchNextPage, hasNextPage, isLoading } =
-    useGetStoreList();
+  const {
+    storeList,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    currCampus, //
+  } = useGetStoreList();
+
+  const observeRef = useRef(null);
 
   const runFucAtIntersect = () => {
     if (hasNextPage) fetchNextPage();
@@ -38,57 +54,62 @@ export default function Store() {
 
   useObserver({ runFucAtIntersect, target: observeRef, threshold: 0.1 });
 
-  const onOpenModal = async (store: StoreType) => {
+  const onOpenStoreModal = async (store: StoreType) => {
     await showDialog({
       key: 'STORE_MODAL',
-      element: (
-        <StoreModal postId={store.postId} onClose={hideDialog} store={store} />
-      ),
+      element: <StoreModal store={store} onClose={hideDialog} />,
     });
   };
 
-  const toggleShowList = () => setIsMap(prev => !prev);
+  const toggleViewType = () => setIsMap(prev => !prev);
+
+  const handleSearchParams = (keyword?: string) => {
+    if (!keyword) {
+      const params = new URLSearchParams(searchParams);
+      params.delete('keyword');
+      setSearchParams(params);
+    } else {
+      updateQueryParams(searchParams, setSearchParams, 'keyword', keyword);
+    }
+  };
+
+  useEffect(() => {
+    handleSearchParams(debouncedFilter.keyword);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedFilter.keyword]);
+
+  if (!currCampus) return null;
 
   return (
     <>
-      <MainView className="h-screen !min-h-[1000px]">
+      <MainView className="!pb-12">
         <Header title="새싹에서 맛집을 소개해드려요!" highlight="새싹">
           <SearchInput
             name="keyword"
-            placeholder="검색어를 입력해 주세요"
+            value={currFilter.keyword}
+            placeholder="찾으시는 맛집을 검색해보세요"
             className="ml-32 max-w-[422px] flex-1"
-            onEnter={() => {
-              updateQueryParams(
-                searchParams,
-                setSearchParams,
-                'keyword',
-                searchKeyword,
-              );
-            }}
-            value={searchKeyword}
-            onChange={e => setSearchKeyword(e.target.value)}
-            resetChange={() => {
-              setSearchKeyword('');
-              const params = new URLSearchParams(searchParams);
-              params.delete('keyword');
-              navigate(`/stores`);
-            }}
+            onChange={handleChangeKeyword}
+            resetChange={handleResetKeyword}
           />
         </Header>
 
         <MealRecruitList />
 
-        <section className="flex h-1/2 w-full flex-1 rounded-[20px] bg-white p-5">
-          <StoreFilterForm onReset={() => setSearchKeyword('')} />
+        <section className="flex !h-[75vh] min-h-[700px] w-full gap-x-8 rounded-[20px] bg-white p-5">
+          <StoreFilterForm
+            currCampusId={currCampus.id}
+            onReset={handleResetKeyword}
+          />
 
           {!isMap && (
-            <div className="relative flex w-full flex-col px-5">
+            <div className="relative flex size-full flex-col">
               <header className="mb-[24px] mt-2 inline-flex h-6 w-full items-center justify-between">
                 <h3 className="text-xl font-semibold text-black">
                   맛집 리스트
                 </h3>
                 <button
-                  onClick={toggleShowList}
+                  onClick={toggleViewType}
                   className="flex size-10 items-center justify-center rounded-lg bg-lightGray-active p-2.5 shadow-xl"
                 >
                   <BsMap size={18} />
@@ -98,26 +119,22 @@ export default function Store() {
               {!isLoading && storeList && (
                 <>
                   {storeList.length > 0 && (
-                    <div className="overflow-y-scroll scrollbar-hide">
-                      <ul className="grid grid-cols-3 gap-9 pb-12 text-base">
+                    <div className="size-full overflow-y-scroll scrollbar-hide">
+                      <ul className="grid grid-cols-3 gap-7 pb-12 text-base">
                         {storeList.map(storeData => (
                           <div
                             key={storeData.id}
                             className="aspect-square"
-                            onClick={() => onOpenModal(storeData)}
+                            onClick={() => onOpenStoreModal(storeData)}
                             role="button"
                             tabIndex={0}
                             onKeyDown={e => {
                               if (e.key === 'Enter') {
-                                onOpenModal(storeData);
+                                onOpenStoreModal(storeData);
                               }
                             }}
                           >
-                            <StoreCard
-                              width="w-full"
-                              height="h-full"
-                              storeData={storeData}
-                            />
+                            <StoreCard storeData={storeData} />
                           </div>
                         ))}
                       </ul>
@@ -144,7 +161,11 @@ export default function Store() {
           )}
 
           {isMap && (
-            <StoreMap storeList={storeList} toggleShowList={toggleShowList} />
+            <StoreMap
+              currCampus={currCampus}
+              storeList={storeList}
+              toggleViewType={toggleViewType}
+            />
           )}
         </section>
       </MainView>

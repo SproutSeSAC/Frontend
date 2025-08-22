@@ -156,6 +156,7 @@ export default function UserPostCollection({
               >
                 {post => (
                   <PostTableRow
+                    currCollection={currCollection}
                     headerCellList={headerCellList}
                     handleShowDialog={handleShowDialog}
                     post={post}

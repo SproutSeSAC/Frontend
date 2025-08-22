@@ -25,8 +25,9 @@ interface SelectBoxPropsBase {
   onClose: () => void;
   onSelectBoxClick: () => void;
   errorMsg?: string;
-  className?: string;
   boxShape?: SelectBoxShape;
+  selectBoxClassName?: string;
+  dropdownBoxClassName?: string;
 }
 
 type SelectBoxProps<T> = SelectBoxPropsBase & T;
@@ -40,7 +41,8 @@ type SelectBoxProps<T> = SelectBoxPropsBase & T;
  * @param onClose - 드롭다운을 열고 닫기 위한 상태 변경 함수입니다.
  * @param onSelectBoxClick - 만약 드롭다운을 열고 닫는 것 이외에도 다른 로직의 함수가 필요하다면 이 props를 이용합니다.
  * @param errorMsg - 폼에 대한 에러메세지. 에러 메세지가 있을경우 에러메세지가 버튼 하단에 표시됩니다.
- * @param className - SelectBox의 스타일을 커스텀할 수 있습니다.
+ * @param selectBoxClassName - SelectBox의 스타일을 커스텀할 수 있습니다.
+ * @param dropdownBoxClassName - 셀렉트박스를 클릭하면 아래로 펼쳐지는 드롭다운 박스의 스타일을 커스텀할 수 있습니다.
  *
  * SingleSelectProps
  * @param selectedOptionLabel - 단일 선택 드롭다운에서 SelectBox에 표시되는 선택한 옵션에 대한 라벨값입니다.
@@ -57,9 +59,10 @@ export default function SelectBox<
   open,
   onClose,
   onSelectBoxClick,
-  className,
   children,
   errorMsg,
+  selectBoxClassName,
+  dropdownBoxClassName,
   boxShape = 'inputShape',
   ...rest
 }: SelectBoxProps<T>) {
@@ -111,7 +114,7 @@ export default function SelectBox<
         <button
           type="button"
           onClick={onSelectBoxClick}
-          className={`relative flex w-full items-center gap-4 rounded-2xl [&>svg]:size-6 [&>svg]:min-w-[20px] [&>svg]:text-darkGray ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${className}`}
+          className={`relative flex w-full items-center gap-4 rounded-2xl [&>svg]:size-6 [&>svg]:min-w-[20px] [&>svg]:text-darkGray ${selectBoxStyle} ${errorMsg ? 'border-red-500' : ''} ${selectBoxClassName}`}
         >
           {isSingleSelect(rest) && (
             <>
@@ -154,7 +157,7 @@ export default function SelectBox<
         }
       >
         <ul
-          className={`${open ? 'max-h-56 border border-lightGray' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white shadow-card transition-all duration-500 scrollbar-hide ${defaultLabel === '기술 스택' ? '' : 'px-2'}`}
+          className={`${open ? 'max-h-56 border border-lightGray' : 'max-h-0'} absolute z-40 mt-1 min-w-full max-w-max overflow-auto rounded-2xl bg-white shadow-card transition-all duration-500 scrollbar-hide ${defaultLabel === '기술 스택' ? '' : 'px-2'} ${dropdownBoxClassName}`}
         >
           {children}
         </ul>

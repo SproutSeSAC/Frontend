@@ -68,10 +68,13 @@ export default function MealRecruitCardModal({
 
   const handleLeaveClick = useCallback(async () => {
     try {
+      await hideDialog('MEAL-RECRUIT-CARD-TYPE');
+
       if (isOwner) {
         await alert({
           text: '정말로 한끼팟을 폭파하시겠습니까?',
-          subText: '다른 참여자들은 모두 자동으로 나가지게 됩니다.',
+          subText: '다른 참여자들은 모두 자동으로 나가게 됩니다.',
+          subTextColor: 'green',
           children: (
             <>
               <SquareButton
@@ -131,6 +134,7 @@ export default function MealRecruitCardModal({
         headerType="onlyTitle"
         headerSize="base"
         title={data.title}
+        zIndex={200}
       >
         <div className="flex flex-col gap-2 rounded-lg bg-lightGray-active px-3 py-[17px] text-sm">
           <div className="flex items-center">

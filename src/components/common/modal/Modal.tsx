@@ -19,6 +19,8 @@ type Modalsize = 'sm' | 'md' | 'lg';
 
 type HeaderSize = 'base' | 'lg' | '2xl';
 
+type ZIndex = 10 | 30 | 40 | 100 | 200;
+
 interface Props {
   onClose: () => void;
   title?: string | ReactNode;
@@ -26,6 +28,7 @@ interface Props {
   modalSize?: Modalsize;
   headerSize?: HeaderSize;
   headerType?: 'title-xIcon' | 'squareBackBtn-title' | 'onlyTitle';
+  zIndex?: ZIndex;
 }
 
 export default function Modal({
@@ -35,6 +38,7 @@ export default function Modal({
   modalSize = 'md',
   headerSize = '2xl',
   headerType = 'title-xIcon',
+  zIndex = 40,
 }: Props) {
   const el = document.getElementById('modal') as Element;
 
@@ -51,10 +55,19 @@ export default function Modal({
     '2xl': 'text-2xl',
   };
 
+  /** NOTE: alert는 최상위에 위치해야하므로 z-[1001] */
+  const zIndexObj: { [key in ZIndex]: { modal: string; overlay: string } } = {
+    10: { modal: 'z-10', overlay: 'z-[9]' },
+    30: { modal: 'z-30', overlay: 'z-[29]' },
+    40: { modal: 'z-40', overlay: 'z-[39]' },
+    100: { modal: 'z-[100]', overlay: 'z-[99]' },
+    200: { modal: 'z-[200]', overlay: 'z-[199]' },
+  };
+
   return createPortal(
     <>
       <section
-        className={`fixed inset-0 z-40 m-auto h-fit max-h-[90vh] min-h-[180px] overflow-hidden rounded-2xl bg-white ${modalSizeObj[modalSize]}`}
+        className={`fixed inset-0 m-auto h-fit max-h-[90vh] min-h-[180px] overflow-hidden rounded-2xl bg-white ${modalSizeObj[modalSize]} ${zIndexObj[zIndex].modal}`}
       >
         {title && (
           <header
@@ -108,7 +121,7 @@ export default function Modal({
           }
         }}
         onClick={onClose}
-        className="fixed inset-0 z-30 h-[100vh] w-full bg-[rgba(43,43,43,0.6)]"
+        className={`fixed inset-0 h-[100vh] w-full bg-[rgba(43,43,43,0.6)] ${zIndexObj[zIndex].overlay}`}
       />
     </>,
     el,

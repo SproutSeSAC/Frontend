@@ -1,6 +1,6 @@
 import {
   storeMapDetailsAtom,
-  zoomBehaviorFlagAtom,
+  storeModalOpenAtom,
 } from '@/atoms/storeDetailsAtom';
 
 import { foodFilterDisplay } from '@/constants';
@@ -19,7 +19,8 @@ export default function StoreListSliderCard({
   slideItem,
 }: StoreListSliderCardProps) {
   const setStoreMapDetails = useSetAtom(storeMapDetailsAtom);
-  const setIsZoomBehaviorFlag = useSetAtom(zoomBehaviorFlagAtom);
+
+  const setStoreModalOpen = useSetAtom(storeModalOpenAtom);
 
   const { onScrapClick, isDeleteScrapPending, isPostScrapPending } =
     useHandleScrap({
@@ -28,77 +29,86 @@ export default function StoreListSliderCard({
       invalidateQueryKeys: [{ queryKey: ['useGetInfiniteStoreList'] }],
     });
 
-  const { latitude, longitude, id } = slideItem;
-
-  const mapDetails = {
+  const {
     latitude,
     longitude,
-    id,
-    zoom: 20,
+    id: storeId,
+    storeImageList,
+    isScraped,
+    scrapCount,
+    name,
+    foodType,
+    storeMenuList,
+  } = slideItem;
+
+  const mapDetails = {
+    storeId,
+    lat: +latitude,
+    lng: +longitude,
+  };
+
+  const onCardClick = () => {
+    setStoreModalOpen({ storeId, open: true });
+    setStoreMapDetails(mapDetails);
   };
 
   return (
     <div
-      key={slideItem.id}
-      className="flex h-[150px] w-full gap-[11px] overflow-hidden"
-      onClick={() => {
-        setStoreMapDetails(mapDetails);
-        setIsZoomBehaviorFlag(true);
-      }}
+      key={storeId}
+      className="flex h-fit w-full flex-col gap-[8px] overflow-hidden"
+      onClick={onCardClick}
       role="button"
       tabIndex={0}
       onKeyDown={e => {
-        if (e.key === 'Enter') {
-          setStoreMapDetails(mapDetails);
-        }
+        if (e.key === 'Enter') onCardClick();
       }}
     >
       <StoreMenuImage
-        width="w-[147px] min-w-[147px]"
-        height="h-[147px] min-h-[147px]"
-        src={slideItem.storeImageList[0]?.path}
+        src={storeImageList[0]?.path}
+        className="aspect-square h-[150px] min-h-[138px] w-full min-w-[138px]"
       />
 
-      <div className="flex w-full flex-col gap-4">
-        <header className="font-semibold">
-          <div className="flex w-full items-start justify-between gap-0.5">
-            <h2>{slideItem.name}</h2>
-
-            <div className="mt-0.5 flex items-center gap-1">
-              <FavoriteButton
-                size={18}
-                isFavorite={slideItem.isScraped}
-                onClick={onScrapClick}
-                disabled={isDeleteScrapPending || isPostScrapPending}
-              />
-              <span className="text-sm text-darkGray">
-                {slideItem.scrapCount || 0}
+      <div className="flex w-full flex-col py-0.5">
+        <header className="flex items-start justify-between">
+          <h2 className="line-clamp-2 font-semibold leading-[22px]">
+            <span className="pr-1">{name}</span>
+            {foodType && (
+              <span className="mt-0.5 inline-block min-w-fit text-sm text-darkGray">
+                {foodFilterDisplay[foodType]}
               </span>
-            </div>
-          </div>
+            )}
+          </h2>
 
-          {slideItem.foodType && (
-            <span className="text-xs text-darkGray-active">
-              {foodFilterDisplay[slideItem.foodType]}
-            </span>
-          )}
+          <div className="ml-2 mt-0.5 flex items-center gap-1">
+            <FavoriteButton
+              size={18}
+              isFavorite={isScraped}
+              onClick={onScrapClick}
+              disabled={isDeleteScrapPending || isPostScrapPending}
+            />
+            <span className="text-sm text-darkGray">{scrapCount || 0}</span>
+          </div>
         </header>
 
-        {slideItem.storeMenuList.length > 0 && (
-          <div>
-            <h3 className="mb-1 text-xs font-semibold">대표 메뉴</h3>
-            <ul className="flex flex-col gap-1 text-[11px]">
-              {slideItem.storeMenuList.slice(0, 3).map(item => {
+        <div className="mt-2">
+          <h3 className="mb-1 text-sm font-semibold">대표 메뉴</h3>
+          {storeMenuList.length > 0 ? (
+            <ul className="flex flex-col gap-y-0.5 text-sm">
+              {storeMenuList.slice(0, 2).map(menu => {
                 return (
-                  <li key={item.id} className="flex gap-2">
-                    <span className="line-clamp-1 flex-1">{item.name}</span>
-                    <span className="">{item.price.toLocaleString()}원</span>
+                  <li key={menu.id} className="flex gap-2">
+                    <span className="line-clamp-1 flex-1">{menu.name}</span>
+                    <span>{menu.price.toLocaleString()}원</span>
                   </li>
                 );
               })}
             </ul>
-          </div>
-        )}
+          ) : (
+            <span className="text-xs text-mainGray-active">
+              메뉴 데이터가 없습니다.
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

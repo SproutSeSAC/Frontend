@@ -119,7 +119,7 @@ export default function DialogContextProvider({
             <Alert {...rest} />
             {showDim && (
               <div
-                className={`${dimClick ? 'cursor-pointer' : 'cursor-default'} fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50`}
+                className={`${dimClick ? 'cursor-pointer' : 'cursor-default'} fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50`}
                 onClick={dimClick ? async () => hideDialog() : undefined}
                 onKeyDown={event => {
                   if (event.key === 'Escape') {

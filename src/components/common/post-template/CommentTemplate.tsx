@@ -1,3 +1,7 @@
+import { useEffect, useRef } from 'react';
+
+import { useLocation } from 'react-router-dom';
+
 import { useGetUserProfileCard } from '@/services/auth/authQueries';
 
 import { rolesObj } from '@/constants';
@@ -5,6 +9,7 @@ import { useHandleComment } from '@/hooks';
 import { formatDate } from '@/utils';
 import { useForm } from 'react-hook-form';
 
+import Pagination from '@/components/common/Pagination';
 import EditButton from '@/components/common/button/EditButton';
 import SquareButton from '@/components/common/button/SquareButton';
 import TrashButton from '@/components/common/button/TrashButton';
@@ -16,6 +21,10 @@ interface CommentTemplateProps {
 }
 
 export default function CommentTemplate({ postId }: CommentTemplateProps) {
+  const targetRef = useRef<HTMLDivElement | null>(null);
+
+  const { state } = useLocation();
+
   const { data: profileCard } = useGetUserProfileCard();
 
   const { register, handleSubmit, reset } = useForm({
@@ -27,16 +36,29 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
     toggleEditingComment,
     onSubmit,
     commentList,
+    commentListPerPage,
     onEditSubmit,
     onDeleteCommentClick,
     isCommentListLoading,
     isPostCommentPending,
     isEditCommentPending,
     isDeleteCommentPending,
+    currPage,
+    totalPage,
+    movePage,
   } = useHandleComment({ postId, reset });
 
+  useEffect(() => {
+    if (state === 'commentList' && !isCommentListLoading) {
+      targetRef.current?.scrollIntoView({
+        behavior: 'instant',
+        block: 'start',
+      });
+    }
+  }, [state, isCommentListLoading]);
+
   return (
-    <section className="mb-24 mt-16">
+    <section ref={targetRef} className="mb-24 mt-16">
       <header className="flex gap-2 pl-1 text-xl font-semibold">
         <h4>댓글</h4>
         <span className="text-mainGreen">{commentList.length}</span>
@@ -61,67 +83,88 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
       </form>
 
       {!isCommentListLoading && (
-        <ul className="mt-10 flex flex-col gap-y-10">
-          {commentList.map(
-            ({
-              id,
-              userInfo: { nickname, profileImg, role },
-              content,
-              createAt,
-            }) => (
-              <li key={id} className="flex w-full flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    <UserImage
-                      className="size-[30px]"
-                      imageNameSegment={profileImg ?? ''}
-                    />
-                    <span className="text-[15px] font-medium">
-                      {nickname ? `@${nickname}` : '-'}
-                    </span>
-                    <Tag
-                      text={rolesObj[role]}
-                      roleKey={role}
-                      className="!py-1"
-                    />
+        <div className="flex flex-col gap-y-14">
+          <ul className="mt-10 flex flex-col gap-y-10">
+            {commentListPerPage.map(
+              ({
+                id,
+                userInfo: { nickname, profileImg, role },
+                content,
+                createAt,
+              }) => (
+                <li key={id} className="flex w-full flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <UserImage
+                        className="size-[30px]"
+                        imageNameSegment={profileImg ?? ''}
+                      />
+                      <span className="text-[15px] font-medium">
+                        {nickname ? `@${nickname}` : '-'}
+                      </span>
+                      <Tag
+                        text={rolesObj[role]}
+                        roleKey={role}
+                        className="!py-1"
+                      />
+                    </div>
+
+                    {nickname === profileCard?.profile?.nickname &&
+                      !isEditingComment.isEditing && (
+                        <div className="ml-5 flex items-center gap-2">
+                          <EditButton
+                            label="댓글 수정하기"
+                            onClick={() => {
+                              toggleEditingComment(id);
+                              reset({ editedContent: content });
+                            }}
+                            size={15}
+                          />
+                          <TrashButton
+                            text="해당 댓글을 삭제하시겠습니까?"
+                            className="!size-4"
+                            onConfirmClick={() => onDeleteCommentClick(id)}
+                            disabled={isDeleteCommentPending}
+                          />
+                        </div>
+                      )}
                   </div>
 
-                  {nickname === profileCard?.profile?.nickname &&
-                    !isEditingComment.isEditing && (
-                      <div className="ml-5 flex items-center gap-2">
-                        <EditButton
-                          label="댓글 수정하기"
-                          onClick={() => {
-                            toggleEditingComment(id);
-                            reset({ editedContent: content });
-                          }}
-                          size={15}
-                        />
-                        <TrashButton
-                          text="해당 댓글을 삭제하시겠습니까?"
-                          className="!size-4"
-                          onConfirmClick={() => onDeleteCommentClick(id)}
-                          disabled={isDeleteCommentPending}
+                  {isEditingComment.isEditing &&
+                  isEditingComment.commentId === id ? (
+                    <form
+                      onSubmit={handleSubmit(({ editedContent }) =>
+                        onEditSubmit({ editedContent, commentId: id }),
+                      )}
+                      className="flex flex-col"
+                    >
+                      <textarea
+                        {...register('editedContent')}
+                        className="mb-2 w-full resize-none rounded-lg border border-mainGray p-[15px] focus:outline-none"
+                        placeholder="댓글을 수정해 주세요."
+                        rows={5}
+                      />
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <span className="pr-3 text-darkGray">
+                            {formatDate(createAt, 'yyyy.MM.dd')}
+                          </span>
+                          <span className="text-darkGray">
+                            {formatDate(createAt, 'HH:mm')}
+                          </span>
+                        </div>
+                        <SquareButton
+                          type="submit"
+                          name="수정하기"
+                          color="lightGreen"
+                          className="w-[25%] min-w-[200px] self-end !py-2"
+                          disabled={isEditCommentPending}
                         />
                       </div>
-                    )}
-                </div>
-
-                {isEditingComment.isEditing &&
-                isEditingComment.commentId === id ? (
-                  <form
-                    onSubmit={handleSubmit(({ editedContent }) =>
-                      onEditSubmit({ editedContent, commentId: id, rate: -1 }),
-                    )}
-                    className="flex flex-col"
-                  >
-                    <textarea
-                      {...register('editedContent')}
-                      className="mb-2 w-full resize-none rounded-lg border border-mainGray p-[15px] focus:outline-none"
-                      placeholder="댓글을 수정해 주세요."
-                      rows={5}
-                    />
-                    <div className="flex items-start justify-between">
+                    </form>
+                  ) : (
+                    <>
+                      <p className="mb-3 mt-2 whitespace-pre-wrap">{content}</p>
                       <div>
                         <span className="pr-3 text-darkGray">
                           {formatDate(createAt, 'yyyy.MM.dd')}
@@ -130,32 +173,21 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                           {formatDate(createAt, 'HH:mm')}
                         </span>
                       </div>
-                      <SquareButton
-                        type="submit"
-                        name="수정하기"
-                        color="lightGreen"
-                        className="w-[25%] min-w-[200px] self-end !py-2"
-                        disabled={isEditCommentPending}
-                      />
-                    </div>
-                  </form>
-                ) : (
-                  <>
-                    <p className="mb-3 mt-2 whitespace-pre-wrap">{content}</p>
-                    <div>
-                      <span className="pr-3 text-darkGray">
-                        {formatDate(createAt, 'yyyy.MM.dd')}
-                      </span>
-                      <span className="text-darkGray">
-                        {formatDate(createAt, 'HH:mm')}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </li>
-            ),
+                    </>
+                  )}
+                </li>
+              ),
+            )}
+          </ul>
+
+          {totalPage >= 1 && (
+            <Pagination
+              totalPages={totalPage}
+              currentPage={currPage}
+              onPageChange={movePage}
+            />
           )}
-        </ul>
+        </div>
       )}
     </section>
   );

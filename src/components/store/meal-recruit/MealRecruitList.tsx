@@ -39,7 +39,7 @@ export default function MealRecruitList() {
   };
 
   return (
-    <section className="relative z-10 mb-5 w-full">
+    <section className="relative mb-5 w-full">
       {!isMealPostListLoading && (
         <div className="relative w-fit max-w-[calc(100vw-192px)] pr-14">
           {!hasNextPage && data?.pages[0].mealPostList.length === 0 ? (
@@ -72,7 +72,7 @@ export default function MealRecruitList() {
 
           <button
             onClick={handleShowDialog}
-            className="absolute right-0 top-6 z-40 h-[30px] w-fit rounded-full bg-mainGray-active text-white"
+            className="absolute right-0 top-6 h-[30px] w-fit rounded-full bg-mainGray-active text-white"
           >
             <BsPlus size={30} />
           </button>

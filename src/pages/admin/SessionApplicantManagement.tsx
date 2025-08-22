@@ -69,7 +69,6 @@ export default function SessionApplicantManagement() {
             placeholder="찾으시는 특강/행사의 내용을 입력해 주세요"
             inputStyle="square"
             onChange={handleChangeKeyword}
-            onEnter={() => {}}
             resetChange={handleResetKeyword}
             className="w-[40vw]"
           />

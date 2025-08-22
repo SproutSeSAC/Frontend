@@ -11,7 +11,7 @@ export type CourseListData = {
   }[];
 };
 
-type CampusListData = {
+export type CampusListData = {
   campusList: {
     id: number;
     name: string;

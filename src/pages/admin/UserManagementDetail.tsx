@@ -120,7 +120,7 @@ export default function UserManagementDetail() {
   };
 
   return (
-    <MainView className="mb-20">
+    <MainView>
       {!isLoading && userInfo && (
         <>
           <Header title={`${userInfo.name} 스프`} />

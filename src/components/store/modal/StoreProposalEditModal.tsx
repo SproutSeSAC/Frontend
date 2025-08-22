@@ -56,7 +56,7 @@ export default function StoreProposalEditModal({
   };
 
   return (
-    <Modal onClose={hideModal} title="정보 수정 제안하기">
+    <Modal onClose={hideModal} title="정보 수정 제안하기" zIndex={200}>
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
         className="flex flex-col"

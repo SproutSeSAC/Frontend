@@ -144,7 +144,7 @@ const TechStackDropdown = memo(function TechStackDropdown({
         errorMsg={errorMsg}
         onResetClick={onResetClick}
         boxShape={boxShape}
-        className={selectBoxClassName}
+        selectBoxClassName={selectBoxClassName}
       >
         <TabNavigation
           tabList={tabList}

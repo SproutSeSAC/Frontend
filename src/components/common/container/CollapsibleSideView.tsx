@@ -19,21 +19,18 @@ export default function CollapsibleSideView({
 }: CollapsibleSideViewProps) {
   return (
     <section
-      className={`z-10 flex flex-col transition-all duration-200 ease-in-out ${sideViewOpen ? 'w-full translate-x-0' : 'w-0 translate-x-full'} ${className}`}
+      className={`flex flex-col transition-all duration-200 ease-in-out ${sideViewOpen ? 'w-full translate-x-0' : 'w-0 translate-x-full'} ${className}`}
     >
       {sideViewOpen && (
-        <>
-          <header className="flex justify-between pr-5 font-semibold text-mainGray-active">
-            {!hideButton && (
-              <ChevronButton direction="ChevronRight" handleClose={onClose} />
-            )}
-
-            {headerContent}
-          </header>
-
-          {mainContent}
-        </>
+        <header className="flex justify-between pr-5 font-semibold text-mainGray-active">
+          {!hideButton && (
+            <ChevronButton direction="ChevronRight" handleClose={onClose} />
+          )}
+          {headerContent}
+        </header>
       )}
+
+      {mainContent}
     </section>
   );
 }

@@ -35,7 +35,7 @@ export default forwardRef(function StoreListSideView(
       <CollapsibleSideView
         sideViewOpen={sideViewOpen}
         onClose={closeSideView}
-        className="sticky right-0 top-0 h-screen max-w-[310px] pb-10 pt-[60px]"
+        className={`sticky top-0 h-screen max-w-[280px] pb-10 pt-[60px] ${sideViewOpen ? '' : 'ml-[20px]'}`}
         headerContent={headerContent}
         mainContent={mainContent}
       />
@@ -44,7 +44,7 @@ export default forwardRef(function StoreListSideView(
         <ChevronButton
           direction="ChevronLeft"
           handleClose={openSideView}
-          className="absolute right-0 top-[60px]"
+          className="fixed right-0 top-[60px]"
         />
       )}
     </>

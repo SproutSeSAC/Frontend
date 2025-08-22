@@ -15,6 +15,7 @@ import Checkbox from '@/components/common/checkbox/Checkbox';
 import TableDataCell from '@/components/common/table/TableDataCell';
 
 interface PostTableRowProps<T> {
+  currCollection: string;
   headerCellList: Header[];
   post: T;
   checkedIdList?: number[];
@@ -28,7 +29,10 @@ interface PostTableRowProps<T> {
   onDeleteConfirmClick?: (id: number) => void;
 }
 
+type PostTypeWithoutMeal = 'PROJECT' | 'STUDY' | 'NOTICE';
+
 export default function PostTableRow<T extends UserPost | UserComment>({
+  currCollection,
   headerCellList,
   post,
   checkedIdList,
@@ -69,13 +73,19 @@ export default function PostTableRow<T extends UserPost | UserComment>({
 
   const navigate = useNavigate();
 
-  const onViewCount = useCallback(async () => {
-    await addViewCount({ linkedId });
-    navigate(
-      `/${type[postType as 'PROJECT' | 'STUDY' | 'NOTICE']}/post/${postId}`,
-    );
+  const handleTitleClick = useCallback(
+    async () => {
+      await addViewCount({ linkedId });
+
+      const state = currCollection?.includes('댓글') ? 'commentList' : null;
+
+      navigate(`/${type[postType as PostTypeWithoutMeal]}/post/${postId}`, {
+        state,
+      });
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addViewCount, navigate, post, postId, postType]);
+    [addViewCount, linkedId, navigate, postId, postType],
+  );
 
   return (
     <tr className="hover:bg-gray4 group">
@@ -100,8 +110,7 @@ export default function PostTableRow<T extends UserPost | UserComment>({
         <TableDataCell>{postTypeObj[postType]}</TableDataCell>
       )}
 
-      {(headerCellList.includes('댓글 내용') ||
-        headerCellList.includes('게시글 제목')) && (
+      {headerCellList.includes('게시글 제목') && (
         <TableDataCell className="max-w-[0px] overflow-hidden truncate pl-2 text-start">
           {/* 맛집, 한끼팟 타입 */}
           {(postType === 'MEAL' || postType === 'STORE') && handleShowDialog ? (
@@ -118,11 +127,12 @@ export default function PostTableRow<T extends UserPost | UserComment>({
               {title}
             </button>
           ) : (
+            // 프로젝트, 스터디, 공지사항
             <div
               role="link"
               tabIndex={0}
-              onClick={onViewCount}
-              onKeyDown={e => e.key === 'Enter' && onViewCount}
+              onClick={handleTitleClick}
+              onKeyDown={e => e.key === 'Enter' && handleTitleClick}
               className="cursor-pointer underline"
             >
               {title}

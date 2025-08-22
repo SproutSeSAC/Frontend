@@ -16,9 +16,9 @@ import {
 import { extractValidParams } from '@/utils';
 
 export const useGetInfiniteStoreList = ({
-  userCampusId,
+  currCampusId,
 }: {
-  userCampusId?: number;
+  currCampusId?: number;
 }) => {
   const [searchParams] = useSearchParams();
   const newSearchParams = extractValidParams(searchParams);
@@ -32,7 +32,7 @@ export const useGetInfiniteStoreList = ({
         {
           params: {
             page: pageParam,
-            campusId: newSearchParams.campusId || userCampusId,
+            campusId: currCampusId,
             ...newSearchParams,
             size: pageSize,
           },
@@ -43,7 +43,7 @@ export const useGetInfiniteStoreList = ({
         nextPage: data.stores.length === pageSize ? pageParam + 1 : undefined,
       };
     },
-    enabled: !!userCampusId,
+    enabled: !!currCampusId,
     getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 0,
   });

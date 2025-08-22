@@ -1,33 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { zoomBehaviorFlagAtom } from '@/atoms/storeDetailsAtom';
+import {
+  StoreMapDetail,
+  storeMapDetailsAtom,
+  storeModalOpenAtom,
+} from '@/atoms/storeDetailsAtom';
 
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 
-interface UseStoreMapOption extends naver.maps.MapOptions {
-  lat: number;
-  lng: number;
+interface UseStoreMapProps {
+  initialMapDetail: StoreMapDetail;
 }
 
-const modalOpenInitValue = {
-  open: false,
-  id: 0,
-};
+export const INITIAL_ZOOM = 15;
 
-export const useStoreMap = (mapOption: UseStoreMapOption) => {
-  const [isZoomBehaviorFlag, setIsZoomBehaviorFlag] =
-    useAtom(zoomBehaviorFlagAtom);
+export const useStoreMap = ({ initialMapDetail }: UseStoreMapProps) => {
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+
+  const [storeMapDetails, setStoreMapDetails] = useAtom(storeMapDetailsAtom);
+  const setStoreModalOpen = useSetAtom(storeModalOpenAtom);
 
   const storeMapRef = useRef(null);
   const storeMapInstanceRef = useRef<naver.maps.Map | null>(null);
   const markerListRef = useRef<naver.maps.Marker[]>([]);
-  const [modalOpen, setModalOpen] = useState<{ open: boolean; id: number }>(
-    modalOpenInitValue,
-  );
-  const [zoom, setZoom] = useState(mapOption.zoom || 15);
-  const [isMapReady, setIsMapReady] = useState(false);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
+  // 스크립트 로딩 로직
   useEffect(() => {
     console.log('loading script...');
 
@@ -48,6 +46,7 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
     };
   }, []);
 
+  // 맵 초기화 로딩 로직
   useEffect(() => {
     const loadMap = () => {
       if (!window.naver) {
@@ -55,121 +54,104 @@ export const useStoreMap = (mapOption: UseStoreMapOption) => {
         return;
       }
 
-      const DEFAULT_OPTIONS = {
-        center: new naver.maps.LatLng(mapOption.lat, mapOption.lng),
-        zoom,
-        minZoom: 7,
-        zoomControl: false,
-        disableKineticPan: false,
-        ...mapOption,
-      };
+      if (!storeMapRef.current) return;
 
-      if (!storeMapRef.current) {
-        return;
-      }
+      const { lat, lng } = initialMapDetail;
+
+      const initialMapOptions = {
+        center: new naver.maps.LatLng(lat, lng),
+        zoom: INITIAL_ZOOM,
+        minZoom: INITIAL_ZOOM,
+        zoomControl: true,
+        disableKineticPan: false,
+      };
 
       storeMapInstanceRef.current = new naver.maps.Map(
         storeMapRef.current,
-        DEFAULT_OPTIONS,
+        initialMapOptions,
       );
 
       setIsMapReady(true);
-
-      // zoom 변경 이벤트 리스너 추가
-      naver.maps.Event.addListener(
-        storeMapInstanceRef.current,
-        'zoom_changed',
-        () => {
-          const currentZoom = storeMapInstanceRef.current?.getZoom();
-          if (currentZoom !== undefined) {
-            setZoom(currentZoom);
-            if (isZoomBehaviorFlag) {
-              setIsZoomBehaviorFlag(false);
-            }
-          }
-        },
-      );
     };
 
-    if (isScriptLoaded) {
-      loadMap();
-    }
-  }, [
-    isScriptLoaded,
-    isZoomBehaviorFlag,
-    mapOption,
-    setIsZoomBehaviorFlag,
-    zoom,
-  ]);
+    if (isScriptLoaded) loadMap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isScriptLoaded]);
 
+  // 지도 초기화 후 마커 추가
   useEffect(() => {
-    // 지도 초기화 후 마커 추가
-    if (isMapReady && storeMapInstanceRef.current) {
-      const mapInstance = storeMapInstanceRef.current;
+    if (!isMapReady || !storeMapInstanceRef.current) return;
 
-      // 지도 중심
-      mapInstance.setCenter(
-        new naver.maps.LatLng(mapOption.lat, mapOption.lng),
+    markerListRef.current.forEach(marker => {
+      const markerPosition = marker.getPosition();
+      marker.setMap(storeMapInstanceRef.current);
+
+      if (markerPosition) {
+        marker.setPosition(markerPosition);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMapReady, initialMapDetail]);
+
+  // 식당 상태값으로 마커로 중심 이동
+  useEffect(() => {
+    if (!storeMapInstanceRef.current || !storeMapDetails) return;
+
+    const { lat, lng } = storeMapDetails;
+    const mapInstance = storeMapInstanceRef.current;
+
+    mapInstance.setCenter(new naver.maps.LatLng(lat, lng));
+    const currentZoom = mapInstance?.getZoom();
+    const mapZoom = currentZoom < 17 ? 17 : currentZoom;
+    mapInstance.setZoom(mapZoom);
+  }, [storeMapDetails]);
+
+  const storeMarkerClick = ({ storeId, lat, lng }: StoreMapDetail) => {
+    if (storeMapInstanceRef.current && storeId !== 'CAMPUS_MARKER') {
+      setStoreMapDetails({ storeId, lat, lng });
+      setStoreModalOpen({ open: true, storeId });
+    }
+  };
+
+  const addMarker = useCallback(
+    ({ storeId, lat, lng }: StoreMapDetail) => {
+      if (!storeMapInstanceRef.current) return;
+
+      // 이미 마커가 존재하면 추가하지 않도록
+      const markerExists = markerListRef.current.find(marker =>
+        marker.getPosition().equals(new naver.maps.LatLng(lat, lng)),
       );
-      // 줌 업데이트
-      mapInstance.setZoom(isZoomBehaviorFlag ? mapOption.zoom || 15 : zoom);
 
-      // 마커 리스트를 순회하며 마커 업데이트
-      markerListRef.current.forEach(marker => {
-        const markerPosition = marker.getPosition();
-        marker.setMap(mapInstance);
+      if (markerExists) return;
 
-        if (markerPosition) {
-          // 마커 위치를 다시 설정
-          marker.setPosition(markerPosition);
+      const campusIcon = {
+        content: `<div style="font-size: 30px;">🏫</div>`,
+        anchor: new naver.maps.Point(12, 12),
+      };
+
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(lat, lng),
+        map: storeMapInstanceRef.current,
+        icon: storeId === 'CAMPUS_MARKER' ? campusIcon : undefined,
+      });
+
+      markerListRef.current.push(marker);
+
+      naver.maps.Event.addListener(marker, 'click', () => {
+        if (storeId !== 'CAMPUS_MARKER') {
+          storeMarkerClick({ storeId, lat, lng });
         }
       });
-    }
-  }, [isMapReady, isZoomBehaviorFlag, mapOption, zoom]);
-
-  const setCenter = useCallback((lat: number, lng: number) => {
-    if (storeMapInstanceRef.current) {
-      storeMapInstanceRef.current.setCenter(new naver.maps.LatLng(lat, lng));
-    }
-  }, []);
-
-  const addMarker = useCallback((lat: number, lng: number, id: number) => {
-    if (!storeMapInstanceRef.current) {
-      return null;
-    }
-
-    // 이미 마커가 존재하면 추가하지 않도록
-    const markerExists = markerListRef.current.find(marker =>
-      marker.getPosition().equals(new naver.maps.LatLng(lat, lng)),
-    );
-
-    if (markerExists) {
-      // eslint-disable-next-line consistent-return
-      return;
-    }
-
-    const marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(lat, lng),
-      map: storeMapInstanceRef.current,
-    });
-
-    naver.maps.Event.addListener(marker, 'click', () =>
-      setModalOpen({ open: true, id }),
-    );
-
-    // 마커 리스트에 추가
-    markerListRef.current.push(marker);
-
-    return marker;
-  }, []);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   return {
     storeMapRef,
+    storeMapInstanceRef,
     isMapReady,
-    modalOpen,
-    setModalOpen,
-    setCenter,
     addMarker,
-    modalOpenInitValue,
+    markerListRef,
   };
 };
