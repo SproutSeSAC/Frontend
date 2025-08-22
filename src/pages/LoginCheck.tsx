@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginCheck } from '@/services/auth/authQueries';
 
-import { ACCESS_TOKEN_KEY, HEADER_ACCESS_TOKEN_KEY } from '@/constants';
+import { HEADER_ACCESS_TOKEN_KEY } from '@/constants';
 import { useDialogContext } from '@/hooks';
 import { getCookie } from '@/utils';
 import axios from 'axios';
@@ -33,7 +33,6 @@ export default function LoginCheck() {
     };
 
     const accessToken = !!getCookie(HEADER_ACCESS_TOKEN_KEY);
-
 
     if (accessToken) {
       handleLoginPost();

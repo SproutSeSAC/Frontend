@@ -134,7 +134,11 @@ export default function CommentTemplate({ postId }: CommentTemplateProps) {
                   isEditingComment.commentId === id ? (
                     <form
                       onSubmit={handleSubmit(({ editedContent }) =>
-                        onEditSubmit({ editedContent, commentId: id }),
+                        onEditSubmit({
+                          editedContent,
+                          commentId: id,
+                          rate: -1,
+                        }),
                       )}
                       className="flex flex-col"
                     >
