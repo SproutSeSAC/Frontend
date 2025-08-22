@@ -26,7 +26,6 @@ export default function StoreCard({
   showFavoriteButton = true,
   isOpenStoreProposalEditModal,
   className,
-  ...rest
 }: StoreCardProps) {
   const { showDialog } = useDialogContext();
 
@@ -97,13 +96,14 @@ export default function StoreCard({
 
   return (
     <article
-      className={`flex !h-fit w-full flex-col gap-3 ${isOpenStoreProposalEditModal ? 'mt-6' : 'mt-3'}`}
-      {...rest}
+      className={`flex !h-fit w-full flex-col gap-3 ${isOpenStoreProposalEditModal ? 'mt-6' : 'mt-3'} ${className}`}
     >
       {storeImageList.length === 1 ? (
         <StoreMenuImage
           src={storeImageList[0].path}
-          className="!h-[14rem] w-full"
+          className={
+            showFavoriteButton ? '!h-[14rem] w-full' : '!h-[17rem] !w-[17rem]'
+          }
         />
       ) : (
         <SwiperContainer
@@ -114,7 +114,12 @@ export default function StoreCard({
         >
           {item => {
             return (
-              <StoreMenuImage src={item.path} className="h-[14rem] w-full" />
+              <StoreMenuImage
+                src={item.path}
+                className={
+                  showFavoriteButton ? '!h-[14rem] w-full' : '!h-[17rem] w-full'
+                }
+              />
             );
           }}
         </SwiperContainer>
