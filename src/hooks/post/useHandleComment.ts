@@ -81,11 +81,17 @@ export const useHandleComment = ({ postId, reset }: UseHandleCommentProps) => {
     }));
   };
 
-  const onSubmit = async ({ content }: { content: string }) => {
-    if (content === '') return;
+  const onSubmit = async ({
+    content,
+    rate,
+  }: {
+    content: string;
+    rate: number;
+  }) => {
+    if (content === '' || rate === undefined) return;
 
     try {
-      await postComment({ imgUrl, content });
+      await postComment({ imgUrl, content, rate });
       showToast('댓글을 등록했어요!');
       reset();
     } catch (err) {
@@ -96,14 +102,22 @@ export const useHandleComment = ({ postId, reset }: UseHandleCommentProps) => {
   const onEditSubmit = async ({
     editedContent,
     commentId,
+    rate,
   }: {
     editedContent: string;
     commentId: number;
+    rate: number;
   }) => {
-    if (editedContent === '') return;
+    if (editedContent === '' || rate === undefined) return;
 
     try {
-      await editComment({ commentId, postId, imgUrl, content: editedContent });
+      await editComment({
+        commentId,
+        postId,
+        imgUrl,
+        content: editedContent,
+        rate,
+      });
       showToast('댓글을 수정했어요!');
       toggleEditingComment();
       reset();
