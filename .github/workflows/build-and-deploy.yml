@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Deploy to Azure
 
 on:
   pull_request:
@@ -27,13 +27,6 @@ jobs:
           VITE_SERVER_API_URL: ${{ secrets.VITE_SERVER_API_URL }}
           VITE_SPROUT_PUBLIC_ASSET_URL: ${{ secrets.VITE_SPROUT_PUBLIC_ASSET_URL }}
 
-      - name: ✅ AWS 자격 증명 설정
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
       - name: ✅ 의존성 설치
         run: |
           rm -rf package-lock.json node_modules
@@ -43,10 +36,17 @@ jobs:
       - name: ✅ 프로젝트 빌드
         run: npm run build
 
-      - name: ✅ S3로 배포
-        run: |
-          aws s3 sync ./dist s3://${{ secrets.AWS_S3_BUCKET_NAME }} --delete
+      - name:  Azure 로그인
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: ✅ CloudFront 캐시 무효화
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_ID }} --paths "/*" --debug
+      - name: Azure Blob Storage 배포
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload-batch \
+              --account-name fedeploy \
+              --destination '$web' \
+              --source ./dist \
+              --overwrite
