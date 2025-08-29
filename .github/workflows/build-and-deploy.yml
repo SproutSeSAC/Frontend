@@ -49,4 +49,5 @@ jobs:
               --account-name fedeploy \
               --destination '$web' \
               --source ./dist \
+              --auth-mode login \
               --overwrite
