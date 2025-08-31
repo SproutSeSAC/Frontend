@@ -65,14 +65,14 @@ export default function UserNameImageModal({
 
   const {
     onImageChange,
-    uploadImageToS3,
+    uploadImageToBlobStorage,
     extractImageNameFromUrl,
-    deleteImageFromS3,
+    deleteImageFromBlobStorage,
   } = useHandleImage();
 
   const resetProfileImage = async () => {
     if (profileImageUrl !== '') {
-      deleteImageFromS3(profileImageUrl);
+      deleteImageFromBlobStorage(profileImageUrl);
       await mutateProfileImage({ profileUrl: '' });
     }
   };
@@ -85,13 +85,13 @@ export default function UserNameImageModal({
       await mutateProfile({ nickname: formData.nickname });
     }
     if (profileImageUrl !== '') {
-      deleteImageFromS3(profileImageUrl);
+      deleteImageFromBlobStorage(profileImageUrl);
     }
     const file = formData.profileImageFiles?.[0];
     if (file) {
       const fileName = `${Date.now()}.${file.type.split('/')[1]}`;
       const fileWithNewName = new File([file], fileName, { type: file.type });
-      const s3Url = await uploadImageToS3(fileWithNewName);
+      const s3Url = await uploadImageToBlobStorage(fileWithNewName);
       const imageName = extractImageNameFromUrl(s3Url);
       await mutateProfileImage({ profileUrl: imageName });
     }
