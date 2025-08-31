@@ -4,8 +4,13 @@ import { useDialogContext } from '@/hooks';
 import { base64ToFile, getByteSizeNum } from '@/utils';
 import axios from 'axios';
 
-type PresignedUrlResponse = {
-  presignedUrl: string;
+// type PresignedUrlResponse = {
+//   presignedUrl: string;
+//   expirationMinutes: number;
+// };
+
+type SasUrlResponse = {
+  sasUrl: string;
   expirationMinutes: number;
 };
 
@@ -36,21 +41,20 @@ export const useHandleImage = () => {
     });
   };
 
-  const getPresignedUrl = async (file: File) => {
+  const getSasUrl = async (file: File) => {
     const folderPath = 'profile';
-    const objectKey = `${folderPath}/${file?.name}`;
+    const blobName = `${folderPath}/${file?.name}`;
 
-    const { data } = await axiosInstance.post<PresignedUrlResponse>(
-      `aws/uploadurl`,
+    // 변경: API 경로 및 요청 DTO 수정
+    const { data } = await axiosInstance.post<SasUrlResponse>(
+      `azure/uploadurl`,
       {
-        bucketName: 'sprout-public-asset',
-        objectKey,
-        contentType: file.type,
+        containerName: 'sprout-public-asset',
+        blobName,
         expirationMinutes: 1,
-        ACL: 'bucket-owner-full-control',
       },
     );
-    return data.presignedUrl;
+    return data.sasUrl;
   };
 
   const onImageChange = (
@@ -95,27 +99,28 @@ export const useHandleImage = () => {
     return pathSegments[pathSegments.length - 1];
   };
 
-  const uploadImageToS3 = async (file: File) => {
-    const presignedUrl = await getPresignedUrl(file);
-    await axios.put(presignedUrl, file, {
+  const uploadImageToBlobStorage = async (file: File) => {
+    const sasUrl = await getSasUrl(file);
+
+    await axios.put(sasUrl, file, {
       headers: {
-        'Content-Type': file.type || 'application/octet-stream',
-        'x-amz-acl': 'bucket-owner-full-control',
+        'Content-Type': file.type,
+        'x-ms-blob-type': 'BlockBlob',
       },
     });
-    const url = new URL(presignedUrl);
+
+    const url = new URL(sasUrl);
     return decodeURI(url.origin + url.pathname);
   };
 
-  const deleteImageFromS3 = async (fileName: string) => {
-    axiosInstance.delete('aws/deletefile', {
+  const deleteImageFromBlobStorage = async (fileName: string) => {
+    axiosInstance.delete('azure/deletefile', {
       headers: {
-        accept: 'application/json',
         'Content-Type': 'application/json',
       },
       data: {
-        bucketName: 'sprout-public-asset',
-        objectKey: `profile/${fileName}`,
+        containerName: 'sprout-public-asset',
+        blobName: `profile/${fileName}`,
       },
     });
   };
@@ -139,7 +144,7 @@ export const useHandleImage = () => {
       if (imageNameToDeleteList.length > 0) {
         await Promise.all(
           imageNameToDeleteList.map(async imageName => {
-            deleteImageFromS3(imageName);
+            deleteImageFromBlobStorage(imageName);
           }),
         );
       }
@@ -147,7 +152,7 @@ export const useHandleImage = () => {
     }
     await Promise.all(
       currImageNameFromS3UrlList.map(async imageName => {
-        deleteImageFromS3(imageName);
+        deleteImageFromBlobStorage(imageName);
       }),
     );
   };
@@ -169,7 +174,7 @@ export const useHandleImage = () => {
             const acc = await accPromise;
             try {
               const file = base64ToFile(base64Data, `${Date.now()}`);
-              const s3Url = await uploadImageToS3(file);
+              const s3Url = await uploadImageToBlobStorage(file);
               return acc.replace(base64Data, s3Url);
             } catch (error) {
               return acc;
@@ -181,9 +186,8 @@ export const useHandleImage = () => {
 
   return {
     extractImageNameFromUrl,
-    getPresignedUrl,
-    uploadImageToS3,
-    deleteImageFromS3,
+    uploadImageToBlobStorage,
+    deleteImageFromBlobStorage,
     onImageChange,
     deletePostImages,
     handleImagesInHtmlContent,
